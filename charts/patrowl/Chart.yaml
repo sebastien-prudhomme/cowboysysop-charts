@@ -1,0 +1,9 @@
+apiVersion: v1
+appVersion: 1.1.2
+description: Open Source, Smart and Scalable Security Operations Orchestration Platform
+home: https://www.patrowl.io/
+maintainers:
+  - name: sebastien-prudhomme
+    email: sebastien.prudhomme@gmail.com
+name: patrowl
+version: 1.0.0
