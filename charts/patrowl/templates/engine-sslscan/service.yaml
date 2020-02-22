@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "patrowl.engineSslscan.fullname" . }}
+  labels:
+    {{- include "patrowl.engineSslscan.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.engineSslscan.service.type }}
+  ports:
+    - port: {{ .Values.engineSslscan.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "patrowl.engineSslscan.selectorLabels" . | nindent 4 }}
