@@ -27,6 +27,15 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: DB_PORT_5432_TCP_HOST
+              value: patrowl-postgresql # A corriger
+            - name: DB_ENV_POSTGRES_USER
+              value: {{ .Values.postgresql.postgresqlUsername | quote }}
+            - name: DB_ENV_POSTGRES_PASSWORD
+              value: {{ .Values.postgresql.postgresqlPassword | quote }}
+            - name: DB_ENV_DB
+              value: {{ .Values.postgresql.postgresqlDatabase | quote }}
           ports:
             - name: http
               containerPort: 8003

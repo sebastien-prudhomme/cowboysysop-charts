@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: patrowl/patrowl-manager-community-edition
+  repository: sebastienprudhomme/patrowl-manager-community-edition
   tag: latest
   pullPolicy: Always
 
@@ -117,3 +117,11 @@ engineSslscan:
   tolerations: []
 
   affinity: {}
+
+postgresql:
+  # Whether to use the PostgreSQL chart
+  enabled: true
+
+  postgresqlUsername: patrowl
+  postgresqlPassword: patrowl
+  postgresqlDatabase: patrowl
