@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "vertical-pod-autoscaler.recommender.metrics.fullname" . }}
+  name: {{ include "scaleway-csi.recommender.metrics.fullname" . }}
   labels:
-    {{- include "vertical-pod-autoscaler.recommender.labels" . | nindent 4 }}
+    {{- include "scaleway-csi.recommender.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.recommender.metrics.service.type }}
   ports:
@@ -12,4 +12,4 @@ spec:
       protocol: TCP
       name: metrics
   selector:
-    {{- include "vertical-pod-autoscaler.recommender.selectorLabels" . | nindent 4 }}
+    {{- include "scaleway-csi.recommender.selectorLabels" . | nindent 4 }}

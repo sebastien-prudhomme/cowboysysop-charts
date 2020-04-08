@@ -1,9 +1,9 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ include "vertical-pod-autoscaler.recommender.fullname" . }}
+  name: {{ include "scaleway-csi.recommender.fullname" . }}
   labels:
-    {{- include "vertical-pod-autoscaler.recommender.labels" . | nindent 4 }}
+    {{- include "scaleway-csi.recommender.labels" . | nindent 4 }}
 rules:
   # system:metrics-reader
   - apiGroups:

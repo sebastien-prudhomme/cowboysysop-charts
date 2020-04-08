@@ -1,4 +1,4 @@
-# Default values for vertical-pod-autoscaler.
+# Default values for scaleway-csi.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
@@ -6,11 +6,11 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
-admissionController:
+controller:
   replicaCount: 1
 
   image:
-    repository: k8s.gcr.io/vpa-admission-controller
+    repository: k8s.gcr.io/vpa-controller
     tag: 0.7.0
     pullPolicy: IfNotPresent
 
@@ -23,10 +23,10 @@ admissionController:
     # If not set and create is true, a name is generated using the fullname template
     name:
 
-  # Additional pod annotations (admission controller component)
+  # Additional pod annotations (controller component)
   podAnnotations: {}
 
-  # Additional pod labels (admission controller component)
+  # Additional pod labels (controller component)
   podLabels: {}
 
   podSecurityContext: {}

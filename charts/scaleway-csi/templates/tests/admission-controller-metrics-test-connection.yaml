@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: "{{ include "vertical-pod-autoscaler.admissionController.metrics.fullname" . }}-test-connection"
+  name: "{{ include "scaleway-csi.controller.metrics.fullname" . }}-test-connection"
   labels:
-    {{- include "vertical-pod-autoscaler.admissionController.labels" . | nindent 4 }}
+    {{- include "scaleway-csi.controller.labels" . | nindent 4 }}
   annotations:
     "helm.sh/hook": test-success
 spec:
@@ -11,5 +11,5 @@ spec:
     - name: wget
       image: busybox
       command: ['wget']
-      args: ['{{ include "vertical-pod-autoscaler.admissionController.metrics.fullname" . }}:{{ .Values.admissionController.metrics.service.port }}/metrics']
+      args: ['{{ include "scaleway-csi.controller.metrics.fullname" . }}:{{ .Values.controller.metrics.service.port }}/metrics']
   restartPolicy: Never

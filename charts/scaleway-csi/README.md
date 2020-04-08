@@ -6,7 +6,7 @@
 
 ```bash
 $ helm repo add cowboysysop https://cowboysysop.github.io/charts/
-$ helm install cowboysysop/vertical-pod-autoscaler
+$ helm install cowboysysop/scaleway-csi
 ```
 
 ## Introduction
@@ -25,7 +25,7 @@ Install the chart using:
 
 ```bash
 $ helm repo add cowboysysop https://cowboysysop.github.io/charts/
-$ helm install --name my-release cowboysysop/vertical-pod-autoscaler
+$ helm install --name my-release cowboysysop/scaleway-csi
 ```
 
 These commands deploy Vertical Pod Autoscaler on the Kubernetes cluster in the default configuration and with the release name `my-release`. The deployment configuration can be customized by specifying the customization parameters with the `helm install` command using the `--values` or `--set` arguments. Find more information in the [configuration section](#configuration) of this document.
@@ -42,7 +42,7 @@ kubectl replace -f crds/verticalpodautoscalercheckpoint.yaml
 Upgrade the chart deployment using:
 
 ```bash
-$ helm upgrade my-release cowboysysop/vertical-pod-autoscaler
+$ helm upgrade my-release cowboysysop/scaleway-csi
 ```
 
 The command upgrades the existing `my-release` deployment with the most latest release of the chart.
@@ -51,7 +51,7 @@ The command upgrades the existing `my-release` deployment with the most latest r
 
 ## Uninstalling
 
-Delete the `vpa-webhook-config` mutating webhook configuration automatically created by Vertical Pod Autoscaler admission controller component using:
+Delete the `vpa-webhook-config` mutating webhook configuration automatically created by Vertical Pod Autoscaler controller component using:
 
 ```bash
 $ kubectl delete mutatingwebhookconfiguration vpa-webhook-config
@@ -81,38 +81,38 @@ The following table lists all the configurable parameters expose by the Vertical
 | Name                                             | Description                                                                                                  | Default                                                                             |
 |--------------------------------------------------|--------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------|
 | `imagePullSecrets`                               | Docker registry secret names as an array                                                                     | `[]`                                                                                |
-| `nameOverride`                                   | Partially override `vertical-pod-autoscaler.fullname` template with a string (will prepend the release name) | `nil`                                                                               |
-| `fullnameOverride`                               | Fully override `vertical-pod-autoscaler.fullname` template with a string                                     | `nil`                                                                               |
-| `admissionController.replicaCount`               | Number of replicas (admission controller component)                                                          | `1`                                                                                 |
-| `admissionController.image.repository`           | Vertical Pod Autoscaler image name (admission controller component)                                          | `k8s.gcr.io/vpa-admission-controller`                                               |
-| `admissionController.image.tag`                  | Vertical Pod Autoscaler image tag (admission controller component)                                           | `0.7.0`                                                                             |
-| `admissionController.image.pullPolicy`           | Image pull policy (admission controller component)                                                           | `IfNotPresent`                                                                      |
-| `admissionController.serviceAccount.create`      | Specify whether to create a ServiceAccount (admission controller component)                                  | `true`                                                                              |
-| `admissionController.serviceAccount.annotations` | ServiceAccount annotations (admission controller component)                                                  | `{}`                                                                                |
-| `admissionController.serviceAccount.name`        | The name of the ServiceAccount to create (admission controller component)                                    | Generated using the `vertical-pod-autoscaler.admissionController.fullname` template |
-| `admissionController.podAnnotations`             | Additional pod annotations (admission controller component)                                                  | `{}`                                                                                |
-| `admissionController.podLabels`                  | Additional pod labels (admission controller component)                                                       | `{}`                                                                                |
-| `admissionController.podSecurityContext`         | Pod security context (admission controller component)                                                        | `{}`                                                                                |
-| `admissionController.securityContext`            | Container security context (admission controller component)                                                  | `{}`                                                                                |
-| `admissionController.service.type`               | Kubernetes Service type (admission controller component)                                                     | `ClusterIP`                                                                         |
-| `admissionController.resources`                  | CPU/Memory resource requests/limits (admission controller component)                                         | `{}`                                                                                |
-| `admissionController.nodeSelector`               | Node labels for pod assignment (admission controller component)                                              | `{}`                                                                                |
-| `admissionController.tolerations`                | Tolerations for pod assignment (admission controller component)                                              | `[]`                                                                                |
-| `admissionController.affinity`                   | Map of node/pod affinities (admission controller component)                                                  | `{}`                                                                                |
-| `admissionController.extraArgs`                  | Additional container arguments (admission controller component)                                              | `{ v: 2 }`                                                                          |
-| `admissionController.metrics.service.type`       | Metrics Kubernetes Service type (admission controller component)                                             | `ClusterIP`                                                                         |
-| `admissionController.metrics.service.port`       | Metrics service port (admission controller component)                                                        | `8944`                                                                              |
-| `admissionController.tls.caCert`                 | TLS CA certificate (admission controller component)                                                          | Generated using the `genCA` function                                                |
-| `admissionController.tls.cert`                   | TLS certificate (admission controller component)                                                             | Generated using the `genSignedCert` function                                        |
-| `admissionController.tls.key`                    | TLS private key (admission controller component)                                                             | Generated using the `genSignedCert` function                                        |
-| `admissionController.tls.existingSecret`         | Name of existing TLS Secret to use (admission controller component)                                          | `nil`                                                                               |
+| `nameOverride`                                   | Partially override `scaleway-csi.fullname` template with a string (will prepend the release name) | `nil`                                                                               |
+| `fullnameOverride`                               | Fully override `scaleway-csi.fullname` template with a string                                     | `nil`                                                                               |
+| `controller.replicaCount`               | Number of replicas (controller component)                                                          | `1`                                                                                 |
+| `controller.image.repository`           | Vertical Pod Autoscaler image name (controller component)                                          | `k8s.gcr.io/vpa-controller`                                               |
+| `controller.image.tag`                  | Vertical Pod Autoscaler image tag (controller component)                                           | `0.7.0`                                                                             |
+| `controller.image.pullPolicy`           | Image pull policy (controller component)                                                           | `IfNotPresent`                                                                      |
+| `controller.serviceAccount.create`      | Specify whether to create a ServiceAccount (controller component)                                  | `true`                                                                              |
+| `controller.serviceAccount.annotations` | ServiceAccount annotations (controller component)                                                  | `{}`                                                                                |
+| `controller.serviceAccount.name`        | The name of the ServiceAccount to create (controller component)                                    | Generated using the `scaleway-csi.controller.fullname` template |
+| `controller.podAnnotations`             | Additional pod annotations (controller component)                                                  | `{}`                                                                                |
+| `controller.podLabels`                  | Additional pod labels (controller component)                                                       | `{}`                                                                                |
+| `controller.podSecurityContext`         | Pod security context (controller component)                                                        | `{}`                                                                                |
+| `controller.securityContext`            | Container security context (controller component)                                                  | `{}`                                                                                |
+| `controller.service.type`               | Kubernetes Service type (controller component)                                                     | `ClusterIP`                                                                         |
+| `controller.resources`                  | CPU/Memory resource requests/limits (controller component)                                         | `{}`                                                                                |
+| `controller.nodeSelector`               | Node labels for pod assignment (controller component)                                              | `{}`                                                                                |
+| `controller.tolerations`                | Tolerations for pod assignment (controller component)                                              | `[]`                                                                                |
+| `controller.affinity`                   | Map of node/pod affinities (controller component)                                                  | `{}`                                                                                |
+| `controller.extraArgs`                  | Additional container arguments (controller component)                                              | `{ v: 2 }`                                                                          |
+| `controller.metrics.service.type`       | Metrics Kubernetes Service type (controller component)                                             | `ClusterIP`                                                                         |
+| `controller.metrics.service.port`       | Metrics service port (controller component)                                                        | `8944`                                                                              |
+| `controller.tls.caCert`                 | TLS CA certificate (controller component)                                                          | Generated using the `genCA` function                                                |
+| `controller.tls.cert`                   | TLS certificate (controller component)                                                             | Generated using the `genSignedCert` function                                        |
+| `controller.tls.key`                    | TLS private key (controller component)                                                             | Generated using the `genSignedCert` function                                        |
+| `controller.tls.existingSecret`         | Name of existing TLS Secret to use (controller component)                                          | `nil`                                                                               |
 | `recommender.replicaCount`                       | Number of replicas (recommender component)                                                                   | `1`                                                                                 |
 | `recommender.image.repository`                   | Vertical Pod Autoscaler image name (recommender component)                                                   | `k8s.gcr.io/vpa-recommender`                                                        |
 | `recommender.image.tag`                          | Vertical Pod Autoscaler image tag (recommender component)                                                    | `0.7.0`                                                                             |
 | `recommender.image.pullPolicy`                   | Image pull policy (recommender component)                                                                    | `IfNotPresent`                                                                      |
 | `recommender.serviceAccount.create`              | Specify whether to create a ServiceAccount (recommender component)                                           | `true`                                                                              |
 | `recommender.serviceAccount.annotations`         | ServiceAccount annotations (recommender component)                                                           | `{}`                                                                                |
-| `recommender.serviceAccount.name`                | The name of the ServiceAccount to create (recommender component)                                             | Generated using the `vertical-pod-autoscaler.recommender.fullname` template         |
+| `recommender.serviceAccount.name`                | The name of the ServiceAccount to create (recommender component)                                             | Generated using the `scaleway-csi.recommender.fullname` template         |
 | `recommender.podAnnotations`                     | Additional pod annotations (recommender component)                                                           | `{}`                                                                                |
 | `recommender.podLabels`                          | Additional pod labels (recommender component)                                                                | `{}`                                                                                |
 | `recommender.podSecurityContext`                 | Pod security context (recommender component)                                                                 | `{}`                                                                                |
@@ -130,7 +130,7 @@ The following table lists all the configurable parameters expose by the Vertical
 | `updater.image.pullPolicy`                       | Image pull policy (updater component)                                                                        | `IfNotPresent`                                                                      |
 | `updater.serviceAccount.create`                  | Specify whether to create a ServiceAccount (updater component)                                               | `true`                                                                              |
 | `updater.serviceAccount.annotations`             | ServiceAccount annotations (updater component)                                                               | `{}`                                                                                |
-| `updater.serviceAccount.name`                    | The name of the ServiceAccount to create (updater component)                                                 | Generated using the `vertical-pod-autoscaler.updater.fullname` template             |
+| `updater.serviceAccount.name`                    | The name of the ServiceAccount to create (updater component)                                                 | Generated using the `scaleway-csi.updater.fullname` template             |
 | `updater.podAnnotations`                         | Additional pod annotations (updater component)                                                               | `{}`                                                                                |
 | `updater.podLabels`                              | Additional pod labels (updater component)                                                                    | `{}`                                                                                |
 | `updater.podSecurityContext`                     | Pod security context (updater component)                                                                     | `{}`                                                                                |
@@ -147,7 +147,7 @@ Specify the parameters you which to customize using the `--set` argument to the 
 
 ```bash
 $ helm install --name my-release \
-    --set nameOverride=my-name cowboysysop/vertical-pod-autoscaler
+    --set nameOverride=my-name cowboysysop/scaleway-csi
 ```
 
 The above command sets the `nameOverride` to `my-name`.
@@ -156,7 +156,7 @@ Alternatively, a YAML file that specifies the values for the above parameters ca
 
 ```bash
 $ helm install --name my-release \
-    --values values.yaml cowboysysop/vertical-pod-autoscaler
+    --values values.yaml cowboysysop/scaleway-csi
 ```
 
 **Tip**: You can use the default [values.yaml](values.yaml).
@@ -167,4 +167,4 @@ Due to hard-coded values in Vertical Pod Autoscaler, the chart configuration has
 
 - Admission controller component service name is `vpa-webhook`
 - Admission controller component service port is `443`
-- Mutating webhook configuration name automatically created by admission controller component is `vpa-webhook-config`
+- Mutating webhook configuration name automatically created by controller component is `vpa-webhook-config`

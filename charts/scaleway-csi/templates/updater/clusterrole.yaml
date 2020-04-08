@@ -1,9 +1,9 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ include "vertical-pod-autoscaler.updater.fullname" . }}
+  name: {{ include "scaleway-csi.updater.fullname" . }}
   labels:
-    {{- include "vertical-pod-autoscaler.updater.labels" . | nindent 4 }}
+    {{- include "scaleway-csi.updater.labels" . | nindent 4 }}
 rules:
   # system:vpa-actor
   - apiGroups:

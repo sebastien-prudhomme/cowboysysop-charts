@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "vertical-pod-autoscaler.updater.fullname" . }}
+  name: {{ include "scaleway-csi.updater.fullname" . }}
   labels:
-    {{- include "vertical-pod-autoscaler.updater.labels" . | nindent 4 }}
+    {{- include "scaleway-csi.updater.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.updater.replicaCount }}
   selector:
     matchLabels:
-      {{- include "vertical-pod-autoscaler.updater.selectorLabels" . | nindent 6 }}
+      {{- include "scaleway-csi.updater.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "vertical-pod-autoscaler.updater.selectorLabels" . | nindent 8 }}
+        {{- include "scaleway-csi.updater.selectorLabels" . | nindent 8 }}
         {{- with .Values.updater.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -25,7 +25,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-      serviceAccountName: {{ include "vertical-pod-autoscaler.updater.serviceAccountName" . }}
+      serviceAccountName: {{ include "scaleway-csi.updater.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.updater.podSecurityContext | nindent 8 }}
       containers:
