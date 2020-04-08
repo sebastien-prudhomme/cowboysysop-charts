@@ -10,8 +10,8 @@ controller:
   replicaCount: 1
 
   image:
-    repository: k8s.gcr.io/vpa-controller
-    tag: 0.7.0
+    repository: scaleway/scaleway-csi
+    tag: v0.1.1
     pullPolicy: IfNotPresent
 
   serviceAccount:
@@ -40,10 +40,6 @@ controller:
     # runAsNonRoot: true
     # runAsUser: 1000
 
-  service:
-    type: ClusterIP
-    # port: 8000
-
   resources: {}
     # We usually recommend not to specify default resources and to leave this as a conscious
     # choice for the user. This also increases chances charts run on environments with little
@@ -69,12 +65,6 @@ controller:
     service:
       type: ClusterIP
       port: 8944
-
-  tls:
-    caCert: ""
-    cert: ""
-    key: ""
-    existingSecret: ""
 
 recommender:
   replicaCount: 1
