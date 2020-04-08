@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "vertical-pod-autoscaler.admissionController.fullname" . }}
+  name: {{ include "jitsi-meet.admissionController.fullname" . }}
   labels:
-    {{- include "vertical-pod-autoscaler.admissionController.labels" . | nindent 4 }}
+    {{- include "jitsi-meet.admissionController.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.admissionController.replicaCount }}
   selector:
     matchLabels:
-      {{- include "vertical-pod-autoscaler.admissionController.selectorLabels" . | nindent 6 }}
+      {{- include "jitsi-meet.admissionController.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "vertical-pod-autoscaler.admissionController.selectorLabels" . | nindent 8 }}
+        {{- include "jitsi-meet.admissionController.selectorLabels" . | nindent 8 }}
         {{- with .Values.admissionController.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -26,7 +26,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-      serviceAccountName: {{ include "vertical-pod-autoscaler.admissionController.serviceAccountName" . }}
+      serviceAccountName: {{ include "jitsi-meet.admissionController.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.admissionController.podSecurityContext | nindent 8 }}
       containers:
@@ -83,4 +83,4 @@ spec:
       volumes:
         - name: tls-secret
           secret:
-            secretName: {{ include "vertical-pod-autoscaler.admissionController.tls.secretName" . }}
+            secretName: {{ include "jitsi-meet.admissionController.tls.secretName" . }}

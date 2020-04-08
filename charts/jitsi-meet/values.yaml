@@ -1,4 +1,4 @@
-# Default values for vertical-pod-autoscaler.
+# Default values for jitsi-meet.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
@@ -157,12 +157,12 @@ recommender:
       type: ClusterIP
       port: 8942
 
-updater:
+web:
   replicaCount: 1
 
   image:
-    repository: k8s.gcr.io/vpa-updater
-    tag: 0.7.0
+    repository: jitsi/web
+    tag: 4384-1
     pullPolicy: IfNotPresent
 
   serviceAccount:
@@ -174,10 +174,10 @@ updater:
     # If not set and create is true, a name is generated using the fullname template
     name:
 
-  # Additional pod annotations (updater component)
+  # Additional pod annotations (web component)
   podAnnotations: {}
 
-  # Additional pod labels (updater component)
+  # Additional pod labels (web component)
   podLabels: {}
 
   podSecurityContext: {}

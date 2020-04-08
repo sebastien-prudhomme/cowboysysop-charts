@@ -1,17 +1,17 @@
-# Vertical Pod Autoscaler
+# Jitsi Meet
 
-[Vertical Pod Autoscaler](https://github.com/kubernetes/autoscaler) is a set of components that automatically adjust the amount of CPU and memory requested by pods running in the Kubernetes Cluster.
+[Jitsi Meet](https://github.com/kubernetes/autoscaler) is a set of components that automatically adjust the amount of CPU and memory requested by pods running in the Kubernetes Cluster.
 
 ## TL;DR;
 
 ```bash
 $ helm repo add cowboysysop https://cowboysysop.github.io/charts/
-$ helm install cowboysysop/vertical-pod-autoscaler
+$ helm install cowboysysop/jitsi-meet
 ```
 
 ## Introduction
 
-This chart bootstraps a Vertical Pod Autoscaler deployment on a [Kubernetes](http://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
+This chart bootstraps a Jitsi Meet deployment on a [Kubernetes](http://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
 
 ## Prerequisites
 
@@ -25,17 +25,17 @@ Install the chart using:
 
 ```bash
 $ helm repo add cowboysysop https://cowboysysop.github.io/charts/
-$ helm install --name my-release cowboysysop/vertical-pod-autoscaler
+$ helm install --name my-release cowboysysop/jitsi-meet
 ```
 
-These commands deploy Vertical Pod Autoscaler on the Kubernetes cluster in the default configuration and with the release name `my-release`. The deployment configuration can be customized by specifying the customization parameters with the `helm install` command using the `--values` or `--set` arguments. Find more information in the [configuration section](#configuration) of this document.
+These commands deploy Jitsi Meet on the Kubernetes cluster in the default configuration and with the release name `my-release`. The deployment configuration can be customized by specifying the customization parameters with the `helm install` command using the `--values` or `--set` arguments. Find more information in the [configuration section](#configuration) of this document.
 
 ## Upgrading
 
 Upgrade the chart deployment using:
 
 ```bash
-$ helm upgrade my-release cowboysysop/vertical-pod-autoscaler
+$ helm upgrade my-release cowboysysop/jitsi-meet
 ```
 
 The command upgrades the existing `my-release` deployment with the most latest release of the chart.
@@ -44,7 +44,7 @@ The command upgrades the existing `my-release` deployment with the most latest r
 
 ## Uninstalling
 
-Delete the `vpa-webhook-config` mutating webhook configuration automatically created by Vertical Pod Autoscaler admission controller component using:
+Delete the `vpa-webhook-config` mutating webhook configuration automatically created by Jitsi Meet admission controller component using:
 
 ```bash
 $ kubectl delete mutatingwebhookconfiguration vpa-webhook-config
@@ -62,20 +62,20 @@ The command deletes the release named `my-release` and frees all the kubernetes 
 
 ## Configuration
 
-The following table lists all the configurable parameters expose by the Vertical Pod Autoscaler chart and their default values.
+The following table lists all the configurable parameters expose by the Jitsi Meet chart and their default values.
 
 | Name                                             | Description                                                                                                  | Default                                                                             |
 |--------------------------------------------------|--------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------|
 | `imagePullSecrets`                               | Docker registry secret names as an array                                                                     | `[]`                                                                                |
-| `nameOverride`                                   | Partially override `vertical-pod-autoscaler.fullname` template with a string (will prepend the release name) | `nil`                                                                               |
-| `fullnameOverride`                               | Fully override `vertical-pod-autoscaler.fullname` template with a string                                     | `nil`                                                                               |
+| `nameOverride`                                   | Partially override `jitsi-meet.fullname` template with a string (will prepend the release name) | `nil`                                                                               |
+| `fullnameOverride`                               | Fully override `jitsi-meet.fullname` template with a string                                     | `nil`                                                                               |
 | `admissionController.replicaCount`               | Number of replicas (admission controller component)                                                          | `1`                                                                                 |
-| `admissionController.image.repository`           | Vertical Pod Autoscaler image name (admission controller component)                                          | `k8s.gcr.io/vpa-admission-controller`                                               |
-| `admissionController.image.tag`                  | Vertical Pod Autoscaler image tag (admission controller component)                                           | `0.7.0`                                                                             |
+| `admissionController.image.repository`           | Jitsi Meet image name (admission controller component)                                          | `k8s.gcr.io/vpa-admission-controller`                                               |
+| `admissionController.image.tag`                  | Jitsi Meet image tag (admission controller component)                                           | `0.7.0`                                                                             |
 | `admissionController.image.pullPolicy`           | Image pull policy (admission controller component)                                                           | `IfNotPresent`                                                                      |
 | `admissionController.serviceAccount.create`      | Specify whether to create a ServiceAccount (admission controller component)                                  | `true`                                                                              |
 | `admissionController.serviceAccount.annotations` | ServiceAccount annotations (admission controller component)                                                  | `{}`                                                                                |
-| `admissionController.serviceAccount.name`        | The name of the ServiceAccount to create (admission controller component)                                    | Generated using the `vertical-pod-autoscaler.admissionController.fullname` template |
+| `admissionController.serviceAccount.name`        | The name of the ServiceAccount to create (admission controller component)                                    | Generated using the `jitsi-meet.admissionController.fullname` template |
 | `admissionController.podAnnotations`             | Additional pod annotations (admission controller component)                                                  | `{}`                                                                                |
 | `admissionController.podLabels`                  | Additional pod labels (admission controller component)                                                       | `{}`                                                                                |
 | `admissionController.podSecurityContext`         | Pod security context (admission controller component)                                                        | `{}`                                                                                |
@@ -93,12 +93,12 @@ The following table lists all the configurable parameters expose by the Vertical
 | `admissionController.tls.key`                    | TLS private key (admission controller component)                                                             | Generated using the `genSignedCert` function                                        |
 | `admissionController.tls.existingSecret`         | Name of existing TLS Secret to use (admission controller component)                                          | `nil`                                                                               |
 | `recommender.replicaCount`                       | Number of replicas (recommender component)                                                                   | `1`                                                                                 |
-| `recommender.image.repository`                   | Vertical Pod Autoscaler image name (recommender component)                                                   | `k8s.gcr.io/vpa-recommender`                                                        |
-| `recommender.image.tag`                          | Vertical Pod Autoscaler image tag (recommender component)                                                    | `0.7.0`                                                                             |
+| `recommender.image.repository`                   | Jitsi Meet image name (recommender component)                                                   | `k8s.gcr.io/vpa-recommender`                                                        |
+| `recommender.image.tag`                          | Jitsi Meet image tag (recommender component)                                                    | `0.7.0`                                                                             |
 | `recommender.image.pullPolicy`                   | Image pull policy (recommender component)                                                                    | `IfNotPresent`                                                                      |
 | `recommender.serviceAccount.create`              | Specify whether to create a ServiceAccount (recommender component)                                           | `true`                                                                              |
 | `recommender.serviceAccount.annotations`         | ServiceAccount annotations (recommender component)                                                           | `{}`                                                                                |
-| `recommender.serviceAccount.name`                | The name of the ServiceAccount to create (recommender component)                                             | Generated using the `vertical-pod-autoscaler.recommender.fullname` template         |
+| `recommender.serviceAccount.name`                | The name of the ServiceAccount to create (recommender component)                                             | Generated using the `jitsi-meet.recommender.fullname` template         |
 | `recommender.podAnnotations`                     | Additional pod annotations (recommender component)                                                           | `{}`                                                                                |
 | `recommender.podLabels`                          | Additional pod labels (recommender component)                                                                | `{}`                                                                                |
 | `recommender.podSecurityContext`                 | Pod security context (recommender component)                                                                 | `{}`                                                                                |
@@ -110,30 +110,30 @@ The following table lists all the configurable parameters expose by the Vertical
 | `recommender.extraArgs`                          | Additional container arguments (recommender component)                                                       | `{ v: 2 }`                                                                          |
 | `recommender.metrics.service.type`               | Metrics Kubernetes Service type (recommender component)                                                      | `ClusterIP`                                                                         |
 | `recommender.metrics.service.port`               | Metrics service port (recommender component)                                                                 | `8942`                                                                              |
-| `updater.replicaCount`                           | Number of replicas (updater component)                                                                       | `1`                                                                                 |
-| `updater.image.repository`                       | Vertical Pod Autoscaler image name (updater component)                                                       | `k8s.gcr.io/vpa-updater`                                                            |
-| `updater.image.tag`                              | Vertical Pod Autoscaler image tag (updater component)                                                        | `0.7.0`                                                                             |
-| `updater.image.pullPolicy`                       | Image pull policy (updater component)                                                                        | `IfNotPresent`                                                                      |
-| `updater.serviceAccount.create`                  | Specify whether to create a ServiceAccount (updater component)                                               | `true`                                                                              |
-| `updater.serviceAccount.annotations`             | ServiceAccount annotations (updater component)                                                               | `{}`                                                                                |
-| `updater.serviceAccount.name`                    | The name of the ServiceAccount to create (updater component)                                                 | Generated using the `vertical-pod-autoscaler.updater.fullname` template             |
-| `updater.podAnnotations`                         | Additional pod annotations (updater component)                                                               | `{}`                                                                                |
-| `updater.podLabels`                              | Additional pod labels (updater component)                                                                    | `{}`                                                                                |
-| `updater.podSecurityContext`                     | Pod security context (updater component)                                                                     | `{}`                                                                                |
-| `updater.securityContext`                        | Container security context (updater component)                                                               | `{}`                                                                                |
-| `updater.resources`                              | CPU/Memory resource requests/limits (updater component)                                                      | `{}`                                                                                |
-| `updater.nodeSelector`                           | Node labels for pod assignment (updater component)                                                           | `{}`                                                                                |
-| `updater.tolerations`                            | Tolerations for pod assignment (updater component)                                                           | `[]`                                                                                |
-| `updater.affinity`                               | Map of node/pod affinities (updater component)                                                               | `{}`                                                                                |
-| `updater.extraArgs`                              | Additional container arguments (updater component)                                                           | `{ v: 2 }`                                                                          |
-| `updater.metrics.service.type`                   | Metrics Kubernetes Service type (updater component)                                                          | `ClusterIP`                                                                         |
-| `updater.metrics.service.port`                   | Metrics service port (updater component)                                                                     | `8943`                                                                              |
+| `web.replicaCount`                           | Number of replicas (web component)                                                                       | `1`                                                                                 |
+| `web.image.repository`                       | Jitsi Meet image name (web component)                                                       | `jitsi/web`                                                            |
+| `web.image.tag`                              | Jitsi Meet image tag (web component)                                                        | `4384-1`                                                                             |
+| `web.image.pullPolicy`                       | Image pull policy (web component)                                                                        | `IfNotPresent`                                                                      |
+| `web.serviceAccount.create`                  | Specify whether to create a ServiceAccount (web component)                                               | `true`                                                                              |
+| `web.serviceAccount.annotations`             | ServiceAccount annotations (web component)                                                               | `{}`                                                                                |
+| `web.serviceAccount.name`                    | The name of the ServiceAccount to create (web component)                                                 | Generated using the `jitsi-meet.web.fullname` template             |
+| `web.podAnnotations`                         | Additional pod annotations (web component)                                                               | `{}`                                                                                |
+| `web.podLabels`                              | Additional pod labels (web component)                                                                    | `{}`                                                                                |
+| `web.podSecurityContext`                     | Pod security context (web component)                                                                     | `{}`                                                                                |
+| `web.securityContext`                        | Container security context (web component)                                                               | `{}`                                                                                |
+| `web.resources`                              | CPU/Memory resource requests/limits (web component)                                                      | `{}`                                                                                |
+| `web.nodeSelector`                           | Node labels for pod assignment (web component)                                                           | `{}`                                                                                |
+| `web.tolerations`                            | Tolerations for pod assignment (web component)                                                           | `[]`                                                                                |
+| `web.affinity`                               | Map of node/pod affinities (web component)                                                               | `{}`                                                                                |
+| `web.extraArgs`                              | Additional container arguments (web component)                                                           | `{ v: 2 }`                                                                          |
+| `web.metrics.service.type`                   | Metrics Kubernetes Service type (web component)                                                          | `ClusterIP`                                                                         |
+| `web.metrics.service.port`                   | Metrics service port (web component)                                                                     | `8943`                                                                              |
 
 Specify the parameters you which to customize using the `--set` argument to the `helm install` command. For instance,
 
 ```bash
 $ helm install --name my-release \
-    --set nameOverride=my-name cowboysysop/vertical-pod-autoscaler
+    --set nameOverride=my-name cowboysysop/jitsi-meet
 ```
 
 The above command sets the `nameOverride` to `my-name`.
@@ -142,14 +142,14 @@ Alternatively, a YAML file that specifies the values for the above parameters ca
 
 ```bash
 $ helm install --name my-release \
-    --values values.yaml cowboysysop/vertical-pod-autoscaler
+    --values values.yaml cowboysysop/jitsi-meet
 ```
 
 **Tip**: You can use the default [values.yaml](values.yaml).
 
 ## Limitations
 
-Due to hard-coded values in Vertical Pod Autoscaler, the chart configuration has some limitations:
+Due to hard-coded values in Jitsi Meet, the chart configuration has some limitations:
 
 - Admission controller component service name is `vpa-webhook`
 - Admission controller component service port is `443`

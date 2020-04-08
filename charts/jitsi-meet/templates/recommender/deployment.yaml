@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "vertical-pod-autoscaler.recommender.fullname" . }}
+  name: {{ include "jitsi-meet.recommender.fullname" . }}
   labels:
-    {{- include "vertical-pod-autoscaler.recommender.labels" . | nindent 4 }}
+    {{- include "jitsi-meet.recommender.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.recommender.replicaCount }}
   selector:
     matchLabels:
-      {{- include "vertical-pod-autoscaler.recommender.selectorLabels" . | nindent 6 }}
+      {{- include "jitsi-meet.recommender.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "vertical-pod-autoscaler.recommender.selectorLabels" . | nindent 8 }}
+        {{- include "jitsi-meet.recommender.selectorLabels" . | nindent 8 }}
         {{- with .Values.recommender.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -25,7 +25,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-      serviceAccountName: {{ include "vertical-pod-autoscaler.recommender.serviceAccountName" . }}
+      serviceAccountName: {{ include "jitsi-meet.recommender.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.recommender.podSecurityContext | nindent 8 }}
       containers:
