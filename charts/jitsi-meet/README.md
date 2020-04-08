@@ -32,13 +32,6 @@ These commands deploy Vertical Pod Autoscaler on the Kubernetes cluster in the d
 
 ## Upgrading
 
-Replace the custom resource definitions created by the chart using:
-
-```bash
-kubectl replace -f crds/verticalpodautoscaler.yaml
-kubectl replace -f crds/verticalpodautoscalercheckpoint.yaml
-```
-
 Upgrade the chart deployment using:
 
 ```bash
@@ -66,13 +59,6 @@ $ helm delete my-release
 The command deletes the release named `my-release` and frees all the kubernetes resources associated with the release.
 
 **TIP**: Specify the `--purge` argument to the above command to remove the release from the store and make its name free for later use.
-
-Optionally, delete the custom resource definitions created by the chart using:
-
-```bash
-$ kubectl delete crd verticalpodautoscalers.autoscaling.k8s.io
-$ kubectl delete crd verticalpodautoscalercheckpoints.autoscaling.k8s.io
-```
 
 ## Configuration
 
