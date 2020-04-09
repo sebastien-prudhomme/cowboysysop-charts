@@ -274,7 +274,6 @@ prosody:
 # asap_accepted_audiences = { "{{ join "\",\"" (splitList "," .Env.JWT_ACCEPTED_AUDIENCES) }}" }
 # {{ end }}
 
-# VirtualHost "{{ .Env.XMPP_DOMAIN }}"
 # {{ if $ENABLE_AUTH }}
 #   {{ if eq $AUTH_TYPE "jwt" }}
 #     authentication = "{{ $JWT_AUTH_TYPE }}"
@@ -295,10 +294,7 @@ prosody:
 # {{ else }}
 #     authentication = "anonymous"
 # {{ end }}
-#     ssl = {
-#         key = "/config/certs/{{ .Env.XMPP_DOMAIN }}.key";
-#         certificate = "/config/certs/{{ .Env.XMPP_DOMAIN }}.crt";
-#     }
+
 #     modules_enabled = {
 
 #         {{ if .Env.XMPP_MODULES }}
@@ -314,28 +310,6 @@ prosody:
 #     c2s_require_encryption = false
 # {{ end }}
 
-# VirtualHost "{{ .Env.XMPP_AUTH_DOMAIN }}"
-#     ssl = {
-#         key = "/config/certs/{{ .Env.XMPP_AUTH_DOMAIN }}.key";
-#         certificate = "/config/certs/{{ .Env.XMPP_AUTH_DOMAIN }}.crt";
-#     }
-#     authentication = "internal_plain"
-
-# {{ if .Env.XMPP_RECORDER_DOMAIN }}
-# VirtualHost "{{ .Env.XMPP_RECORDER_DOMAIN }}"
-#     modules_enabled = {
-#       "ping";
-#     }
-#     authentication = "internal_plain"
-# {{ end }}
-
-# Component "{{ .Env.XMPP_INTERNAL_MUC_DOMAIN }}" "muc"
-#     modules_enabled = {
-#         "ping";
-#         {{ if .Env.XMPP_INTERNAL_MUC_MODULES }}
-#         "{{ join "\";\n\"" (splitList "," .Env.XMPP_INTERNAL_MUC_MODULES) }}";
-#         {{ end }}
-#     }
 
 
 # Component "{{ .Env.XMPP_MUC_DOMAIN }}" "muc"
@@ -346,11 +320,6 @@ prosody:
 #         {{ end }}
 
 #     }
-
-
-# Component "focus.{{ .Env.XMPP_DOMAIN }}"
-#     component_secret = "{{ .Env.JICOFO_COMPONENT_SECRET }}"
-
 
 
 # {{ $LOG_LEVEL := .Env.LOG_LEVEL | default "info" }}
@@ -409,6 +378,9 @@ xmpp:
 
   # XMPP domain for the internal MUC
   internalMucDomain: internal-muc.meet.jitsi
+
+  # Custom Prosody modules for internal MUC component (comma separated)
+  internalMucModules: info,alert
 
   # Domain for the jibri recorder
   recorderDomain: recorder.meet.jitsi

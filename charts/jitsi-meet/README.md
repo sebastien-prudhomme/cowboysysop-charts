@@ -134,6 +134,7 @@ The following table lists all the configurable parameters expose by the Jitsi Me
 | `xmpp.domain`                        | Internal XMPP domain                                                                            | `meet.jitsi`                                               |
 | `xmpp.authDomain`                    | Internal XMPP domain for authenticated services                                                 | `auth.meet.jitsi`                                          |
 | `xmpp.internalMucDomain`             | XMPP domain for the internal MUC                                                                | `internal-muc.meet.jitsi`                                  |
+| `xmpp.internalMucModules`            | Custom Prosody modules for internal MUC component (comma separated)                             | `info,alert`                                               |
 | `xmpp.recorderDomain`                | Domain for the jibri recorder                                                                   | `recorder.meet.jitsi`                                      |
 | `web.replicaCount`                   | Number of replicas (web component)                                                              | `1`                                                        |
 | `web.image.repository`               | Jitsi Meet image name (web component)                                                           | `jitsi/web`                                                |
