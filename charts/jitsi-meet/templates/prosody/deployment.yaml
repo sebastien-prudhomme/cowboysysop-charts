@@ -84,21 +84,31 @@ spec:
 
 
           ports:
-            - name: metrics
-              containerPort: 8943
+            - name: http
+              containerPort: 5280
               protocol: TCP
 
 
-# 5222 5269 5347 5280
+# 5222 5269 5347
+
+
+# portmanager         info        Activated service 'component' on [*]:5347
+# portmanager         info        Activated service 's2s' on [*]:5269, [::]:5269
+# portmanager         info        Activated service 'c2s' on [*]:5222, [::]:5222
+# portmanager         info        Activated service 'legacy_ssl' on no ports
+# <no value>:tls      error       Error creating context for c2s: No certificate present in SSL/TLS configuration for <no value>
+# <no value>:tls      error       Error creating contexts for s2sin: No certificate present in SSL/TLS configuration for <no value>
+# portmanager         info        Activated service 'http' on [*]:5280, [::]:5280
+# portmanager         info        Activated service 'https' on no ports
 
           livenessProbe:
             httpGet:
-              path: /metrics
-              port: metrics
+              path: /
+              port: http
           readinessProbe:
             httpGet:
-              path: /metrics
-              port: metrics
+              path: /
+              port: http
           resources:
             {{- toYaml .Values.prosody.resources | nindent 12 }}
       {{- with .Values.prosody.nodeSelector }}

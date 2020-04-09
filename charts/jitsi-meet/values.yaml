@@ -246,6 +246,8 @@ prosody:
 
   affinity: {}
 
+  #globalModules: statistics,alert,prometheus
+
   metrics:
     service:
       type: ClusterIP
