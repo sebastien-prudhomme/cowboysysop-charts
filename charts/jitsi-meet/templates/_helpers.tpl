@@ -25,6 +25,20 @@ If release name contains chart name it will be used as a full name.
 {{- end -}}
 
 {{/*
+Create a default fully qualified app name (jibri component).
+*/}}
+{{- define "jitsi-meet.jibri.fullname" -}}
+{{- printf "%s-%s" (include "jitsi-meet.fullname" .) "jibri" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
+Create a default fully qualified metrics name (jibri component).
+*/}}
+{{- define "jitsi-meet.jibri.metrics.fullname" -}}
+{{- printf "%s-%s" (include "jitsi-meet.jibri.fullname" .) "metrics" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
 Create a default fully qualified app name (jicofo component).
 */}}
 {{- define "jitsi-meet.jicofo.fullname" -}}
@@ -36,6 +50,20 @@ Create a default fully qualified metrics name (jicofo component).
 */}}
 {{- define "jitsi-meet.jicofo.metrics.fullname" -}}
 {{- printf "%s-%s" (include "jitsi-meet.jicofo.fullname" .) "metrics" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
+Create a default fully qualified app name (jigasi component).
+*/}}
+{{- define "jitsi-meet.jigasi.fullname" -}}
+{{- printf "%s-%s" (include "jitsi-meet.fullname" .) "jigasi" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
+Create a default fully qualified metrics name (jigasi component).
+*/}}
+{{- define "jitsi-meet.jigasi.metrics.fullname" -}}
+{{- printf "%s-%s" (include "jitsi-meet.jigasi.fullname" .) "metrics" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
@@ -88,6 +116,13 @@ Create chart name and version as used by the chart label.
 {{- end -}}
 
 {{/*
+Component labels (jibri component)
+*/}}
+{{- define "jitsi-meet.jibri.componentLabels" -}}
+app.kubernetes.io/component: jibri
+{{- end -}}
+
+{{/*
 Component labels (jicofo component)
 */}}
 {{- define "jitsi-meet.jicofo.componentLabels" -}}
@@ -125,6 +160,14 @@ helm.sh/chart: {{ include "jitsi-meet.chart" . }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end -}}
+
+{{/*
+Common labels (jibri component)
+*/}}
+{{- define "jitsi-meet.jibri.labels" -}}
+{{ include "jitsi-meet.labels" . }}
+{{ include "jitsi-meet.jibri.componentLabels" . }}
 {{- end -}}
 
 {{/*
@@ -168,6 +211,14 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
 
 {{/*
+Selector labels (jibri component)
+*/}}
+{{- define "jitsi-meet.jibri.selectorLabels" -}}
+{{ include "jitsi-meet.selectorLabels" . }}
+{{ include "jitsi-meet.jibri.componentLabels" . }}
+{{- end -}}
+
+{{/*
 Selector labels (jicofo component)
 */}}
 {{- define "jitsi-meet.jicofo.selectorLabels" -}}
@@ -207,6 +258,17 @@ Create the name of the service account to use
     {{ default (include "jitsi-meet.fullname" .) .Values.serviceAccount.name }}
 {{- else -}}
     {{ default "default" .Values.serviceAccount.name }}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Create the name of the service account to use (jibri component)
+*/}}
+{{- define "jitsi-meet.jibri.serviceAccountName" -}}
+{{- if .Values.jibri.serviceAccount.create -}}
+    {{ default (include "jitsi-meet.jibri.fullname" .) .Values.jibri.serviceAccount.name }}
+{{- else -}}
+    {{ default "default" .Values.jibri.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
 
@@ -255,6 +317,17 @@ Create the name of the service account to use (web component)
 {{- end -}}
 
 {{/*
+Create the name of the secret to use (jibri component)
+*/}}
+{{- define "jitsi-meet.jibri.secretName" -}}
+{{- if .Values.jibri.existingSecret -}}
+    {{ .Values.jibri.existingSecret }}
+{{- else -}}
+    {{ include "jitsi-meet.jibri.fullname" . }}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Create the name of the secret to use (jicofo component)
 */}}
 {{- define "jitsi-meet.jicofo.secretName" -}}
@@ -262,5 +335,16 @@ Create the name of the secret to use (jicofo component)
     {{ .Values.jicofo.existingSecret }}
 {{- else -}}
     {{ include "jitsi-meet.jicofo.fullname" . }}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Create the name of the secret to use (jvb component)
+*/}}
+{{- define "jitsi-meet.jvb.secretName" -}}
+{{- if .Values.jvb.existingSecret -}}
+    {{ .Values.jvb.existingSecret }}
+{{- else -}}
+    {{ include "jitsi-meet.jvb.fullname" . }}
 {{- end -}}
 {{- end -}}

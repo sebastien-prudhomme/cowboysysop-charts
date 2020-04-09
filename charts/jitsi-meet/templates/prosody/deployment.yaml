@@ -34,10 +34,63 @@ spec:
             {{- toYaml .Values.prosody.securityContext | nindent 12 }}
           image: "{{ .Values.prosody.image.repository }}:{{ .Values.prosody.image.tag }}"
           imagePullPolicy: {{ .Values.prosody.image.pullPolicy }}
+          env:
+            - name: XMPP_DOMAIN
+              value: {{ .Values.xmpp.domain | quote }}
+            - name: XMPP_AUTH_DOMAIN
+              value: {{ .Values.xmpp.authDomain | quote }}
+            - name: XMPP_RECORDER_DOMAIN
+              value: {{ .Values.xmpp.recorderDomain | quote }}
+            - name: JIBRI_RECORDER_USER
+              value: {{ .Values.jibri.recorderUser | quote }}
+            - name: JIBRI_RECORDER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "jitsi-meet.jibri.secretName" . }}
+                  key: recorder-password
+            - name: JIBRI_XMPP_USER
+              value: {{ .Values.jibri.xmppUser | quote }}
+            - name: JIBRI_XMPP_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "jitsi-meet.jibri.secretName" . }}
+                  key: xmpp-password
+            - name: JICOFO_COMPONENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "jitsi-meet.jicofo.secretName" . }}
+                  key: component-secret
+            - name: JICOFO_AUTH_USER
+              value: {{ .Values.jicofo.authUser | quote }}
+            - name: JICOFO_AUTH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "jitsi-meet.jicofo.secretName" . }}
+                  key: auth-password
+            - name: JIGASI_XMPP_USER
+              value: {{ .Values.jigasi.xmppUser | quote }}
+            - name: JIGASI_XMPP_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "jitsi-meet.jigasi.secretName" . }}
+                  key: xmpp-password
+            - name: JVB_AUTH_USER
+              value: {{ .Values.jvb.authUser | quote }}
+            - name: JVB_AUTH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "jitsi-meet.jvb.secretName" . }}
+                  key: auth-password
+
+
           ports:
             - name: metrics
               containerPort: 8943
               protocol: TCP
+
+
+5222 5269 5347 5280
+
           livenessProbe:
             httpGet:
               path: /metrics

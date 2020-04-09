@@ -154,11 +154,35 @@ jvb:
 
   affinity: {}
 
+  # XMPP user for JVB MUC client connections
+  authUser: "jvb"
+
+  # XMPP password for JVB MUC client connections
+  authPassword: ""
+
+  # Name of existing Secret to use (jvb component)
+  existingSecret: ""
+
   metrics:
     service:
       type: ClusterIP
       port: 8942
 
+jibri:
+  # XMPP recorder user for Jibri client connections
+  recorderUser: "recorder"
+
+  # XMPP recorder password for Jibri client connections
+  recorderPassword: ""
+
+  # XMPP user for Jibri client connections
+  xmppUser: "jibri"
+
+  # XMPP password for Jibri client connections
+  xmppPassword: ""
+
+  # Name of existing Secret to use (jibri component)
+  existingSecret: ""
 prosody:
   replicaCount: 1
 
@@ -216,12 +240,169 @@ prosody:
       type: ClusterIP
       port: 8943
 
+# admins = { "{{ .Env.JICOFO_AUTH_USER }}@{{ .Env.XMPP_AUTH_DOMAIN }}" }
+# http_default_host = "{{ .Env.XMPP_DOMAIN }}"
+
+# {{ $ENABLE_AUTH := .Env.ENABLE_AUTH | default "0" | toBool }}
+# {{ $AUTH_TYPE := .Env.AUTH_TYPE | default "internal" }}
+# {{ $JWT_ASAP_KEYSERVER := .Env.JWT_ASAP_KEYSERVER | default "" }}
+# {{ $JWT_ALLOW_EMPTY := .Env.JWT_ALLOW_EMPTY | default "0" | toBool }}
+# {{ $JWT_AUTH_TYPE := .Env.JWT_AUTH_TYPE | default "token" }}
+# {{ $JWT_TOKEN_AUTH_MODULE := .Env.JWT_TOKEN_AUTH_MODULE | default "token_verification" }}
+
+# {{ if and $ENABLE_AUTH (eq $AUTH_TYPE "jwt") .Env.JWT_ACCEPTED_ISSUERS }}
+# asap_accepted_issuers = { "{{ join "\",\"" (splitList "," .Env.JWT_ACCEPTED_ISSUERS) }}" }
+# {{ end }}
+
+# {{ if and $ENABLE_AUTH (eq $AUTH_TYPE "jwt") .Env.JWT_ACCEPTED_AUDIENCES }}
+# asap_accepted_audiences = { "{{ join "\",\"" (splitList "," .Env.JWT_ACCEPTED_AUDIENCES) }}" }
+# {{ end }}
+
+# VirtualHost "{{ .Env.XMPP_DOMAIN }}"
+# {{ if $ENABLE_AUTH }}
+#   {{ if eq $AUTH_TYPE "jwt" }}
+#     authentication = "{{ $JWT_AUTH_TYPE }}"
+#     app_id = "{{ .Env.JWT_APP_ID }}"
+#     app_secret = "{{ .Env.JWT_APP_SECRET }}"
+#     allow_empty_token = {{ if $JWT_ALLOW_EMPTY }}true{{ else }}false{{ end }}
+#     {{ if $JWT_ASAP_KEYSERVER }}
+#     asap_key_server = "{{ .Env.JWT_ASAP_KEYSERVER }}"
+#     {{ end }}
+
+#     {{ else if eq $AUTH_TYPE "ldap" }}
+#     authentication = "cyrus"
+#     cyrus_application_name = "xmpp"
+#     allow_unencrypted_plain_auth = true
+#   {{ else if eq $AUTH_TYPE "internal" }}
+#     authentication = "internal_plain"
+#   {{ end }}
+# {{ else }}
+#     authentication = "anonymous"
+# {{ end }}
+#     ssl = {
+#         key = "/config/certs/{{ .Env.XMPP_DOMAIN }}.key";
+#         certificate = "/config/certs/{{ .Env.XMPP_DOMAIN }}.crt";
+#     }
+#     modules_enabled = {
+
+#         {{ if .Env.XMPP_MODULES }}
+#         "{{ join "\";\n\"" (splitList "," .Env.XMPP_MODULES) }}";
+#         {{ end }}
+#     }
+
+#     c2s_require_encryption = false
+
+# {{ if and $ENABLE_AUTH (.Env.ENABLE_GUESTS | default "0" | toBool) }}
+# VirtualHost "{{ .Env.XMPP_GUEST_DOMAIN }}"
+#     authentication = "anonymous"
+#     c2s_require_encryption = false
+# {{ end }}
+
+# VirtualHost "{{ .Env.XMPP_AUTH_DOMAIN }}"
+#     ssl = {
+#         key = "/config/certs/{{ .Env.XMPP_AUTH_DOMAIN }}.key";
+#         certificate = "/config/certs/{{ .Env.XMPP_AUTH_DOMAIN }}.crt";
+#     }
+#     authentication = "internal_plain"
+
+# {{ if .Env.XMPP_RECORDER_DOMAIN }}
+# VirtualHost "{{ .Env.XMPP_RECORDER_DOMAIN }}"
+#     modules_enabled = {
+#       "ping";
+#     }
+#     authentication = "internal_plain"
+# {{ end }}
+
+# Component "{{ .Env.XMPP_INTERNAL_MUC_DOMAIN }}" "muc"
+#     modules_enabled = {
+#         "ping";
+#         {{ if .Env.XMPP_INTERNAL_MUC_MODULES }}
+#         "{{ join "\";\n\"" (splitList "," .Env.XMPP_INTERNAL_MUC_MODULES) }}";
+#         {{ end }}
+#     }
+
+
+# Component "{{ .Env.XMPP_MUC_DOMAIN }}" "muc"
+#     storage = "memory"
+#     modules_enabled = {
+#         {{ if .Env.XMPP_MUC_MODULES }}
+#         "{{ join "\";\n\"" (splitList "," .Env.XMPP_MUC_MODULES) }}";
+#         {{ end }}
+
+#     }
+
+
+# Component "focus.{{ .Env.XMPP_DOMAIN }}"
+#     component_secret = "{{ .Env.JICOFO_COMPONENT_SECRET }}"
+
+
+
+# {{ $LOG_LEVEL := .Env.LOG_LEVEL | default "info" }}
+
+
+# -- Enable use of libevent for better performance under high load
+# -- For more information see: http://prosody.im/doc/libevent
+# --use_libevent = true;
+
+# -- This is the list of modules Prosody will load on startup.
+# -- It looks for mod_modulename.lua in the plugins folder, so make sure that exists too.
+# -- Documentation on modules can be found at: http://prosody.im/doc/modules
+# modules_enabled = {
+#         {{ if .Env.GLOBAL_MODULES }}
+#         "{{ join "\";\n\"" (splitList "," .Env.GLOBAL_MODULES) }}";
+#         {{ end }}
+# };
+
+# {{ if .Env.GLOBAL_CONFIG }}
+# {{ join "\n" (splitList "\\n" .Env.GLOBAL_CONFIG) }}
+# {{ end }}
+
+# {{ if eq (.Env.AUTH_TYPE | default "internal") "ldap" }}
+# ldap_servers: {{ .Env.LDAP_URL }}
+# ldap_search_base: {{ .Env.LDAP_BASE }}
+# {{ if .Env.LDAP_BINDDN | default "" }}
+# ldap_bind_dn: {{ .Env.LDAP_BINDDN }}
+# ldap_bind_pw: {{ .Env.LDAP_BINDPW }}
+# {{ end }}
+# ldap_filter: {{ .Env.LDAP_FILTER | default "uid=%u" }}
+# ldap_version: {{ .Env.LDAP_VERSION | default "3" }}
+# ldap_auth_method: {{ .Env.LDAP_AUTH_METHOD | default "bind" }}
+#   {{ if .Env.LDAP_USE_TLS | default "0" | toBool }}
+# ldap_tls_key: /config/certs/{{ .Env.XMPP_DOMAIN }}.key
+# ldap_tls_cert: /config/certs/{{ .Env.XMPP_DOMAIN }}.crt
+#     {{ if .Env.LDAP_TLS_CHECK_PEER | default "0" | toBool }}
+# ldap_tls_check_peer: yes
+# ldap_tls_cacert_file: {{ .Env.LDAP_TLS_CACERT_FILE | default "/etc/ssl/certs/ca-certificates.crt" }}
+# ldap_tls_cacert_dir: {{ .Env.LDAP_TLS_CACERT_DIR | default "/etc/ssl/certs" }}
+#     {{ end }}
+#     {{ if .Env.LDAP_TLS_CIPHERS }}
+# ldap_tls_ciphers: {{ .Env.LDAP_TLS_CIPHERS }}
+#     {{ end }}
+#   {{ end }}
+# {{ end }}
+# {{ if .Env.LDAP_START_TLS | default "0" | toBool }}
+# ldap_start_tls: yes
+# {{ end }}
+
+
+
+
+
+
+        prosodyctl --config $PROSODY_CFG register $JIGASI_XMPP_USER $XMPP_AUTH_DOMAIN $JIGASI_XMPP_PASSWORD
+    fi
+fi
+
+
 xmpp:
   # Internal XMPP domain
   domain: meet.jitsi
 
   # Internal XMPP domain for authenticated services
   authDomain: auth.meet.jitsi
+
+  # Domain for the jibri recorder
+  recorderDomain: recorder.meet.jitsi
 
 web:
   replicaCount: 1

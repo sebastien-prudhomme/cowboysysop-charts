@@ -63,6 +63,11 @@ The following table lists all the configurable parameters expose by the Jitsi Me
 | `imagePullSecrets`                   | Docker registry secret names as an array                                                        | `[]`                                                       |
 | `nameOverride`                       | Partially override `jitsi-meet.fullname` template with a string (will prepend the release name) | `nil`                                                      |
 | `fullnameOverride`                   | Fully override `jitsi-meet.fullname` template with a string                                     | `nil`                                                      |
+| `jibri.recorderUser`                 | XMPP recorder user for Jibri client connections                                                 | `recorder`                                                 |
+| `jibri.recorderPassword`             | XMPP recorder password for Jibri client connections                                             | Random 32 character long alphanumeric string               |
+| `jibri.xmppUser`                     | XMPP user for Jibri client connections                                                          | `jibri`                                                    |
+| `jibri.xmppPassword`                 | XMPP password for Jibri client connections                                                      | Random 32 character long alphanumeric string               |
+| `jibri.existingSecret`               | Name of existing Secret to use (jibri component)                                                | `nil`                                                      |
 | `jicofo.replicaCount`                | Number of replicas (jicofo component)                                                           | `1`                                                        |
 | `jicofo.image.repository`            | Jitsi Meet image name (jicofo component)                                                        | `jitsi/jicofo`                                             |
 | `jicofo.image.tag`                   | Jitsi Meet image tag (jicofo component)                                                         | `4384-1`                                                   |
@@ -100,6 +105,9 @@ The following table lists all the configurable parameters expose by the Jitsi Me
 | `jvb.nodeSelector`                   | Node labels for pod assignment (jvb component)                                                  | `{}`                                                       |
 | `jvb.tolerations`                    | Tolerations for pod assignment (jvb component)                                                  | `[]`                                                       |
 | `jvb.affinity`                       | Map of node/pod affinities (jvb component)                                                      | `{}`                                                       |
+| `jvb.authUser`                       | XMPP user for JVB MUC client connections                                                        | `jvb`                                                      |
+| `jvb.authPassword`                   | XMPP password for JVB MUC client connections                                                    | Random 32 character long alphanumeric string               |
+| `jvb.existingSecret`                 | Name of existing Secret to use (jvb component)                                                  | `nil`                                                      |
 | `jvb.metrics.service.type`           | Metrics Kubernetes Service type (jvb component)                                                 | `ClusterIP`                                                |
 | `jvb.metrics.service.port`           | Metrics service port (jvb component)                                                            | `8942`                                                     |
 | `prosody.replicaCount`               | Number of replicas (prosody component)                                                          | `1`                                                        |
@@ -121,6 +129,7 @@ The following table lists all the configurable parameters expose by the Jitsi Me
 | `prosody.metrics.service.port`       | Metrics service port (prosody component)                                                        | `8943`                                                     |
 | `xmpp.domain`                        | Internal XMPP domain                                                                            | `meet.jitsi`                                               |
 | `xmpp.authDomain`                    | Internal XMPP domain for authenticated services                                                 | `auth.meet.jitsi`                                          |
+| `xmpp.recorderDomain`          | Domain for the jibri recorder                                                                   | `recorder.meet.jitsi`                                      |
 | `web.replicaCount`                   | Number of replicas (web component)                                                              | `1`                                                        |
 | `web.image.repository`               | Jitsi Meet image name (web component)                                                           | `jitsi/web`                                                |
 | `web.image.tag`                      | Jitsi Meet image tag (web component)                                                            | `4384-1`                                                   |
