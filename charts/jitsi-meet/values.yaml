@@ -252,7 +252,7 @@ prosody:
 
   affinity: {}
 
-  #globalModules: statistics,alert,prometheus
+  #globalModules: prometheus
 
   metrics:
     service:
@@ -380,7 +380,7 @@ xmpp:
   internalMucDomain: internal-muc.meet.jitsi
 
   # Custom Prosody modules for internal MUC component (comma separated)
-  internalMucModules: info,alert
+  internalMucModules: ""
 
   # Domain for the jibri recorder
   recorderDomain: recorder.meet.jitsi
