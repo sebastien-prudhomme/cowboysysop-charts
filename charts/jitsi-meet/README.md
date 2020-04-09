@@ -44,12 +44,6 @@ The command upgrades the existing `my-release` deployment with the most latest r
 
 ## Uninstalling
 
-Delete the `vpa-webhook-config` mutating webhook configuration automatically created by Jitsi Meet jicofo component using:
-
-```bash
-$ kubectl delete mutatingwebhookconfiguration vpa-webhook-config
-```
-
 Uninstall the `my-release` deployment using:
 
 ```bash
@@ -88,10 +82,6 @@ The following table lists all the configurable parameters expose by the Jitsi Me
 | `jicofo.extraArgs`                  | Additional container arguments (jicofo component)                                               | `{ v: 2 }`                                                |
 | `jicofo.metrics.service.type`       | Metrics Kubernetes Service type (jicofo component)                                              | `ClusterIP`                                               |
 | `jicofo.metrics.service.port`       | Metrics service port (jicofo component)                                                         | `8944`                                                    |
-| `jicofo.tls.caCert`                 | TLS CA certificate (jicofo component)                                                           | Generated using the `genCA` function                      |
-| `jicofo.tls.cert`                   | TLS certificate (jicofo component)                                                              | Generated using the `genSignedCert` function              |
-| `jicofo.tls.key`                    | TLS private key (jicofo component)                                                              | Generated using the `genSignedCert` function              |
-| `jicofo.tls.existingSecret`         | Name of existing TLS Secret to use (jicofo component)                                           | `nil`                                                     |
 | `jvb.replicaCount`                  | Number of replicas (jvb component)                                                              | `1`                                                       |
 | `jvb.image.repository`              | Jitsi Meet image name (jvb component)                                                           | `jitsi/jvb`                                               |
 | `jvb.image.tag`                     | Jitsi Meet image tag (jvb component)                                                            | `4384-1`                                                  |

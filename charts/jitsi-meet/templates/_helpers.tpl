@@ -205,14 +205,3 @@ Create the name of the service account to use (web component)
     {{ default "default" .Values.web.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
-
-{{/*
-Create the name of the tls secret to use (jicofo component)
-*/}}
-{{- define "jitsi-meet.jicofo.tls.secretName" -}}
-{{- if .Values.jicofo.tls.existingSecret -}}
-    {{ .Values.jicofo.tls.existingSecret }}
-{{- else -}}
-    {{- printf "%s-%s" (include "jitsi-meet.jicofo.fullname" .) "tls" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-{{- end -}}

@@ -70,12 +70,6 @@ jicofo:
       type: ClusterIP
       port: 8944
 
-  tls:
-    caCert: ""
-    cert: ""
-    key: ""
-    existingSecret: ""
-
 jvb:
   replicaCount: 1
 
