@@ -34,6 +34,11 @@ spec:
             {{- toYaml .Values.web.securityContext | nindent 12 }}
           image: "{{ .Values.web.image.repository }}:{{ .Values.web.image.tag }}"
           imagePullPolicy: {{ .Values.web.image.pullPolicy }}
+          env:
+            - name: XMPP_BOSH_URL_BASE
+              value: http://{{ include "jitsi-meet.prosody.fullname" . }}:{{ .Values.prosody.service.httpPort }}
+            - name: XMPP_DOMAIN
+              value: {{ .Values.xmpp.domain | quote }}
           ports:
             - name: http
               containerPort: 80
