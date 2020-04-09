@@ -36,7 +36,7 @@ spec:
           imagePullPolicy: {{ .Values.jicofo.image.pullPolicy }}
           env:
             - name: XMPP_DOMAIN
-              value: {{ .Values.xmpp.Domain | quote }}
+              value: {{ .Values.xmpp.domain | quote }}
             - name: XMPP_AUTH_DOMAIN
               value: {{ .Values.xmpp.authDomain | quote }}
             - name: JICOFO_COMPONENT_SECRET
