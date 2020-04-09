@@ -35,17 +35,19 @@ spec:
           image: "{{ .Values.jicofo.image.repository }}:{{ .Values.jicofo.image.tag }}"
           imagePullPolicy: {{ .Values.jicofo.image.pullPolicy }}
           args:
-            - --client-ca-file=/tls-secret/ca.crt
-            - --tls-cert-file=/tls-secret/tls.crt
-            - --tls-private-key=/tls-secret/tls.key
             {{- range $key, $value := .Values.jicofo.extraArgs }}
             - --{{ $key }}={{ $value }}
             {{- end }}
           env:
-            - name: NAMESPACE
+            - name: JICOFO_COMPONENT_SECRET
+                secretKeyRef:
+                  name: {{ include "jitsi-meet.jicofo.secretName" . }}
+                  key: component-secret
+            - name: JICOFO_AUTH_PASSWORD
               valueFrom:
-                fieldRef:
-                  fieldPath: metadata.namespace
+                secretKeyRef:
+                  name: {{ include "jitsi-meet.jicofo.secretName" . }}
+                  key: auth-password
           ports:
             - name: http
               containerPort: 8000
@@ -63,10 +65,6 @@ spec:
               port: metrics
           resources:
             {{- toYaml .Values.jicofo.resources | nindent 12 }}
-          volumeMounts:
-            - name: tls-secret
-              mountPath: /tls-secret
-              readOnly: true
       {{- with .Values.jicofo.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -79,7 +77,3 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-      volumes:
-        - name: tls-secret
-          secret:
-            secretName: {{ include "jitsi-meet.jicofo.tls.secretName" . }}

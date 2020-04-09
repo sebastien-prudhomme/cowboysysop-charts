@@ -79,6 +79,9 @@ The following table lists all the configurable parameters expose by the Jitsi Me
 | `jicofo.nodeSelector`               | Node labels for pod assignment (jicofo component)                                               | `{}`                                                      |
 | `jicofo.tolerations`                | Tolerations for pod assignment (jicofo component)                                               | `[]`                                                      |
 | `jicofo.affinity`                   | Map of node/pod affinities (jicofo component)                                                   | `{}`                                                      |
+| `jicofo.componentSecret`            | XMPP component password for Jicofo                                                              | Random 32 character long alphanumeric string              |
+| `jicofo.authPassword`               | XMPP password for Jicofo client connections                                                     | Random 32 character long alphanumeric string              |
+| `jicofo.existingSecret`             | Name of existing Secret to use (jicofo component)                                               | `nil`                                                     |
 | `jicofo.extraArgs`                  | Additional container arguments (jicofo component)                                               | `{ v: 2 }`                                                |
 | `jicofo.metrics.service.type`       | Metrics Kubernetes Service type (jicofo component)                                              | `ClusterIP`                                               |
 | `jicofo.metrics.service.port`       | Metrics service port (jicofo component)                                                         | `8944`                                                    |

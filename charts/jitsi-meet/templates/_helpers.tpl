@@ -205,3 +205,14 @@ Create the name of the service account to use (web component)
     {{ default "default" .Values.web.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Create the name of the secret to use (jicofo component)
+*/}}
+{{- define "jitsi-meet.jicofo.secretName" -}}
+{{- if .Values.jicofo.existingSecret -}}
+    {{ .Values.jicofo.existingSecret }}
+{{- else -}}
+    {{ include "jitsi-meet.jicofo.fullname" . }}
+{{- end -}}
+{{- end -}}
