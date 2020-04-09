@@ -35,6 +35,8 @@ spec:
           image: "{{ .Values.jicofo.image.repository }}:{{ .Values.jicofo.image.tag }}"
           imagePullPolicy: {{ .Values.jicofo.image.pullPolicy }}
           env:
+            - name: XMPP_SERVER
+              value: {{ include "jitsi-meet.prosody.fullname" . }}
             - name: XMPP_DOMAIN
               value: {{ .Values.xmpp.domain | quote }}
             - name: XMPP_AUTH_DOMAIN

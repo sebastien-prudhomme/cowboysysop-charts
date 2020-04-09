@@ -1,9 +1,9 @@
 apiVersion: v1
-appVersion: 0.7.0
+appVersion: 4384
 description: Set of components that automatically adjust the amount of CPU and memory requested by pods running in the Kubernetes Cluster
 home: https://github.com/kubernetes/autoscaler
 maintainers:
   - name: sebastien-prudhomme
     email: sebastien.prudhomme@gmail.com
 name: jitsi-meet
-version: 1.3.0
+version: 1.0.0
