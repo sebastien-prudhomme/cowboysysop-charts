@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "jitsi-meet.prosody.fullname" . }}
+  labels:
+    {{- include "jitsi-meet.prosody.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.prosody.service.type }}
+  ports:
+    - port: {{ .Values.prosody.service.xmppClientPort }}
+      targetPort: xmpp-client
+      protocol: TCP
+      name: xmpp-client
+    - port: {{ .Values.prosody.service.xmppServerPort }}
+      targetPort: xmpp-server
+      protocol: TCP
+      name: xmpp-server
+    - port: {{ .Values.prosody.service.httpPort }}
+      targetPort: http
+      protocol: TCP
+      name: http
+    - port: {{ .Values.prosody.service.componentPort }}
+      targetPort: component
+      protocol: TCP
+      name: component
+  selector:
+    {{- include "jitsi-meet.prosody.selectorLabels" . | nindent 4 }}
