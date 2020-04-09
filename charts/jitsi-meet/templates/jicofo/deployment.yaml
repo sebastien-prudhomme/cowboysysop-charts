@@ -35,11 +35,17 @@ spec:
           image: "{{ .Values.jicofo.image.repository }}:{{ .Values.jicofo.image.tag }}"
           imagePullPolicy: {{ .Values.jicofo.image.pullPolicy }}
           env:
+            - name: XMPP_DOMAIN
+              value: {{ .Values.xmpp.Domain | quote }}
+            - name: XMPP_AUTH_DOMAIN
+              value: {{ .Values.xmpp.authDomain | quote }}
             - name: JICOFO_COMPONENT_SECRET
               valueFrom:
                 secretKeyRef:
                   name: {{ include "jitsi-meet.jicofo.secretName" . }}
                   key: component-secret
+            - name: JICOFO_AUTH_USER
+              value: {{ .Values.jicofo.authUser | quote }}
             - name: JICOFO_AUTH_PASSWORD
               valueFrom:
                 secretKeyRef:

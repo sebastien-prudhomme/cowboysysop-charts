@@ -65,11 +65,37 @@ jicofo:
   # XMPP component password for Jicofo
   componentSecret: ""
 
+  # XMPP user for Jicofo client connections
+  authUser: "focus"
+
   # XMPP password for Jicofo client connections
   authPassword: ""
 
   # Name of existing Secret to use (jicofo component)
   existingSecret: ""
+
+
+# org.jitsi.jicofo.ALWAYS_TRUST_MODE_ENABLED=true
+# org.jitsi.jicofo.BRIDGE_MUC={{ .Env.JVB_BREWERY_MUC }}@{{ .Env.XMPP_INTERNAL_MUC_DOMAIN }}
+
+# {{ if and .Env.JIBRI_BREWERY_MUC .Env.JIBRI_PENDING_TIMEOUT }}
+# org.jitsi.jicofo.jibri.BREWERY={{ .Env.JIBRI_BREWERY_MUC}}@{{ .Env.XMPP_INTERNAL_MUC_DOMAIN }}
+# org.jitsi.jicofo.jibri.PENDING_TIMEOUT={{ .Env.JIBRI_PENDING_TIMEOUT }}
+# {{ end }}
+
+# {{ if and .Env.JIGASI_SIP_URI .Env.JIGASI_BREWERY_MUC }}
+# org.jitsi.jicofo.jigasi.BREWERY={{ .Env.JIGASI_BREWERY_MUC}}@{{ .Env.XMPP_INTERNAL_MUC_DOMAIN }}
+# {{ end }}
+
+# {{ if .Env.ENABLE_AUTH | default "0" | toBool }}
+# org.jitsi.jicofo.auth.URL=XMPP:{{ .Env.XMPP_DOMAIN }}
+# {{ end }}
+
+# {{ if .Env.JICOFO_RESERVATION_REST_BASE_URL }}
+# org.jitsi.impl.reservation.rest.BASE_URL={{ .Env.JICOFO_RESERVATION_REST_BASE_URL }}
+# {{ end }}
+
+# DAEMON_OPTS="--host=$XMPP_SERVER  "
 
   metrics:
     service:
@@ -132,6 +158,13 @@ jvb:
     service:
       type: ClusterIP
       port: 8942
+
+xmpp:
+  # Internal XMPP domain
+  domain: meet.jitsi
+
+  # Internal XMPP domain for authenticated services
+  authDomain: auth.meet.jitsi
 
 web:
   replicaCount: 1

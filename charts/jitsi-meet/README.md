@@ -80,6 +80,7 @@ The following table lists all the configurable parameters expose by the Jitsi Me
 | `jicofo.tolerations`                | Tolerations for pod assignment (jicofo component)                                               | `[]`                                                      |
 | `jicofo.affinity`                   | Map of node/pod affinities (jicofo component)                                                   | `{}`                                                      |
 | `jicofo.componentSecret`            | XMPP component password for Jicofo                                                              | Random 32 character long alphanumeric string              |
+| `jicofo.authUser`                   | XMPP user for Jicofo client connections                                                         | `focus`                                                   |
 | `jicofo.authPassword`               | XMPP password for Jicofo client connections                                                     | Random 32 character long alphanumeric string              |
 | `jicofo.existingSecret`             | Name of existing Secret to use (jicofo component)                                               | `nil`                                                     |
 | `jicofo.metrics.service.type`       | Metrics Kubernetes Service type (jicofo component)                                              | `ClusterIP`                                               |
@@ -101,6 +102,8 @@ The following table lists all the configurable parameters expose by the Jitsi Me
 | `jvb.affinity`                      | Map of node/pod affinities (jvb component)                                                      | `{}`                                                      |
 | `jvb.metrics.service.type`          | Metrics Kubernetes Service type (jvb component)                                                 | `ClusterIP`                                               |
 | `jvb.metrics.service.port`          | Metrics service port (jvb component)                                                            | `8942`                                                    |
+| `xmpp.domain`                       | Internal XMPP domain                                                                            | `meet.jitsi`                                              |
+| `xmpp.authDomain`                   | Internal XMPP domain for authenticated services                                                 | `auth.meet.jitsi`                                         |
 | `web.replicaCount`                  | Number of replicas (web component)                                                              | `1`                                                       |
 | `web.image.repository`              | Jitsi Meet image name (web component)                                                           | `jitsi/web`                                               |
 | `web.image.tag`                     | Jitsi Meet image tag (web component)                                                            | `4384-1`                                                  |
