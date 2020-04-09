@@ -17,7 +17,7 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
       annotations:
-        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+        checksum/secret: {{ include (print $.Template.BasePath "/jicofo/secret.yaml") . | sha256sum }}
         {{- with .Values.jicofo.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}

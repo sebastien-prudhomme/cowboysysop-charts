@@ -17,9 +17,9 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
       annotations:
-        checksum/jibriSecret: {{ include (print $.Template.BasePath "/../jibri/secret.yaml") . | sha256sum }}
-        checksum/jicofoSecret: {{ include (print $.Template.BasePath "/../jicofo/secret.yaml") . | sha256sum }}
-        checksum/jvbSecret: {{ include (print $.Template.BasePath "/../jvb/secret.yaml") . | sha256sum }}
+        checksum/jibriSecret: {{ include (print $.Template.BasePath "/jibri/secret.yaml") . | sha256sum }}
+        checksum/jicofoSecret: {{ include (print $.Template.BasePath "/jicofo/secret.yaml") . | sha256sum }}
+        checksum/jvbSecret: {{ include (print $.Template.BasePath "/jvb/secret.yaml") . | sha256sum }}
         {{- with .Values.prosody.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
