@@ -34,10 +34,6 @@ spec:
             {{- toYaml .Values.web.securityContext | nindent 12 }}
           image: "{{ .Values.web.image.repository }}:{{ .Values.web.image.tag }}"
           imagePullPolicy: {{ .Values.web.image.pullPolicy }}
-          args:
-            {{- range $key, $value := .Values.web.extraArgs }}
-            - --{{ $key }}={{ $value }}
-            {{- end }}
           ports:
             - name: metrics
               containerPort: 8943

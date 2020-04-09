@@ -34,10 +34,6 @@ spec:
             {{- toYaml .Values.jvb.securityContext | nindent 12 }}
           image: "{{ .Values.jvb.image.repository }}:{{ .Values.jvb.image.tag }}"
           imagePullPolicy: {{ .Values.jvb.image.pullPolicy }}
-          args:
-            {{- range $key, $value := .Values.jvb.extraArgs }}
-            - --{{ $key }}={{ $value }}
-            {{- end }}
           ports:
             - name: metrics
               containerPort: 8942

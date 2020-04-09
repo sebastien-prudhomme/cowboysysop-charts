@@ -82,7 +82,6 @@ The following table lists all the configurable parameters expose by the Jitsi Me
 | `jicofo.componentSecret`            | XMPP component password for Jicofo                                                              | Random 32 character long alphanumeric string              |
 | `jicofo.authPassword`               | XMPP password for Jicofo client connections                                                     | Random 32 character long alphanumeric string              |
 | `jicofo.existingSecret`             | Name of existing Secret to use (jicofo component)                                               | `nil`                                                     |
-| `jicofo.extraArgs`                  | Additional container arguments (jicofo component)                                               | `{ v: 2 }`                                                |
 | `jicofo.metrics.service.type`       | Metrics Kubernetes Service type (jicofo component)                                              | `ClusterIP`                                               |
 | `jicofo.metrics.service.port`       | Metrics service port (jicofo component)                                                         | `8944`                                                    |
 | `jvb.replicaCount`                  | Number of replicas (jvb component)                                                              | `1`                                                       |
@@ -100,7 +99,6 @@ The following table lists all the configurable parameters expose by the Jitsi Me
 | `jvb.nodeSelector`                  | Node labels for pod assignment (jvb component)                                                  | `{}`                                                      |
 | `jvb.tolerations`                   | Tolerations for pod assignment (jvb component)                                                  | `[]`                                                      |
 | `jvb.affinity`                      | Map of node/pod affinities (jvb component)                                                      | `{}`                                                      |
-| `jvb.extraArgs`                     | Additional container arguments (jvb component)                                                  | `{ v: 2 }`                                                |
 | `jvb.metrics.service.type`          | Metrics Kubernetes Service type (jvb component)                                                 | `ClusterIP`                                               |
 | `jvb.metrics.service.port`          | Metrics service port (jvb component)                                                            | `8942`                                                    |
 | `web.replicaCount`                  | Number of replicas (web component)                                                              | `1`                                                       |
@@ -118,7 +116,6 @@ The following table lists all the configurable parameters expose by the Jitsi Me
 | `web.nodeSelector`                  | Node labels for pod assignment (web component)                                                  | `{}`                                                      |
 | `web.tolerations`                   | Tolerations for pod assignment (web component)                                                  | `[]`                                                      |
 | `web.affinity`                      | Map of node/pod affinities (web component)                                                      | `{}`                                                      |
-| `web.extraArgs`                     | Additional container arguments (web component)                                                  | `{ v: 2 }`                                                |
 | `web.metrics.service.type`          | Metrics Kubernetes Service type (web component)                                                 | `ClusterIP`                                               |
 | `web.metrics.service.port`          | Metrics service port (web component)                                                            | `8943`                                                    |
 

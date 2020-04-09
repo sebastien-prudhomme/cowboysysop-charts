@@ -34,10 +34,6 @@ spec:
             {{- toYaml .Values.jicofo.securityContext | nindent 12 }}
           image: "{{ .Values.jicofo.image.repository }}:{{ .Values.jicofo.image.tag }}"
           imagePullPolicy: {{ .Values.jicofo.image.pullPolicy }}
-          args:
-            {{- range $key, $value := .Values.jicofo.extraArgs }}
-            - --{{ $key }}={{ $value }}
-            {{- end }}
           env:
             - name: JICOFO_COMPONENT_SECRET
               valueFrom:
