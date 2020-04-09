@@ -441,3 +441,104 @@ web:
     service:
       type: ClusterIP
       port: 8943
+
+
+# 	{{ if .Env.ENABLE_HTTP_REDIRECT | default "0" | toBool }}
+
+# {{ if not (.Env.DISABLE_HTTPS | default "0" | toBool) }}
+
+# }
+
+# # BOSH
+# location = /http-bind {
+#     proxy_pass {{ .Env.XMPP_BOSH_URL_BASE }}/http-bind;
+#     proxy_set_header X-Forwarded-For $remote_addr;
+#     proxy_set_header Host {{ .Env.XMPP_DOMAIN }};
+# }
+
+
+# {{ if .Env.ETHERPAD_URL_BASE }}
+# # Etherpad-lite
+# location /etherpad/ {
+
+#     proxy_pass {{ .Env.ETHERPAD_URL_BASE }}/;
+#     proxy_set_header X-Forwarded-For $remote_addr;
+#     proxy_buffering off;
+#     proxy_set_header Host {{ .Env.XMPP_DOMAIN }};
+# }
+# {{ end }}
+
+# # ssl certs
+# {{ if .Env.ENABLE_LETSENCRYPT | default "0" | toBool }}
+# ssl_certificate /etc/letsencrypt/live/{{ .Env.LETSENCRYPT_DOMAIN }}/fullchain.pem;
+# ssl_certificate_key /etc/letsencrypt/live/{{ .Env.LETSENCRYPT_DOMAIN }}/privkey.pem;
+# {{ else }}
+# ssl_certificate /config/keys/cert.crt;
+# ssl_certificate_key /config/keys/cert.key;
+# {{ end }}
+
+# #!/usr/bin/with-contenv bash
+
+# # generate keys (maybe)
+# if [[ $DISABLE_HTTPS -ne 1 ]]; then
+#     if [[ $ENABLE_LETSENCRYPT -eq 1 ]]; then
+#         if [[ ! -f /etc/letsencrypt/live/$LETSENCRYPT_DOMAIN/fullchain.pem ]]; then
+#             if ! certbot certonly \
+#                   --noninteractive \
+#                   --standalone \
+#                   --preferred-challenges http \
+#                   -d $LETSENCRYPT_DOMAIN \
+#                   --agree-tos \
+#                   --email $LETSENCRYPT_EMAIL ; then
+#             fi
+#         fi
+#     else
+#         # use self-signed certs
+#     fi
+# fi
+
+# if [[ ! -f /config/config.js ]]; then
+#     cp /defaults/config.js /config/config.js
+#     sed -i \
+#         -e "s#jitsi-meet.example.com#$XMPP_DOMAIN#g" \
+#         -e "s#bosh:.*#bosh: '${PUBLIC_URL}/http-bind',#" \
+#         -e "s#muc:.*#muc: '${XMPP_MUC_DOMAIN}',#" \
+#         -e "s#// focusUserJid:.*#focusUserJid: '${JICOFO_AUTH_USER}@${XMPP_AUTH_DOMAIN}',#" \
+#         /config/config.js
+
+#     if [[ $ENABLE_RECORDING -eq 1 || x$ENABLE_RECORDING == xtrue ]]; then
+#         sed -i \
+#             -e "/\/\/ Recording.*/a hiddenDomain: '$XMPP_RECORDER_DOMAIN'," \
+#         /config/config.js
+#     fi
+
+#     if [[ $ENABLE_AUTH -eq 1 ]]; then
+#         if [[ $ENABLE_GUESTS -eq 1 ]]; then
+#             sed -i \
+#                 -e "s#// anonymousdomain:.*#anonymousdomain: '${XMPP_GUEST_DOMAIN}',#" \
+#                 /config/config.js
+#         fi
+
+#         sed -i \
+#             -e "s#// authdomain:.*#authdomain: '${XMPP_DOMAIN}',#" \
+#             /config/config.js
+#     fi
+
+#     if [[ ! -z "${ETHERPAD_URL_BASE}" && -z "$(grep -om1 'etherpad_base:' /config/config.js)" ]]; then
+#         sed -i \
+#             -e "/enableWelcomePage/a\    etherpad_base: '${PUBLIC_URL}/etherpad/p/'," \
+#             /config/config.js
+#     fi
+
+#     if [[ $ENABLE_TRANSCRIPTIONS -eq 1 || "$ENABLE_TRANSCRIPTIONS" == "true" ]]; then
+#         sed -i \
+#              -e "s#// transcribingEnabled:.*#transcribingEnabled: true,#" \
+#              /config/config.js
+#     fi
+# fi
+
+# if [[ $DISABLE_HTTPS -ne 1 ]]; then
+#     if [[ $ENABLE_LETSENCRYPT -eq 1 ]]; then
+#       exec cron -f
+#     fi
+# fi

@@ -35,17 +35,17 @@ spec:
           image: "{{ .Values.web.image.repository }}:{{ .Values.web.image.tag }}"
           imagePullPolicy: {{ .Values.web.image.pullPolicy }}
           ports:
-            - name: metrics
-              containerPort: 8943
+            - name: http
+              containerPort: 80
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: /metrics
-              port: metrics
+              path: /
+              port: http
           readinessProbe:
             httpGet:
-              path: /metrics
-              port: metrics
+              path: /
+              port: http
           resources:
             {{- toYaml .Values.web.resources | nindent 12 }}
       {{- with .Values.web.nodeSelector }}
