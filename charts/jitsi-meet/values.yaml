@@ -76,12 +76,12 @@ admissionController:
     key: ""
     existingSecret: ""
 
-recommender:
+jvb:
   replicaCount: 1
 
   image:
-    repository: k8s.gcr.io/vpa-recommender
-    tag: 0.7.0
+    repository: jitsi/jvb
+    tag: 4384-1
     pullPolicy: IfNotPresent
 
   serviceAccount:
@@ -93,10 +93,10 @@ recommender:
     # If not set and create is true, a name is generated using the fullname template
     name:
 
-  # Additional pod annotations (recommender component)
+  # Additional pod annotations (jvb component)
   podAnnotations: {}
 
-  # Additional pod labels (recommender component)
+  # Additional pod labels (jvb component)
   podLabels: {}
 
   podSecurityContext: {}

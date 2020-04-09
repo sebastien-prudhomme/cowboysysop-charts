@@ -39,17 +39,17 @@ Create a default fully qualified metrics name (admission controller component).
 {{- end -}}
 
 {{/*
-Create a default fully qualified app name (recommender component).
+Create a default fully qualified app name (jvb component).
 */}}
-{{- define "jitsi-meet.recommender.fullname" -}}
-{{- printf "%s-%s" (include "jitsi-meet.fullname" .) "recommender" | trunc 63 | trimSuffix "-" -}}
+{{- define "jitsi-meet.jvb.fullname" -}}
+{{- printf "%s-%s" (include "jitsi-meet.fullname" .) "jvb" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
-Create a default fully qualified metrics name (recommender component).
+Create a default fully qualified metrics name (jvb component).
 */}}
-{{- define "jitsi-meet.recommender.metrics.fullname" -}}
-{{- printf "%s-%s" (include "jitsi-meet.recommender.fullname" .) "metrics" | trunc 63 | trimSuffix "-" -}}
+{{- define "jitsi-meet.jvb.metrics.fullname" -}}
+{{- printf "%s-%s" (include "jitsi-meet.jvb.fullname" .) "metrics" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
@@ -81,10 +81,10 @@ app.kubernetes.io/component: admission-controller
 {{- end -}}
 
 {{/*
-Component labels (recommender component)
+Component labels (jvb component)
 */}}
-{{- define "jitsi-meet.recommender.componentLabels" -}}
-app.kubernetes.io/component: recommender
+{{- define "jitsi-meet.jvb.componentLabels" -}}
+app.kubernetes.io/component: jvb
 {{- end -}}
 
 {{/*
@@ -115,11 +115,11 @@ Common labels (admission controller component)
 {{- end -}}
 
 {{/*
-Common labels (recommender component)
+Common labels (jvb component)
 */}}
-{{- define "jitsi-meet.recommender.labels" -}}
+{{- define "jitsi-meet.jvb.labels" -}}
 {{ include "jitsi-meet.labels" . }}
-{{ include "jitsi-meet.recommender.componentLabels" . }}
+{{ include "jitsi-meet.jvb.componentLabels" . }}
 {{- end -}}
 
 {{/*
@@ -147,11 +147,11 @@ Selector labels (admission controller component)
 {{- end -}}
 
 {{/*
-Selector labels (recommender component)
+Selector labels (jvb component)
 */}}
-{{- define "jitsi-meet.recommender.selectorLabels" -}}
+{{- define "jitsi-meet.jvb.selectorLabels" -}}
 {{ include "jitsi-meet.selectorLabels" . }}
-{{ include "jitsi-meet.recommender.componentLabels" . }}
+{{ include "jitsi-meet.jvb.componentLabels" . }}
 {{- end -}}
 
 {{/*
@@ -185,13 +185,13 @@ Create the name of the service account to use (admission controller component)
 {{- end -}}
 
 {{/*
-Create the name of the service account to use (recommender component)
+Create the name of the service account to use (jvb component)
 */}}
-{{- define "jitsi-meet.recommender.serviceAccountName" -}}
-{{- if .Values.recommender.serviceAccount.create -}}
-    {{ default (include "jitsi-meet.recommender.fullname" .) .Values.recommender.serviceAccount.name }}
+{{- define "jitsi-meet.jvb.serviceAccountName" -}}
+{{- if .Values.jvb.serviceAccount.create -}}
+    {{ default (include "jitsi-meet.jvb.fullname" .) .Values.jvb.serviceAccount.name }}
 {{- else -}}
-    {{ default "default" .Values.recommender.serviceAccount.name }}
+    {{ default "default" .Values.jvb.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
 
