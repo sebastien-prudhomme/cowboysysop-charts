@@ -35,6 +35,8 @@ spec:
           image: "{{ .Values.web.image.repository }}:{{ .Values.web.image.tag }}"
           imagePullPolicy: {{ .Values.web.image.pullPolicy }}
           env:
+            - name: PUBLIC_URL
+              value: {{ .Values.web.publicUrl | quote }}
             - name: XMPP_BOSH_URL_BASE
               value: http://{{ include "jitsi-meet.prosody.fullname" . }}:{{ .Values.prosody.service.httpPort }}
             - name: XMPP_DOMAIN
@@ -47,12 +49,12 @@ spec:
             httpGet:
               path: /
               port: http
-            initialDelaySeconds: 30
+            initialDelaySeconds: 60
           readinessProbe:
             httpGet:
               path: /
               port: http
-            initialDelaySeconds: 30
+            initialDelaySeconds: 60
           resources:
             {{- toYaml .Values.web.resources | nindent 12 }}
       {{- with .Values.web.nodeSelector }}

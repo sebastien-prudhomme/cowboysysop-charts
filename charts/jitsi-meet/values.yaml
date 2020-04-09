@@ -437,6 +437,9 @@ web:
 
   affinity: {}
 
+  # Public URL for the web service
+  publicUrl: https://jitsi-meet.local
+
   metrics:
     service:
       type: ClusterIP
@@ -493,7 +496,6 @@ web:
 #     cp /defaults/config.js /config/config.js
 #     sed -i \
 #         -e "s#jitsi-meet.example.com#$XMPP_DOMAIN#g" \
-#         -e "s#bosh:.*#bosh: '${PUBLIC_URL}/http-bind',#" \
 #         -e "s#muc:.*#muc: '${XMPP_MUC_DOMAIN}',#" \
 #         -e "s#// focusUserJid:.*#focusUserJid: '${JICOFO_AUTH_USER}@${XMPP_AUTH_DOMAIN}',#" \
 #         /config/config.js
@@ -518,7 +520,6 @@ web:
 
 #     if [[ ! -z "${ETHERPAD_URL_BASE}" && -z "$(grep -om1 'etherpad_base:' /config/config.js)" ]]; then
 #         sed -i \
-#             -e "/enableWelcomePage/a\    etherpad_base: '${PUBLIC_URL}/etherpad/p/'," \
 #             /config/config.js
 #     fi
 

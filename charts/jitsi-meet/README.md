@@ -134,7 +134,7 @@ The following table lists all the configurable parameters expose by the Jitsi Me
 | `xmpp.domain`                        | Internal XMPP domain                                                                            | `meet.jitsi`                                               |
 | `xmpp.authDomain`                    | Internal XMPP domain for authenticated services                                                 | `auth.meet.jitsi`                                          |
 | `xmpp.internalMucDomain`             | XMPP domain for the internal MUC                                                                | `internal-muc.meet.jitsi`                                  |
-| `xmpp.internalMucModules`            | Custom Prosody modules for internal MUC component (comma separated)                             | `nil`                                                |
+| `xmpp.internalMucModules`            | Custom Prosody modules for internal MUC component (comma separated)                             | `nil`                                                      |
 | `xmpp.recorderDomain`                | Domain for the jibri recorder                                                                   | `recorder.meet.jitsi`                                      |
 | `web.replicaCount`                   | Number of replicas (web component)                                                              | `1`                                                        |
 | `web.image.repository`               | Jitsi Meet image name (web component)                                                           | `jitsi/web`                                                |
@@ -151,6 +151,7 @@ The following table lists all the configurable parameters expose by the Jitsi Me
 | `web.nodeSelector`                   | Node labels for pod assignment (web component)                                                  | `{}`                                                       |
 | `web.tolerations`                    | Tolerations for pod assignment (web component)                                                  | `[]`                                                       |
 | `web.affinity`                       | Map of node/pod affinities (web component)                                                      | `{}`                                                       |
+| `web.publicUrl`                      | Public URL for the web service                                                                  | `https://jitsi-meet.local`                                 |
 | `web.metrics.service.type`           | Metrics Kubernetes Service type (web component)                                                 | `ClusterIP`                                                |
 | `web.metrics.service.port`           | Metrics service port (web component)                                                            | `8943`                                                     |
 
