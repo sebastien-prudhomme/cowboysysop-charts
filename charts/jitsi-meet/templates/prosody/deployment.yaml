@@ -101,14 +101,14 @@ spec:
 # portmanager         info        Activated service 'http' on [*]:5280, [::]:5280
 # portmanager         info        Activated service 'https' on no ports
 
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
+          # livenessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: http
+          # readinessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: http
           resources:
             {{- toYaml .Values.prosody.resources | nindent 12 }}
       {{- with .Values.prosody.nodeSelector }}
