@@ -337,15 +337,6 @@ prosody:
 
 
 
-# Component "{{ .Env.XMPP_MUC_DOMAIN }}" "muc"
-#     storage = "memory"
-#     modules_enabled = {
-#         {{ if .Env.XMPP_MUC_MODULES }}
-#         "{{ join "\";\n\"" (splitList "," .Env.XMPP_MUC_MODULES) }}";
-#         {{ end }}
-
-#     }
-
 
 # {{ $LOG_LEVEL := .Env.LOG_LEVEL | default "info" }}
 
@@ -406,6 +397,12 @@ xmpp:
 
   # Custom Prosody modules for internal MUC component (comma separated)
   internalMucModules: ""
+
+  # XMPP domain for the MUC
+  mucDomain: muc.meet.jitsi
+
+  # Custom Prosody modules for MUC component (comma separated)
+  mucModules: ""
 
   # Domain for the jibri recorder
   recorderDomain: recorder.meet.jitsi
@@ -484,7 +481,6 @@ web:
 #     proxy_pass {{ .Env.ETHERPAD_URL_BASE }}/;
 #     proxy_set_header X-Forwarded-For $remote_addr;
 #     proxy_buffering off;
-#     proxy_set_header Host {{ .Env.XMPP_DOMAIN }};
 # }
 # {{ end }}
 
@@ -520,8 +516,6 @@ web:
 # if [[ ! -f /config/config.js ]]; then
 #     cp /defaults/config.js /config/config.js
 #     sed -i \
-#         -e "s#jitsi-meet.example.com#$XMPP_DOMAIN#g" \
-#         -e "s#muc:.*#muc: '${XMPP_MUC_DOMAIN}',#" \
 #         -e "s#// focusUserJid:.*#focusUserJid: '${JICOFO_AUTH_USER}@${XMPP_AUTH_DOMAIN}',#" \
 #         /config/config.js
 
@@ -537,10 +531,6 @@ web:
 #                 -e "s#// anonymousdomain:.*#anonymousdomain: '${XMPP_GUEST_DOMAIN}',#" \
 #                 /config/config.js
 #         fi
-
-#         sed -i \
-#             -e "s#// authdomain:.*#authdomain: '${XMPP_DOMAIN}',#" \
-#             /config/config.js
 #     fi
 
 #     if [[ ! -z "${ETHERPAD_URL_BASE}" && -z "$(grep -om1 'etherpad_base:' /config/config.js)" ]]; then
