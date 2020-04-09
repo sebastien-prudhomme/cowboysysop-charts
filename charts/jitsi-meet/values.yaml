@@ -257,9 +257,6 @@ prosody:
       type: ClusterIP
       port: 8943
 
-# admins = { "{{ .Env.JICOFO_AUTH_USER }}@{{ .Env.XMPP_AUTH_DOMAIN }}" }
-# http_default_host = "{{ .Env.XMPP_DOMAIN }}"
-
 # {{ $ENABLE_AUTH := .Env.ENABLE_AUTH | default "0" | toBool }}
 # {{ $AUTH_TYPE := .Env.AUTH_TYPE | default "internal" }}
 # {{ $JWT_ASAP_KEYSERVER := .Env.JWT_ASAP_KEYSERVER | default "" }}
