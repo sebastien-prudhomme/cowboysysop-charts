@@ -53,6 +53,20 @@ Create a default fully qualified metrics name (jvb component).
 {{- end -}}
 
 {{/*
+Create a default fully qualified app name (prosody component).
+*/}}
+{{- define "jitsi-meet.prosody.fullname" -}}
+{{- printf "%s-%s" (include "jitsi-meet.fullname" .) "prosody" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
+Create a default fully qualified metrics name (prosody component).
+*/}}
+{{- define "jitsi-meet.prosody.metrics.fullname" -}}
+{{- printf "%s-%s" (include "jitsi-meet.prosody.fullname" .) "metrics" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
 Create a default fully qualified app name (web component).
 */}}
 {{- define "jitsi-meet.web.fullname" -}}
@@ -85,6 +99,13 @@ Component labels (jvb component)
 */}}
 {{- define "jitsi-meet.jvb.componentLabels" -}}
 app.kubernetes.io/component: jvb
+{{- end -}}
+
+{{/*
+Component labels (prosody component)
+*/}}
+{{- define "jitsi-meet.prosody.componentLabels" -}}
+app.kubernetes.io/component: prosody
 {{- end -}}
 
 {{/*
@@ -123,6 +144,14 @@ Common labels (jvb component)
 {{- end -}}
 
 {{/*
+Common labels (prosody component)
+*/}}
+{{- define "jitsi-meet.prosody.labels" -}}
+{{ include "jitsi-meet.labels" . }}
+{{ include "jitsi-meet.prosody.componentLabels" . }}
+{{- end -}}
+
+{{/*
 Common labels (web component)
 */}}
 {{- define "jitsi-meet.web.labels" -}}
@@ -152,6 +181,14 @@ Selector labels (jvb component)
 {{- define "jitsi-meet.jvb.selectorLabels" -}}
 {{ include "jitsi-meet.selectorLabels" . }}
 {{ include "jitsi-meet.jvb.componentLabels" . }}
+{{- end -}}
+
+{{/*
+Selector labels (prosody component)
+*/}}
+{{- define "jitsi-meet.prosody.selectorLabels" -}}
+{{ include "jitsi-meet.selectorLabels" . }}
+{{ include "jitsi-meet.prosody.componentLabels" . }}
 {{- end -}}
 
 {{/*
@@ -192,6 +229,17 @@ Create the name of the service account to use (jvb component)
     {{ default (include "jitsi-meet.jvb.fullname" .) .Values.jvb.serviceAccount.name }}
 {{- else -}}
     {{ default "default" .Values.jvb.serviceAccount.name }}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Create the name of the service account to use (prosody component)
+*/}}
+{{- define "jitsi-meet.prosody.serviceAccountName" -}}
+{{- if .Values.prosody.serviceAccount.create -}}
+    {{ default (include "jitsi-meet.prosody.fullname" .) .Values.prosody.serviceAccount.name }}
+{{- else -}}
+    {{ default "default" .Values.prosody.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
 

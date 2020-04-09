@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "jitsi-meet.prosody.fullname" . }}
+  labels:
+    {{- include "jitsi-meet.prosody.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.prosody.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "jitsi-meet.prosody.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "jitsi-meet.prosody.selectorLabels" . | nindent 8 }}
+        {{- with .Values.prosody.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- with .Values.prosody.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "jitsi-meet.prosody.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.prosody.podSecurityContext | nindent 8 }}
+      containers:
+        - name: prosody
+          securityContext:
+            {{- toYaml .Values.prosody.securityContext | nindent 12 }}
+          image: "{{ .Values.prosody.image.repository }}:{{ .Values.prosody.image.tag }}"
+          imagePullPolicy: {{ .Values.prosody.image.pullPolicy }}
+          ports:
+            - name: metrics
+              containerPort: 8943
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: metrics
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: metrics
+          resources:
+            {{- toYaml .Values.prosody.resources | nindent 12 }}
+      {{- with .Values.prosody.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.prosody.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.prosody.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
