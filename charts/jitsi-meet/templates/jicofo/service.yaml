@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  # name: {{ include "jitsi-meet.jicofo.fullname" . }}
+  name: vpa-webhook
+  labels:
+    {{- include "jitsi-meet.jicofo.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.jicofo.service.type }}
+  ports:
+    # - port: {{ .Values.jicofo.service.port }}
+    - port: 443
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "jitsi-meet.jicofo.selectorLabels" . | nindent 4 }}

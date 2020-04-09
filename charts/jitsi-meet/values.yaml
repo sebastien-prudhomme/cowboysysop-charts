@@ -6,12 +6,12 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
-admissionController:
+jicofo:
   replicaCount: 1
 
   image:
-    repository: k8s.gcr.io/vpa-admission-controller
-    tag: 0.7.0
+    repository: jitsi/jicofo
+    tag: 4384-1
     pullPolicy: IfNotPresent
 
   serviceAccount:
@@ -23,10 +23,10 @@ admissionController:
     # If not set and create is true, a name is generated using the fullname template
     name:
 
-  # Additional pod annotations (admission controller component)
+  # Additional pod annotations (jicofo component)
   podAnnotations: {}
 
-  # Additional pod labels (admission controller component)
+  # Additional pod labels (jicofo component)
   podLabels: {}
 
   podSecurityContext: {}

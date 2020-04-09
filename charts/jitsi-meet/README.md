@@ -44,7 +44,7 @@ The command upgrades the existing `my-release` deployment with the most latest r
 
 ## Uninstalling
 
-Delete the `vpa-webhook-config` mutating webhook configuration automatically created by Jitsi Meet admission controller component using:
+Delete the `vpa-webhook-config` mutating webhook configuration automatically created by Jitsi Meet jicofo component using:
 
 ```bash
 $ kubectl delete mutatingwebhookconfiguration vpa-webhook-config
@@ -64,70 +64,70 @@ The command deletes the release named `my-release` and frees all the kubernetes 
 
 The following table lists all the configurable parameters expose by the Jitsi Meet chart and their default values.
 
-| Name                                             | Description                                                                                                  | Default                                                                             |
-|--------------------------------------------------|--------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------|
-| `imagePullSecrets`                               | Docker registry secret names as an array                                                                     | `[]`                                                                                |
-| `nameOverride`                                   | Partially override `jitsi-meet.fullname` template with a string (will prepend the release name) | `nil`                                                                               |
-| `fullnameOverride`                               | Fully override `jitsi-meet.fullname` template with a string                                     | `nil`                                                                               |
-| `admissionController.replicaCount`               | Number of replicas (admission controller component)                                                          | `1`                                                                                 |
-| `admissionController.image.repository`           | Jitsi Meet image name (admission controller component)                                          | `k8s.gcr.io/vpa-admission-controller`                                               |
-| `admissionController.image.tag`                  | Jitsi Meet image tag (admission controller component)                                           | `0.7.0`                                                                             |
-| `admissionController.image.pullPolicy`           | Image pull policy (admission controller component)                                                           | `IfNotPresent`                                                                      |
-| `admissionController.serviceAccount.create`      | Specify whether to create a ServiceAccount (admission controller component)                                  | `true`                                                                              |
-| `admissionController.serviceAccount.annotations` | ServiceAccount annotations (admission controller component)                                                  | `{}`                                                                                |
-| `admissionController.serviceAccount.name`        | The name of the ServiceAccount to create (admission controller component)                                    | Generated using the `jitsi-meet.admissionController.fullname` template |
-| `admissionController.podAnnotations`             | Additional pod annotations (admission controller component)                                                  | `{}`                                                                                |
-| `admissionController.podLabels`                  | Additional pod labels (admission controller component)                                                       | `{}`                                                                                |
-| `admissionController.podSecurityContext`         | Pod security context (admission controller component)                                                        | `{}`                                                                                |
-| `admissionController.securityContext`            | Container security context (admission controller component)                                                  | `{}`                                                                                |
-| `admissionController.service.type`               | Kubernetes Service type (admission controller component)                                                     | `ClusterIP`                                                                         |
-| `admissionController.resources`                  | CPU/Memory resource requests/limits (admission controller component)                                         | `{}`                                                                                |
-| `admissionController.nodeSelector`               | Node labels for pod assignment (admission controller component)                                              | `{}`                                                                                |
-| `admissionController.tolerations`                | Tolerations for pod assignment (admission controller component)                                              | `[]`                                                                                |
-| `admissionController.affinity`                   | Map of node/pod affinities (admission controller component)                                                  | `{}`                                                                                |
-| `admissionController.extraArgs`                  | Additional container arguments (admission controller component)                                              | `{ v: 2 }`                                                                          |
-| `admissionController.metrics.service.type`       | Metrics Kubernetes Service type (admission controller component)                                             | `ClusterIP`                                                                         |
-| `admissionController.metrics.service.port`       | Metrics service port (admission controller component)                                                        | `8944`                                                                              |
-| `admissionController.tls.caCert`                 | TLS CA certificate (admission controller component)                                                          | Generated using the `genCA` function                                                |
-| `admissionController.tls.cert`                   | TLS certificate (admission controller component)                                                             | Generated using the `genSignedCert` function                                        |
-| `admissionController.tls.key`                    | TLS private key (admission controller component)                                                             | Generated using the `genSignedCert` function                                        |
-| `admissionController.tls.existingSecret`         | Name of existing TLS Secret to use (admission controller component)                                          | `nil`                                                                               |
-| `jvb.replicaCount`                       | Number of replicas (jvb component)                                                                   | `1`                                                                                 |
-| `jvb.image.repository`                   | Jitsi Meet image name (jvb component)                                                   | `jitsi/jvb`                                                        |
-| `jvb.image.tag`                          | Jitsi Meet image tag (jvb component)                                                    | `4384-1`                                                                             |
-| `jvb.image.pullPolicy`                   | Image pull policy (jvb component)                                                                    | `IfNotPresent`                                                                      |
-| `jvb.serviceAccount.create`              | Specify whether to create a ServiceAccount (jvb component)                                           | `true`                                                                              |
-| `jvb.serviceAccount.annotations`         | ServiceAccount annotations (jvb component)                                                           | `{}`                                                                                |
-| `jvb.serviceAccount.name`                | The name of the ServiceAccount to create (jvb component)                                             | Generated using the `jitsi-meet.jvb.fullname` template         |
-| `jvb.podAnnotations`                     | Additional pod annotations (jvb component)                                                           | `{}`                                                                                |
-| `jvb.podLabels`                          | Additional pod labels (jvb component)                                                                | `{}`                                                                                |
-| `jvb.podSecurityContext`                 | Pod security context (jvb component)                                                                 | `{}`                                                                                |
-| `jvb.securityContext`                    | Container security context (jvb component)                                                           | `{}`                                                                                |
-| `jvb.resources`                          | CPU/Memory resource requests/limits (jvb component)                                                  | `{}`                                                                                |
-| `jvb.nodeSelector`                       | Node labels for pod assignment (jvb component)                                                       | `{}`                                                                                |
-| `jvb.tolerations`                        | Tolerations for pod assignment (jvb component)                                                       | `[]`                                                                                |
-| `jvb.affinity`                           | Map of node/pod affinities (jvb component)                                                           | `{}`                                                                                |
-| `jvb.extraArgs`                          | Additional container arguments (jvb component)                                                       | `{ v: 2 }`                                                                          |
-| `jvb.metrics.service.type`               | Metrics Kubernetes Service type (jvb component)                                                      | `ClusterIP`                                                                         |
-| `jvb.metrics.service.port`               | Metrics service port (jvb component)                                                                 | `8942`                                                                              |
-| `web.replicaCount`                           | Number of replicas (web component)                                                                       | `1`                                                                                 |
-| `web.image.repository`                       | Jitsi Meet image name (web component)                                                       | `jitsi/web`                                                            |
-| `web.image.tag`                              | Jitsi Meet image tag (web component)                                                        | `4384-1`                                                                             |
-| `web.image.pullPolicy`                       | Image pull policy (web component)                                                                        | `IfNotPresent`                                                                      |
-| `web.serviceAccount.create`                  | Specify whether to create a ServiceAccount (web component)                                               | `true`                                                                              |
-| `web.serviceAccount.annotations`             | ServiceAccount annotations (web component)                                                               | `{}`                                                                                |
-| `web.serviceAccount.name`                    | The name of the ServiceAccount to create (web component)                                                 | Generated using the `jitsi-meet.web.fullname` template             |
-| `web.podAnnotations`                         | Additional pod annotations (web component)                                                               | `{}`                                                                                |
-| `web.podLabels`                              | Additional pod labels (web component)                                                                    | `{}`                                                                                |
-| `web.podSecurityContext`                     | Pod security context (web component)                                                                     | `{}`                                                                                |
-| `web.securityContext`                        | Container security context (web component)                                                               | `{}`                                                                                |
-| `web.resources`                              | CPU/Memory resource requests/limits (web component)                                                      | `{}`                                                                                |
-| `web.nodeSelector`                           | Node labels for pod assignment (web component)                                                           | `{}`                                                                                |
-| `web.tolerations`                            | Tolerations for pod assignment (web component)                                                           | `[]`                                                                                |
-| `web.affinity`                               | Map of node/pod affinities (web component)                                                               | `{}`                                                                                |
-| `web.extraArgs`                              | Additional container arguments (web component)                                                           | `{ v: 2 }`                                                                          |
-| `web.metrics.service.type`                   | Metrics Kubernetes Service type (web component)                                                          | `ClusterIP`                                                                         |
-| `web.metrics.service.port`                   | Metrics service port (web component)                                                                     | `8943`                                                                              |
+| Name                                | Description                                                                                     | Default                                                   |
+|-------------------------------------|-------------------------------------------------------------------------------------------------|-----------------------------------------------------------|
+| `imagePullSecrets`                  | Docker registry secret names as an array                                                        | `[]`                                                      |
+| `nameOverride`                      | Partially override `jitsi-meet.fullname` template with a string (will prepend the release name) | `nil`                                                     |
+| `fullnameOverride`                  | Fully override `jitsi-meet.fullname` template with a string                                     | `nil`                                                     |
+| `jicofo.replicaCount`               | Number of replicas (jicofo component)                                                           | `1`                                                       |
+| `jicofo.image.repository`           | Jitsi Meet image name (jicofo component)                                                        | `jitsi/jicofo`                                            |
+| `jicofo.image.tag`                  | Jitsi Meet image tag (jicofo component)                                                         | `4384-1`                                                  |
+| `jicofo.image.pullPolicy`           | Image pull policy (jicofo component)                                                            | `IfNotPresent`                                            |
+| `jicofo.serviceAccount.create`      | Specify whether to create a ServiceAccount (jicofo component)                                   | `true`                                                    |
+| `jicofo.serviceAccount.annotations` | ServiceAccount annotations (jicofo component)                                                   | `{}`                                                      |
+| `jicofo.serviceAccount.name`        | The name of the ServiceAccount to create (jicofo component)                                     | Generated using the `jitsi-meet.jicofo.fullname` template |
+| `jicofo.podAnnotations`             | Additional pod annotations (jicofo component)                                                   | `{}`                                                      |
+| `jicofo.podLabels`                  | Additional pod labels (jicofo component)                                                        | `{}`                                                      |
+| `jicofo.podSecurityContext`         | Pod security context (jicofo component)                                                         | `{}`                                                      |
+| `jicofo.securityContext`            | Container security context (jicofo component)                                                   | `{}`                                                      |
+| `jicofo.service.type`               | Kubernetes Service type (jicofo component)                                                      | `ClusterIP`                                               |
+| `jicofo.resources`                  | CPU/Memory resource requests/limits (jicofo component)                                          | `{}`                                                      |
+| `jicofo.nodeSelector`               | Node labels for pod assignment (jicofo component)                                               | `{}`                                                      |
+| `jicofo.tolerations`                | Tolerations for pod assignment (jicofo component)                                               | `[]`                                                      |
+| `jicofo.affinity`                   | Map of node/pod affinities (jicofo component)                                                   | `{}`                                                      |
+| `jicofo.extraArgs`                  | Additional container arguments (jicofo component)                                               | `{ v: 2 }`                                                |
+| `jicofo.metrics.service.type`       | Metrics Kubernetes Service type (jicofo component)                                              | `ClusterIP`                                               |
+| `jicofo.metrics.service.port`       | Metrics service port (jicofo component)                                                         | `8944`                                                    |
+| `jicofo.tls.caCert`                 | TLS CA certificate (jicofo component)                                                           | Generated using the `genCA` function                      |
+| `jicofo.tls.cert`                   | TLS certificate (jicofo component)                                                              | Generated using the `genSignedCert` function              |
+| `jicofo.tls.key`                    | TLS private key (jicofo component)                                                              | Generated using the `genSignedCert` function              |
+| `jicofo.tls.existingSecret`         | Name of existing TLS Secret to use (jicofo component)                                           | `nil`                                                     |
+| `jvb.replicaCount`                  | Number of replicas (jvb component)                                                              | `1`                                                       |
+| `jvb.image.repository`              | Jitsi Meet image name (jvb component)                                                           | `jitsi/jvb`                                               |
+| `jvb.image.tag`                     | Jitsi Meet image tag (jvb component)                                                            | `4384-1`                                                  |
+| `jvb.image.pullPolicy`              | Image pull policy (jvb component)                                                               | `IfNotPresent`                                            |
+| `jvb.serviceAccount.create`         | Specify whether to create a ServiceAccount (jvb component)                                      | `true`                                                    |
+| `jvb.serviceAccount.annotations`    | ServiceAccount annotations (jvb component)                                                      | `{}`                                                      |
+| `jvb.serviceAccount.name`           | The name of the ServiceAccount to create (jvb component)                                        | Generated using the `jitsi-meet.jvb.fullname` template    |
+| `jvb.podAnnotations`                | Additional pod annotations (jvb component)                                                      | `{}`                                                      |
+| `jvb.podLabels`                     | Additional pod labels (jvb component)                                                           | `{}`                                                      |
+| `jvb.podSecurityContext`            | Pod security context (jvb component)                                                            | `{}`                                                      |
+| `jvb.securityContext`               | Container security context (jvb component)                                                      | `{}`                                                      |
+| `jvb.resources`                     | CPU/Memory resource requests/limits (jvb component)                                             | `{}`                                                      |
+| `jvb.nodeSelector`                  | Node labels for pod assignment (jvb component)                                                  | `{}`                                                      |
+| `jvb.tolerations`                   | Tolerations for pod assignment (jvb component)                                                  | `[]`                                                      |
+| `jvb.affinity`                      | Map of node/pod affinities (jvb component)                                                      | `{}`                                                      |
+| `jvb.extraArgs`                     | Additional container arguments (jvb component)                                                  | `{ v: 2 }`                                                |
+| `jvb.metrics.service.type`          | Metrics Kubernetes Service type (jvb component)                                                 | `ClusterIP`                                               |
+| `jvb.metrics.service.port`          | Metrics service port (jvb component)                                                            | `8942`                                                    |
+| `web.replicaCount`                  | Number of replicas (web component)                                                              | `1`                                                       |
+| `web.image.repository`              | Jitsi Meet image name (web component)                                                           | `jitsi/web`                                               |
+| `web.image.tag`                     | Jitsi Meet image tag (web component)                                                            | `4384-1`                                                  |
+| `web.image.pullPolicy`              | Image pull policy (web component)                                                               | `IfNotPresent`                                            |
+| `web.serviceAccount.create`         | Specify whether to create a ServiceAccount (web component)                                      | `true`                                                    |
+| `web.serviceAccount.annotations`    | ServiceAccount annotations (web component)                                                      | `{}`                                                      |
+| `web.serviceAccount.name`           | The name of the ServiceAccount to create (web component)                                        | Generated using the `jitsi-meet.web.fullname` template    |
+| `web.podAnnotations`                | Additional pod annotations (web component)                                                      | `{}`                                                      |
+| `web.podLabels`                     | Additional pod labels (web component)                                                           | `{}`                                                      |
+| `web.podSecurityContext`            | Pod security context (web component)                                                            | `{}`                                                      |
+| `web.securityContext`               | Container security context (web component)                                                      | `{}`                                                      |
+| `web.resources`                     | CPU/Memory resource requests/limits (web component)                                             | `{}`                                                      |
+| `web.nodeSelector`                  | Node labels for pod assignment (web component)                                                  | `{}`                                                      |
+| `web.tolerations`                   | Tolerations for pod assignment (web component)                                                  | `[]`                                                      |
+| `web.affinity`                      | Map of node/pod affinities (web component)                                                      | `{}`                                                      |
+| `web.extraArgs`                     | Additional container arguments (web component)                                                  | `{ v: 2 }`                                                |
+| `web.metrics.service.type`          | Metrics Kubernetes Service type (web component)                                                 | `ClusterIP`                                               |
+| `web.metrics.service.port`          | Metrics service port (web component)                                                            | `8943`                                                    |
 
 Specify the parameters you which to customize using the `--set` argument to the `helm install` command. For instance,
 
@@ -146,11 +146,3 @@ $ helm install --name my-release \
 ```
 
 **Tip**: You can use the default [values.yaml](values.yaml).
-
-## Limitations
-
-Due to hard-coded values in Jitsi Meet, the chart configuration has some limitations:
-
-- Admission controller component service name is `vpa-webhook`
-- Admission controller component service port is `443`
-- Mutating webhook configuration name automatically created by admission controller component is `vpa-webhook-config`

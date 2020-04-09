@@ -1,45 +1,44 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "jitsi-meet.admissionController.fullname" . }}
+  name: {{ include "jitsi-meet.jicofo.fullname" . }}
   labels:
-    {{- include "jitsi-meet.admissionController.labels" . | nindent 4 }}
+    {{- include "jitsi-meet.jicofo.labels" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.admissionController.replicaCount }}
+  replicas: {{ .Values.jicofo.replicaCount }}
   selector:
     matchLabels:
-      {{- include "jitsi-meet.admissionController.selectorLabels" . | nindent 6 }}
+      {{- include "jitsi-meet.jicofo.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "jitsi-meet.admissionController.selectorLabels" . | nindent 8 }}
-        {{- with .Values.admissionController.podLabels }}
+        {{- include "jitsi-meet.jicofo.selectorLabels" . | nindent 8 }}
+        {{- with .Values.jicofo.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
+      {{- with .Values.jicofo.podAnnotations }}
       annotations:
-        checksum/secret: {{ include (print $.Template.BasePath "/admission-controller/tls-secret.yaml") . | sha256sum }}
-        {{- with .Values.admissionController.podAnnotations }}
         {{- toYaml . | nindent 8 }}
-        {{- end }}
+      {{- end }}
     spec:
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-      serviceAccountName: {{ include "jitsi-meet.admissionController.serviceAccountName" . }}
+      serviceAccountName: {{ include "jitsi-meet.jicofo.serviceAccountName" . }}
       securityContext:
-        {{- toYaml .Values.admissionController.podSecurityContext | nindent 8 }}
+        {{- toYaml .Values.jicofo.podSecurityContext | nindent 8 }}
       containers:
-        - name: admission-controller
+        - name: jicofo
           securityContext:
-            {{- toYaml .Values.admissionController.securityContext | nindent 12 }}
-          image: "{{ .Values.admissionController.image.repository }}:{{ .Values.admissionController.image.tag }}"
-          imagePullPolicy: {{ .Values.admissionController.image.pullPolicy }}
+            {{- toYaml .Values.jicofo.securityContext | nindent 12 }}
+          image: "{{ .Values.jicofo.image.repository }}:{{ .Values.jicofo.image.tag }}"
+          imagePullPolicy: {{ .Values.jicofo.image.pullPolicy }}
           args:
             - --client-ca-file=/tls-secret/ca.crt
             - --tls-cert-file=/tls-secret/tls.crt
             - --tls-private-key=/tls-secret/tls.key
-            {{- range $key, $value := .Values.admissionController.extraArgs }}
+            {{- range $key, $value := .Values.jicofo.extraArgs }}
             - --{{ $key }}={{ $value }}
             {{- end }}
           env:
@@ -63,24 +62,24 @@ spec:
               path: /metrics
               port: metrics
           resources:
-            {{- toYaml .Values.admissionController.resources | nindent 12 }}
+            {{- toYaml .Values.jicofo.resources | nindent 12 }}
           volumeMounts:
             - name: tls-secret
               mountPath: /tls-secret
               readOnly: true
-      {{- with .Values.admissionController.nodeSelector }}
+      {{- with .Values.jicofo.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- with .Values.admissionController.affinity }}
+    {{- with .Values.jicofo.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- with .Values.admissionController.tolerations }}
+    {{- with .Values.jicofo.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       volumes:
         - name: tls-secret
           secret:
-            secretName: {{ include "jitsi-meet.admissionController.tls.secretName" . }}
+            secretName: {{ include "jitsi-meet.jicofo.tls.secretName" . }}

@@ -25,17 +25,17 @@ If release name contains chart name it will be used as a full name.
 {{- end -}}
 
 {{/*
-Create a default fully qualified app name (admission controller component).
+Create a default fully qualified app name (jicofo component).
 */}}
-{{- define "jitsi-meet.admissionController.fullname" -}}
-{{- printf "%s-%s" (include "jitsi-meet.fullname" .) "admission-controller" | trunc 63 | trimSuffix "-" -}}
+{{- define "jitsi-meet.jicofo.fullname" -}}
+{{- printf "%s-%s" (include "jitsi-meet.fullname" .) "jicofo" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
-Create a default fully qualified metrics name (admission controller component).
+Create a default fully qualified metrics name (jicofo component).
 */}}
-{{- define "jitsi-meet.admissionController.metrics.fullname" -}}
-{{- printf "%s-%s" (include "jitsi-meet.admissionController.fullname" .) "metrics" | trunc 63 | trimSuffix "-" -}}
+{{- define "jitsi-meet.jicofo.metrics.fullname" -}}
+{{- printf "%s-%s" (include "jitsi-meet.jicofo.fullname" .) "metrics" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
@@ -74,10 +74,10 @@ Create chart name and version as used by the chart label.
 {{- end -}}
 
 {{/*
-Component labels (admission controller component)
+Component labels (jicofo component)
 */}}
-{{- define "jitsi-meet.admissionController.componentLabels" -}}
-app.kubernetes.io/component: admission-controller
+{{- define "jitsi-meet.jicofo.componentLabels" -}}
+app.kubernetes.io/component: jicofo
 {{- end -}}
 
 {{/*
@@ -107,11 +107,11 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
 
 {{/*
-Common labels (admission controller component)
+Common labels (jicofo component)
 */}}
-{{- define "jitsi-meet.admissionController.labels" -}}
+{{- define "jitsi-meet.jicofo.labels" -}}
 {{ include "jitsi-meet.labels" . }}
-{{ include "jitsi-meet.admissionController.componentLabels" . }}
+{{ include "jitsi-meet.jicofo.componentLabels" . }}
 {{- end -}}
 
 {{/*
@@ -139,11 +139,11 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
 
 {{/*
-Selector labels (admission controller component)
+Selector labels (jicofo component)
 */}}
-{{- define "jitsi-meet.admissionController.selectorLabels" -}}
+{{- define "jitsi-meet.jicofo.selectorLabels" -}}
 {{ include "jitsi-meet.selectorLabels" . }}
-{{ include "jitsi-meet.admissionController.componentLabels" . }}
+{{ include "jitsi-meet.jicofo.componentLabels" . }}
 {{- end -}}
 
 {{/*
@@ -174,13 +174,13 @@ Create the name of the service account to use
 {{- end -}}
 
 {{/*
-Create the name of the service account to use (admission controller component)
+Create the name of the service account to use (jicofo component)
 */}}
-{{- define "jitsi-meet.admissionController.serviceAccountName" -}}
-{{- if .Values.admissionController.serviceAccount.create -}}
-    {{ default (include "jitsi-meet.admissionController.fullname" .) .Values.admissionController.serviceAccount.name }}
+{{- define "jitsi-meet.jicofo.serviceAccountName" -}}
+{{- if .Values.jicofo.serviceAccount.create -}}
+    {{ default (include "jitsi-meet.jicofo.fullname" .) .Values.jicofo.serviceAccount.name }}
 {{- else -}}
-    {{ default "default" .Values.admissionController.serviceAccount.name }}
+    {{ default "default" .Values.jicofo.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
 
@@ -207,12 +207,12 @@ Create the name of the service account to use (web component)
 {{- end -}}
 
 {{/*
-Create the name of the tls secret to use (admission controller component)
+Create the name of the tls secret to use (jicofo component)
 */}}
-{{- define "jitsi-meet.admissionController.tls.secretName" -}}
-{{- if .Values.admissionController.tls.existingSecret -}}
-    {{ .Values.admissionController.tls.existingSecret }}
+{{- define "jitsi-meet.jicofo.tls.secretName" -}}
+{{- if .Values.jicofo.tls.existingSecret -}}
+    {{ .Values.jicofo.tls.existingSecret }}
 {{- else -}}
-    {{- printf "%s-%s" (include "jitsi-meet.admissionController.fullname" .) "tls" | trunc 63 | trimSuffix "-" -}}
+    {{- printf "%s-%s" (include "jitsi-meet.jicofo.fullname" .) "tls" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 {{- end -}}
