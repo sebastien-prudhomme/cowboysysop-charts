@@ -8,13 +8,13 @@ fullnameOverride: ""
 
 jibri:
   # XMPP recorder user for Jibri client connections
-  recorderUser: "recorder"
+  recorderUser: recorder
 
   # XMPP recorder password for Jibri client connections
   recorderPassword: ""
 
   # XMPP user for Jibri client connections
-  xmppUser: "jibri"
+  xmppUser: jibri
 
   # XMPP password for Jibri client connections
   xmppPassword: ""
@@ -82,7 +82,7 @@ jicofo:
   componentSecret: ""
 
   # XMPP user for Jicofo client connections
-  authUser: "focus"
+  authUser: focus
 
   # XMPP password for Jicofo client connections
   authPassword: ""
@@ -91,7 +91,6 @@ jicofo:
   existingSecret: ""
 
 
-# org.jitsi.jicofo.BRIDGE_MUC={{ .Env.JVB_BREWERY_MUC }}@{{ .Env.XMPP_INTERNAL_MUC_DOMAIN }}
 
 # {{ if and .Env.JIBRI_BREWERY_MUC .Env.JIBRI_PENDING_TIMEOUT }}
 # org.jitsi.jicofo.jibri.BREWERY={{ .Env.JIBRI_BREWERY_MUC}}@{{ .Env.XMPP_INTERNAL_MUC_DOMAIN }}
@@ -117,7 +116,7 @@ jicofo:
 
 jigasi:
   # XMPP user for Jigasi MUC client connections
-  xmppUser: "jigasi"
+  xmppUser: jigasi
 
   # XMPP password for Jigasi MUC client connections
   xmppPassword: ""
@@ -178,13 +177,16 @@ jvb:
   affinity: {}
 
   # XMPP user for JVB MUC client connections
-  authUser: "jvb"
+  authUser: jvb
 
   # XMPP password for JVB MUC client connections
   authPassword: ""
 
   # Name of existing Secret to use (jvb component)
   existingSecret: ""
+
+  # MUC name for the JVB pool
+  breweryMuc: jvbbrewery
 
   metrics:
     service:
@@ -404,6 +406,9 @@ xmpp:
 
   # Internal XMPP domain for authenticated services
   authDomain: auth.meet.jitsi
+
+  # XMPP domain for the internal MUC
+  internalMucDomain: internal-muc.meet.jitsi
 
   # Domain for the jibri recorder
   recorderDomain: recorder.meet.jitsi

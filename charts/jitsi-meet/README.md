@@ -111,6 +111,7 @@ The following table lists all the configurable parameters expose by the Jitsi Me
 | `jvb.authUser`                       | XMPP user for JVB MUC client connections                                                        | `jvb`                                                      |
 | `jvb.authPassword`                   | XMPP password for JVB MUC client connections                                                    | Random 32 character long alphanumeric string               |
 | `jvb.existingSecret`                 | Name of existing Secret to use (jvb component)                                                  | `nil`                                                      |
+| `jvb.breweryMuc`                     | MUC name for the JVB pool                                                                       | `jvbbrewery`                                               |
 | `jvb.metrics.service.type`           | Metrics Kubernetes Service type (jvb component)                                                 | `ClusterIP`                                                |
 | `jvb.metrics.service.port`           | Metrics service port (jvb component)                                                            | `8942`                                                     |
 | `prosody.replicaCount`               | Number of replicas (prosody component)                                                          | `1`                                                        |
@@ -132,6 +133,7 @@ The following table lists all the configurable parameters expose by the Jitsi Me
 | `prosody.metrics.service.port`       | Metrics service port (prosody component)                                                        | `8943`                                                     |
 | `xmpp.domain`                        | Internal XMPP domain                                                                            | `meet.jitsi`                                               |
 | `xmpp.authDomain`                    | Internal XMPP domain for authenticated services                                                 | `auth.meet.jitsi`                                          |
+| `xmpp.internalMucDomain`             | XMPP domain for the internal MUC                                                                | `internal-muc.meet.jitsi`                                  |
 | `xmpp.recorderDomain`                | Domain for the jibri recorder                                                                   | `recorder.meet.jitsi`                                      |
 | `web.replicaCount`                   | Number of replicas (web component)                                                              | `1`                                                        |
 | `web.image.repository`               | Jitsi Meet image name (web component)                                                           | `jitsi/web`                                                |
