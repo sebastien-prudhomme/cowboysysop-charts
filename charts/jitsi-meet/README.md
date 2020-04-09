@@ -90,6 +90,9 @@ The following table lists all the configurable parameters expose by the Jitsi Me
 | `jicofo.existingSecret`              | Name of existing Secret to use (jicofo component)                                               | `nil`                                                      |
 | `jicofo.metrics.service.type`        | Metrics Kubernetes Service type (jicofo component)                                              | `ClusterIP`                                                |
 | `jicofo.metrics.service.port`        | Metrics service port (jicofo component)                                                         | `8944`                                                     |
+| `jigasi.xmppUser`                    | XMPP user for Jigasi MUC client connections                                                     | `jigasi`                                                   |
+| `jigasi.xmppPassword`                | XMPP password for Jigasi MUC client connections                                                 | Random 32 character long alphanumeric string               |
+| `jigasi.existingSecret`              | Name of existing Secret to use (jigasi component)                                               | `nil`                                                      |
 | `jvb.replicaCount`                   | Number of replicas (jvb component)                                                              | `1`                                                        |
 | `jvb.image.repository`               | Jitsi Meet image name (jvb component)                                                           | `jitsi/jvb`                                                |
 | `jvb.image.tag`                      | Jitsi Meet image tag (jvb component)                                                            | `4384-1`                                                   |
@@ -129,7 +132,7 @@ The following table lists all the configurable parameters expose by the Jitsi Me
 | `prosody.metrics.service.port`       | Metrics service port (prosody component)                                                        | `8943`                                                     |
 | `xmpp.domain`                        | Internal XMPP domain                                                                            | `meet.jitsi`                                               |
 | `xmpp.authDomain`                    | Internal XMPP domain for authenticated services                                                 | `auth.meet.jitsi`                                          |
-| `xmpp.recorderDomain`          | Domain for the jibri recorder                                                                   | `recorder.meet.jitsi`                                      |
+| `xmpp.recorderDomain`                | Domain for the jibri recorder                                                                   | `recorder.meet.jitsi`                                      |
 | `web.replicaCount`                   | Number of replicas (web component)                                                              | `1`                                                        |
 | `web.image.repository`               | Jitsi Meet image name (web component)                                                           | `jitsi/web`                                                |
 | `web.image.tag`                      | Jitsi Meet image tag (web component)                                                            | `4384-1`                                                   |

@@ -130,6 +130,13 @@ app.kubernetes.io/component: jicofo
 {{- end -}}
 
 {{/*
+Component labels (jigasi component)
+*/}}
+{{- define "jitsi-meet.jigasi.componentLabels" -}}
+app.kubernetes.io/component: jigasi
+{{- end -}}
+
+{{/*
 Component labels (jvb component)
 */}}
 {{- define "jitsi-meet.jvb.componentLabels" -}}
@@ -179,6 +186,14 @@ Common labels (jicofo component)
 {{- end -}}
 
 {{/*
+Common labels (jigasi component)
+*/}}
+{{- define "jitsi-meet.jigasi.labels" -}}
+{{ include "jitsi-meet.labels" . }}
+{{ include "jitsi-meet.jigasi.componentLabels" . }}
+{{- end -}}
+
+{{/*
 Common labels (jvb component)
 */}}
 {{- define "jitsi-meet.jvb.labels" -}}
@@ -224,6 +239,14 @@ Selector labels (jicofo component)
 {{- define "jitsi-meet.jicofo.selectorLabels" -}}
 {{ include "jitsi-meet.selectorLabels" . }}
 {{ include "jitsi-meet.jicofo.componentLabels" . }}
+{{- end -}}
+
+{{/*
+Selector labels (jigasi component)
+*/}}
+{{- define "jitsi-meet.jigasi.selectorLabels" -}}
+{{ include "jitsi-meet.selectorLabels" . }}
+{{ include "jitsi-meet.jigasi.componentLabels" . }}
 {{- end -}}
 
 {{/*
@@ -284,6 +307,17 @@ Create the name of the service account to use (jicofo component)
 {{- end -}}
 
 {{/*
+Create the name of the service account to use (jigasi component)
+*/}}
+{{- define "jitsi-meet.jigasi.serviceAccountName" -}}
+{{- if .Values.jigasi.serviceAccount.create -}}
+    {{ default (include "jitsi-meet.jigasi.fullname" .) .Values.jigasi.serviceAccount.name }}
+{{- else -}}
+    {{ default "default" .Values.jigasi.serviceAccount.name }}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Create the name of the service account to use (jvb component)
 */}}
 {{- define "jitsi-meet.jvb.serviceAccountName" -}}
@@ -335,6 +369,17 @@ Create the name of the secret to use (jicofo component)
     {{ .Values.jicofo.existingSecret }}
 {{- else -}}
     {{ include "jitsi-meet.jicofo.fullname" . }}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Create the name of the secret to use (jigasi component)
+*/}}
+{{- define "jitsi-meet.jigasi.secretName" -}}
+{{- if .Values.jigasi.existingSecret -}}
+    {{ .Values.jigasi.existingSecret }}
+{{- else -}}
+    {{ include "jitsi-meet.jigasi.fullname" . }}
 {{- end -}}
 {{- end -}}
 

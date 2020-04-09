@@ -6,6 +6,22 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
+jibri:
+  # XMPP recorder user for Jibri client connections
+  recorderUser: "recorder"
+
+  # XMPP recorder password for Jibri client connections
+  recorderPassword: ""
+
+  # XMPP user for Jibri client connections
+  xmppUser: "jibri"
+
+  # XMPP password for Jibri client connections
+  xmppPassword: ""
+
+  # Name of existing Secret to use (jibri component)
+  existingSecret: ""
+
 jicofo:
   replicaCount: 1
 
@@ -102,6 +118,16 @@ jicofo:
       type: ClusterIP
       port: 8944
 
+jigasi:
+  # XMPP user for Jigasi MUC client connections
+  xmppUser: "jigasi"
+
+  # XMPP password for Jigasi MUC client connections
+  xmppPassword: ""
+
+  # Name of existing Secret to use (jigasi component)
+  existingSecret: ""
+
 jvb:
   replicaCount: 1
 
@@ -168,21 +194,6 @@ jvb:
       type: ClusterIP
       port: 8942
 
-jibri:
-  # XMPP recorder user for Jibri client connections
-  recorderUser: "recorder"
-
-  # XMPP recorder password for Jibri client connections
-  recorderPassword: ""
-
-  # XMPP user for Jibri client connections
-  xmppUser: "jibri"
-
-  # XMPP password for Jibri client connections
-  xmppPassword: ""
-
-  # Name of existing Secret to use (jibri component)
-  existingSecret: ""
 prosody:
   replicaCount: 1
 
@@ -383,16 +394,6 @@ prosody:
 # {{ if .Env.LDAP_START_TLS | default "0" | toBool }}
 # ldap_start_tls: yes
 # {{ end }}
-
-
-
-
-
-
-        prosodyctl --config $PROSODY_CFG register $JIGASI_XMPP_USER $XMPP_AUTH_DOMAIN $JIGASI_XMPP_PASSWORD
-    fi
-fi
-
 
 xmpp:
   # Internal XMPP domain
