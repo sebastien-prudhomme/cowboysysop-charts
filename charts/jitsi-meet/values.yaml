@@ -7,11 +7,14 @@ nameOverride: ""
 fullnameOverride: ""
 
 etherpad:
+  # Enable shared document editing with Etherpad
+  enabled: false
+
   replicaCount: 1
 
   image:
-    repository: etherpad/etherpad
-    tag: 1.8.0
+    repository: jitsi/etherpad
+    tag: 4384-1
     pullPolicy: IfNotPresent
 
   serviceAccount:

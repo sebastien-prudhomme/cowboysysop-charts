@@ -63,9 +63,10 @@ The following table lists all the configurable parameters expose by the Jitsi Me
 | `imagePullSecrets`                    | Docker registry secret names as an array                                                        | `[]`                                                        |
 | `nameOverride`                        | Partially override `jitsi-meet.fullname` template with a string (will prepend the release name) | `nil`                                                       |
 | `fullnameOverride`                    | Fully override `jitsi-meet.fullname` template with a string                                     | `nil`                                                       |
+| `etherpad.enabled`                    | Enable shared document editing with Etherpad                                                    | `false`                                                     |
 | `etherpad.replicaCount`               | Number of replicas (etherpad component)                                                         | `1`                                                         |
-| `etherpad.image.repository`           | Jitsi Meet image name (etherpad component)                                                      | `etherpad/etherpad`                                         |
-| `etherpad.image.tag`                  | Jitsi Meet image tag (etherpad component)                                                       | `1.8.0`                                                     |
+| `etherpad.image.repository`           | Jitsi Meet image name (etherpad component)                                                      | `jitsi/etherpad`                                            |
+| `etherpad.image.tag`                  | Jitsi Meet image tag (etherpad component)                                                       | `4384-1`                                                    |
 | `etherpad.image.pullPolicy`           | Image pull policy (etherpad component)                                                          | `IfNotPresent`                                              |
 | `etherpad.serviceAccount.create`      | Specify whether to create a ServiceAccount (etherpad component)                                 | `true`                                                      |
 | `etherpad.serviceAccount.annotations` | ServiceAccount annotations (etherpad component)                                                 | `{}`                                                        |
