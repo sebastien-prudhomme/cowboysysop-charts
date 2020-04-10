@@ -62,6 +62,16 @@ spec:
                 secretKeyRef:
                   name: {{ include "jitsi-meet.jibri.secretName" . }}
                   key: xmpp-password
+            - name: JIBRI_BREWERY_MUC
+              value: {{ .Values.jibri.breweryMuc | quote }}
+            - name: JIBRI_FINALIZE_RECORDING_SCRIPT_PATH
+              value: {{ .Values.jibri.finalizeRecordingScriptPath | quote }}
+            - name: JIBRI_LOGS_DIR
+              value: {{ .Values.jibri.logsDir | quote }}
+            - name: JIBRI_RECORDING_DIR
+              value: {{ .Values.jibri.recordingDir | quote }}
+            - name: JIBRI_STRIP_DOMAIN_JID
+              value: {{ .Values.jibri.stripDomainJid | quote }}
           # livenessProbe:
           #   httpGet:
           #     path: /
