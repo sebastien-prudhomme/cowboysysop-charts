@@ -33,11 +33,9 @@ spec:
         - name: init
           image: gcr.io/google_containers/busybox:1.27.2
           command:
-          - /bin/sh
-          - -c
-          - echo "{{params}}" | grep "\-\-proxy-mode=ipvs" &&
-            modprobe -a ip_vs ip_vs_rr ip_vs_wrr ip_vs_sh nf_conntrack_ipv4 ||
-            echo "didn't load ipvs related kernel modules"
+            - /bin/sh
+            - -c
+            - modprobe -a ip_vs ip_vs_rr ip_vs_wrr ip_vs_sh nf_conntrack_ipv4 || echo "didn't load ipvs related kernel modules"
           # securityContext:
           #   privileged: true
           volumeMounts:
