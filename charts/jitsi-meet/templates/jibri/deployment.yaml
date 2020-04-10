@@ -36,6 +36,8 @@ spec:
           image: "{{ .Values.jibri.image.repository }}:{{ .Values.jibri.image.tag }}"
           imagePullPolicy: {{ .Values.jibri.image.pullPolicy }}
           env:
+            - name: DISPLAY
+              value: :0
             - name: XMPP_SERVER
               value: {{ include "jitsi-meet.prosody.fullname" . }}
             - name: XMPP_DOMAIN
