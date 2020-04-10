@@ -65,34 +65,6 @@ etherpad:
 
   affinity: {}
 
-# --- settings.json.template.txt  2020-04-10 08:43:46.049151711 +0200
-# +++ settings.json2      2020-04-10 09:01:01.120323900 +0200
-# @@ -3,69 +3,14 @@
-# -  "title": "Etherpad",
-# +  "title": "Video Chat",
-
-# env TITLE
-
-# @@ -74,27 +19,7 @@
-# -  "defaultPadText" : "Welcome to Etherpad!\n\nThis pad text is synchronized as you type, so that everyone viewing this page sees the same text. This allows you to collaborate seamlessly on documents!\n\nGet involved with Etherpad at https:\/\/etherpad.org\n",
-# +  "defaultPadText": "Welcome to Web Chat!\n\n",
-
-
-# env DEFAULT_PAD_TEXT
-
-# @@ -190,35 +117,35 @@
-#    /*
-#     * Should we suppress errors from being visible in the default Pad Text?
-#     */
-# -  "suppressErrorsInPadText": false,
-# +  "suppressErrorsInPadText": true,
-
-# Pas de env dispo dans l'image Etherpad officielle
-
-# ADMIN_PASSWORD ?
-# USER_PASSWORD ?
-
-
 jibri:
   # XMPP recorder user for Jibri client connections
   recorderUser: recorder

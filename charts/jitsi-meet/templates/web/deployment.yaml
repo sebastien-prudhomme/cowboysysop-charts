@@ -37,8 +37,10 @@ spec:
           env:
             - name: PUBLIC_URL
               value: {{ .Values.web.publicUrl | quote }}
+            {{- if .Values.etherpad.enabled }}
             - name: ETHERPAD_URL_BASE
               value: http://{{ include "jitsi-meet.etherpad.fullname" . }}:{{ .Values.etherpad.service.port }}
+            {{- end }}
             - name: XMPP_BOSH_URL_BASE
               value: http://{{ include "jitsi-meet.prosody.fullname" . }}:{{ .Values.prosody.service.httpPort }}
             - name: XMPP_DOMAIN
