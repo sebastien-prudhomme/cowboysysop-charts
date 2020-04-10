@@ -1,0 +1,60 @@
+{{- if .Values.jibri.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "jitsi-meet.jibri.fullname" . }}
+  labels:
+    {{- include "jitsi-meet.jibri.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.jibri.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "jitsi-meet.jibri.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "jitsi-meet.jibri.selectorLabels" . | nindent 8 }}
+        {{- with .Values.jibri.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- with .Values.jibri.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "jitsi-meet.jibri.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.jibri.podSecurityContext | nindent 8 }}
+      containers:
+        - name: jibri
+          securityContext:
+            {{- toYaml .Values.jibri.securityContext | nindent 12 }}
+          image: "{{ .Values.jibri.image.repository }}:{{ .Values.jibri.image.tag }}"
+          imagePullPolicy: {{ .Values.jibri.image.pullPolicy }}
+          # livenessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: http
+          # readinessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: http
+          resources:
+            {{- toYaml .Values.jibri.resources | nindent 12 }}
+      {{- with .Values.jibri.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.jibri.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.jibri.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+{{- end }}

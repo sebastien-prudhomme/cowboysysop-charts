@@ -26,10 +26,10 @@ etherpad:
     # If not set and create is true, a name is generated using the fullname template
     name:
 
-  # Additional pod annotations (jicofo component)
+  # Additional pod annotations (etherpad component)
   podAnnotations: {}
 
-  # Additional pod labels (jicofo component)
+  # Additional pod labels (etherpad component)
   podLabels: {}
 
   podSecurityContext: {}
@@ -66,6 +66,60 @@ etherpad:
   affinity: {}
 
 jibri:
+  # Enable recording or streaming with Jibri
+  enabled: false
+
+  replicaCount: 1
+
+  image:
+    repository: jitsi/jibri
+    tag: 4384-1
+    pullPolicy: IfNotPresent
+
+  serviceAccount:
+    # Specifies whether a service account should be created
+    create: true
+    # Annotations to add to the service account
+    annotations: {}
+    # The name of the service account to use.
+    # If not set and create is true, a name is generated using the fullname template
+    name:
+
+  # Additional pod annotations (jibri component)
+  podAnnotations: {}
+
+  # Additional pod labels (jibri component)
+  podLabels: {}
+
+  podSecurityContext: {}
+    # fsGroup: 2000
+
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+
+  resources: {}
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #   cpu: 200m
+    #   memory: 512Mi
+    # requests:
+    #   cpu: 50m
+    #   memory: 256Mi
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
+
   # XMPP recorder user for Jibri client connections
   recorderUser: recorder
 

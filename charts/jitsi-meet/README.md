@@ -81,6 +81,22 @@ The following table lists all the configurable parameters expose by the Jitsi Me
 | `etherpad.nodeSelector`               | Node labels for pod assignment (etherpad component)                                             | `{}`                                                        |
 | `etherpad.tolerations`                | Tolerations for pod assignment (etherpad component)                                             | `[]`                                                        |
 | `etherpad.affinity`                   | Map of node/pod affinities (etherpad component)                                                 | `{}`                                                        |
+| `jibri.enabled`                       | Enable recording or streaming with Jibri                                                        | `false`                                                     |
+| `jibri.replicaCount`                  | Number of replicas (jibri component)                                                            | `1`                                                         |
+| `jibri.image.repository`              | Jitsi Meet image name (jibri component)                                                         | `jitsi/jibri`                                               |
+| `jibri.image.tag`                     | Jitsi Meet image tag (jibri component)                                                          | `4384-1`                                                    |
+| `jibri.image.pullPolicy`              | Image pull policy (jibri component)                                                             | `IfNotPresent`                                              |
+| `jibri.serviceAccount.create`         | Specify whether to create a ServiceAccount (jibri component)                                    | `true`                                                      |
+| `jibri.serviceAccount.annotations`    | ServiceAccount annotations (jibri component)                                                    | `{}`                                                        |
+| `jibri.serviceAccount.name`           | The name of the ServiceAccount to create (jibri component)                                      | Generated using the `jitsi-meet.jibri.fullname` template    |
+| `jibri.podAnnotations`                | Additional pod annotations (jibri component)                                                    | `{}`                                                        |
+| `jibri.podLabels`                     | Additional pod labels (jibri component)                                                         | `{}`                                                        |
+| `jibri.podSecurityContext`            | Pod security context (jibri component)                                                          | `{}`                                                        |
+| `jibri.securityContext`               | Container security context (jibri component)                                                    | `{}`                                                        |
+| `jibri.resources`                     | CPU/Memory resource requests/limits (jibri component)                                           | `{}`                                                        |
+| `jibri.nodeSelector`                  | Node labels for pod assignment (jibri component)                                                | `{}`                                                        |
+| `jibri.tolerations`                   | Tolerations for pod assignment (jibri component)                                                | `[]`                                                        |
+| `jibri.affinity`                      | Map of node/pod affinities (jibri component)                                                    | `{}`                                                        |
 | `jibri.recorderUser`                  | XMPP recorder user for Jibri client connections                                                 | `recorder`                                                  |
 | `jibri.recorderPassword`              | XMPP recorder password for Jibri client connections                                             | Random 32 character long alphanumeric string                |
 | `jibri.xmppUser`                      | XMPP user for Jibri client connections                                                          | `jibri`                                                     |
