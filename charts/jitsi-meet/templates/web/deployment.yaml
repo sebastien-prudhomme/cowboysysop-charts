@@ -41,6 +41,10 @@ spec:
             - name: ETHERPAD_URL_BASE
               value: http://{{ include "jitsi-meet.etherpad.fullname" . }}:{{ .Values.etherpad.service.port }}
             {{- end }}
+            {{- if .Values.jibri.enabled }}
+            - name: ENABLE_RECORDING
+              value: "1"
+            {{- end }}
             - name: XMPP_BOSH_URL_BASE
               value: http://{{ include "jitsi-meet.prosody.fullname" . }}:{{ .Values.prosody.service.httpPort }}
             - name: XMPP_DOMAIN
