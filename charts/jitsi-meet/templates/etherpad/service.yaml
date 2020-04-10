@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "jitsi-meet.etherpad.fullname" . }}
+  labels:
+    {{- include "jitsi-meet.etherpad.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.etherpad.service.type }}
+  ports:
+    - port: {{ .Values.etherpad.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "jitsi-meet.etherpad.selectorLabels" . | nindent 4 }}

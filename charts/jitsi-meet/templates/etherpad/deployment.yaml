@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "jitsi-meet.etherpad.fullname" . }}
+  labels:
+    {{- include "jitsi-meet.etherpad.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.etherpad.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "jitsi-meet.etherpad.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "jitsi-meet.etherpad.selectorLabels" . | nindent 8 }}
+        {{- with .Values.etherpad.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- with .Values.etherpad.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "jitsi-meet.etherpad.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.etherpad.podSecurityContext | nindent 8 }}
+      containers:
+        - name: etherpad
+          securityContext:
+            {{- toYaml .Values.etherpad.securityContext | nindent 12 }}
+          image: "{{ .Values.etherpad.image.repository }}:{{ .Values.etherpad.image.tag }}"
+          imagePullPolicy: {{ .Values.etherpad.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 9001
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            {{- toYaml .Values.etherpad.resources | nindent 12 }}
+      {{- with .Values.etherpad.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.etherpad.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.etherpad.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
