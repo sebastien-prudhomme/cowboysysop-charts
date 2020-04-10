@@ -1,15 +1,15 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "jitsi-meet.web.metrics.fullname" . }}
+  name: {{ include "jitsi-meet.web.fullname" . }}
   labels:
     {{- include "jitsi-meet.web.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.web.metrics.service.type }}
+  type: {{ .Values.web.service.type }}
   ports:
-    - port: {{ .Values.web.metrics.service.port }}
-      targetPort: metrics
+    - port: {{ .Values.web.service.port }}
+      targetPort: http
       protocol: TCP
-      name: metrics
+      name: http
   selector:
     {{- include "jitsi-meet.web.selectorLabels" . | nindent 4 }}

@@ -81,20 +81,6 @@ Create a default fully qualified metrics name (prosody component).
 {{- end -}}
 
 {{/*
-Create a default fully qualified app name (web component).
-*/}}
-{{- define "jitsi-meet.web.fullname" -}}
-{{- printf "%s-%s" (include "jitsi-meet.fullname" .) "web" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{/*
-Create a default fully qualified metrics name (web component).
-*/}}
-{{- define "jitsi-meet.web.metrics.fullname" -}}
-{{- printf "%s-%s" (include "jitsi-meet.web.fullname" .) "metrics" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{/*
 Create chart name and version as used by the chart label.
 */}}
 {{- define "jitsi-meet.chart" -}}
@@ -127,13 +113,6 @@ Component labels (prosody component)
 */}}
 {{- define "jitsi-meet.prosody.componentLabels" -}}
 app.kubernetes.io/component: prosody
-{{- end -}}
-
-{{/*
-Component labels (web component)
-*/}}
-{{- define "jitsi-meet.web.componentLabels" -}}
-app.kubernetes.io/component: web
 {{- end -}}
 
 {{/*
@@ -181,14 +160,6 @@ Common labels (prosody component)
 {{- end -}}
 
 {{/*
-Common labels (web component)
-*/}}
-{{- define "jitsi-meet.web.labels" -}}
-{{ include "jitsi-meet.labels" . }}
-{{ include "jitsi-meet.web.componentLabels" . }}
-{{- end -}}
-
-{{/*
 Selector labels
 */}}
 {{- define "jitsi-meet.selectorLabels" -}}
@@ -226,14 +197,6 @@ Selector labels (prosody component)
 {{- define "jitsi-meet.prosody.selectorLabels" -}}
 {{ include "jitsi-meet.selectorLabels" . }}
 {{ include "jitsi-meet.prosody.componentLabels" . }}
-{{- end -}}
-
-{{/*
-Selector labels (web component)
-*/}}
-{{- define "jitsi-meet.web.selectorLabels" -}}
-{{ include "jitsi-meet.selectorLabels" . }}
-{{ include "jitsi-meet.web.componentLabels" . }}
 {{- end -}}
 
 {{/*
@@ -288,17 +251,6 @@ Create the name of the service account to use (prosody component)
     {{ default (include "jitsi-meet.prosody.fullname" .) .Values.prosody.serviceAccount.name }}
 {{- else -}}
     {{ default "default" .Values.prosody.serviceAccount.name }}
-{{- end -}}
-{{- end -}}
-
-{{/*
-Create the name of the service account to use (web component)
-*/}}
-{{- define "jitsi-meet.web.serviceAccountName" -}}
-{{- if .Values.web.serviceAccount.create -}}
-    {{ default (include "jitsi-meet.web.fullname" .) .Values.web.serviceAccount.name }}
-{{- else -}}
-    {{ default "default" .Values.web.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
 
