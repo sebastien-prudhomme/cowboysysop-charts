@@ -35,6 +35,31 @@ spec:
             {{- toYaml .Values.jibri.securityContext | nindent 12 }}
           image: "{{ .Values.jibri.image.repository }}:{{ .Values.jibri.image.tag }}"
           imagePullPolicy: {{ .Values.jibri.image.pullPolicy }}
+          env:
+            - name: XMPP_SERVER
+              value: {{ include "jitsi-meet.prosody.fullname" . }}
+            - name: XMPP_DOMAIN
+              value: {{ .Values.xmpp.domain | quote }}
+            - name: XMPP_AUTH_DOMAIN
+              value: {{ .Values.xmpp.authDomain | quote }}
+            - name: XMPP_INTERNAL_MUC_DOMAIN
+              value: {{ .Values.xmpp.internalMucDomain | quote }}
+            - name: XMPP_RECORDER_DOMAIN
+              value: {{ .Values.xmpp.recorderDomain | quote }}
+            - name: JIBRI_RECORDER_USER
+              value: {{ .Values.jibri.recorderUser | quote }}
+            - name: JIBRI_RECORDER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "jitsi-meet.jibri.secretName" . }}
+                  key: recorder-password
+            - name: JIBRI_XMPP_USER
+              value: {{ .Values.jibri.xmppUser | quote }}
+            - name: JIBRI_XMPP_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "jitsi-meet.jibri.secretName" . }}
+                  key: xmpp-password
           # livenessProbe:
           #   httpGet:
           #     path: /
