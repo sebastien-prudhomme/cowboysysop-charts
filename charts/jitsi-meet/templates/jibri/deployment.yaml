@@ -72,14 +72,18 @@ spec:
               value: {{ .Values.jibri.recordingDir | quote }}
             - name: JIBRI_STRIP_DOMAIN_JID
               value: {{ .Values.jibri.stripDomainJid | quote }}
-          # livenessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: http
-          # readinessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: http
+          ports:
+            - name: http
+              containerPort: 2222
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /jibri/api/v1.0/health
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /jibri/api/v1.0/health
+              port: http
           resources:
             {{- toYaml .Values.jibri.resources | nindent 12 }}
           volumeMounts:
