@@ -823,16 +823,6 @@ web:
 
 # }
 
-# {{ if .Env.ETHERPAD_URL_BASE }}
-# # Etherpad-lite
-# location /etherpad/ {
-
-#     proxy_pass {{ .Env.ETHERPAD_URL_BASE }}/;
-#     proxy_set_header X-Forwarded-For $remote_addr;
-#     proxy_buffering off;
-# }
-# {{ end }}
-
 # # ssl certs
 # {{ if .Env.ENABLE_LETSENCRYPT | default "0" | toBool }}
 # ssl_certificate /etc/letsencrypt/live/{{ .Env.LETSENCRYPT_DOMAIN }}/fullchain.pem;
@@ -882,10 +872,6 @@ web:
 #         fi
 #     fi
 
-#     if [[ ! -z "${ETHERPAD_URL_BASE}" && -z "$(grep -om1 'etherpad_base:' /config/config.js)" ]]; then
-#         sed -i \
-#             /config/config.js
-#     fi
 
 #     if [[ $ENABLE_TRANSCRIPTIONS -eq 1 || "$ENABLE_TRANSCRIPTIONS" == "true" ]]; then
 #         sed -i \
