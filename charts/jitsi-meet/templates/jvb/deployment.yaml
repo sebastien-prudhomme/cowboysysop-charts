@@ -51,6 +51,8 @@ spec:
                   key: auth-password
             - name: JVB_BREWERY_MUC
               value: {{ .Values.jvb.breweryMuc | quote }}
+            - name: JVB_PORT
+              value: 10000
           ports:
             - name: metrics
               containerPort: 8942
