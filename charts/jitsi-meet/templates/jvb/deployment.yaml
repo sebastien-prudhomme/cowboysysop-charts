@@ -52,9 +52,9 @@ spec:
             - name: JVB_BREWERY_MUC
               value: {{ .Values.jvb.breweryMuc | quote }}
             - name: JVB_PORT
-              value: 10000
+              value: "10000"
             - name: JVB_TCP_PORT
-              value: 4443
+              value: "4443"
           ports:
             - name: ice-udp
               containerPort: 10000
