@@ -25,20 +25,6 @@ If release name contains chart name it will be used as a full name.
 {{- end -}}
 
 {{/*
-Create a default fully qualified app name (jicofo component).
-*/}}
-{{- define "jitsi-meet.jicofo.fullname" -}}
-{{- printf "%s-%s" (include "jitsi-meet.fullname" .) "jicofo" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{/*
-Create a default fully qualified metrics name (jicofo component).
-*/}}
-{{- define "jitsi-meet.jicofo.metrics.fullname" -}}
-{{- printf "%s-%s" (include "jitsi-meet.jicofo.fullname" .) "metrics" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{/*
 Create a default fully qualified app name (jigasi component).
 */}}
 {{- define "jitsi-meet.jigasi.fullname" -}}
@@ -88,13 +74,6 @@ Create chart name and version as used by the chart label.
 {{- end -}}
 
 {{/*
-Component labels (jicofo component)
-*/}}
-{{- define "jitsi-meet.jicofo.componentLabels" -}}
-app.kubernetes.io/component: jicofo
-{{- end -}}
-
-{{/*
 Component labels (jigasi component)
 */}}
 {{- define "jitsi-meet.jigasi.componentLabels" -}}
@@ -128,14 +107,6 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
 
 {{/*
-Common labels (jicofo component)
-*/}}
-{{- define "jitsi-meet.jicofo.labels" -}}
-{{ include "jitsi-meet.labels" . }}
-{{ include "jitsi-meet.jicofo.componentLabels" . }}
-{{- end -}}
-
-{{/*
 Common labels (jigasi component)
 */}}
 {{- define "jitsi-meet.jigasi.labels" -}}
@@ -165,14 +136,6 @@ Selector labels
 {{- define "jitsi-meet.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "jitsi-meet.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end -}}
-
-{{/*
-Selector labels (jicofo component)
-*/}}
-{{- define "jitsi-meet.jicofo.selectorLabels" -}}
-{{ include "jitsi-meet.selectorLabels" . }}
-{{ include "jitsi-meet.jicofo.componentLabels" . }}
 {{- end -}}
 
 {{/*
@@ -211,17 +174,6 @@ Create the name of the service account to use
 {{- end -}}
 
 {{/*
-Create the name of the service account to use (jicofo component)
-*/}}
-{{- define "jitsi-meet.jicofo.serviceAccountName" -}}
-{{- if .Values.jicofo.serviceAccount.create -}}
-    {{ default (include "jitsi-meet.jicofo.fullname" .) .Values.jicofo.serviceAccount.name }}
-{{- else -}}
-    {{ default "default" .Values.jicofo.serviceAccount.name }}
-{{- end -}}
-{{- end -}}
-
-{{/*
 Create the name of the service account to use (jigasi component)
 */}}
 {{- define "jitsi-meet.jigasi.serviceAccountName" -}}
@@ -251,17 +203,6 @@ Create the name of the service account to use (prosody component)
     {{ default (include "jitsi-meet.prosody.fullname" .) .Values.prosody.serviceAccount.name }}
 {{- else -}}
     {{ default "default" .Values.prosody.serviceAccount.name }}
-{{- end -}}
-{{- end -}}
-
-{{/*
-Create the name of the secret to use (jicofo component)
-*/}}
-{{- define "jitsi-meet.jicofo.secretName" -}}
-{{- if .Values.jicofo.existingSecret -}}
-    {{ .Values.jicofo.existingSecret }}
-{{- else -}}
-    {{ include "jitsi-meet.jicofo.fullname" . }}
 {{- end -}}
 {{- end -}}
 

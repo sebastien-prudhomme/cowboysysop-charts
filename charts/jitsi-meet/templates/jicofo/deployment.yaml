@@ -44,6 +44,10 @@ spec:
               value: {{ .Values.xmpp.authDomain | quote }}
             - name: XMPP_INTERNAL_MUC_DOMAIN
               value: {{ .Values.xmpp.internalMucDomain | quote }}
+            - name: JIBRI_BREWERY_MUC
+              value: {{ .Values.jibri.breweryMuc | quote }}
+            - name: JIBRI_PENDING_TIMEOUT
+              value: {{ .Values.jibri.pendingTimeout | quote }}
             - name: JICOFO_COMPONENT_SECRET
               valueFrom:
                 secretKeyRef:

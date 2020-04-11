@@ -11,5 +11,5 @@ spec:
     - name: wget
       image: busybox
       command: ['wget']
-      args: ['{{ include "jitsi-meet.jicofo.metrics.fullname" . }}:{{ .Values.jicofo.metrics.service.port }}/metrics']
+      args: ['{{ include "jitsi-meet.jicofo.fullname" . }}:{{ .Values.jicofo.service.port }}']
   restartPolicy: Never

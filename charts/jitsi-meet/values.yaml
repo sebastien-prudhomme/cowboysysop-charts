@@ -135,6 +135,9 @@ jibri:
   # MUC name for the Jibri pool
   breweryMuc: jibribrewery
 
+  # MUC connection timeout
+  pendingTimeout: 90
+
   # The finalizing script. Will run after recording is complete
   finalizeRecordingScriptPath: /config/finalize.sh
 
@@ -149,12 +152,6 @@ jibri:
 
   # Name of existing Secret to use (jibri component)
   existingSecret: ""
-
-#             "control_muc": {
-# 		// MUST be unic for every instanse
-#                 "nickname": "jibri-instanse-{{ .Env.JIBRI_INSTANCE_ID }}"
-#             },
-
 
 jicofo:
   replicaCount: 1
@@ -224,29 +221,15 @@ jicofo:
   # Name of existing Secret to use (jicofo component)
   existingSecret: ""
 
-
-
-# {{ if and .Env.JIBRI_BREWERY_MUC .Env.JIBRI_PENDING_TIMEOUT }}
-# org.jitsi.jicofo.jibri.BREWERY={{ .Env.JIBRI_BREWERY_MUC}}@{{ .Env.XMPP_INTERNAL_MUC_DOMAIN }}
-# org.jitsi.jicofo.jibri.PENDING_TIMEOUT={{ .Env.JIBRI_PENDING_TIMEOUT }}
-# {{ end }}
-
 # {{ if and .Env.JIGASI_SIP_URI .Env.JIGASI_BREWERY_MUC }}
-# org.jitsi.jicofo.jigasi.BREWERY={{ .Env.JIGASI_BREWERY_MUC}}@{{ .Env.XMPP_INTERNAL_MUC_DOMAIN }}
+# org.jitsi.jicofo.jigasi.BREWERY={{ .Env.JIGASI_BREWERY_MUC}}
 # {{ end }}
 
 # {{ if .Env.ENABLE_AUTH | default "0" | toBool }}
-# org.jitsi.jicofo.auth.URL=XMPP:{{ .Env.XMPP_DOMAIN }}
 # {{ end }}
 
 # {{ if .Env.JICOFO_RESERVATION_REST_BASE_URL }}
-# org.jitsi.impl.reservation.rest.BASE_URL={{ .Env.JICOFO_RESERVATION_REST_BASE_URL }}
 # {{ end }}
-
-  metrics:
-    service:
-      type: ClusterIP
-      port: 8944
 
 jigasi:
   # XMPP user for Jigasi MUC client connections

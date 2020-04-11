@@ -102,6 +102,7 @@ The following table lists all the configurable parameters expose by the Jitsi Me
 | `jibri.xmppUser`                      | XMPP user for Jibri client connections                                                          | `jibri`                                                     |
 | `jibri.xmppPassword`                  | XMPP password for Jibri client connections                                                      | Random 32 character long alphanumeric string                |
 | `jibri.breweryMuc`                    | MUC name for the Jibri pool                                                                     | `jibribrewery`                                              |
+| `jibri.pendingTimeout`                | MUC connection timeout                                                                          | `90`                                                        |
 | `jibri.finalizeRecordingScriptPath`   | The finalizing script. Will run after recording is complete                                     | `/config/finalize.sh`                                       |
 | `jibri.logsDir`                       | Directory for logs inside Jibri container                                                       | `/config/logs`                                              |
 | `jibri.recordingDir`                  | Directory for recordings inside Jibri container                                                 | `/config/recordings`                                        |
