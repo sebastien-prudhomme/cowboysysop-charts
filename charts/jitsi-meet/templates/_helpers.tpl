@@ -39,20 +39,6 @@ Create a default fully qualified metrics name (jigasi component).
 {{- end -}}
 
 {{/*
-Create a default fully qualified app name (jvb component).
-*/}}
-{{- define "jitsi-meet.jvb.fullname" -}}
-{{- printf "%s-%s" (include "jitsi-meet.fullname" .) "jvb" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{/*
-Create a default fully qualified metrics name (jvb component).
-*/}}
-{{- define "jitsi-meet.jvb.metrics.fullname" -}}
-{{- printf "%s-%s" (include "jitsi-meet.jvb.fullname" .) "metrics" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{/*
 Create a default fully qualified app name (prosody component).
 */}}
 {{- define "jitsi-meet.prosody.fullname" -}}
@@ -78,13 +64,6 @@ Component labels (jigasi component)
 */}}
 {{- define "jitsi-meet.jigasi.componentLabels" -}}
 app.kubernetes.io/component: jigasi
-{{- end -}}
-
-{{/*
-Component labels (jvb component)
-*/}}
-{{- define "jitsi-meet.jvb.componentLabels" -}}
-app.kubernetes.io/component: jvb
 {{- end -}}
 
 {{/*
@@ -115,14 +94,6 @@ Common labels (jigasi component)
 {{- end -}}
 
 {{/*
-Common labels (jvb component)
-*/}}
-{{- define "jitsi-meet.jvb.labels" -}}
-{{ include "jitsi-meet.labels" . }}
-{{ include "jitsi-meet.jvb.componentLabels" . }}
-{{- end -}}
-
-{{/*
 Common labels (prosody component)
 */}}
 {{- define "jitsi-meet.prosody.labels" -}}
@@ -144,14 +115,6 @@ Selector labels (jigasi component)
 {{- define "jitsi-meet.jigasi.selectorLabels" -}}
 {{ include "jitsi-meet.selectorLabels" . }}
 {{ include "jitsi-meet.jigasi.componentLabels" . }}
-{{- end -}}
-
-{{/*
-Selector labels (jvb component)
-*/}}
-{{- define "jitsi-meet.jvb.selectorLabels" -}}
-{{ include "jitsi-meet.selectorLabels" . }}
-{{ include "jitsi-meet.jvb.componentLabels" . }}
 {{- end -}}
 
 {{/*
@@ -185,17 +148,6 @@ Create the name of the service account to use (jigasi component)
 {{- end -}}
 
 {{/*
-Create the name of the service account to use (jvb component)
-*/}}
-{{- define "jitsi-meet.jvb.serviceAccountName" -}}
-{{- if .Values.jvb.serviceAccount.create -}}
-    {{ default (include "jitsi-meet.jvb.fullname" .) .Values.jvb.serviceAccount.name }}
-{{- else -}}
-    {{ default "default" .Values.jvb.serviceAccount.name }}
-{{- end -}}
-{{- end -}}
-
-{{/*
 Create the name of the service account to use (prosody component)
 */}}
 {{- define "jitsi-meet.prosody.serviceAccountName" -}}
@@ -214,16 +166,5 @@ Create the name of the secret to use (jigasi component)
     {{ .Values.jigasi.existingSecret }}
 {{- else -}}
     {{ include "jitsi-meet.jigasi.fullname" . }}
-{{- end -}}
-{{- end -}}
-
-{{/*
-Create the name of the secret to use (jvb component)
-*/}}
-{{- define "jitsi-meet.jvb.secretName" -}}
-{{- if .Values.jvb.existingSecret -}}
-    {{ .Values.jvb.existingSecret }}
-{{- else -}}
-    {{ include "jitsi-meet.jvb.fullname" . }}
 {{- end -}}
 {{- end -}}

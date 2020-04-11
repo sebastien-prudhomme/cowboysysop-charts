@@ -53,9 +53,14 @@ spec:
               value: {{ .Values.jvb.breweryMuc | quote }}
             - name: JVB_PORT
               value: 10000
+            - name: JVB_TCP_PORT
+              value: 4443
           ports:
-            - name: metrics
-              containerPort: 8942
+            - name: ice-udp
+              containerPort: 10000
+              protocol: UDP
+            - name: ice-tcp
+              containerPort: 4443
               protocol: TCP
           # livenessProbe:
           #   httpGet:

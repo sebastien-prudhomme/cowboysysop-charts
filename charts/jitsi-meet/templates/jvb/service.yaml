@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "jitsi-meet.jvb.fullname" . }}
+  labels:
+    {{- include "jitsi-meet.jvb.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.jvb.service.type }}
+  ports:
+    - port: {{ .Values.jvb.service.udpPort }}
+      targetPort: ice-udp
+      protocol: UDP
+      name: ice-udp
+    - port: {{ .Values.jvb.service.tcpPort }}
+      targetPort: ice-tcp
+      protocol: TCP
+      name: ice-tcp
+  selector:
+    {{- include "jitsi-meet.jvb.selectorLabels" . | nindent 4 }}

@@ -145,6 +145,9 @@ The following table lists all the configurable parameters expose by the Jitsi Me
 | `jvb.podLabels`                       | Additional pod labels (jvb component)                                                           | `{}`                                                        |
 | `jvb.podSecurityContext`              | Pod security context (jvb component)                                                            | `{}`                                                        |
 | `jvb.securityContext`                 | Container security context (jvb component)                                                      | `{}`                                                        |
+| `jvb.service.type`                    | Kubernetes Service type (jvb component)                                                         | `ClusterIP`                                                 |
+| `jvb.service.udpPort`                 | Jitsi Meet service UDP port (jvb component)                                                     | `10000`                                                     |
+| `jvb.service.tcpPort`                 | Jitsi Meet service TCP port (jvb component)                                                     | `4443`                                                      |
 | `jvb.resources`                       | CPU/Memory resource requests/limits (jvb component)                                             | `{}`                                                        |
 | `jvb.nodeSelector`                    | Node labels for pod assignment (jvb component)                                                  | `{}`                                                        |
 | `jvb.tolerations`                     | Tolerations for pod assignment (jvb component)                                                  | `[]`                                                        |
@@ -153,8 +156,6 @@ The following table lists all the configurable parameters expose by the Jitsi Me
 | `jvb.authPassword`                    | XMPP password for JVB MUC client connections                                                    | Random 32 character long alphanumeric string                |
 | `jvb.existingSecret`                  | Name of existing Secret to use (jvb component)                                                  | `nil`                                                       |
 | `jvb.breweryMuc`                      | MUC name for the JVB pool                                                                       | `jvbbrewery`                                                |
-| `jvb.metrics.service.type`            | Metrics Kubernetes Service type (jvb component)                                                 | `ClusterIP`                                                 |
-| `jvb.metrics.service.port`            | Metrics service port (jvb component)                                                            | `8942`                                                      |
 | `prosody.replicaCount`                | Number of replicas (prosody component)                                                          | `1`                                                         |
 | `prosody.image.repository`            | Jitsi Meet image name (prosody component)                                                       | `jitsi/prosody`                                             |
 | `prosody.image.tag`                   | Jitsi Meet image tag (prosody component)                                                        | `4384-1`                                                    |
