@@ -94,12 +94,12 @@ controller:
   # Name of existing Secret to use (controller component)
   existingSecret: ""
 
-recommender:
+node:
   replicaCount: 1
 
   image:
-    repository: k8s.gcr.io/vpa-recommender
-    tag: 0.7.0
+    repository: scaleway/scaleway-csi
+    tag: v0.1.1
     pullPolicy: IfNotPresent
 
   serviceAccount:
@@ -111,10 +111,10 @@ recommender:
     # If not set and create is true, a name is generated using the fullname template
     name:
 
-  # Additional pod annotations (recommender component)
+  # Additional pod annotations (node component)
   podAnnotations: {}
 
-  # Additional pod labels (recommender component)
+  # Additional pod labels (node component)
   podLabels: {}
 
   podSecurityContext: {}
@@ -147,27 +147,6 @@ recommender:
   affinity: {}
 
   extraArgs:
-    # checkpoints-gc-interval: 10m0s
-    # checkpoints-timeout: 1m0s
-    # container-name-label: name
-    # container-namespace-label: namespace
-    # container-pod-name-label: pod_name
-    # history-length: 8d
-    # kube-api-burst: 10
-    # kube-api-qps: 5
-    # memory-saver: false
-    # metric-for-pod-labels: up{job="kubernetes-pods"}
-    # min-checkpoints: 10
-    # pod-label-prefix: pod_label_
-    # pod-name-label: kubernetes_pod_name
-    # pod-namespace-label: kubernetes_namespace
-    # pod-recommendation-min-cpu-millicores: 25
-    # pod-recommendation-min-memory-mb: 250
-    # prometheus-address: ""
-    # prometheus-cadvisor-job-name: kubernetes-cadvisor
-    # recommendation-margin-fraction: 0.15
-    # recommender-interval: 1m0s
-    # storage: checkpoint
     v: 2
 
   metrics:

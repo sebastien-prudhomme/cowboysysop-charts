@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "scaleway-csi.node.metrics.fullname" . }}
+  labels:
+    {{- include "scaleway-csi.node.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.node.metrics.service.type }}
+  ports:
+    - port: {{ .Values.node.metrics.service.port }}
+      targetPort: metrics
+      protocol: TCP
+      name: metrics
+  selector:
+    {{- include "scaleway-csi.node.selectorLabels" . | nindent 4 }}

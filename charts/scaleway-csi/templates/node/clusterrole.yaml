@@ -1,9 +1,9 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ include "scaleway-csi.recommender.fullname" . }}
+  name: {{ include "scaleway-csi.node.fullname" . }}
   labels:
-    {{- include "scaleway-csi.recommender.labels" . | nindent 4 }}
+    {{- include "scaleway-csi.node.labels" . | nindent 4 }}
 rules:
   # system:metrics-reader
   - apiGroups:
