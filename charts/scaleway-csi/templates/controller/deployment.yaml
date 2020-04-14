@@ -59,6 +59,37 @@ spec:
           volumeMounts:
             - name: socket
               mountPath: /socket
+        - name: csi-attacher
+          securityContext:
+            {{- toYaml .Values.controller.securityContext | nindent 12 }}
+          image: "{{ .Values.controller.csiAttacherImage.repository }}:{{ .Values.controller.csiAttacherImage.tag }}"
+          imagePullPolicy: {{ .Values.controller.csiAttacherImage.pullPolicy }}
+          args:
+            - --csi-address=/socket/csi.sock
+            - --leader-election=true
+            # -metrics-address :8080
+            #     The TCP network address where the prometheus metrics endpoint will listen (example: :8080). The default is empty string, which means metrics endpoint is disabled.
+            # -metrics-path /metrics
+            #     The HTTP path where prometheus metrics will be exposed. Default is /metrics. (default "/metrics")
+            # -reconcile-sync duration
+            #     Resync interval of the VolumeAttachment reconciler. (default 1m0s)
+            # -resync duration
+            #     Resync interval of the controller. (default 10m0s)
+            # -retry-interval-max duration
+            #     Maximum retry interval of failed create volume or deletion. (default 5m0s)
+            # -retry-interval-start duration
+            #     Initial retry interval of failed create volume or deletion. It doubles with each failure, up to retry-interval-max. (default 1s)
+            # -timeout duration
+            #     Timeout for waiting for attaching or detaching the volume. (default 15s)
+            # -v value
+            #     number for the log level verbosity
+            # -worker-threads uint
+            #     Number of attacher worker threads (default 10)
+          resources:
+           {{- toYaml .Values.controller.resources | nindent 12 }}
+          volumeMounts:
+            - name: socket
+              mountPath: /socket
         - name: csi-snapshotter
           securityContext:
             {{- toYaml .Values.controller.securityContext | nindent 12 }}
