@@ -50,8 +50,8 @@ spec:
           #   httpGet:
           #     path: /healthz
           #     port: http
-          # resources:
-          #  {{- toYaml .Values.controller.resources | nindent 12 }}
+          resources:
+           {{- toYaml .Values.controller.resources | nindent 12 }}
           volumeMounts:
             - name: socket
               mountPath: /socket
@@ -76,8 +76,8 @@ spec:
           #   httpGet:
           #     path: /healthz
           #     port: http
-          # resources:
-          #  {{- toYaml .Values.controller.resources | nindent 12 }}
+          resources:
+           {{- toYaml .Values.controller.resources | nindent 12 }}
       {{- with .Values.controller.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
