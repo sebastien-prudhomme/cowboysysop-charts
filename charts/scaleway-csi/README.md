@@ -120,24 +120,6 @@ The following table lists all the configurable parameters expose by the Vertical
 | `recommender.extraArgs`                  | Additional container arguments (recommender component)                                            | `{ v: 2 }`                                                       |
 | `recommender.metrics.service.type`       | Metrics Kubernetes Service type (recommender component)                                           | `ClusterIP`                                                      |
 | `recommender.metrics.service.port`       | Metrics service port (recommender component)                                                      | `8942`                                                           |
-| `updater.replicaCount`                   | Number of replicas (updater component)                                                            | `1`                                                              |
-| `updater.image.repository`               | Vertical Pod Autoscaler image name (updater component)                                            | `k8s.gcr.io/vpa-updater`                                         |
-| `updater.image.tag`                      | Vertical Pod Autoscaler image tag (updater component)                                             | `0.7.0`                                                          |
-| `updater.image.pullPolicy`               | Image pull policy (updater component)                                                             | `IfNotPresent`                                                   |
-| `updater.serviceAccount.create`          | Specify whether to create a ServiceAccount (updater component)                                    | `true`                                                           |
-| `updater.serviceAccount.annotations`     | ServiceAccount annotations (updater component)                                                    | `{}`                                                             |
-| `updater.serviceAccount.name`            | The name of the ServiceAccount to create (updater component)                                      | Generated using the `scaleway-csi.updater.fullname` template     |
-| `updater.podAnnotations`                 | Additional pod annotations (updater component)                                                    | `{}`                                                             |
-| `updater.podLabels`                      | Additional pod labels (updater component)                                                         | `{}`                                                             |
-| `updater.podSecurityContext`             | Pod security context (updater component)                                                          | `{}`                                                             |
-| `updater.securityContext`                | Container security context (updater component)                                                    | `{}`                                                             |
-| `updater.resources`                      | CPU/Memory resource requests/limits (updater component)                                           | `{}`                                                             |
-| `updater.nodeSelector`                   | Node labels for pod assignment (updater component)                                                | `{}`                                                             |
-| `updater.tolerations`                    | Tolerations for pod assignment (updater component)                                                | `[]`                                                             |
-| `updater.affinity`                       | Map of node/pod affinities (updater component)                                                    | `{}`                                                             |
-| `updater.extraArgs`                      | Additional container arguments (updater component)                                                | `{ v: 2 }`                                                       |
-| `updater.metrics.service.type`           | Metrics Kubernetes Service type (updater component)                                               | `ClusterIP`                                                      |
-| `updater.metrics.service.port`           | Metrics service port (updater component)                                                          | `8943`                                                           |
 
 Specify the parameters you which to customize using the `--set` argument to the `helm install` command. For instance,
 

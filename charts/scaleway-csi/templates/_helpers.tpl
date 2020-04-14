@@ -39,20 +39,6 @@ Create a default fully qualified metrics name (recommender component).
 {{- end -}}
 
 {{/*
-Create a default fully qualified app name (updater component).
-*/}}
-{{- define "scaleway-csi.updater.fullname" -}}
-{{- printf "%s-%s" (include "scaleway-csi.fullname" .) "updater" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{/*
-Create a default fully qualified metrics name (updater component).
-*/}}
-{{- define "scaleway-csi.updater.metrics.fullname" -}}
-{{- printf "%s-%s" (include "scaleway-csi.updater.fullname" .) "metrics" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{/*
 Create chart name and version as used by the chart label.
 */}}
 {{- define "scaleway-csi.chart" -}}
@@ -64,13 +50,6 @@ Component labels (recommender component)
 */}}
 {{- define "scaleway-csi.recommender.componentLabels" -}}
 app.kubernetes.io/component: recommender
-{{- end -}}
-
-{{/*
-Component labels (updater component)
-*/}}
-{{- define "scaleway-csi.updater.componentLabels" -}}
-app.kubernetes.io/component: updater
 {{- end -}}
 
 {{/*
@@ -94,14 +73,6 @@ Common labels (recommender component)
 {{- end -}}
 
 {{/*
-Common labels (updater component)
-*/}}
-{{- define "scaleway-csi.updater.labels" -}}
-{{ include "scaleway-csi.labels" . }}
-{{ include "scaleway-csi.updater.componentLabels" . }}
-{{- end -}}
-
-{{/*
 Selector labels
 */}}
 {{- define "scaleway-csi.selectorLabels" -}}
@@ -115,14 +86,6 @@ Selector labels (recommender component)
 {{- define "scaleway-csi.recommender.selectorLabels" -}}
 {{ include "scaleway-csi.selectorLabels" . }}
 {{ include "scaleway-csi.recommender.componentLabels" . }}
-{{- end -}}
-
-{{/*
-Selector labels (updater component)
-*/}}
-{{- define "scaleway-csi.updater.selectorLabels" -}}
-{{ include "scaleway-csi.selectorLabels" . }}
-{{ include "scaleway-csi.updater.componentLabels" . }}
 {{- end -}}
 
 {{/*
@@ -144,16 +107,5 @@ Create the name of the service account to use (recommender component)
     {{ default (include "scaleway-csi.recommender.fullname" .) .Values.recommender.serviceAccount.name }}
 {{- else -}}
     {{ default "default" .Values.recommender.serviceAccount.name }}
-{{- end -}}
-{{- end -}}
-
-{{/*
-Create the name of the service account to use (updater component)
-*/}}
-{{- define "scaleway-csi.updater.serviceAccountName" -}}
-{{- if .Values.updater.serviceAccount.create -}}
-    {{ default (include "scaleway-csi.updater.fullname" .) .Values.updater.serviceAccount.name }}
-{{- else -}}
-    {{ default "default" .Values.updater.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
