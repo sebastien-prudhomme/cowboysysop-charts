@@ -42,6 +42,10 @@ spec:
             #     Prefix to add in block volume name
             # -v value
             #     number for the log level verbosity
+          ports:
+            - name: http
+              containerPort: 9808
+              protocol: TCP
           # livenessProbe:
           #   httpGet:
           #     path: /healthz
@@ -55,6 +59,23 @@ spec:
           volumeMounts:
             - name: socket
               mountPath: /socket
+        - name: snapshot-controller
+          securityContext:
+            {{- toYaml .Values.controller.securityContext | nindent 12 }}
+          image: "{{ .Values.controller.snapshotControllerImage.repository }}:{{ .Values.controller.snapshotControllerImage.tag }}"
+          imagePullPolicy: {{ .Values.controller.snapshotControllerImage.pullPolicy }}
+          # args:
+            # -leader-election
+            #     Enables leader election.
+            # -resync-period duration
+            #     Resync interval of the controller. (default 1m0s)
+            # -v value
+            #     number for the log level verbosity
+          resources:
+           {{- toYaml .Values.controller.resources | nindent 12 }}
+          volumeMounts:
+            - name: socket
+              mountPath: /socket
         - name: liveness-probe
           securityContext:
             {{- toYaml .Values.controller.securityContext | nindent 12 }}
@@ -62,18 +83,12 @@ spec:
           imagePullPolicy: {{ .Values.controller.livenessProbeImage.pullPolicy }}
           args:
             - --csi-address=/socket/csi.sock
-          ports:
-            - name: http
-              containerPort: 9808
-              protocol: TCP
-          # livenessProbe:
-          #   httpGet:
-          #     path: /healthz
-          #     port: http
-          # readinessProbe:
-          #   httpGet:
-          #     path: /healthz
-          #     port: http
+            # -health-port string
+            #     TCP ports for listening healthz requests (default "9808")
+            # -probe-timeout duration
+            #     Probe timeout in seconds (default 1s)
+            # -v value
+            #     number for the log level verbosity
           resources:
            {{- toYaml .Values.controller.resources | nindent 12 }}
           volumeMounts:
