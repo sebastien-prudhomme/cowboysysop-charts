@@ -93,6 +93,7 @@ The following table lists all the configurable parameters expose by the Vertical
 | `controller.podAnnotations`              | Additional pod annotations (controller component)                                                 | `{}`                                                             |
 | `controller.podLabels`                   | Additional pod labels (controller component)                                                      | `{}`                                                             |
 | `controller.podSecurityContext`          | Pod security context (controller component)                                                       | `{}`                                                             |
+| `controller.priorityClassName`           | Pod priority class name (controller component)                                                    | `system-cluster-critical`                                        |
 | `controller.securityContext`             | Container security context (controller component)                                                 | `{}`                                                             |
 | `controller.resources`                   | CPU/Memory resource requests/limits (controller component)                                        | `{}`                                                             |
 | `controller.nodeSelector`                | Node labels for pod assignment (controller component)                                             | `{}`                                                             |

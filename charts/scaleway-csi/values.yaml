@@ -32,6 +32,9 @@ controller:
   podSecurityContext: {}
     # fsGroup: 2000
 
+  # Pod priority class name (controller component)
+  priorityClassName: system-cluster-critical
+
   securityContext: {}
     # capabilities:
     #   drop:
