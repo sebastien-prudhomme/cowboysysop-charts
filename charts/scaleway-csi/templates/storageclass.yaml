@@ -1,0 +1,10 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: scw-bssd
+  labels:
+    {{- include "scaleway-csi.labels" . | nindent 4 }}
+  annotations:
+    storageclass.kubernetes.io/is-default-class: true
+provisioner: csi.scaleway.com
+reclaimPolicy: Delete
