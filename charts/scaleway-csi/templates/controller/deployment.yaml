@@ -64,9 +64,8 @@ spec:
             {{- toYaml .Values.controller.securityContext | nindent 12 }}
           image: "{{ .Values.controller.snapshotControllerImage.repository }}:{{ .Values.controller.snapshotControllerImage.tag }}"
           imagePullPolicy: {{ .Values.controller.snapshotControllerImage.pullPolicy }}
-          # args:
-            # -leader-election
-            #     Enables leader election.
+          args:
+            - --leader-election=true
             # -resync-period duration
             #     Resync interval of the controller. (default 1m0s)
             # -v value
