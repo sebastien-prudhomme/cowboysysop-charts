@@ -26,12 +26,12 @@ spec:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       serviceAccountName: {{ include "scaleway-csi.controller.serviceAccountName" . }}
+      priorityClassName: {{ .Values.controller.priorityClassName }}
       securityContext:
         {{- toYaml .Values.controller.podSecurityContext | nindent 8 }}
       containers:
         - name: liveness-probe
           {{- if .Values.controller.priorityClassName }}
-          priorityClassName: {{ .Values.controller.priorityClassName }}
           {{- end }}
           securityContext:
             {{- toYaml .Values.controller.securityContext | nindent 12 }}
