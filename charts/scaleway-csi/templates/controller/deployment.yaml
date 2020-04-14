@@ -26,13 +26,36 @@ spec:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       serviceAccountName: {{ include "scaleway-csi.controller.serviceAccountName" . }}
+      {{- if .Values.controller.priorityClassName }}
       priorityClassName: {{ .Values.controller.priorityClassName }}
+      {{- end }}
       securityContext:
         {{- toYaml .Values.controller.podSecurityContext | nindent 8 }}
       containers:
+        - name: controller
+          image: "{{ .Values.controller.image.repository }}:{{ .Values.controller.image.tag }}"
+          imagePullPolicy: {{ .Values.controller.image.pullPolicy }}
+          args:
+            - --endpoint=unix:///socket/csi.sock
+            - --mode=controller
+            # -prefix string
+            #     Prefix to add in block volume name
+            # -v value
+            #     number for the log level verbosity
+          # livenessProbe:
+          #   httpGet:
+          #     path: /healthz
+          #     port: http
+          # readinessProbe:
+          #   httpGet:
+          #     path: /healthz
+          #     port: http
+          # resources:
+          #  {{- toYaml .Values.controller.resources | nindent 12 }}
+          volumeMounts:
+            - name: socket
+              mountPath: /socket
         - name: liveness-probe
-          {{- if .Values.controller.priorityClassName }}
-          {{- end }}
           securityContext:
             {{- toYaml .Values.controller.securityContext | nindent 12 }}
           image: "{{ .Values.controller.livenessProbeImage.repository }}:{{ .Values.controller.livenessProbeImage.tag }}"
@@ -53,8 +76,8 @@ spec:
           #   httpGet:
           #     path: /healthz
           #     port: http
-          resources:
-            {{- toYaml .Values.controller.resources | nindent 12 }}
+          # resources:
+          #  {{- toYaml .Values.controller.resources | nindent 12 }}
       {{- with .Values.controller.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -67,3 +90,6 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
+      volumes:
+        - name: socket
+          emptyDir: {}
