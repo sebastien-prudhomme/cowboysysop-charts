@@ -66,6 +66,9 @@ controller:
       type: ClusterIP
       port: 8944
 
+  # Name of existing Secret to use (controller component)
+  existingSecret: ""
+
 recommender:
   replicaCount: 1
 

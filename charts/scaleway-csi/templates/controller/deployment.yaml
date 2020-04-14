@@ -16,11 +16,10 @@ spec:
         {{- with .Values.controller.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
+      {{- with .Values.recommender.podAnnotations }}
       annotations:
-        checksum/secret: {{ include (print $.Template.BasePath "/controller/tls-secret.yaml") . | sha256sum }}
-        {{- with .Values.controller.podAnnotations }}
         {{- toYaml . | nindent 8 }}
-        {{- end }}
+      {{- end }}
     spec:
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -36,9 +35,6 @@ spec:
           image: "{{ .Values.controller.image.repository }}:{{ .Values.controller.image.tag }}"
           imagePullPolicy: {{ .Values.controller.image.pullPolicy }}
           args:
-            - --client-ca-file=/tls-secret/ca.crt
-            - --tls-cert-file=/tls-secret/tls.crt
-            - --tls-private-key=/tls-secret/tls.key
             {{- range $key, $value := .Values.controller.extraArgs }}
             - --{{ $key }}={{ $value }}
             {{- end }}
@@ -64,10 +60,6 @@ spec:
               port: metrics
           resources:
             {{- toYaml .Values.controller.resources | nindent 12 }}
-          volumeMounts:
-            - name: tls-secret
-              mountPath: /tls-secret
-              readOnly: true
       {{- with .Values.controller.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -80,7 +72,3 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-      volumes:
-        - name: tls-secret
-          secret:
-            secretName: {{ include "scaleway-csi.controller.tls.secretName" . }}

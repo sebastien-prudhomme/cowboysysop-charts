@@ -25,20 +25,6 @@ If release name contains chart name it will be used as a full name.
 {{- end -}}
 
 {{/*
-Create a default fully qualified app name (controller component).
-*/}}
-{{- define "scaleway-csi.controller.fullname" -}}
-{{- printf "%s-%s" (include "scaleway-csi.fullname" .) "controller" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{/*
-Create a default fully qualified metrics name (controller component).
-*/}}
-{{- define "scaleway-csi.controller.metrics.fullname" -}}
-{{- printf "%s-%s" (include "scaleway-csi.controller.fullname" .) "metrics" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{/*
 Create a default fully qualified app name (recommender component).
 */}}
 {{- define "scaleway-csi.recommender.fullname" -}}
@@ -74,13 +60,6 @@ Create chart name and version as used by the chart label.
 {{- end -}}
 
 {{/*
-Component labels (controller component)
-*/}}
-{{- define "scaleway-csi.controller.componentLabels" -}}
-app.kubernetes.io/component: controller
-{{- end -}}
-
-{{/*
 Component labels (recommender component)
 */}}
 {{- define "scaleway-csi.recommender.componentLabels" -}}
@@ -107,14 +86,6 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
 
 {{/*
-Common labels (controller component)
-*/}}
-{{- define "scaleway-csi.controller.labels" -}}
-{{ include "scaleway-csi.labels" . }}
-{{ include "scaleway-csi.controller.componentLabels" . }}
-{{- end -}}
-
-{{/*
 Common labels (recommender component)
 */}}
 {{- define "scaleway-csi.recommender.labels" -}}
@@ -136,14 +107,6 @@ Selector labels
 {{- define "scaleway-csi.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "scaleway-csi.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end -}}
-
-{{/*
-Selector labels (controller component)
-*/}}
-{{- define "scaleway-csi.controller.selectorLabels" -}}
-{{ include "scaleway-csi.selectorLabels" . }}
-{{ include "scaleway-csi.controller.componentLabels" . }}
 {{- end -}}
 
 {{/*
@@ -174,17 +137,6 @@ Create the name of the service account to use
 {{- end -}}
 
 {{/*
-Create the name of the service account to use (controller component)
-*/}}
-{{- define "scaleway-csi.controller.serviceAccountName" -}}
-{{- if .Values.controller.serviceAccount.create -}}
-    {{ default (include "scaleway-csi.controller.fullname" .) .Values.controller.serviceAccount.name }}
-{{- else -}}
-    {{ default "default" .Values.controller.serviceAccount.name }}
-{{- end -}}
-{{- end -}}
-
-{{/*
 Create the name of the service account to use (recommender component)
 */}}
 {{- define "scaleway-csi.recommender.serviceAccountName" -}}
@@ -203,16 +155,5 @@ Create the name of the service account to use (updater component)
     {{ default (include "scaleway-csi.updater.fullname" .) .Values.updater.serviceAccount.name }}
 {{- else -}}
     {{ default "default" .Values.updater.serviceAccount.name }}
-{{- end -}}
-{{- end -}}
-
-{{/*
-Create the name of the tls secret to use (controller component)
-*/}}
-{{- define "scaleway-csi.controller.tls.secretName" -}}
-{{- if .Values.controller.tls.existingSecret -}}
-    {{ .Values.controller.tls.existingSecret }}
-{{- else -}}
-    {{- printf "%s-%s" (include "scaleway-csi.controller.fullname" .) "tls" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 {{- end -}}
