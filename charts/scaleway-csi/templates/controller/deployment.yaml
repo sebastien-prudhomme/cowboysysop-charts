@@ -59,6 +59,33 @@ spec:
           volumeMounts:
             - name: socket
               mountPath: /socket
+        - name: csi-snapshotter
+          securityContext:
+            {{- toYaml .Values.controller.securityContext | nindent 12 }}
+          image: "{{ .Values.controller.csiSnapshotterImage.repository }}:{{ .Values.controller.csiSnapshotterImage.tag }}"
+          imagePullPolicy: {{ .Values.controller.csiSnapshotterImage.pullPolicy }}
+          args:
+            - --csi-address=/socket/csi.sock
+            - --leader-election=true
+            # -metrics-address :8080
+            #     The TCP network address where the prometheus metrics endpoint will listen (example: :8080). The default is empty string, which means metrics endpoint is disabled.
+            # -metrics-path /metrics
+            #     The HTTP path where prometheus metrics will be exposed. Default is /metrics. (default "/metrics")
+            # -resync-period duration
+            #     Resync interval of the controller. (default 1m0s)
+            # -snapshot-name-prefix string
+            #     Prefix to apply to the name of a created snapshot (default "snapshot")
+            # -snapshot-name-uuid-length int
+            #     Length in characters for the generated uuid of a created snapshot. Defaults behavior is to NOT truncate. (default -1)
+            # -timeout duration
+            #     The timeout for any RPCs to the CSI driver. Default is 1 minute. (default 1m0s)
+            # -v value
+            #     number for the log level verbosity
+          resources:
+           {{- toYaml .Values.controller.resources | nindent 12 }}
+          volumeMounts:
+            - name: socket
+              mountPath: /socket
         - name: snapshot-controller
           securityContext:
             {{- toYaml .Values.controller.securityContext | nindent 12 }}
@@ -72,9 +99,6 @@ spec:
             #     number for the log level verbosity
           resources:
            {{- toYaml .Values.controller.resources | nindent 12 }}
-          volumeMounts:
-            - name: socket
-              mountPath: /socket
         - name: liveness-probe
           securityContext:
             {{- toYaml .Values.controller.securityContext | nindent 12 }}
