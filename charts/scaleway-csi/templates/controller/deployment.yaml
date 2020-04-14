@@ -59,6 +59,31 @@ spec:
           volumeMounts:
             - name: socket
               mountPath: /socket
+        - name: csi-provisioner
+          securityContext:
+            {{- toYaml .Values.controller.securityContext | nindent 12 }}
+          image: "{{ .Values.controller.csiProvisionerImage.repository }}:{{ .Values.controller.csiProvisionerImage.tag }}"
+          imagePullPolicy: {{ .Values.controller.csiProvisionerImage.pullPolicy }}
+          args:
+            - --csi-address=/socket/csi.sock
+            - --enable-leader-election=true
+            - --feature-gates=Topology=true
+            - --leader-election-type=leases
+            # --metrics-address :8080              The TCP network address address where the prometheus metrics endpoint will listen (example: :8080). The default is empty string, which means metrics endpoint is disabled.
+            # --metrics-path /metrics              The HTTP path where prometheus metrics will be exposed. Default is /metrics. (default "/metrics")
+            # --retry-interval-max duration        Maximum retry interval of failed provisioning or deletion. (default 5m0s)
+            # --retry-interval-start duration      Initial retry interval of failed provisioning or deletion. It doubles with each failure, up to retry-interval-max. (default 1s)
+            # --strict-topology                    Passes only selected node topology to CreateVolume Request, unlike default behavior of passing aggregated cluster topologies that match with topology keys of the selected node.
+            # --timeout duration                   Timeout for waiting for creation or deletion of a volume (default 10s)
+            # -v, --v Level                            number for the log level verbosity
+            # --volume-name-prefix string          Prefix to apply to the name of a created volume. (default "pvc")
+            # --volume-name-uuid-length int        Truncates generated UUID of a created volume to this length. Defaults behavior is to NOT truncate. (default -1)
+            # --worker-threads uint                Number of provisioner worker threads, in other words nr. of simultaneous CSI calls. (default 100)
+          resources:
+           {{- toYaml .Values.controller.resources | nindent 12 }}
+          volumeMounts:
+            - name: socket
+              mountPath: /socket
         - name: csi-attacher
           securityContext:
             {{- toYaml .Values.controller.securityContext | nindent 12 }}
