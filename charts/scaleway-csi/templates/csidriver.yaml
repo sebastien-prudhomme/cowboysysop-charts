@@ -3,7 +3,7 @@ kind: CSIDriver
 metadata:
   name: csi.scaleway.com
   labels:
-    {{- include "scaleway-csi.node.labels" . | nindent 4 }}
+    {{- include "scaleway-csi.labels" . | nindent 4 }}
 spec:
   attachRequired: true
   podInfoOnMount: true
