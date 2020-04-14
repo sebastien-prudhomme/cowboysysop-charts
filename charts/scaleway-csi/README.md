@@ -15,8 +15,7 @@ This chart bootstraps a Scaleway CSI deployment on a [Kubernetes](http://kuberne
 
 ## Prerequisites
 
-- Kubernetes 1.12+
-- Metrics Server 0.2+ (you can use the [stable/metrics-server](https://hub.helm.sh/charts/stable/metrics-server) chart)
+- Kubernetes 1.17+
 - Helm 2.11+
 
 ## Installing
