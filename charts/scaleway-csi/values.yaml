@@ -9,9 +9,9 @@ fullnameOverride: ""
 controller:
   replicaCount: 1
 
-  image:
-    repository: scaleway/scaleway-csi
-    tag: v0.1.1
+  livenessProbeImage:
+    repository: quay.io/k8scsi/livenessprobe
+    tag: v2.0.0
     pullPolicy: IfNotPresent
 
   serviceAccount:

@@ -1,6 +1,6 @@
-# Vertical Pod Autoscaler
+# Scaleway CSI
 
-[Vertical Pod Autoscaler](https://github.com/kubernetes/autoscaler) is a set of components that automatically adjust the amount of CPU and memory requested by pods running in the Kubernetes Cluster.
+[Scaleway CSI](https://github.com/kubernetes/autoscaler) is a set of components that automatically adjust the amount of CPU and memory requested by pods running in the Kubernetes Cluster.
 
 ## TL;DR;
 
@@ -11,7 +11,7 @@ $ helm install cowboysysop/scaleway-csi
 
 ## Introduction
 
-This chart bootstraps a Vertical Pod Autoscaler deployment on a [Kubernetes](http://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
+This chart bootstraps a Scaleway CSI deployment on a [Kubernetes](http://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
 
 ## Prerequisites
 
@@ -28,7 +28,7 @@ $ helm repo add cowboysysop https://cowboysysop.github.io/charts/
 $ helm install --name my-release cowboysysop/scaleway-csi
 ```
 
-These commands deploy Vertical Pod Autoscaler on the Kubernetes cluster in the default configuration and with the release name `my-release`. The deployment configuration can be customized by specifying the customization parameters with the `helm install` command using the `--values` or `--set` arguments. Find more information in the [configuration section](#configuration) of this document.
+These commands deploy Scaleway CSI on the Kubernetes cluster in the default configuration and with the release name `my-release`. The deployment configuration can be customized by specifying the customization parameters with the `helm install` command using the `--values` or `--set` arguments. Find more information in the [configuration section](#configuration) of this document.
 
 ## Upgrading
 
@@ -51,7 +51,7 @@ The command upgrades the existing `my-release` deployment with the most latest r
 
 ## Uninstalling
 
-Delete the `vpa-webhook-config` mutating webhook configuration automatically created by Vertical Pod Autoscaler controller component using:
+Delete the `vpa-webhook-config` mutating webhook configuration automatically created by Scaleway CSI controller component using:
 
 ```bash
 $ kubectl delete mutatingwebhookconfiguration vpa-webhook-config
@@ -76,51 +76,51 @@ $ kubectl delete crd verticalpodautoscalercheckpoints.autoscaling.k8s.io
 
 ## Configuration
 
-The following table lists all the configurable parameters expose by the Vertical Pod Autoscaler chart and their default values.
+The following table lists all the configurable parameters expose by the Scaleway CSI chart and their default values.
 
-| Name                                     | Description                                                                                       | Default                                                          |
-|------------------------------------------|---------------------------------------------------------------------------------------------------|------------------------------------------------------------------|
-| `imagePullSecrets`                       | Docker registry secret names as an array                                                          | `[]`                                                             |
-| `nameOverride`                           | Partially override `scaleway-csi.fullname` template with a string (will prepend the release name) | `nil`                                                            |
-| `fullnameOverride`                       | Fully override `scaleway-csi.fullname` template with a string                                     | `nil`                                                            |
-| `controller.replicaCount`                | Number of replicas (controller component)                                                         | `1`                                                              |
-| `controller.image.repository`            | Vertical Pod Autoscaler image name (controller component)                                         | `k8s.gcr.io/vpa-controller`                                      |
-| `controller.image.tag`                   | Vertical Pod Autoscaler image tag (controller component)                                          | `0.7.0`                                                          |
-| `controller.image.pullPolicy`            | Image pull policy (controller component)                                                          | `IfNotPresent`                                                   |
-| `controller.serviceAccount.create`       | Specify whether to create a ServiceAccount (controller component)                                 | `true`                                                           |
-| `controller.serviceAccount.annotations`  | ServiceAccount annotations (controller component)                                                 | `{}`                                                             |
-| `controller.serviceAccount.name`         | The name of the ServiceAccount to create (controller component)                                   | Generated using the `scaleway-csi.controller.fullname` template  |
-| `controller.podAnnotations`              | Additional pod annotations (controller component)                                                 | `{}`                                                             |
-| `controller.podLabels`                   | Additional pod labels (controller component)                                                      | `{}`                                                             |
-| `controller.podSecurityContext`          | Pod security context (controller component)                                                       | `{}`                                                             |
-| `controller.priorityClassName`           | Pod priority class name (controller component)                                                    | `system-cluster-critical`                                        |
-| `controller.securityContext`             | Container security context (controller component)                                                 | `{}`                                                             |
-| `controller.resources`                   | CPU/Memory resource requests/limits (controller component)                                        | `{}`                                                             |
-| `controller.nodeSelector`                | Node labels for pod assignment (controller component)                                             | `{}`                                                             |
-| `controller.tolerations`                 | Tolerations for pod assignment (controller component)                                             | `[]`                                                             |
-| `controller.affinity`                    | Map of node/pod affinities (controller component)                                                 | `{}`                                                             |
-| `controller.extraArgs`                   | Additional container arguments (controller component)                                             | `{ v: 2 }`                                                       |
-| `controller.metrics.service.type`        | Metrics Kubernetes Service type (controller component)                                            | `ClusterIP`                                                      |
-| `controller.metrics.service.port`        | Metrics service port (controller component)                                                       | `8944`                                                           |
-| `controller.existingSecret`              | Name of existing Secret to use (controller component)                                             | `nil`                                                            |
-| `recommender.replicaCount`               | Number of replicas (recommender component)                                                        | `1`                                                              |
-| `recommender.image.repository`           | Vertical Pod Autoscaler image name (recommender component)                                        | `k8s.gcr.io/vpa-recommender`                                     |
-| `recommender.image.tag`                  | Vertical Pod Autoscaler image tag (recommender component)                                         | `0.7.0`                                                          |
-| `recommender.image.pullPolicy`           | Image pull policy (recommender component)                                                         | `IfNotPresent`                                                   |
-| `recommender.serviceAccount.create`      | Specify whether to create a ServiceAccount (recommender component)                                | `true`                                                           |
-| `recommender.serviceAccount.annotations` | ServiceAccount annotations (recommender component)                                                | `{}`                                                             |
-| `recommender.serviceAccount.name`        | The name of the ServiceAccount to create (recommender component)                                  | Generated using the `scaleway-csi.recommender.fullname` template |
-| `recommender.podAnnotations`             | Additional pod annotations (recommender component)                                                | `{}`                                                             |
-| `recommender.podLabels`                  | Additional pod labels (recommender component)                                                     | `{}`                                                             |
-| `recommender.podSecurityContext`         | Pod security context (recommender component)                                                      | `{}`                                                             |
-| `recommender.securityContext`            | Container security context (recommender component)                                                | `{}`                                                             |
-| `recommender.resources`                  | CPU/Memory resource requests/limits (recommender component)                                       | `{}`                                                             |
-| `recommender.nodeSelector`               | Node labels for pod assignment (recommender component)                                            | `{}`                                                             |
-| `recommender.tolerations`                | Tolerations for pod assignment (recommender component)                                            | `[]`                                                             |
-| `recommender.affinity`                   | Map of node/pod affinities (recommender component)                                                | `{}`                                                             |
-| `recommender.extraArgs`                  | Additional container arguments (recommender component)                                            | `{ v: 2 }`                                                       |
-| `recommender.metrics.service.type`       | Metrics Kubernetes Service type (recommender component)                                           | `ClusterIP`                                                      |
-| `recommender.metrics.service.port`       | Metrics service port (recommender component)                                                      | `8942`                                                           |
+| Name                                       | Description                                                                                       | Default                                                          |
+|--------------------------------------------|---------------------------------------------------------------------------------------------------|------------------------------------------------------------------|
+| `imagePullSecrets`                         | Docker registry secret names as an array                                                          | `[]`                                                             |
+| `nameOverride`                             | Partially override `scaleway-csi.fullname` template with a string (will prepend the release name) | `nil`                                                            |
+| `fullnameOverride`                         | Fully override `scaleway-csi.fullname` template with a string                                     | `nil`                                                            |
+| `controller.replicaCount`                  | Number of replicas (controller component)                                                         | `1`                                                              |
+| `controller.livenessProbeImage.repository` | Scaleway CSI image name (controller component)                                                    | `quay.io/k8scsi/livenessprobe`                                   |
+| `controller.livenessProbeImage.tag`        | Scaleway CSI image tag (controller component)                                                     | `v2.0.0`                                                         |
+| `controller.livenessProbeImage.pullPolicy` | Image pull policy (controller component)                                                          | `IfNotPresent`                                                   |
+| `controller.serviceAccount.create`         | Specify whether to create a ServiceAccount (controller component)                                 | `true`                                                           |
+| `controller.serviceAccount.annotations`    | ServiceAccount annotations (controller component)                                                 | `{}`                                                             |
+| `controller.serviceAccount.name`           | The name of the ServiceAccount to create (controller component)                                   | Generated using the `scaleway-csi.controller.fullname` template  |
+| `controller.podAnnotations`                | Additional pod annotations (controller component)                                                 | `{}`                                                             |
+| `controller.podLabels`                     | Additional pod labels (controller component)                                                      | `{}`                                                             |
+| `controller.podSecurityContext`            | Pod security context (controller component)                                                       | `{}`                                                             |
+| `controller.priorityClassName`             | Pod priority class name (controller component)                                                    | `system-cluster-critical`                                        |
+| `controller.securityContext`               | Container security context (controller component)                                                 | `{}`                                                             |
+| `controller.resources`                     | CPU/Memory resource requests/limits (controller component)                                        | `{}`                                                             |
+| `controller.nodeSelector`                  | Node labels for pod assignment (controller component)                                             | `{}`                                                             |
+| `controller.tolerations`                   | Tolerations for pod assignment (controller component)                                             | `[]`                                                             |
+| `controller.affinity`                      | Map of node/pod affinities (controller component)                                                 | `{}`                                                             |
+| `controller.extraArgs`                     | Additional container arguments (controller component)                                             | `{ v: 2 }`                                                       |
+| `controller.metrics.service.type`          | Metrics Kubernetes Service type (controller component)                                            | `ClusterIP`                                                      |
+| `controller.metrics.service.port`          | Metrics service port (controller component)                                                       | `8944`                                                           |
+| `controller.existingSecret`                | Name of existing Secret to use (controller component)                                             | `nil`                                                            |
+| `recommender.replicaCount`                 | Number of replicas (recommender component)                                                        | `1`                                                              |
+| `recommender.image.repository`             | Scaleway CSI image name (recommender component)                                                   | `k8s.gcr.io/vpa-recommender`                                     |
+| `recommender.image.tag`                    | Scaleway CSI image tag (recommender component)                                                    | `0.7.0`                                                          |
+| `recommender.image.pullPolicy`             | Image pull policy (recommender component)                                                         | `IfNotPresent`                                                   |
+| `recommender.serviceAccount.create`        | Specify whether to create a ServiceAccount (recommender component)                                | `true`                                                           |
+| `recommender.serviceAccount.annotations`   | ServiceAccount annotations (recommender component)                                                | `{}`                                                             |
+| `recommender.serviceAccount.name`          | The name of the ServiceAccount to create (recommender component)                                  | Generated using the `scaleway-csi.recommender.fullname` template |
+| `recommender.podAnnotations`               | Additional pod annotations (recommender component)                                                | `{}`                                                             |
+| `recommender.podLabels`                    | Additional pod labels (recommender component)                                                     | `{}`                                                             |
+| `recommender.podSecurityContext`           | Pod security context (recommender component)                                                      | `{}`                                                             |
+| `recommender.securityContext`              | Container security context (recommender component)                                                | `{}`                                                             |
+| `recommender.resources`                    | CPU/Memory resource requests/limits (recommender component)                                       | `{}`                                                             |
+| `recommender.nodeSelector`                 | Node labels for pod assignment (recommender component)                                            | `{}`                                                             |
+| `recommender.tolerations`                  | Tolerations for pod assignment (recommender component)                                            | `[]`                                                             |
+| `recommender.affinity`                     | Map of node/pod affinities (recommender component)                                                | `{}`                                                             |
+| `recommender.extraArgs`                    | Additional container arguments (recommender component)                                            | `{ v: 2 }`                                                       |
+| `recommender.metrics.service.type`         | Metrics Kubernetes Service type (recommender component)                                           | `ClusterIP`                                                      |
+| `recommender.metrics.service.port`         | Metrics service port (recommender component)                                                      | `8942`                                                           |
 
 Specify the parameters you which to customize using the `--set` argument to the `helm install` command. For instance,
 
@@ -139,11 +139,3 @@ $ helm install --name my-release \
 ```
 
 **Tip**: You can use the default [values.yaml](values.yaml).
-
-## Limitations
-
-Due to hard-coded values in Vertical Pod Autoscaler, the chart configuration has some limitations:
-
-- Admission controller component service name is `vpa-webhook`
-- Admission controller component service port is `443`
-- Mutating webhook configuration name automatically created by controller component is `vpa-webhook-config`
