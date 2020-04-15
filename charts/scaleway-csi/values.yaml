@@ -89,7 +89,7 @@ controller:
   metrics:
     service:
       type: ClusterIP
-      port: 8944
+      port: 8080
 
   # Name of existing Secret to use (controller component)
   existingSecret: ""
