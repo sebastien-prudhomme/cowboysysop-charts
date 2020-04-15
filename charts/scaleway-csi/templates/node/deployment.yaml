@@ -29,29 +29,24 @@ spec:
       securityContext:
         {{- toYaml .Values.node.podSecurityContext | nindent 8 }}
       containers:
-        - name: node
+        - name: liveness-probe
           securityContext:
             {{- toYaml .Values.node.securityContext | nindent 12 }}
-          image: "{{ .Values.node.image.repository }}:{{ .Values.node.image.tag }}"
-          imagePullPolicy: {{ .Values.node.image.pullPolicy }}
+          image: "{{ .Values.node.livenessProbeImage.repository }}:{{ .Values.node.livenessProbeImage.tag }}"
+          imagePullPolicy: {{ .Values.node.livenessProbeImage.pullPolicy }}
           args:
-            {{- range $key, $value := .Values.node.extraArgs }}
-            - --{{ $key }}={{ $value }}
-            {{- end }}
-          ports:
-            - name: metrics
-              containerPort: 8942
-              protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /metrics
-              port: metrics
-          readinessProbe:
-            httpGet:
-              path: /metrics
-              port: metrics
+            - --csi-address=/socket/csi.sock
+            # -health-port string
+            #     TCP ports for listening healthz requests (default "9808")
+            # -probe-timeout duration
+            #     Probe timeout in seconds (default 1s)
+            # -v value
+            #     number for the log level verbosity
           resources:
-            {{- toYaml .Values.node.resources | nindent 12 }}
+           {{- toYaml .Values.node.resources | nindent 12 }}
+          volumeMounts:
+            - name: socket
+              mountPath: /socket
       {{- with .Values.node.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -64,3 +59,6 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
+      volumes:
+        - name: socket
+          emptyDir: {}

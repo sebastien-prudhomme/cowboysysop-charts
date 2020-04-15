@@ -120,6 +120,9 @@ The following table lists all the configurable parameters expose by the Scaleway
 | `node.image.repository`                         | Scaleway CSI image name (node component)                                                          | `scaleway/scaleway-csi`                                         |
 | `node.image.tag`                                | Scaleway CSI image tag (node component)                                                           | `v0.1.1`                                                        |
 | `node.image.pullPolicy`                         | Image pull policy (node component)                                                                | `IfNotPresent`                                                  |
+| `node.livenessProbeImage.repository`            | Scaleway CSI image name (controller component)                                                    | `quay.io/k8scsi/livenessprobe`                                  |
+| `node.livenessProbeImage.tag`                   | Scaleway CSI image tag (controller component)                                                     | `v2.0.0`                                                        |
+| `node.livenessProbeImage.pullPolicy`            | Image pull policy (controller component)                                                          | `IfNotPresent`                                                  |
 | `node.serviceAccount.create`                    | Specify whether to create a ServiceAccount (node component)                                       | `true`                                                          |
 | `node.serviceAccount.annotations`               | ServiceAccount annotations (node component)                                                       | `{}`                                                            |
 | `node.serviceAccount.name`                      | The name of the ServiceAccount to create (node component)                                         | Generated using the `scaleway-csi.node.fullname` template       |
@@ -131,7 +134,6 @@ The following table lists all the configurable parameters expose by the Scaleway
 | `node.nodeSelector`                             | Node labels for pod assignment (node component)                                                   | `{}`                                                            |
 | `node.tolerations`                              | Tolerations for pod assignment (node component)                                                   | `[]`                                                            |
 | `node.affinity`                                 | Map of node/pod affinities (node component)                                                       | `{}`                                                            |
-| `node.extraArgs`                                | Additional container arguments (node component)                                                   | `{ v: 2 }`                                                      |
 | `node.metrics.service.type`                     | Metrics Kubernetes Service type (node component)                                                  | `ClusterIP`                                                     |
 | `node.metrics.service.port`                     | Metrics service port (node component)                                                             | `8942`                                                          |
 

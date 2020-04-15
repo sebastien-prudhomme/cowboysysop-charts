@@ -102,6 +102,11 @@ node:
     tag: v0.1.1
     pullPolicy: IfNotPresent
 
+  livenessProbeImage:
+    repository: quay.io/k8scsi/livenessprobe
+    tag: v2.0.0
+    pullPolicy: IfNotPresent
+
   serviceAccount:
     # Specifies whether a service account should be created
     create: true
@@ -145,9 +150,6 @@ node:
   tolerations: []
 
   affinity: {}
-
-  extraArgs:
-    v: 2
 
   metrics:
     service:
