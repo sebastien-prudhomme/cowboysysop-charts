@@ -28,6 +28,33 @@ spec:
       securityContext:
         {{- toYaml .Values.node.podSecurityContext | nindent 8 }}
       containers:
+        - name: node
+          image: "{{ .Values.node.image.repository }}:{{ .Values.node.image.tag }}"
+          imagePullPolicy: {{ .Values.node.image.pullPolicy }}
+          args:
+            - --endpoint=unix:///socket/csi.sock
+            - --mode=node
+            # -prefix string
+            #     Prefix to add in block volume name
+            # -v value
+            #     number for the log level verbosity
+          ports:
+            - name: healthz
+              containerPort: 9808
+              protocol: TCP
+          # livenessProbe:
+          #   httpGet:
+          #     path: /healthz
+          #     port: healthz
+          # readinessProbe:
+          #   httpGet:
+          #     path: /healthz
+          #     port: healthz
+          resources:
+           {{- toYaml .Values.node.resources | nindent 12 }}
+          volumeMounts:
+            - name: socket
+              mountPath: /socket
         - name: csi-node-driver-registrar
           securityContext:
             {{- toYaml .Values.node.securityContext | nindent 12 }}
