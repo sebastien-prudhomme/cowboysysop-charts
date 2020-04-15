@@ -102,6 +102,11 @@ node:
     tag: v0.1.1
     pullPolicy: IfNotPresent
 
+  csiNodeDriverRegistrarImage:
+    repository: quay.io/k8scsi/csi-node-driver-registrar
+    tag: v1.2.0
+    pullPolicy: IfNotPresent
+
   livenessProbeImage:
     repository: quay.io/k8scsi/livenessprobe
     tag: v2.0.0

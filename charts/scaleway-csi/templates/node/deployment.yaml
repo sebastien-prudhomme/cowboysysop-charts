@@ -29,6 +29,22 @@ spec:
       securityContext:
         {{- toYaml .Values.node.podSecurityContext | nindent 8 }}
       containers:
+        - name: csi-node-driver-registrar
+          securityContext:
+            {{- toYaml .Values.node.securityContext | nindent 12 }}
+          image: "{{ .Values.node.csiNodeDriverRegistrarImage.repository }}:{{ .Values.node.csiNodeDriverRegistrarImage.tag }}"
+          imagePullPolicy: {{ .Values.node.csiNodeDriverRegistrarImage.pullPolicy }}
+          args:
+            - --csi-address=/socket/csi.sock
+            # -kubelet-registration-path string
+            #     Path of the CSI driver socket on the Kubernetes host machine.
+            # -v value
+            #     log level for V logs
+          resources:
+           {{- toYaml .Values.node.resources | nindent 12 }}
+          volumeMounts:
+            - name: socket
+              mountPath: /socket
         - name: liveness-probe
           securityContext:
             {{- toYaml .Values.node.securityContext | nindent 12 }}
