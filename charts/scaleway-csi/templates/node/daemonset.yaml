@@ -35,6 +35,7 @@ spec:
           imagePullPolicy: {{ .Values.node.csiNodeDriverRegistrarImage.pullPolicy }}
           args:
             - --csi-address=/socket/csi.sock
+            - --kubelet-registration-path=/plugins/csi.sock
             # -kubelet-registration-path string
             #     Path of the CSI driver socket on the Kubernetes host machine.
             # -v value
@@ -42,6 +43,8 @@ spec:
           resources:
            {{- toYaml .Values.node.resources | nindent 12 }}
           volumeMounts:
+            - name: plugins
+              mountPath: /plugins
             - name: socket
               mountPath: /socket
         - name: liveness-probe
@@ -75,5 +78,8 @@ spec:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       volumes:
+        - name: plugins
+          hostPath: /var/lib/kubelet/plugins/csi.scaleway.com
+          type: DirectoryOrCreate
         - name: socket
           emptyDir: {}
