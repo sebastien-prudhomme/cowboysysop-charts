@@ -5,7 +5,6 @@ metadata:
   labels:
     {{- include "scaleway-csi.node.labels" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.node.replicaCount }}
   selector:
     matchLabels:
       {{- include "scaleway-csi.node.selectorLabels" . | nindent 6 }}
