@@ -72,6 +72,8 @@ spec:
           volumeMounts:
             - name: plugins
               mountPath: /plugins
+            - name: registry
+              mountPath: /registration
             - name: socket
               mountPath: /socket
         - name: liveness-probe
@@ -109,5 +111,9 @@ spec:
           hostPath:
             path: /var/lib/kubelet/plugins/csi.scaleway.com
             type: DirectoryOrCreate
+        - name: registry
+          hostPath:
+            path: /var/lib/kubelet/plugins_registry
+            type: Directory
         - name: socket
           emptyDir: {}
