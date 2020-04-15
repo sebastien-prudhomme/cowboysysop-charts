@@ -75,7 +75,7 @@ spec:
                 command:
                   - /bin/sh
                   - -c
-                  - rm -f /registration/csi.scaleway.com-reg.sock-reg.sock
+                  - rm -f /registration/csi.scaleway.com-reg.sock
           resources:
            {{- toYaml .Values.node.resources | nindent 12 }}
           volumeMounts:
