@@ -62,16 +62,12 @@ spec:
           imagePullPolicy: {{ .Values.node.csiNodeDriverRegistrarImage.pullPolicy }}
           args:
             - --csi-address=/socket/csi.sock
-            - --kubelet-registration-path=/plugins/csi.sock
-            # -kubelet-registration-path string
-            #     Path of the CSI driver socket on the Kubernetes host machine.
+            - --kubelet-registration-path=/var/lib/kubelet/plugins/csi.scaleway.com/csi.sock
             # -v value
             #     log level for V logs
           resources:
            {{- toYaml .Values.node.resources | nindent 12 }}
           volumeMounts:
-            - name: plugins
-              mountPath: /plugins
             - name: registry
               mountPath: /registration
             - name: socket
@@ -107,13 +103,11 @@ spec:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       volumes:
-        - name: plugins
-          hostPath:
-            path: /var/lib/kubelet/plugins/csi.scaleway.com
-            type: DirectoryOrCreate
         - name: registry
           hostPath:
             path: /var/lib/kubelet/plugins_registry
             type: Directory
         - name: socket
-          emptyDir: {}
+          hostPath:
+            path: /var/lib/kubelet/plugins/csi.scaleway.com
+            type: DirectoryOrCreate
