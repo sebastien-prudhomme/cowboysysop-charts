@@ -38,6 +38,10 @@ spec:
             #     Prefix to add in block volume name
             # -v value
             #     number for the log level verbosity
+          # lifecycle:
+          #   preStop:
+          #     exec:
+          #       command: ["/bin/sh", "-c", "rm -f /registration/csi.scaleway.com-reg.sock-reg.sock"]
           ports:
             - name: healthz
               containerPort: 9808
@@ -65,6 +69,10 @@ spec:
             - --kubelet-registration-path=/var/lib/kubelet/plugins/csi.scaleway.com/csi.sock
             # -v value
             #     log level for V logs
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "rm -f /registration/csi.scaleway.com-reg.sock-reg.sock"]
           resources:
            {{- toYaml .Values.node.resources | nindent 12 }}
           volumeMounts:
