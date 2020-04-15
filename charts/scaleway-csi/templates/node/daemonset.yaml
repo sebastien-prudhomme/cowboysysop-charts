@@ -79,7 +79,8 @@ spec:
     {{- end }}
       volumes:
         - name: plugins
-          hostPath: /var/lib/kubelet/plugins/csi.scaleway.com
-          type: DirectoryOrCreate
+          hostPath:
+            path: /var/lib/kubelet/plugins/csi.scaleway.com
+            type: DirectoryOrCreate
         - name: socket
           emptyDir: {}
