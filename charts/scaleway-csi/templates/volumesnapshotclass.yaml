@@ -1,0 +1,8 @@
+apiVersion: snapshot.storage.k8s.io/v1beta1
+kind: VolumeSnapshotClass
+metadata:
+  name: scw-snapshot
+  labels:
+    {{- include "scaleway-csi.labels" . | nindent 4 }}
+driver: csi.scaleway.com
+deletionPolicy: Delete
