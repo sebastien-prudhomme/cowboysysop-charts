@@ -29,6 +29,8 @@ spec:
         {{- toYaml .Values.node.podSecurityContext | nindent 8 }}
       containers:
         - name: node
+          securityContext:
+            {{- toYaml .Values.node.securityContext | nindent 12 }}
           image: "{{ .Values.node.image.repository }}:{{ .Values.node.image.tag }}"
           imagePullPolicy: {{ .Values.node.image.pullPolicy }}
           args:
