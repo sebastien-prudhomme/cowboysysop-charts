@@ -25,6 +25,9 @@ spec:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       serviceAccountName: {{ include "scaleway-csi.node.serviceAccountName" . }}
+      {{- if .Values.node.priorityClassName }}
+      priorityClassName: {{ .Values.node.priorityClassName }}
+      {{- end }}
       securityContext:
         {{- toYaml .Values.node.podSecurityContext | nindent 8 }}
       containers:

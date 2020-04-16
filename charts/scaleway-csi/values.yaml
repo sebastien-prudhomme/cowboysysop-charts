@@ -142,6 +142,9 @@ node:
   podSecurityContext: {}
     # fsGroup: 2000
 
+  # Pod priority class name (node component)
+  priorityClassName: system-node-critical
+
   securityContext:
     privileged: true
     # capabilities:
