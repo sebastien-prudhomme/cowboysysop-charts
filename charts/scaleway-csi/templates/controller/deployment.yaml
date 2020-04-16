@@ -34,6 +34,8 @@ spec:
         {{- toYaml .Values.controller.podSecurityContext | nindent 8 }}
       containers:
         - name: controller
+          securityContext:
+            {{- toYaml .Values.controller.securityContext | nindent 12 }}
           image: "{{ .Values.controller.image.repository }}:{{ .Values.controller.image.tag }}"
           imagePullPolicy: {{ .Values.controller.image.pullPolicy }}
           args:
