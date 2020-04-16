@@ -42,6 +42,14 @@ spec:
             #     Prefix to add in block volume name
             # -v value
             #     number for the log level verbosity
+          env:
+            # - name: ME_CONFIG_MONGODB_AUTH_PASSWORD
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: {{ include "scaleway-csi.controller.secretName" . }}
+            #       key: mongodb-auth-password
+            - name: SCW_DEFAULT_ZONE
+              value: {{ .Values.defaultZone | quote }}
           ports:
             - name: healthz
               containerPort: 9808
