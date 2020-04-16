@@ -138,8 +138,6 @@ The following table lists all the configurable parameters expose by the Scaleway
 | `node.nodeSelector`                             | Node labels for pod assignment (node component)                                                   | `{}`                                                            |
 | `node.tolerations`                              | Tolerations for pod assignment (node component)                                                   | `[]`                                                            |
 | `node.affinity`                                 | Map of node/pod affinities (node component)                                                       | `{}`                                                            |
-| `node.metrics.service.type`                     | Metrics Kubernetes Service type (node component)                                                  | `ClusterIP`                                                     |
-| `node.metrics.service.port`                     | Metrics service port (node component)                                                             | `8942`                                                          |
 
 Specify the parameters you which to customize using the `--set` argument to the `helm install` command. For instance,
 

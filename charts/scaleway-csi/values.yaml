@@ -155,8 +155,3 @@ node:
   tolerations: []
 
   affinity: {}
-
-  metrics:
-    service:
-      type: ClusterIP
-      port: 8942

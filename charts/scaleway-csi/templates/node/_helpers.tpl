@@ -7,13 +7,6 @@ Create a default fully qualified app name.
 {{- end -}}
 
 {{/*
-Create a default fully qualified metrics name.
-*/}}
-{{- define "scaleway-csi.node.metrics.fullname" -}}
-{{- printf "%s-%s" (include "scaleway-csi.node.fullname" .) "metrics" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{/*
 Component labels
 */}}
 {{- define "scaleway-csi.node.componentLabels" -}}
