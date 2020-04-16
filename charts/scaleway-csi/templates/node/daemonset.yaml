@@ -57,6 +57,9 @@ spec:
           volumeMounts:
             - name: dev
               mountPath: /dev
+            - name: kubelet
+              mountPath: /var/lib/kubelet
+              mountPropagation: Bidirectional
             - name: socket
               mountPath: /socket
         - name: csi-node-driver-registrar
@@ -110,6 +113,10 @@ spec:
         - name: dev
           hostPath:
             path: /dev
+            type: Directory
+        - name: kubelet
+          hostPath:
+            path: /var/lib/kubelet
             type: Directory
         - name: registry
           hostPath:
