@@ -53,6 +53,8 @@ spec:
           resources:
            {{- toYaml .Values.node.resources | nindent 12 }}
           volumeMounts:
+            - name: dev
+              mountPath: /dev
             - name: socket
               mountPath: /socket
         - name: csi-node-driver-registrar
@@ -102,6 +104,11 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
+      volumes:
+        - name: dev
+          hostPath:
+            path: /dev
+            type: Directory
       volumes:
         - name: registry
           hostPath:
