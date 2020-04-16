@@ -46,12 +46,12 @@ spec:
             - name: SCW_ACCESS_KEY
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "scaleway-csi.controller.accessKey" . }}
+                  name: {{ include "scaleway-csi.controller.secretName" . }}
                   key: access-key
             - name: SCW_SECRET_KEY
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "scaleway-csi.controller.secretKey" . }}
+                  name: {{ include "scaleway-csi.controller.secretName" . }}
                   key: secret-key
             - name: SCW_DEFAULT_ZONE
               value: {{ .Values.controller.defaultZone | quote }}
