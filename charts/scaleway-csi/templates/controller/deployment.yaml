@@ -54,6 +54,11 @@ spec:
                 secretKeyRef:
                   name: {{ include "scaleway-csi.controller.secretName" . }}
                   key: secret-key
+            - name: SCW_DEFAULT_ORGANIZATION_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "scaleway-csi.controller.secretName" . }}
+                  key: default-organization-id
             - name: SCW_DEFAULT_ZONE
               value: {{ .Values.controller.defaultZone | quote }}
           ports:
