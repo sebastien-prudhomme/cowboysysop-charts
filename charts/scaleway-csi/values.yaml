@@ -86,6 +86,12 @@ controller:
 
   affinity: {}
 
+  # Scaleway access key
+  accessKey: ""
+
+  # Scaleway secret key
+  secretKey: ""
+
   # Scaleway default zone
   defaultZone: "fr-par-1"
 

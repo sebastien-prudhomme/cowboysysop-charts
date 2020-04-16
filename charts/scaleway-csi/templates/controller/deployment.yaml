@@ -43,11 +43,16 @@ spec:
             # -v value
             #     number for the log level verbosity
           env:
-            # - name: ME_CONFIG_MONGODB_AUTH_PASSWORD
-            #   valueFrom:
-            #     secretKeyRef:
-            #       name: {{ include "scaleway-csi.controller.secretName" . }}
-            #       key: mongodb-auth-password
+            - name: SCW_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "scaleway-csi.controller.accessKey" . }}
+                  key: access-key
+            - name: SCW_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "scaleway-csi.controller.secretKey" . }}
+                  key: secret-key
             - name: SCW_DEFAULT_ZONE
               value: {{ .Values.controller.defaultZone | quote }}
           ports:
