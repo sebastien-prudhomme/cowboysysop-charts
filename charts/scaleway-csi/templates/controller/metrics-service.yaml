@@ -8,16 +8,16 @@ spec:
   type: {{ .Values.controller.metrics.service.type }}
   ports:
     - port: {{ .Values.controller.metrics.service.csiProvisionerPort }}
-      targetPort: csi-provisioner-metrics
+      targetPort: metrics-csi-pr
       protocol: TCP
-      name: csi-provisioner-metrics
+      name: metrics-csi-pr
     - port: {{ .Values.controller.metrics.service.csiAttacherPort }}
-      targetPort: csi-attacher-metrics
+      targetPort: metrics-csi-at
       protocol: TCP
-      name: csi-attacher-metrics
+      name: metrics-csi-at
     - port: {{ .Values.controller.metrics.service.csiSnapshotterPort }}
-      targetPort: csi-snapshotter-metrics
+      targetPort: metrics-csi-sn
       protocol: TCP
-      name: csi-snapshotter-metrics
+      name: metrics-csi-sn
   selector:
     {{- include "scaleway-csi.controller.selectorLabels" . | nindent 4 }}
