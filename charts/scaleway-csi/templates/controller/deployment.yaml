@@ -49,7 +49,7 @@ spec:
             #       name: {{ include "scaleway-csi.controller.secretName" . }}
             #       key: mongodb-auth-password
             - name: SCW_DEFAULT_ZONE
-              value: {{ .Values.defaultZone | quote }}
+              value: {{ .Values.controller.defaultZone | quote }}
           ports:
             - name: healthz
               containerPort: 9808
