@@ -46,14 +46,14 @@ spec:
             - name: healthz
               containerPort: 9808
               protocol: TCP
-          # livenessProbe:
-          #   httpGet:
-          #     path: /healthz
-          #     port: healthz
-          # readinessProbe:
-          #   httpGet:
-          #     path: /healthz
-          #     port: healthz
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: healthz
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: healthz
           resources:
            {{- toYaml .Values.node.resources | nindent 12 }}
           volumeMounts:
