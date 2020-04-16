@@ -7,9 +7,17 @@ metadata:
 spec:
   type: {{ .Values.controller.metrics.service.type }}
   ports:
-    - port: {{ .Values.controller.metrics.service.port }}
-      targetPort: metrics
+    - port: {{ .Values.controller.metrics.service.csiProvisionerPort }}
+      targetPort: csi-provisioner-metrics
       protocol: TCP
-      name: metrics
+      name: csi-provisioner-metrics
+    - port: {{ .Values.controller.metrics.service.csiAttacherPort }}
+      targetPort: csi-attacher-metrics
+      protocol: TCP
+      name: csi-attacher-metrics
+    - port: {{ .Values.controller.metrics.service.csiSnapshotterPort }}
+      targetPort: csi-snapshotter-metrics
+      protocol: TCP
+      name: csi-snapshotter-metrics
   selector:
     {{- include "scaleway-csi.controller.selectorLabels" . | nindent 4 }}

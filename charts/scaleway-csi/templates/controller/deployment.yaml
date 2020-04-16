@@ -79,7 +79,7 @@ spec:
             # --volume-name-uuid-length int        Truncates generated UUID of a created volume to this length. Defaults behavior is to NOT truncate. (default -1)
             # --worker-threads uint                Number of provisioner worker threads, in other words nr. of simultaneous CSI calls. (default 100)
           ports:
-            - name: metrics
+            - name: csi-provisioner-metrics
               containerPort: 8080
               protocol: TCP
           resources:
@@ -95,10 +95,7 @@ spec:
           args:
             - --csi-address=/socket/csi.sock
             - --leader-election=true
-            # -metrics-address :8080
-            #     The TCP network address where the prometheus metrics endpoint will listen (example: :8080). The default is empty string, which means metrics endpoint is disabled.
-            # -metrics-path /metrics
-            #     The HTTP path where prometheus metrics will be exposed. Default is /metrics. (default "/metrics")
+            - --metrics-address=:8081
             # -reconcile-sync duration
             #     Resync interval of the VolumeAttachment reconciler. (default 1m0s)
             # -resync duration
@@ -113,6 +110,10 @@ spec:
             #     number for the log level verbosity
             # -worker-threads uint
             #     Number of attacher worker threads (default 10)
+          ports:
+            - name: csi-attacher-metrics
+              containerPort: 8081
+              protocol: TCP
           resources:
            {{- toYaml .Values.controller.resources | nindent 12 }}
           volumeMounts:
@@ -126,10 +127,7 @@ spec:
           args:
             - --csi-address=/socket/csi.sock
             - --leader-election=true
-            # -metrics-address :8080
-            #     The TCP network address where the prometheus metrics endpoint will listen (example: :8080). The default is empty string, which means metrics endpoint is disabled.
-            # -metrics-path /metrics
-            #     The HTTP path where prometheus metrics will be exposed. Default is /metrics. (default "/metrics")
+            - --metrics-address=:8082
             # -resync-period duration
             #     Resync interval of the controller. (default 1m0s)
             # -snapshot-name-prefix string
@@ -140,6 +138,10 @@ spec:
             #     The timeout for any RPCs to the CSI driver. Default is 1 minute. (default 1m0s)
             # -v value
             #     number for the log level verbosity
+          ports:
+            - name: csi-snapshotter-metrics
+              containerPort: 8082
+              protocol: TCP
           resources:
            {{- toYaml .Values.controller.resources | nindent 12 }}
           volumeMounts:
