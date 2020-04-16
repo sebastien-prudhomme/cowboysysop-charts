@@ -38,10 +38,6 @@ spec:
             #     Prefix to add in block volume name
             # -v value
             #     number for the log level verbosity
-          # lifecycle:
-          #   preStop:
-          #     exec:
-          #       command: ["/bin/sh", "-c", "rm -f /registration/csi.scaleway.com-reg.sock-reg.sock"]
           ports:
             - name: healthz
               containerPort: 9808
