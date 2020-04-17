@@ -1,6 +1,6 @@
 # Scaleway CSI
 
-[Scaleway CSI](https://github.com/kubernetes/autoscaler) is a set of components that automatically adjust the amount of CPU and memory requested by pods running in the Kubernetes Cluster.
+[Scaleway CSI](https://github.com/scaleway/scaleway-csi) is an implementation of the Container Storage Interface to manage Scaleway Block Storage volumes.
 
 ## TL;DR;
 
