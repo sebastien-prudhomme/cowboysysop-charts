@@ -96,7 +96,6 @@ The following tables list all the configurable parameters expose by the PatrOwl 
 | `sslscanEngine.image.repository`           | PatrOwl image name                         | `patrowl/patrowl-manager-community-edition`     |
 | `sslscanEngine.image.tag`                  | PatrOwl image tag                          | `latest`                                        |
 | `sslscanEngine.image.pullPolicy`           | Image pull policy                          | `Always`                                        |
-| `sslscanEngine.imagePullSecrets`           | Docker registry secret names as an array   | `[]`                                            |
 | `sslscanEngine.serviceAccount.create`      | Specify whether to create a ServiceAccount | `true`                                          |
 | `sslscanEngine.serviceAccount.annotations` | ServiceAccount annotations                 | `{}`                                            |
 | `sslscanEngine.serviceAccount.name`        | The name of the ServiceAccount to create   | Generated using the `patrowl.fullname` template |
