@@ -25,6 +25,12 @@ serviceAccount:
 podSecurityContext: {}
   # fsGroup: 2000
 
+# Additional pod annotations
+podAnnotations: {}
+
+# Additional pod labels
+podLabels: {}
+
 securityContext: {}
   # capabilities:
   #   drop:
@@ -84,6 +90,12 @@ engineSslscan:
     # The name of the service account to use.
     # If not set and create is true, a name is generated using the fullname template
     name:
+
+  # Additional pod annotations
+  podAnnotations: {}
+
+  # Additional pod labels
+  podLabels: {}
 
   podSecurityContext: {}
     # fsGroup: 2000
