@@ -25,24 +25,10 @@ If release name contains chart name it will be used as a full name.
 {{- end -}}
 
 {{/*
-Create a default fully qualified app name (engine-sslscan component).
-*/}}
-{{- define "patrowl.sslscanEngine.fullname" -}}
-{{- printf "%s-%s" (include "patrowl.fullname" .) "engine-sslscan" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{/*
 Create chart name and version as used by the chart label.
 */}}
 {{- define "patrowl.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{/*
-Component labels (engine-sslscan component)
-*/}}
-{{- define "patrowl.sslscanEngine.componentLabels" -}}
-app.kubernetes.io/component: engine-sslscan
 {{- end -}}
 
 {{/*
@@ -58,27 +44,11 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
 
 {{/*
-Common labels (engine-sslscan component)
-*/}}
-{{- define "patrowl.sslscanEngine.labels" -}}
-{{ include "patrowl.labels" . }}
-{{ include "patrowl.sslscanEngine.componentLabels" . }}
-{{- end -}}
-
-{{/*
 Selector labels
 */}}
 {{- define "patrowl.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "patrowl.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end -}}
-
-{{/*
-Selector labels (engine-sslscan component)
-*/}}
-{{- define "patrowl.sslscanEngine.selectorLabels" -}}
-{{ include "patrowl.selectorLabels" . }}
-{{ include "patrowl.sslscanEngine.componentLabels" . }}
 {{- end -}}
 
 {{/*
@@ -89,16 +59,5 @@ Create the name of the service account to use
     {{ default (include "patrowl.fullname" .) .Values.serviceAccount.name }}
 {{- else -}}
     {{ default "default" .Values.serviceAccount.name }}
-{{- end -}}
-{{- end -}}
-
-{{/*
-Create the name of the service account to use (engine-sslscan component)
-*/}}
-{{- define "patrowl.sslscanEngine.serviceAccountName" -}}
-{{- if .Values.sslscanEngine.serviceAccount.create -}}
-    {{ default (include "patrowl.sslscanEngine.fullname" .) .Values.sslscanEngine.serviceAccount.name }}
-{{- else -}}
-    {{ default "default" .Values.sslscanEngine.serviceAccount.name }}
 {{- end -}}
 {{- end -}}

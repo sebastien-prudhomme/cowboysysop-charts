@@ -29,7 +29,7 @@ spec:
       securityContext:
         {{- toYaml .Values.sslscanEngine.podSecurityContext | nindent 8 }}
       containers:
-        - name: engine-sslscan
+        - name: sslscan-engine
           securityContext:
             {{- toYaml .Values.sslscanEngine.securityContext | nindent 12 }}
           image: "{{ .Values.sslscanEngine.image.repository }}:{{ .Values.sslscanEngine.image.tag }}"
