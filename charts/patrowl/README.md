@@ -114,10 +114,10 @@ Specify the parameters you which to customize using the `--set` argument to the 
 
 ```bash
 $ helm install --name my-release \
-    --set replicaCount=3 cowboysysop/patrowl
+    --set nameOverride=my-name cowboysysop/patrowl
 ```
 
-The above command sets the `replicaCount` to `3`.
+The above command sets the `nameOverride` to `my-name`.
 
 Alternatively, a YAML file that specifies the values for the above parameters can be provided while installing the chart. For example,
 
