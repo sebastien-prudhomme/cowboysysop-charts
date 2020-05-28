@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: containous/whoami
-  tag: v1.4.0
+  tag: v1.5.0
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []
@@ -21,6 +21,12 @@ serviceAccount:
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
   name:
+
+# Additional pod annotations
+podAnnotations: {}
+
+# Additional pod labels
+podLabels: {}
 
 podSecurityContext: {}
   # fsGroup: 2000
@@ -67,3 +73,6 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+extraArgs: {}
+  # name: ""
