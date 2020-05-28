@@ -55,7 +55,9 @@ The command deletes the release named `my-release` and frees all the kubernetes 
 
 ## Configuration
 
-The following table lists all the configurable parameters expose by the PatrOwl chart and their default values.
+The following tables list all the configurable parameters expose by the PatrOwl chart and their default values.
+
+### Common parameters
 
 | Name                         | Description                                                                                  | Default                                         |
 |------------------------------|----------------------------------------------------------------------------------------------|-------------------------------------------------|
@@ -85,6 +87,29 @@ The following table lists all the configurable parameters expose by the PatrOwl 
 | `nodeSelector`               | Node labels for pod assignment                                                               | `{}`                                            |
 | `tolerations`                | Tolerations for pod assignment                                                               | `[]`                                            |
 | `affinity`                   | Map of node/pod affinities                                                                   | `{}`                                            |
+
+### SSLScan engine parameters
+
+| Name                                       | Description                                | Default                                         |
+|--------------------------------------------|--------------------------------------------|-------------------------------------------------|
+| `sslscanEngine.replicaCount`               | Number of replicas                         | `1`                                             |
+| `sslscanEngine.image.repository`           | PatrOwl image name                         | `patrowl/patrowl-manager-community-edition`     |
+| `sslscanEngine.image.tag`                  | PatrOwl image tag                          | `latest`                                        |
+| `sslscanEngine.image.pullPolicy`           | Image pull policy                          | `Always`                                        |
+| `sslscanEngine.imagePullSecrets`           | Docker registry secret names as an array   | `[]`                                            |
+| `sslscanEngine.serviceAccount.create`      | Specify whether to create a ServiceAccount | `true`                                          |
+| `sslscanEngine.serviceAccount.annotations` | ServiceAccount annotations                 | `{}`                                            |
+| `sslscanEngine.serviceAccount.name`        | The name of the ServiceAccount to create   | Generated using the `patrowl.fullname` template |
+| `sslscanEngine.podAnnotations`             | Additional pod annotations                 | `{}`                                            |
+| `sslscanEngine.podLabels`                  | Additional pod labels                      | `{}`                                            |
+| `sslscanEngine.podSecurityContext`         | Pod security context                       | `{}`                                            |
+| `sslscanEngine.securityContext`            | Container security context                 | `{}`                                            |
+| `sslscanEngine.service.type`               | Kubernetes Service type                    | `ClusterIP`                                     |
+| `sslscanEngine.service.port`               | PatrOwl service port                       | `8003`                                          |
+| `sslscanEngine.resources`                  | CPU/Memory resource requests/limits        | `{}`                                            |
+| `sslscanEngine.nodeSelector`               | Node labels for pod assignment             | `{}`                                            |
+| `sslscanEngine.tolerations`                | Tolerations for pod assignment             | `[]`                                            |
+| `sslscanEngine.affinity`                   | Map of node/pod affinities                 | `{}`                                            |
 
 Specify the parameters you which to customize using the `--set` argument to the `helm install` command. For instance,
 

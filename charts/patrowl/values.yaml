@@ -74,7 +74,7 @@ tolerations: []
 
 affinity: {}
 
-engineSslscan:
+sslscanEngine:
   replicaCount: 1
 
   image:

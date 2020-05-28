@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "patrowl.sslscanEngine.fullname" . }}
+  labels:
+    {{- include "patrowl.sslscanEngine.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.sslscanEngine.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "patrowl.sslscanEngine.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "patrowl.sslscanEngine.selectorLabels" . | nindent 8 }}
+        {{- with .Values.sslscanEngine.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- with .Values.sslscanEngine.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "patrowl.sslscanEngine.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.sslscanEngine.podSecurityContext | nindent 8 }}
+      containers:
+        - name: engine-sslscan
+          securityContext:
+            {{- toYaml .Values.sslscanEngine.securityContext | nindent 12 }}
+          image: "{{ .Values.sslscanEngine.image.repository }}:{{ .Values.sslscanEngine.image.tag }}"
+          imagePullPolicy: {{ .Values.sslscanEngine.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 5014
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /engines/sslscan/liveness
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /engines/sslscan/readiness
+              port: http
+          resources:
+            {{- toYaml .Values.sslscanEngine.resources | nindent 12 }}
+      {{- with .Values.sslscanEngine.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.sslscanEngine.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.sslscanEngine.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

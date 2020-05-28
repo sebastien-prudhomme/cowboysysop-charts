@@ -27,7 +27,7 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create a default fully qualified app name (engine-sslscan component).
 */}}
-{{- define "patrowl.engineSslscan.fullname" -}}
+{{- define "patrowl.sslscanEngine.fullname" -}}
 {{- printf "%s-%s" (include "patrowl.fullname" .) "engine-sslscan" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
@@ -41,7 +41,7 @@ Create chart name and version as used by the chart label.
 {{/*
 Component labels (engine-sslscan component)
 */}}
-{{- define "patrowl.engineSslscan.componentLabels" -}}
+{{- define "patrowl.sslscanEngine.componentLabels" -}}
 app.kubernetes.io/component: engine-sslscan
 {{- end -}}
 
@@ -60,9 +60,9 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Common labels (engine-sslscan component)
 */}}
-{{- define "patrowl.engineSslscan.labels" -}}
+{{- define "patrowl.sslscanEngine.labels" -}}
 {{ include "patrowl.labels" . }}
-{{ include "patrowl.engineSslscan.componentLabels" . }}
+{{ include "patrowl.sslscanEngine.componentLabels" . }}
 {{- end -}}
 
 {{/*
@@ -76,9 +76,9 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{/*
 Selector labels (engine-sslscan component)
 */}}
-{{- define "patrowl.engineSslscan.selectorLabels" -}}
+{{- define "patrowl.sslscanEngine.selectorLabels" -}}
 {{ include "patrowl.selectorLabels" . }}
-{{ include "patrowl.engineSslscan.componentLabels" . }}
+{{ include "patrowl.sslscanEngine.componentLabels" . }}
 {{- end -}}
 
 {{/*
@@ -95,10 +95,10 @@ Create the name of the service account to use
 {{/*
 Create the name of the service account to use (engine-sslscan component)
 */}}
-{{- define "patrowl.engineSslscan.serviceAccountName" -}}
-{{- if .Values.engineSslscan.serviceAccount.create -}}
-    {{ default (include "patrowl.engineSslscan.fullname" .) .Values.engineSslscan.serviceAccount.name }}
+{{- define "patrowl.sslscanEngine.serviceAccountName" -}}
+{{- if .Values.sslscanEngine.serviceAccount.create -}}
+    {{ default (include "patrowl.sslscanEngine.fullname" .) .Values.sslscanEngine.serviceAccount.name }}
 {{- else -}}
-    {{ default "default" .Values.engineSslscan.serviceAccount.name }}
+    {{ default "default" .Values.sslscanEngine.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
