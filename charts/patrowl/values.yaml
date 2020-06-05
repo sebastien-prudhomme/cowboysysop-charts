@@ -6,8 +6,8 @@ replicaCount: 1
 
 image:
   repository: sebastienprudhomme/patrowl-manager-community-edition
-  tag: latest
-  pullPolicy: Always
+  digest: sha256:72040490f6832708307d3530a223ae9f7ab4eafa4077a76971e9d3661aff66c2
+  pullPolicy: IfNotPresent
 
 imagePullSecrets: []
 nameOverride: ""
@@ -79,8 +79,8 @@ sslscanEngine:
 
   image:
     repository: patrowl/engine-sslscan
-    tag: latest
-    pullPolicy: Always
+    digest: sha256:01dec9405f11d2a332b46db457c73953ee3ba6e32aaba1b9e54642c5322ed121
+    pullPolicy: IfNotPresent
 
   serviceAccount:
     # Specifies whether a service account should be created
