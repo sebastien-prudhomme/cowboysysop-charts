@@ -31,7 +31,8 @@ spec:
       properties:
         spec:
           type: object
-          required: []
+          # Compatibility with reconciliation tools such as Argo CD
+          # required: []
           properties:
             targetRef:
               type: object
@@ -47,3 +48,18 @@ spec:
                   type: array
                   items:
                     type: object
+                    properties:
+                      containerName:
+                        type: string
+                      mode:
+                        type: string
+                        enum: ["Auto", "Off"]
+                      minAllowed:
+                        type: object
+                      maxAllowed:
+                        type: object
+                      controlledResources:
+                        type: array
+                        items:
+                          type: string
+                          enum: ["cpu", "memory"]

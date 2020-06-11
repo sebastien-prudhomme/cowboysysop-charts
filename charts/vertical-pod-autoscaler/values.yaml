@@ -10,8 +10,8 @@ admissionController:
   replicaCount: 1
 
   image:
-    repository: k8s.gcr.io/vpa-admission-controller
-    tag: 0.7.0
+    repository: us.gcr.io/k8s-artifacts-prod/autoscaling/vpa-admission-controller
+    tag: 0.8.0
     pullPolicy: IfNotPresent
 
   serviceAccount:
@@ -23,10 +23,10 @@ admissionController:
     # If not set and create is true, a name is generated using the fullname template
     name:
 
-  # Additional pod annotations (admission controller component)
+  # Additional pod annotations
   podAnnotations: {}
 
-  # Additional pod labels (admission controller component)
+  # Additional pod labels
   podLabels: {}
 
   podSecurityContext: {}
@@ -39,6 +39,44 @@ admissionController:
     # readOnlyRootFilesystem: true
     # runAsNonRoot: true
     # runAsUser: 1000
+
+  livenessProbe:
+    # Enable liveness probe
+    enabled: true
+
+    # Delay before the liveness probe is initiated
+    initialDelaySeconds: 0
+
+    # How often to perform the liveness probe
+    periodSeconds: 10
+
+    # When the liveness probe times out
+    timeoutSeconds: 1
+
+    # Minimum consecutive failures for the liveness probe to be considered failed after having succeeded
+    failureThreshold: 3
+
+    # Minimum consecutive successes for the liveness probe to be considered successful after having failed
+    successThreshold: 1
+
+  readinessProbe:
+    # Enable readiness probe
+    enabled: true
+
+    # Delay before the readiness probe is initiated
+    initialDelaySeconds: 0
+
+    # How often to perform the readiness probe
+    periodSeconds: 10
+
+    # When the readiness probe times out
+    timeoutSeconds: 1
+
+    # Minimum consecutive failures for the readiness probe to be considered failed after having succeeded
+    failureThreshold: 3
+
+    # Minimum consecutive successes for the readiness probe to be considered successful after having failed
+    successThreshold: 1
 
   service:
     type: ClusterIP
@@ -80,8 +118,8 @@ recommender:
   replicaCount: 1
 
   image:
-    repository: k8s.gcr.io/vpa-recommender
-    tag: 0.7.0
+    repository: us.gcr.io/k8s-artifacts-prod/autoscaling/vpa-recommender
+    tag: 0.8.0
     pullPolicy: IfNotPresent
 
   serviceAccount:
@@ -93,10 +131,10 @@ recommender:
     # If not set and create is true, a name is generated using the fullname template
     name:
 
-  # Additional pod annotations (recommender component)
+  # Additional pod annotations
   podAnnotations: {}
 
-  # Additional pod labels (recommender component)
+  # Additional pod labels
   podLabels: {}
 
   podSecurityContext: {}
@@ -109,6 +147,44 @@ recommender:
     # readOnlyRootFilesystem: true
     # runAsNonRoot: true
     # runAsUser: 1000
+
+  livenessProbe:
+    # Enable liveness probe
+    enabled: true
+
+    # Delay before the liveness probe is initiated
+    initialDelaySeconds: 0
+
+    # How often to perform the liveness probe
+    periodSeconds: 10
+
+    # When the liveness probe times out
+    timeoutSeconds: 1
+
+    # Minimum consecutive failures for the liveness probe to be considered failed after having succeeded
+    failureThreshold: 3
+
+    # Minimum consecutive successes for the liveness probe to be considered successful after having failed
+    successThreshold: 1
+
+  readinessProbe:
+    # Enable readiness probe
+    enabled: true
+
+    # Delay before the readiness probe is initiated
+    initialDelaySeconds: 0
+
+    # How often to perform the readiness probe
+    periodSeconds: 10
+
+    # When the readiness probe times out
+    timeoutSeconds: 1
+
+    # Minimum consecutive failures for the readiness probe to be considered failed after having succeeded
+    failureThreshold: 3
+
+    # Minimum consecutive successes for the readiness probe to be considered successful after having failed
+    successThreshold: 1
 
   resources: {}
     # We usually recommend not to specify default resources and to leave this as a conscious
@@ -161,8 +237,8 @@ updater:
   replicaCount: 1
 
   image:
-    repository: k8s.gcr.io/vpa-updater
-    tag: 0.7.0
+    repository: us.gcr.io/k8s-artifacts-prod/autoscaling/vpa-updater
+    tag: 0.8.0
     pullPolicy: IfNotPresent
 
   serviceAccount:
@@ -174,10 +250,10 @@ updater:
     # If not set and create is true, a name is generated using the fullname template
     name:
 
-  # Additional pod annotations (updater component)
+  # Additional pod annotations
   podAnnotations: {}
 
-  # Additional pod labels (updater component)
+  # Additional pod labels
   podLabels: {}
 
   podSecurityContext: {}
@@ -190,6 +266,44 @@ updater:
     # readOnlyRootFilesystem: true
     # runAsNonRoot: true
     # runAsUser: 1000
+
+  livenessProbe:
+    # Enable liveness probe
+    enabled: true
+
+    # Delay before the liveness probe is initiated
+    initialDelaySeconds: 0
+
+    # How often to perform the liveness probe
+    periodSeconds: 10
+
+    # When the liveness probe times out
+    timeoutSeconds: 1
+
+    # Minimum consecutive failures for the liveness probe to be considered failed after having succeeded
+    failureThreshold: 3
+
+    # Minimum consecutive successes for the liveness probe to be considered successful after having failed
+    successThreshold: 1
+
+  readinessProbe:
+    # Enable readiness probe
+    enabled: true
+
+    # Delay before the readiness probe is initiated
+    initialDelaySeconds: 0
+
+    # How often to perform the readiness probe
+    periodSeconds: 10
+
+    # When the readiness probe times out
+    timeoutSeconds: 1
+
+    # Minimum consecutive failures for the readiness probe to be considered failed after having succeeded
+    failureThreshold: 3
+
+    # Minimum consecutive successes for the readiness probe to be considered successful after having failed
+    successThreshold: 1
 
   resources: {}
     # We usually recommend not to specify default resources and to leave this as a conscious
@@ -210,10 +324,13 @@ updater:
   affinity: {}
 
   extraArgs:
-    # evict-after-oom-treshold: 10m0s
+    # evict-after-oom-threshold: 10m0s
+    # eviction-rate-burst: 1
+    # eviction-rate-limit: -1
     # eviction-tolerance: 0.5
     # min-replicas: 2
     # updater-interval: 1m0s
+    # use-admission-controller-status: true
     v: 2
 
   metrics:
