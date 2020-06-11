@@ -62,6 +62,9 @@ rules:
   - apiGroups: [""]
     resources: ["events"]
     verbs: ["list", "watch", "create", "update", "patch"]
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["list", "watch"]
   # scaleway-csi-snapshotter
   - apiGroups: [""]
     resources: ["persistentvolumes"]
