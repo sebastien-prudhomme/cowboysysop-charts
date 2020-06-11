@@ -8,3 +8,4 @@ metadata:
   #   storageclass.kubernetes.io/is-default-class: "true"
 provisioner: csi.scaleway.com
 reclaimPolicy: Delete
+allowVolumeExpansion: true

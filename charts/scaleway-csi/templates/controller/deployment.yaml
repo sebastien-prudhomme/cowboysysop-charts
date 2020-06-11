@@ -91,6 +91,8 @@ spec:
             - --feature-gates=Topology=true
             - --leader-election-type=leases
             - --metrics-address=:8080
+            # --cloning-protection-threads uint    Number of simultaniously running threads, handling cloning finalizer removal (default 1)
+            # --extra-create-metadata              If set, add pv/pvc metadata to plugin create requests as parameters.
             # --retry-interval-max duration        Maximum retry interval of failed provisioning or deletion. (default 5m0s)
             # --retry-interval-start duration      Initial retry interval of failed provisioning or deletion. It doubles with each failure, up to retry-interval-max. (default 1s)
             # --strict-topology                    Passes only selected node topology to CreateVolume Request, unlike default behavior of passing aggregated cluster topologies that match with topology keys of the selected node.
@@ -159,6 +161,8 @@ spec:
             #     The timeout for any RPCs to the CSI driver. Default is 1 minute. (default 1m0s)
             # -v value
             #     number for the log level verbosity
+            # -worker-threads int
+            #     Number of worker threads. (default 10)
           ports:
             - name: metrics-csi-sn
               containerPort: 8082
@@ -179,8 +183,36 @@ spec:
             #     Resync interval of the controller. (default 1m0s)
             # -v value
             #     number for the log level verbosity
+            # -worker-threads int
+            #     Number of worker threads. (default 10)
           resources:
            {{- toYaml .Values.controller.resources | nindent 12 }}
+        - name: csi-resizer
+          securityContext:
+            {{- toYaml .Values.controller.securityContext | nindent 12 }}
+          image: "{{ .Values.controller.csiResizerImage.repository }}@{{ .Values.controller.csiResizerImage.digest }}"
+          imagePullPolicy: {{ .Values.controller.csiResizerImage.pullPolicy }}
+          args:
+            - --csi-address=/socket/csi.sock
+            - --leader-election=true
+            - --metrics-address=:8083
+            # -csiTimeout duration
+            #     Timeout for waiting for CSI driver socket. (default 15s)
+            # -resync-period duration
+            #     Resync period for cache (default 10m0s)
+            # -retry-interval-max duration
+            #     Maximum retry interval of failed volume resize. (default 5m0s)
+            # -retry-interval-start duration
+            #     Initial retry interval of failed volume resize. It exponentially increases with each failure, up to retry-interval-max. (default 1s)
+            # -v value
+            #     number for the log level verbosity
+            # -workers int
+            #     Concurrency to process multiple resize requests (default 10)
+          resources:
+            {{- toYaml .Values.controller.resources | nindent 12 }}
+          volumeMounts:
+            - name: socket
+              mountPath: /socket
         - name: liveness-probe
           securityContext:
             {{- toYaml .Values.controller.securityContext | nindent 12 }}
