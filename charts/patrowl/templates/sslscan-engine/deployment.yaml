@@ -38,14 +38,28 @@ spec:
             - name: http
               containerPort: 5014
               protocol: TCP
+          {{- if .Values.sslscanEngine.livenessProbe.enabled }}
           livenessProbe:
             httpGet:
               path: /engines/sslscan/liveness
               port: http
+            initialDelaySeconds: {{ .Values.sslscanEngine.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.sslscanEngine.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.sslscanEngine.livenessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.sslscanEngine.livenessProbe.failureThreshold }}
+            successThreshold: {{ .Values.sslscanEngine.livenessProbe.successThreshold }}
+          {{- end }}
+          {{- if .Values.sslscanEngine.readinessProbe.enabled }}
           readinessProbe:
             httpGet:
               path: /engines/sslscan/readiness
               port: http
+            initialDelaySeconds: {{ .Values.sslscanEngine.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.sslscanEngine.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.sslscanEngine.readinessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.sslscanEngine.readinessProbe.failureThreshold }}
+            successThreshold: {{ .Values.sslscanEngine.readinessProbe.successThreshold }}
+          {{- end }}
           resources:
             {{- toYaml .Values.sslscanEngine.resources | nindent 12 }}
       {{- with .Values.sslscanEngine.nodeSelector }}
