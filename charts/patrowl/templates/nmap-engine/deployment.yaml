@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "patrowl.nmapEngine.fullname" . }}
+  labels:
+    {{- include "patrowl.nmapEngine.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.nmapEngine.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "patrowl.nmapEngine.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "patrowl.nmapEngine.selectorLabels" . | nindent 8 }}
+        {{- with .Values.nmapEngine.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- with .Values.nmapEngine.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "patrowl.nmapEngine.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.nmapEngine.podSecurityContext | nindent 8 }}
+      containers:
+        - name: nmap-engine
+          securityContext:
+            {{- toYaml .Values.nmapEngine.securityContext | nindent 12 }}
+          image: "{{ .Values.nmapEngine.image.repository }}:{{ .Values.nmapEngine.image.tag }}"
+          imagePullPolicy: {{ .Values.nmapEngine.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 5001
+              protocol: TCP
+          {{- if .Values.nmapEngine.livenessProbe.enabled }}
+          livenessProbe:
+            httpGet:
+              path: /engines/nmap/liveness
+              port: http
+            initialDelaySeconds: {{ .Values.nmapEngine.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.nmapEngine.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.nmapEngine.livenessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.nmapEngine.livenessProbe.failureThreshold }}
+            successThreshold: {{ .Values.nmapEngine.livenessProbe.successThreshold }}
+          {{- end }}
+          {{- if .Values.nmapEngine.readinessProbe.enabled }}
+          readinessProbe:
+            httpGet:
+              path: /engines/nmap/readiness
+              port: http
+            initialDelaySeconds: {{ .Values.nmapEngine.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.nmapEngine.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.nmapEngine.readinessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.nmapEngine.readinessProbe.failureThreshold }}
+            successThreshold: {{ .Values.nmapEngine.readinessProbe.successThreshold }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.nmapEngine.resources | nindent 12 }}
+      {{- with .Values.nmapEngine.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.nmapEngine.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.nmapEngine.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
