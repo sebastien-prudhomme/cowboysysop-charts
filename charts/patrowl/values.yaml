@@ -5,8 +5,8 @@
 replicaCount: 1
 
 image:
-  repository: sebastienprudhomme/patrowl-manager-community-edition
-  tag: 1.3.6-kubernetes
+  repository: patrowl/patrowl-manager-community-edition
+  tag: 1.3.6
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []
@@ -307,3 +307,7 @@ postgresql:
   postgresqlUsername: patrowl
   postgresqlPassword: patrowl
   postgresqlDatabase: patrowl
+
+redis:
+  # Whether to use the Redis chart
+  enabled: true
