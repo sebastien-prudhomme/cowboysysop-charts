@@ -32,7 +32,7 @@ spec:
         - name: sslscan-engine
           securityContext:
             {{- toYaml .Values.sslscanEngine.securityContext | nindent 12 }}
-          image: "{{ .Values.sslscanEngine.image.repository }}@{{ .Values.sslscanEngine.image.digest }}"
+          image: "{{ .Values.sslscanEngine.image.repository }}:{{ .Values.sslscanEngine.image.tag }}"
           imagePullPolicy: {{ .Values.sslscanEngine.image.pullPolicy }}
           ports:
             - name: http
