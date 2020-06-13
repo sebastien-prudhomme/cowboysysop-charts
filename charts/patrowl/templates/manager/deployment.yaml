@@ -1,39 +1,39 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "patrowl.fullname" . }}
+  name: {{ include "patrowl.manager.fullname" . }}
   labels:
-    {{- include "patrowl.labels" . | nindent 4 }}
+    {{- include "patrowl.manager.labels" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .Values.manager.replicaCount }}
   selector:
     matchLabels:
-      {{- include "patrowl.selectorLabels" . | nindent 6 }}
+      {{- include "patrowl.manager.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "patrowl.selectorLabels" . | nindent 8 }}
-        {{- with .Values.podLabels }}
+        {{- include "patrowl.manager.selectorLabels" . | nindent 8 }}
+        {{- with .Values.manager.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
-      {{- with .Values.podAnnotations }}
+      {{- with .Values.manager.podAnnotations }}
       annotations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:
-    {{- with .Values.imagePullSecrets }}
+    {{- with .Values.manager.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-      serviceAccountName: {{ include "patrowl.serviceAccountName" . }}
+      serviceAccountName: {{ include "patrowl.manager.serviceAccountName" . }}
       securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+        {{- toYaml .Values.manager.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+            {{- toYaml .Values.manager.securityContext | nindent 12 }}
+          image: "{{ .Values.manager.image.repository }}:{{ .Values.manager.image.tag }}"
+          imagePullPolicy: {{ .Values.manager.image.pullPolicy }}
           env:
             - name: DB_HOST
               value: patrowl-postgresql # A corriger
@@ -41,6 +41,8 @@ spec:
               value: "5432" # A corriger
             - name: DB_PORT_5432_TCP_HOST
               value: patrowl-postgresql # A corriger
+            - name: DB_PORT_5432_TCP_PORT
+              value: "5432" # A corriger
             - name: DB_ENV_POSTGRES_USER
               value: {{ .Values.postgresql.postgresqlUsername | quote }}
             - name: DB_ENV_POSTGRES_PASSWORD
@@ -61,39 +63,39 @@ spec:
             - name: http
               containerPort: 8003
               protocol: TCP
-          {{- if .Values.livenessProbe.enabled }}
+          {{- if .Values.manager.livenessProbe.enabled }}
           livenessProbe:
             httpGet:
               path: /
               port: http
-            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
-            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
-            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
-            failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
-            successThreshold: {{ .Values.livenessProbe.successThreshold }}
+            initialDelaySeconds: {{ .Values.manager.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.manager.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.manager.livenessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.manager.livenessProbe.failureThreshold }}
+            successThreshold: {{ .Values.manager.livenessProbe.successThreshold }}
           {{- end }}
-          {{- if .Values.readinessProbe.enabled }}
+          {{- if .Values.manager.readinessProbe.enabled }}
           readinessProbe:
             httpGet:
               path: /
               port: http
-            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
-            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
-            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
-            failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
-            successThreshold: {{ .Values.readinessProbe.successThreshold }}
+            initialDelaySeconds: {{ .Values.manager.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.manager.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.manager.readinessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.manager.readinessProbe.failureThreshold }}
+            successThreshold: {{ .Values.manager.readinessProbe.successThreshold }}
           {{- end }}
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-      {{- with .Values.nodeSelector }}
+            {{- toYaml .Values.manager.resources | nindent 12 }}
+      {{- with .Values.manager.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- with .Values.affinity }}
+    {{- with .Values.manager.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- with .Values.tolerations }}
+    {{- with .Values.manager.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
