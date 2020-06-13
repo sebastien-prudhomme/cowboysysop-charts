@@ -35,6 +35,10 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
+            - name: DB_HOST
+              value: patrowl-postgresql # A corriger
+            - name: DB_PORT
+              value: "5432" # A corriger
             - name: DB_PORT_5432_TCP_HOST
               value: patrowl-postgresql # A corriger
             - name: DB_ENV_POSTGRES_USER
@@ -43,6 +47,16 @@ spec:
               value: {{ .Values.postgresql.postgresqlPassword | quote }}
             - name: DB_ENV_DB
               value: {{ .Values.postgresql.postgresqlDatabase | quote }}
+            - name: RABBITMQ_HOST
+              value: patrowl-rabbitmq # A corriger
+            - name: RABBITMQ_PORT
+              value: "5672" # A corriger
+            - name: RABBIT_PORT_5672_TCP
+              value: patrowl-rabbitmq:5672 # A corriger
+            - name: RABBIT_ENV_USER
+              value:  {{ .Values.rabbitmq.rabbitmq.username | quote }}
+            - name: RABBIT_ENV_PASS
+              value:  {{ .Values.rabbitmq.rabbitmq.password | quote }}
           ports:
             - name: http
               containerPort: 8003
