@@ -29,7 +29,7 @@ spec:
       securityContext:
         {{- toYaml .Values.manager.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: manager
           securityContext:
             {{- toYaml .Values.manager.securityContext | nindent 12 }}
           image: "{{ .Values.manager.image.repository }}:{{ .Values.manager.image.tag }}"
@@ -87,6 +87,49 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.manager.resources | nindent 12 }}
+          volumeMounts:
+            - name: media
+              mountPath: /opt/patrowl-manager/media
+            - name: staticfiles
+              mountPath: /opt/patrowl-manager/staticfiles
+        - name: nginx
+          securityContext:
+            {{- toYaml .Values.manager.nginx.securityContext | nindent 12 }}
+          image: "{{ .Values.manager.nginx.image.repository }}:{{ .Values.manager.nginx.image.tag }}"
+          imagePullPolicy: {{ .Values.manager.nginx.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8083
+              protocol: TCP
+          {{- if .Values.manager.nginx.livenessProbe.enabled }}
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: {{ .Values.manager.nginx.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.manager.nginx.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.manager.nginx.livenessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.manager.nginx.livenessProbe.failureThreshold }}
+            successThreshold: {{ .Values.manager.nginx.livenessProbe.successThreshold }}
+          {{- end }}
+          {{- if .Values.manager.nginx.readinessProbe.enabled }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: {{ .Values.manager.nginx.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.manager.nginx.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.manager.nginx.readinessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.manager.nginx.readinessProbe.failureThreshold }}
+            successThreshold: {{ .Values.manager.nginx.readinessProbe.successThreshold }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.manager.nginx.resources | nindent 12 }}
+          volumeMounts:
+            - name: media
+              mountPath: /opt/patrowl-manager/media
+            - name: staticfiles
+              mountPath: /opt/patrowl-manager/staticfiles
       {{- with .Values.manager.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -99,3 +142,8 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
+      volumes:
+        - name: media
+          emptyDir: {}
+        - name: staticfiles
+          emptyDir: {}
