@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "patrowl.virustotalEngine.fullname" . }}
+  labels:
+    {{- include "patrowl.virustotalEngine.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.virustotalEngine.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "patrowl.virustotalEngine.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "patrowl.virustotalEngine.selectorLabels" . | nindent 8 }}
+        {{- with .Values.virustotalEngine.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- with .Values.virustotalEngine.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "patrowl.virustotalEngine.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.virustotalEngine.podSecurityContext | nindent 8 }}
+      containers:
+        - name: virustotal-engine
+          securityContext:
+            {{- toYaml .Values.virustotalEngine.securityContext | nindent 12 }}
+          image: "{{ .Values.virustotalEngine.image.repository }}:{{ .Values.virustotalEngine.image.tag }}"
+          imagePullPolicy: {{ .Values.virustotalEngine.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 5007
+              protocol: TCP
+          {{- if .Values.virustotalEngine.livenessProbe.enabled }}
+          livenessProbe:
+            httpGet:
+              path: /engines/virustotal/status
+              port: http
+            initialDelaySeconds: {{ .Values.virustotalEngine.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.virustotalEngine.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.virustotalEngine.livenessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.virustotalEngine.livenessProbe.failureThreshold }}
+            successThreshold: {{ .Values.virustotalEngine.livenessProbe.successThreshold }}
+          {{- end }}
+          {{- if .Values.virustotalEngine.readinessProbe.enabled }}
+          readinessProbe:
+            httpGet:
+              path: /engines/virustotal/status
+              port: http
+            initialDelaySeconds: {{ .Values.virustotalEngine.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.virustotalEngine.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.virustotalEngine.readinessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.virustotalEngine.readinessProbe.failureThreshold }}
+            successThreshold: {{ .Values.virustotalEngine.readinessProbe.successThreshold }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.virustotalEngine.resources | nindent 12 }}
+      {{- with .Values.virustotalEngine.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.virustotalEngine.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.virustotalEngine.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

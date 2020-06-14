@@ -41,7 +41,7 @@ spec:
           {{- if .Values.sslscanEngine.livenessProbe.enabled }}
           livenessProbe:
             httpGet:
-              path: /engines/sslscan/liveness
+              path: /engines/sslscan/status
               port: http
             initialDelaySeconds: {{ .Values.sslscanEngine.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.sslscanEngine.livenessProbe.periodSeconds }}
@@ -52,7 +52,7 @@ spec:
           {{- if .Values.sslscanEngine.readinessProbe.enabled }}
           readinessProbe:
             httpGet:
-              path: /engines/sslscan/readiness
+              path: /engines/sslscan/status
               port: http
             initialDelaySeconds: {{ .Values.sslscanEngine.readinessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.sslscanEngine.readinessProbe.periodSeconds }}

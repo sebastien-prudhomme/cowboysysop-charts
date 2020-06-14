@@ -41,7 +41,7 @@ spec:
           {{- if .Values.nmapEngine.livenessProbe.enabled }}
           livenessProbe:
             httpGet:
-              path: /engines/nmap/liveness
+              path: /engines/nmap/status
               port: http
             initialDelaySeconds: {{ .Values.nmapEngine.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.nmapEngine.livenessProbe.periodSeconds }}
@@ -52,7 +52,7 @@ spec:
           {{- if .Values.nmapEngine.readinessProbe.enabled }}
           readinessProbe:
             httpGet:
-              path: /engines/nmap/readiness
+              path: /engines/nmap/status
               port: http
             initialDelaySeconds: {{ .Values.nmapEngine.readinessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.nmapEngine.readinessProbe.periodSeconds }}

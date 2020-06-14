@@ -459,6 +459,100 @@ sslscanEngine:
 
   affinity: {}
 
+virustotalEngine:
+  replicaCount: 1
+
+  image:
+    repository: patrowl/engine-virustotal
+    tag: 1.3.5
+    pullPolicy: IfNotPresent
+
+  serviceAccount:
+    # Specifies whether a service account should be created
+    create: true
+    # Annotations to add to the service account
+    annotations: {}
+    # The name of the service account to use.
+    # If not set and create is true, a name is generated using the fullname template
+    name:
+
+  # Additional pod annotations
+  podAnnotations: {}
+
+  # Additional pod labels
+  podLabels: {}
+
+  podSecurityContext: {}
+    # fsGroup: 2000
+
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+
+  livenessProbe:
+    # Enable liveness probe
+    enabled: true
+
+    # Delay before the liveness probe is initiated
+    initialDelaySeconds: 0
+
+    # How often to perform the liveness probe
+    periodSeconds: 10
+
+    # When the liveness probe times out
+    timeoutSeconds: 1
+
+    # Minimum consecutive failures for the liveness probe to be considered failed after having succeeded
+    failureThreshold: 3
+
+    # Minimum consecutive successes for the liveness probe to be considered successful after having failed
+    successThreshold: 1
+
+  readinessProbe:
+    # Enable readiness probe
+    enabled: true
+
+    # Delay before the readiness probe is initiated
+    initialDelaySeconds: 0
+
+    # How often to perform the readiness probe
+    periodSeconds: 10
+
+    # When the readiness probe times out
+    timeoutSeconds: 1
+
+    # Minimum consecutive failures for the readiness probe to be considered failed after having succeeded
+    failureThreshold: 3
+
+    # Minimum consecutive successes for the readiness probe to be considered successful after having failed
+    successThreshold: 1
+
+  service:
+    type: ClusterIP
+    port: 5007
+
+  resources: {}
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
+
 postgresql:
   # Whether to use the PostgreSQL chart
   enabled: true
