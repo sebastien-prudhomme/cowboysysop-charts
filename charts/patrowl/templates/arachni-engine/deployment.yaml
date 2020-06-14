@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "patrowl.arachniEngine.fullname" . }}
+  labels:
+    {{- include "patrowl.arachniEngine.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.arachniEngine.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "patrowl.arachniEngine.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "patrowl.arachniEngine.selectorLabels" . | nindent 8 }}
+        {{- with .Values.arachniEngine.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- with .Values.arachniEngine.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "patrowl.arachniEngine.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.arachniEngine.podSecurityContext | nindent 8 }}
+      containers:
+        - name: arachni-engine
+          securityContext:
+            {{- toYaml .Values.arachniEngine.securityContext | nindent 12 }}
+          image: "{{ .Values.arachniEngine.image.repository }}:{{ .Values.arachniEngine.image.tag }}"
+          imagePullPolicy: {{ .Values.arachniEngine.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 5005
+              protocol: TCP
+          {{- if .Values.arachniEngine.livenessProbe.enabled }}
+          livenessProbe:
+            httpGet:
+              path: /engines/arachni/status
+              port: http
+            initialDelaySeconds: {{ .Values.arachniEngine.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.arachniEngine.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.arachniEngine.livenessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.arachniEngine.livenessProbe.failureThreshold }}
+            successThreshold: {{ .Values.arachniEngine.livenessProbe.successThreshold }}
+          {{- end }}
+          {{- if .Values.arachniEngine.readinessProbe.enabled }}
+          readinessProbe:
+            httpGet:
+              path: /engines/arachni/status
+              port: http
+            initialDelaySeconds: {{ .Values.arachniEngine.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.arachniEngine.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.arachniEngine.readinessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.arachniEngine.readinessProbe.failureThreshold }}
+            successThreshold: {{ .Values.arachniEngine.readinessProbe.successThreshold }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.arachniEngine.resources | nindent 12 }}
+      {{- with .Values.arachniEngine.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.arachniEngine.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.arachniEngine.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
