@@ -134,6 +134,40 @@ The following tables list all the configurable parameters expose by the PatrOwl 
 | `nmapEngine.tolerations`                        | Tolerations for pod assignment                                                                        | `[]`                                                                      |
 | `nmapEngine.affinity`                           | Map of node/pod affinities                                                                            | `{}`                                                                      |
 
+### SSL Labs engine parameters
+
+| Name                                               | Description                                                                                           | Default                                                                   |
+|----------------------------------------------------|-------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------|
+| `ssllabsEngine.replicaCount`                       | Number of replicas                                                                                    | `1`                                                                       |
+| `ssllabsEngine.image.repository`                   | PatrOwl image name                                                                                    | `patrowl/engine-ssllabs`                                                  |
+| `ssllabsEngine.image.digest`                       | PatrOwl image digest                                                                                  | `sha256:01dec9405f11d2a332b46db457c73953ee3ba6e32aaba1b9e54642c5322ed121` |
+| `ssllabsEngine.image.pullPolicy`                   | Image pull policy                                                                                     | `IfNotPresent`                                                            |
+| `ssllabsEngine.serviceAccount.create`              | Specify whether to create a ServiceAccount                                                            | `true`                                                                    |
+| `ssllabsEngine.serviceAccount.annotations`         | ServiceAccount annotations                                                                            | `{}`                                                                      |
+| `ssllabsEngine.serviceAccount.name`                | The name of the ServiceAccount to create                                                              | Generated using the `patrowl.fullname` template                           |
+| `ssllabsEngine.podAnnotations`                     | Additional pod annotations                                                                            | `{}`                                                                      |
+| `ssllabsEngine.podLabels`                          | Additional pod labels                                                                                 | `{}`                                                                      |
+| `ssllabsEngine.podSecurityContext`                 | Pod security context                                                                                  | `{}`                                                                      |
+| `ssllabsEngine.securityContext`                    | Container security context                                                                            | `{}`                                                                      |
+| `ssllabsEngine.livenessProbe.enabled`              | Enable liveness probe                                                                                 | `true`                                                                    |
+| `ssllabsEngine.livenessProbe.initialDelaySeconds`  | Delay before the liveness probe is initiated                                                          | `0`                                                                       |
+| `ssllabsEngine.livenessProbe.periodSeconds`        | How often to perform the liveness probe                                                               | `10`                                                                      |
+| `ssllabsEngine.livenessProbe.timeoutSeconds`       | When the liveness probe times out                                                                     | `1`                                                                       |
+| `ssllabsEngine.livenessProbe.failureThreshold`     | Minimum consecutive failures for the liveness probe to be considered failed after having succeeded    | `3`                                                                       |
+| `ssllabsEngine.livenessProbe.successThreshold`     | Minimum consecutive successes for the liveness probe to be considered successful after having failed  | `1`                                                                       |
+| `ssllabsEngine.readinessProbe.enabled`             | Enable readiness probe                                                                                | `true`                                                                    |
+| `ssllabsEngine.readinessProbe.initialDelaySeconds` | Delay before the readiness probe is initiated                                                         | `0`                                                                       |
+| `ssllabsEngine.readinessProbe.periodSeconds`       | How often to perform the readiness probe                                                              | `10`                                                                      |
+| `ssllabsEngine.readinessProbe.timeoutSeconds`      | When the readiness probe times out                                                                    | `1`                                                                       |
+| `ssllabsEngine.readinessProbe.failureThreshold`    | Minimum consecutive failures for the readiness probe to be considered failed after having succeeded   | `3`                                                                       |
+| `ssllabsEngine.readinessProbe.successThreshold`    | Minimum consecutive successes for the readiness probe to be considered successful after having failed | `1`                                                                       |
+| `ssllabsEngine.service.type`                       | Kubernetes Service type                                                                               | `ClusterIP`                                                               |
+| `ssllabsEngine.service.port`                       | PatrOwl service port                                                                                  | `5004`                                                                    |
+| `ssllabsEngine.resources`                          | CPU/Memory resource requests/limits                                                                   | `{}`                                                                      |
+| `ssllabsEngine.nodeSelector`                       | Node labels for pod assignment                                                                        | `{}`                                                                      |
+| `ssllabsEngine.tolerations`                        | Tolerations for pod assignment                                                                        | `[]`                                                                      |
+| `ssllabsEngine.affinity`                           | Map of node/pod affinities                                                                            | `{}`                                                                      |
+
 ### SSLScan engine parameters
 
 | Name                                               | Description                                                                                           | Default                                                                   |

@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "patrowl.ssllabsEngine.fullname" . }}
+  labels:
+    {{- include "patrowl.ssllabsEngine.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.ssllabsEngine.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "patrowl.ssllabsEngine.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "patrowl.ssllabsEngine.selectorLabels" . | nindent 8 }}
+        {{- with .Values.ssllabsEngine.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- with .Values.ssllabsEngine.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "patrowl.ssllabsEngine.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.ssllabsEngine.podSecurityContext | nindent 8 }}
+      containers:
+        - name: ssllabs-engine
+          securityContext:
+            {{- toYaml .Values.ssllabsEngine.securityContext | nindent 12 }}
+          image: "{{ .Values.ssllabsEngine.image.repository }}:{{ .Values.ssllabsEngine.image.tag }}"
+          imagePullPolicy: {{ .Values.ssllabsEngine.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 5004
+              protocol: TCP
+          {{- if .Values.ssllabsEngine.livenessProbe.enabled }}
+          livenessProbe:
+            httpGet:
+              path: /engines/ssllabs/liveness
+              port: http
+            initialDelaySeconds: {{ .Values.ssllabsEngine.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.ssllabsEngine.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.ssllabsEngine.livenessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.ssllabsEngine.livenessProbe.failureThreshold }}
+            successThreshold: {{ .Values.ssllabsEngine.livenessProbe.successThreshold }}
+          {{- end }}
+          {{- if .Values.ssllabsEngine.readinessProbe.enabled }}
+          readinessProbe:
+            httpGet:
+              path: /engines/ssllabs/readiness
+              port: http
+            initialDelaySeconds: {{ .Values.ssllabsEngine.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.ssllabsEngine.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.ssllabsEngine.readinessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.ssllabsEngine.readinessProbe.failureThreshold }}
+            successThreshold: {{ .Values.ssllabsEngine.readinessProbe.successThreshold }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.ssllabsEngine.resources | nindent 12 }}
+      {{- with .Values.ssllabsEngine.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.ssllabsEngine.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.ssllabsEngine.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
