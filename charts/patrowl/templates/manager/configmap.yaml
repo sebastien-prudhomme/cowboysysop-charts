@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "patrowl.manager.fullname" . }}
+  labels:
+    {{- include "patrowl.manager.labels" . | nindent 4 }}
+data:
+  nginx.conf: |
+    server {
+      listen 8083;
+      autoindex on;
+      server_name localhost;
+
+      access_log /opt/bitnami/nginx/logs/patrowlmanager_access.log;
+      error_log /opt/bitnami/nginx/logs/patrowlmanager_error.log;
+
+      # Protects against Clickjacking attacks.
+      add_header X-Frame-Options "SAMEORIGIN";
+
+      # Protects against Clickjacking attacks.
+      add_header Strict-Transport-Security "max-age=63072000; includeSubdomains";
+
+      # Protects against XSS injections.
+      add_header X-XSS-Protection "1; mode=block";
+
+      # Protects against MIME-type confusion attack.
+      add_header X-Content-Type-Options "nosniff";
+
+      # CSP modern XSS directive-based defence, used since 2014.
+      add_header Content-Security-Policy "default-src 'self'; font-src *;img-src * data:; script-src *; style-src *;";
+
+      # Prevents from leaking referrer data over insecure connections.
+      add_header Referrer-Policy 'strict-origin';
+
+      location / {
+          proxy_pass http://localhost:8003;
+
+          proxy_set_header X-Real-IP              $remote_addr;
+          proxy_set_header X-Forwarded-For        $proxy_add_x_forwarded_for;
+          proxy_set_header X-Forwarded-Host       $host;
+
+          proxy_set_header Proxy                  "";
+
+          add_header 'Cache-Control' 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0';
+          expires off;
+
+          # Custom headers
+          proxy_connect_timeout                   75s;
+          proxy_read_timeout                      300s;
+
+          proxy_redirect                          off;
+          proxy_buffering                         off;
+          proxy_buffer_size                       "4k";
+      }
+
+      location /static {
+          alias /opt/patrowl-manager/staticfiles;
+      }
+      location /media {
+          alias /opt/patrowl-manager/media;
+      }
+    }

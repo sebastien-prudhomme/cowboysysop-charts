@@ -16,10 +16,11 @@ spec:
         {{- with .Values.manager.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
-      {{- with .Values.manager.podAnnotations }}
       annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/manager/configmap.yaml") . | sha256sum }}
+        {{- with .Values.manager.podAnnotations }}
         {{- toYaml . | nindent 8 }}
-      {{- end }}
+        {{- end }}
     spec:
     {{- with .Values.manager.imagePullSecrets }}
       imagePullSecrets:
@@ -60,14 +61,14 @@ spec:
             - name: RABBIT_ENV_PASS
               value:  {{ .Values.rabbitmq.rabbitmq.password | quote }}
           ports:
-            - name: http
+            - name: http-manager
               containerPort: 8003
               protocol: TCP
           {{- if .Values.manager.livenessProbe.enabled }}
           livenessProbe:
             httpGet:
               path: /
-              port: http
+              port: http-manager
             initialDelaySeconds: {{ .Values.manager.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.manager.livenessProbe.periodSeconds }}
             timeoutSeconds: {{ .Values.manager.livenessProbe.timeoutSeconds }}
@@ -78,7 +79,7 @@ spec:
           readinessProbe:
             httpGet:
               path: /
-              port: http
+              port: http-manager
             initialDelaySeconds: {{ .Values.manager.readinessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.manager.readinessProbe.periodSeconds }}
             timeoutSeconds: {{ .Values.manager.readinessProbe.timeoutSeconds }}
@@ -98,14 +99,14 @@ spec:
           image: "{{ .Values.manager.nginx.image.repository }}:{{ .Values.manager.nginx.image.tag }}"
           imagePullPolicy: {{ .Values.manager.nginx.image.pullPolicy }}
           ports:
-            - name: http
+            - name: http-nginx
               containerPort: 8083
               protocol: TCP
           {{- if .Values.manager.nginx.livenessProbe.enabled }}
           livenessProbe:
             httpGet:
               path: /
-              port: http
+              port: http-nginx
             initialDelaySeconds: {{ .Values.manager.nginx.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.manager.nginx.livenessProbe.periodSeconds }}
             timeoutSeconds: {{ .Values.manager.nginx.livenessProbe.timeoutSeconds }}
@@ -116,7 +117,7 @@ spec:
           readinessProbe:
             httpGet:
               path: /
-              port: http
+              port: http-nginx
             initialDelaySeconds: {{ .Values.manager.nginx.readinessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.manager.nginx.readinessProbe.periodSeconds }}
             timeoutSeconds: {{ .Values.manager.nginx.readinessProbe.timeoutSeconds }}
@@ -126,10 +127,16 @@ spec:
           resources:
             {{- toYaml .Values.manager.nginx.resources | nindent 12 }}
           volumeMounts:
+            - name: config
+              mountPath: /opt/bitnami/nginx/conf/server_blocks/nginx.conf
+              subPath: nginx.conf
+              readOnly: true
             - name: media
               mountPath: /opt/patrowl-manager/media
+              readOnly: true
             - name: staticfiles
               mountPath: /opt/patrowl-manager/staticfiles
+              readOnly: true
       {{- with .Values.manager.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -143,6 +150,9 @@ spec:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       volumes:
+        - name: config
+          configMap:
+            name: {{ include "patrowl.manager.fullname" . }}
         - name: media
           emptyDir: {}
         - name: staticfiles
