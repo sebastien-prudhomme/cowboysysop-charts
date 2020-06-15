@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "patrowl.urlvoidEngine.fullname" . }}
+  labels:
+    {{- include "patrowl.urlvoidEngine.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.urlvoidEngine.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "patrowl.urlvoidEngine.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "patrowl.urlvoidEngine.selectorLabels" . | nindent 8 }}
+        {{- with .Values.urlvoidEngine.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- with .Values.urlvoidEngine.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "patrowl.urlvoidEngine.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.urlvoidEngine.podSecurityContext | nindent 8 }}
+      containers:
+        - name: urlvoid-engine
+          securityContext:
+            {{- toYaml .Values.urlvoidEngine.securityContext | nindent 12 }}
+          image: "{{ .Values.urlvoidEngine.image.repository }}:{{ .Values.urlvoidEngine.image.tag }}"
+          imagePullPolicy: {{ .Values.urlvoidEngine.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 5007
+              protocol: TCP
+          {{- if .Values.urlvoidEngine.livenessProbe.enabled }}
+          livenessProbe:
+            httpGet:
+              path: /engines/urlvoid/status
+              port: http
+            initialDelaySeconds: {{ .Values.urlvoidEngine.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.urlvoidEngine.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.urlvoidEngine.livenessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.urlvoidEngine.livenessProbe.failureThreshold }}
+            successThreshold: {{ .Values.urlvoidEngine.livenessProbe.successThreshold }}
+          {{- end }}
+          {{- if .Values.urlvoidEngine.readinessProbe.enabled }}
+          readinessProbe:
+            httpGet:
+              path: /engines/urlvoid/status
+              port: http
+            initialDelaySeconds: {{ .Values.urlvoidEngine.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.urlvoidEngine.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.urlvoidEngine.readinessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.urlvoidEngine.readinessProbe.failureThreshold }}
+            successThreshold: {{ .Values.urlvoidEngine.readinessProbe.successThreshold }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.urlvoidEngine.resources | nindent 12 }}
+      {{- with .Values.urlvoidEngine.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.urlvoidEngine.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.urlvoidEngine.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

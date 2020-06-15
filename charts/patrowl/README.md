@@ -134,39 +134,39 @@ The following tables list all the configurable parameters expose by the PatrOwl 
 | `arachniEngine.tolerations`                        | Tolerations for pod assignment                                                                        | `[]`                                            |
 | `arachniEngine.affinity`                           | Map of node/pod affinities                                                                            | `{}`                                            |
 
-### arachni engine parameters
+### Nmap engine parameters
 
 | Name                                            | Description                                                                                           | Default                                         |
 |-------------------------------------------------|-------------------------------------------------------------------------------------------------------|-------------------------------------------------|
-| `arachniEngine.replicaCount`                       | Number of replicas                                                                                    | `1`                                             |
-| `arachniEngine.image.repository`                   | PatrOwl image name                                                                                    | `patrowl/engine-arachni`                           |
-| `arachniEngine.image.digest`                       | PatrOwl image digest                                                                                  | `1.3.5`                                         |
-| `arachniEngine.image.pullPolicy`                   | Image pull policy                                                                                     | `IfNotPresent`                                  |
-| `arachniEngine.serviceAccount.create`              | Specify whether to create a ServiceAccount                                                            | `true`                                          |
-| `arachniEngine.serviceAccount.annotations`         | ServiceAccount annotations                                                                            | `{}`                                            |
-| `arachniEngine.serviceAccount.name`                | The name of the ServiceAccount to create                                                              | Generated using the `patrowl.fullname` template |
-| `arachniEngine.podAnnotations`                     | Additional pod annotations                                                                            | `{}`                                            |
-| `arachniEngine.podLabels`                          | Additional pod labels                                                                                 | `{}`                                            |
-| `arachniEngine.podSecurityContext`                 | Pod security context                                                                                  | `{}`                                            |
-| `arachniEngine.securityContext`                    | Container security context                                                                            | `{}`                                            |
-| `arachniEngine.livenessProbe.enabled`              | Enable liveness probe                                                                                 | `true`                                          |
-| `arachniEngine.livenessProbe.initialDelaySeconds`  | Delay before the liveness probe is initiated                                                          | `0`                                             |
-| `arachniEngine.livenessProbe.periodSeconds`        | How often to perform the liveness probe                                                               | `10`                                            |
-| `arachniEngine.livenessProbe.timeoutSeconds`       | When the liveness probe times out                                                                     | `1`                                             |
-| `arachniEngine.livenessProbe.failureThreshold`     | Minimum consecutive failures for the liveness probe to be considered failed after having succeeded    | `3`                                             |
-| `arachniEngine.livenessProbe.successThreshold`     | Minimum consecutive successes for the liveness probe to be considered successful after having failed  | `1`                                             |
-| `arachniEngine.readinessProbe.enabled`             | Enable readiness probe                                                                                | `true`                                          |
-| `arachniEngine.readinessProbe.initialDelaySeconds` | Delay before the readiness probe is initiated                                                         | `0`                                             |
-| `arachniEngine.readinessProbe.periodSeconds`       | How often to perform the readiness probe                                                              | `10`                                            |
-| `arachniEngine.readinessProbe.timeoutSeconds`      | When the readiness probe times out                                                                    | `1`                                             |
-| `arachniEngine.readinessProbe.failureThreshold`    | Minimum consecutive failures for the readiness probe to be considered failed after having succeeded   | `3`                                             |
-| `arachniEngine.readinessProbe.successThreshold`    | Minimum consecutive successes for the readiness probe to be considered successful after having failed | `1`                                             |
-| `arachniEngine.service.type`                       | Kubernetes Service type                                                                               | `ClusterIP`                                     |
-| `arachniEngine.service.port`                       | PatrOwl service port                                                                                  | `5001`                                          |
-| `arachniEngine.resources`                          | CPU/Memory resource requests/limits                                                                   | `{}`                                            |
-| `arachniEngine.nodeSelector`                       | Node labels for pod assignment                                                                        | `{}`                                            |
-| `arachniEngine.tolerations`                        | Tolerations for pod assignment                                                                        | `[]`                                            |
-| `arachniEngine.affinity`                           | Map of node/pod affinities                                                                            | `{}`                                            |
+| `nmapEngine.replicaCount`                       | Number of replicas                                                                                    | `1`                                             |
+| `nmapEngine.image.repository`                   | PatrOwl image name                                                                                    | `patrowl/engine-nmap`                           |
+| `nmapEngine.image.digest`                       | PatrOwl image digest                                                                                  | `1.3.5`                                         |
+| `nmapEngine.image.pullPolicy`                   | Image pull policy                                                                                     | `IfNotPresent`                                  |
+| `nmapEngine.serviceAccount.create`              | Specify whether to create a ServiceAccount                                                            | `true`                                          |
+| `nmapEngine.serviceAccount.annotations`         | ServiceAccount annotations                                                                            | `{}`                                            |
+| `nmapEngine.serviceAccount.name`                | The name of the ServiceAccount to create                                                              | Generated using the `patrowl.fullname` template |
+| `nmapEngine.podAnnotations`                     | Additional pod annotations                                                                            | `{}`                                            |
+| `nmapEngine.podLabels`                          | Additional pod labels                                                                                 | `{}`                                            |
+| `nmapEngine.podSecurityContext`                 | Pod security context                                                                                  | `{}`                                            |
+| `nmapEngine.securityContext`                    | Container security context                                                                            | `{}`                                            |
+| `nmapEngine.livenessProbe.enabled`              | Enable liveness probe                                                                                 | `true`                                          |
+| `nmapEngine.livenessProbe.initialDelaySeconds`  | Delay before the liveness probe is initiated                                                          | `0`                                             |
+| `nmapEngine.livenessProbe.periodSeconds`        | How often to perform the liveness probe                                                               | `10`                                            |
+| `nmapEngine.livenessProbe.timeoutSeconds`       | When the liveness probe times out                                                                     | `1`                                             |
+| `nmapEngine.livenessProbe.failureThreshold`     | Minimum consecutive failures for the liveness probe to be considered failed after having succeeded    | `3`                                             |
+| `nmapEngine.livenessProbe.successThreshold`     | Minimum consecutive successes for the liveness probe to be considered successful after having failed  | `1`                                             |
+| `nmapEngine.readinessProbe.enabled`             | Enable readiness probe                                                                                | `true`                                          |
+| `nmapEngine.readinessProbe.initialDelaySeconds` | Delay before the readiness probe is initiated                                                         | `0`                                             |
+| `nmapEngine.readinessProbe.periodSeconds`       | How often to perform the readiness probe                                                              | `10`                                            |
+| `nmapEngine.readinessProbe.timeoutSeconds`      | When the readiness probe times out                                                                    | `1`                                             |
+| `nmapEngine.readinessProbe.failureThreshold`    | Minimum consecutive failures for the readiness probe to be considered failed after having succeeded   | `3`                                             |
+| `nmapEngine.readinessProbe.successThreshold`    | Minimum consecutive successes for the readiness probe to be considered successful after having failed | `1`                                             |
+| `nmapEngine.service.type`                       | Kubernetes Service type                                                                               | `ClusterIP`                                     |
+| `nmapEngine.service.port`                       | PatrOwl service port                                                                                  | `5001`                                          |
+| `nmapEngine.resources`                          | CPU/Memory resource requests/limits                                                                   | `{}`                                            |
+| `nmapEngine.nodeSelector`                       | Node labels for pod assignment                                                                        | `{}`                                            |
+| `nmapEngine.tolerations`                        | Tolerations for pod assignment                                                                        | `[]`                                            |
+| `nmapEngine.affinity`                           | Map of node/pod affinities                                                                            | `{}`                                            |
 
 ### SSL Labs engine parameters
 
@@ -202,39 +202,73 @@ The following tables list all the configurable parameters expose by the PatrOwl 
 | `ssllabsEngine.tolerations`                        | Tolerations for pod assignment                                                                        | `[]`                                            |
 | `ssllabsEngine.affinity`                           | Map of node/pod affinities                                                                            | `{}`                                            |
 
-### virustotal engine parameters
+### SSLScan engine parameters
 
 | Name                                               | Description                                                                                           | Default                                         |
 |----------------------------------------------------|-------------------------------------------------------------------------------------------------------|-------------------------------------------------|
-| `virustotalEngine.replicaCount`                       | Number of replicas                                                                                    | `1`                                             |
-| `virustotalEngine.image.repository`                   | PatrOwl image name                                                                                    | `patrowl/engine-virustotal`                        |
-| `virustotalEngine.image.digest`                       | PatrOwl image digest                                                                                  | `1.3.5`                                         |
-| `virustotalEngine.image.pullPolicy`                   | Image pull policy                                                                                     | `IfNotPresent`                                  |
-| `virustotalEngine.serviceAccount.create`              | Specify whether to create a ServiceAccount                                                            | `true`                                          |
-| `virustotalEngine.serviceAccount.annotations`         | ServiceAccount annotations                                                                            | `{}`                                            |
-| `virustotalEngine.serviceAccount.name`                | The name of the ServiceAccount to create                                                              | Generated using the `patrowl.fullname` template |
-| `virustotalEngine.podAnnotations`                     | Additional pod annotations                                                                            | `{}`                                            |
-| `virustotalEngine.podLabels`                          | Additional pod labels                                                                                 | `{}`                                            |
-| `virustotalEngine.podSecurityContext`                 | Pod security context                                                                                  | `{}`                                            |
-| `virustotalEngine.securityContext`                    | Container security context                                                                            | `{}`                                            |
-| `virustotalEngine.livenessProbe.enabled`              | Enable liveness probe                                                                                 | `true`                                          |
-| `virustotalEngine.livenessProbe.initialDelaySeconds`  | Delay before the liveness probe is initiated                                                          | `0`                                             |
-| `virustotalEngine.livenessProbe.periodSeconds`        | How often to perform the liveness probe                                                               | `10`                                            |
-| `virustotalEngine.livenessProbe.timeoutSeconds`       | When the liveness probe times out                                                                     | `1`                                             |
-| `virustotalEngine.livenessProbe.failureThreshold`     | Minimum consecutive failures for the liveness probe to be considered failed after having succeeded    | `3`                                             |
-| `virustotalEngine.livenessProbe.successThreshold`     | Minimum consecutive successes for the liveness probe to be considered successful after having failed  | `1`                                             |
-| `virustotalEngine.readinessProbe.enabled`             | Enable readiness probe                                                                                | `true`                                          |
-| `virustotalEngine.readinessProbe.initialDelaySeconds` | Delay before the readiness probe is initiated                                                         | `0`                                             |
-| `virustotalEngine.readinessProbe.periodSeconds`       | How often to perform the readiness probe                                                              | `10`                                            |
-| `virustotalEngine.readinessProbe.timeoutSeconds`      | When the readiness probe times out                                                                    | `1`                                             |
-| `virustotalEngine.readinessProbe.failureThreshold`    | Minimum consecutive failures for the readiness probe to be considered failed after having succeeded   | `3`                                             |
-| `virustotalEngine.readinessProbe.successThreshold`    | Minimum consecutive successes for the readiness probe to be considered successful after having failed | `1`                                             |
-| `virustotalEngine.service.type`                       | Kubernetes Service type                                                                               | `ClusterIP`                                     |
-| `virustotalEngine.service.port`                       | PatrOwl service port                                                                                  | `5014`                                          |
-| `virustotalEngine.resources`                          | CPU/Memory resource requests/limits                                                                   | `{}`                                            |
-| `virustotalEngine.nodeSelector`                       | Node labels for pod assignment                                                                        | `{}`                                            |
-| `virustotalEngine.tolerations`                        | Tolerations for pod assignment                                                                        | `[]`                                            |
-| `virustotalEngine.affinity`                           | Map of node/pod affinities                                                                            | `{}`                                            |
+| `sslscanEngine.replicaCount`                       | Number of replicas                                                                                    | `1`                                             |
+| `sslscanEngine.image.repository`                   | PatrOwl image name                                                                                    | `patrowl/engine-sslscan`                        |
+| `sslscanEngine.image.digest`                       | PatrOwl image digest                                                                                  | `1.3.5`                                         |
+| `sslscanEngine.image.pullPolicy`                   | Image pull policy                                                                                     | `IfNotPresent`                                  |
+| `sslscanEngine.serviceAccount.create`              | Specify whether to create a ServiceAccount                                                            | `true`                                          |
+| `sslscanEngine.serviceAccount.annotations`         | ServiceAccount annotations                                                                            | `{}`                                            |
+| `sslscanEngine.serviceAccount.name`                | The name of the ServiceAccount to create                                                              | Generated using the `patrowl.fullname` template |
+| `sslscanEngine.podAnnotations`                     | Additional pod annotations                                                                            | `{}`                                            |
+| `sslscanEngine.podLabels`                          | Additional pod labels                                                                                 | `{}`                                            |
+| `sslscanEngine.podSecurityContext`                 | Pod security context                                                                                  | `{}`                                            |
+| `sslscanEngine.securityContext`                    | Container security context                                                                            | `{}`                                            |
+| `sslscanEngine.livenessProbe.enabled`              | Enable liveness probe                                                                                 | `true`                                          |
+| `sslscanEngine.livenessProbe.initialDelaySeconds`  | Delay before the liveness probe is initiated                                                          | `0`                                             |
+| `sslscanEngine.livenessProbe.periodSeconds`        | How often to perform the liveness probe                                                               | `10`                                            |
+| `sslscanEngine.livenessProbe.timeoutSeconds`       | When the liveness probe times out                                                                     | `1`                                             |
+| `sslscanEngine.livenessProbe.failureThreshold`     | Minimum consecutive failures for the liveness probe to be considered failed after having succeeded    | `3`                                             |
+| `sslscanEngine.livenessProbe.successThreshold`     | Minimum consecutive successes for the liveness probe to be considered successful after having failed  | `1`                                             |
+| `sslscanEngine.readinessProbe.enabled`             | Enable readiness probe                                                                                | `true`                                          |
+| `sslscanEngine.readinessProbe.initialDelaySeconds` | Delay before the readiness probe is initiated                                                         | `0`                                             |
+| `sslscanEngine.readinessProbe.periodSeconds`       | How often to perform the readiness probe                                                              | `10`                                            |
+| `sslscanEngine.readinessProbe.timeoutSeconds`      | When the readiness probe times out                                                                    | `1`                                             |
+| `sslscanEngine.readinessProbe.failureThreshold`    | Minimum consecutive failures for the readiness probe to be considered failed after having succeeded   | `3`                                             |
+| `sslscanEngine.readinessProbe.successThreshold`    | Minimum consecutive successes for the readiness probe to be considered successful after having failed | `1`                                             |
+| `sslscanEngine.service.type`                       | Kubernetes Service type                                                                               | `ClusterIP`                                     |
+| `sslscanEngine.service.port`                       | PatrOwl service port                                                                                  | `5014`                                          |
+| `sslscanEngine.resources`                          | CPU/Memory resource requests/limits                                                                   | `{}`                                            |
+| `sslscanEngine.nodeSelector`                       | Node labels for pod assignment                                                                        | `{}`                                            |
+| `sslscanEngine.tolerations`                        | Tolerations for pod assignment                                                                        | `[]`                                            |
+| `sslscanEngine.affinity`                           | Map of node/pod affinities                                                                            | `{}`                                            |
+
+### URLVoid engine parameters
+
+| Name                                               | Description                                                                                           | Default                                         |
+|----------------------------------------------------|-------------------------------------------------------------------------------------------------------|-------------------------------------------------|
+| `urlvoidEngine.replicaCount`                       | Number of replicas                                                                                    | `1`                                             |
+| `urlvoidEngine.image.repository`                   | PatrOwl image name                                                                                    | `patrowl/engine-urlvoid`                        |
+| `urlvoidEngine.image.digest`                       | PatrOwl image digest                                                                                  | `1.3.5`                                         |
+| `urlvoidEngine.image.pullPolicy`                   | Image pull policy                                                                                     | `IfNotPresent`                                  |
+| `urlvoidEngine.serviceAccount.create`              | Specify whether to create a ServiceAccount                                                            | `true`                                          |
+| `urlvoidEngine.serviceAccount.annotations`         | ServiceAccount annotations                                                                            | `{}`                                            |
+| `urlvoidEngine.serviceAccount.name`                | The name of the ServiceAccount to create                                                              | Generated using the `patrowl.fullname` template |
+| `urlvoidEngine.podAnnotations`                     | Additional pod annotations                                                                            | `{}`                                            |
+| `urlvoidEngine.podLabels`                          | Additional pod labels                                                                                 | `{}`                                            |
+| `urlvoidEngine.podSecurityContext`                 | Pod security context                                                                                  | `{}`                                            |
+| `urlvoidEngine.securityContext`                    | Container security context                                                                            | `{}`                                            |
+| `urlvoidEngine.livenessProbe.enabled`              | Enable liveness probe                                                                                 | `true`                                          |
+| `urlvoidEngine.livenessProbe.initialDelaySeconds`  | Delay before the liveness probe is initiated                                                          | `0`                                             |
+| `urlvoidEngine.livenessProbe.periodSeconds`        | How often to perform the liveness probe                                                               | `10`                                            |
+| `urlvoidEngine.livenessProbe.timeoutSeconds`       | When the liveness probe times out                                                                     | `1`                                             |
+| `urlvoidEngine.livenessProbe.failureThreshold`     | Minimum consecutive failures for the liveness probe to be considered failed after having succeeded    | `3`                                             |
+| `urlvoidEngine.livenessProbe.successThreshold`     | Minimum consecutive successes for the liveness probe to be considered successful after having failed  | `1`                                             |
+| `urlvoidEngine.readinessProbe.enabled`             | Enable readiness probe                                                                                | `true`                                          |
+| `urlvoidEngine.readinessProbe.initialDelaySeconds` | Delay before the readiness probe is initiated                                                         | `0`                                             |
+| `urlvoidEngine.readinessProbe.periodSeconds`       | How often to perform the readiness probe                                                              | `10`                                            |
+| `urlvoidEngine.readinessProbe.timeoutSeconds`      | When the readiness probe times out                                                                    | `1`                                             |
+| `urlvoidEngine.readinessProbe.failureThreshold`    | Minimum consecutive failures for the readiness probe to be considered failed after having succeeded   | `3`                                             |
+| `urlvoidEngine.readinessProbe.successThreshold`    | Minimum consecutive successes for the readiness probe to be considered successful after having failed | `1`                                             |
+| `urlvoidEngine.service.type`                       | Kubernetes Service type                                                                               | `ClusterIP`                                     |
+| `urlvoidEngine.service.port`                       | PatrOwl service port                                                                                  | `5008`                                          |
+| `urlvoidEngine.resources`                          | CPU/Memory resource requests/limits                                                                   | `{}`                                            |
+| `urlvoidEngine.nodeSelector`                       | Node labels for pod assignment                                                                        | `{}`                                            |
+| `urlvoidEngine.tolerations`                        | Tolerations for pod assignment                                                                        | `[]`                                            |
+| `urlvoidEngine.affinity`                           | Map of node/pod affinities                                                                            | `{}`                                            |
 
 ### VirusTotal engine parameters
 

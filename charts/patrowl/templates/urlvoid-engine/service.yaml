@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "patrowl.urlvoidEngine.fullname" . }}
+  labels:
+    {{- include "patrowl.urlvoidEngine.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.urlvoidEngine.service.type }}
+  ports:
+    - port: {{ .Values.urlvoidEngine.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "patrowl.urlvoidEngine.selectorLabels" . | nindent 4 }}
