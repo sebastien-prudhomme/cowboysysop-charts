@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "patrowl.owlcodeEngine.fullname" . }}
+  labels:
+    {{- include "patrowl.owlcodeEngine.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.owlcodeEngine.service.type }}
+  ports:
+    - port: {{ .Values.owlcodeEngine.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "patrowl.owlcodeEngine.selectorLabels" . | nindent 4 }}

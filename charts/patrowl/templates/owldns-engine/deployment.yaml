@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "patrowl.owldnsEngine.fullname" . }}
+  labels:
+    {{- include "patrowl.owldnsEngine.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.owldnsEngine.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "patrowl.owldnsEngine.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "patrowl.owldnsEngine.selectorLabels" . | nindent 8 }}
+        {{- with .Values.owldnsEngine.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- with .Values.owldnsEngine.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "patrowl.owldnsEngine.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.owldnsEngine.podSecurityContext | nindent 8 }}
+      containers:
+        - name: owldns-engine
+          securityContext:
+            {{- toYaml .Values.owldnsEngine.securityContext | nindent 12 }}
+          image: "{{ .Values.owldnsEngine.image.repository }}:{{ .Values.owldnsEngine.image.tag }}"
+          imagePullPolicy: {{ .Values.owldnsEngine.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 5007
+              protocol: TCP
+          {{- if .Values.owldnsEngine.livenessProbe.enabled }}
+          livenessProbe:
+            httpGet:
+              path: /engines/owldns/status
+              port: http
+            initialDelaySeconds: {{ .Values.owldnsEngine.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.owldnsEngine.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.owldnsEngine.livenessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.owldnsEngine.livenessProbe.failureThreshold }}
+            successThreshold: {{ .Values.owldnsEngine.livenessProbe.successThreshold }}
+          {{- end }}
+          {{- if .Values.owldnsEngine.readinessProbe.enabled }}
+          readinessProbe:
+            httpGet:
+              path: /engines/owldns/status
+              port: http
+            initialDelaySeconds: {{ .Values.owldnsEngine.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.owldnsEngine.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.owldnsEngine.readinessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.owldnsEngine.readinessProbe.failureThreshold }}
+            successThreshold: {{ .Values.owldnsEngine.readinessProbe.successThreshold }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.owldnsEngine.resources | nindent 12 }}
+      {{- with .Values.owldnsEngine.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.owldnsEngine.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.owldnsEngine.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

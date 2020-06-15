@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "patrowl.owlleaksEngine.fullname" . }}
+  labels:
+    {{- include "patrowl.owlleaksEngine.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.owlleaksEngine.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "patrowl.owlleaksEngine.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "patrowl.owlleaksEngine.selectorLabels" . | nindent 8 }}
+        {{- with .Values.owlleaksEngine.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- with .Values.owlleaksEngine.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "patrowl.owlleaksEngine.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.owlleaksEngine.podSecurityContext | nindent 8 }}
+      containers:
+        - name: owlleaks-engine
+          securityContext:
+            {{- toYaml .Values.owlleaksEngine.securityContext | nindent 12 }}
+          image: "{{ .Values.owlleaksEngine.image.repository }}:{{ .Values.owlleaksEngine.image.tag }}"
+          imagePullPolicy: {{ .Values.owlleaksEngine.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 5007
+              protocol: TCP
+          {{- if .Values.owlleaksEngine.livenessProbe.enabled }}
+          livenessProbe:
+            httpGet:
+              path: /engines/owlleaks/status
+              port: http
+            initialDelaySeconds: {{ .Values.owlleaksEngine.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.owlleaksEngine.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.owlleaksEngine.livenessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.owlleaksEngine.livenessProbe.failureThreshold }}
+            successThreshold: {{ .Values.owlleaksEngine.livenessProbe.successThreshold }}
+          {{- end }}
+          {{- if .Values.owlleaksEngine.readinessProbe.enabled }}
+          readinessProbe:
+            httpGet:
+              path: /engines/owlleaks/status
+              port: http
+            initialDelaySeconds: {{ .Values.owlleaksEngine.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.owlleaksEngine.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.owlleaksEngine.readinessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.owlleaksEngine.readinessProbe.failureThreshold }}
+            successThreshold: {{ .Values.owlleaksEngine.readinessProbe.successThreshold }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.owlleaksEngine.resources | nindent 12 }}
+      {{- with .Values.owlleaksEngine.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.owlleaksEngine.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.owlleaksEngine.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

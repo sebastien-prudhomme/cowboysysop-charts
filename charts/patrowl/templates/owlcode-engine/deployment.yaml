@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "patrowl.owlcodeEngine.fullname" . }}
+  labels:
+    {{- include "patrowl.owlcodeEngine.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.owlcodeEngine.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "patrowl.owlcodeEngine.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "patrowl.owlcodeEngine.selectorLabels" . | nindent 8 }}
+        {{- with .Values.owlcodeEngine.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- with .Values.owlcodeEngine.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "patrowl.owlcodeEngine.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.owlcodeEngine.podSecurityContext | nindent 8 }}
+      containers:
+        - name: owlcode-engine
+          securityContext:
+            {{- toYaml .Values.owlcodeEngine.securityContext | nindent 12 }}
+          image: "{{ .Values.owlcodeEngine.image.repository }}:{{ .Values.owlcodeEngine.image.tag }}"
+          imagePullPolicy: {{ .Values.owlcodeEngine.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 5007
+              protocol: TCP
+          {{- if .Values.owlcodeEngine.livenessProbe.enabled }}
+          livenessProbe:
+            httpGet:
+              path: /engines/owlcode/status
+              port: http
+            initialDelaySeconds: {{ .Values.owlcodeEngine.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.owlcodeEngine.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.owlcodeEngine.livenessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.owlcodeEngine.livenessProbe.failureThreshold }}
+            successThreshold: {{ .Values.owlcodeEngine.livenessProbe.successThreshold }}
+          {{- end }}
+          {{- if .Values.owlcodeEngine.readinessProbe.enabled }}
+          readinessProbe:
+            httpGet:
+              path: /engines/owlcode/status
+              port: http
+            initialDelaySeconds: {{ .Values.owlcodeEngine.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.owlcodeEngine.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.owlcodeEngine.readinessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.owlcodeEngine.readinessProbe.failureThreshold }}
+            successThreshold: {{ .Values.owlcodeEngine.readinessProbe.successThreshold }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.owlcodeEngine.resources | nindent 12 }}
+      {{- with .Values.owlcodeEngine.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.owlcodeEngine.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.owlcodeEngine.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

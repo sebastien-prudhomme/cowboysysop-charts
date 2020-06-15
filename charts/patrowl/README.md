@@ -168,6 +168,108 @@ The following tables list all the configurable parameters expose by the PatrOwl 
 | `nmapEngine.tolerations`                        | Tolerations for pod assignment                                                                        | `[]`                                            |
 | `nmapEngine.affinity`                           | Map of node/pod affinities                                                                            | `{}`                                            |
 
+### OwlCode engine parameters
+
+| Name                                               | Description                                                                                           | Default                                         |
+|----------------------------------------------------|-------------------------------------------------------------------------------------------------------|-------------------------------------------------|
+| `owlcodeEngine.replicaCount`                       | Number of replicas                                                                                    | `1`                                             |
+| `owlcodeEngine.image.repository`                   | PatrOwl image name                                                                                    | `patrowl/engine-owl_code`                       |
+| `owlcodeEngine.image.digest`                       | PatrOwl image digest                                                                                  | `1.3.5`                                         |
+| `owlcodeEngine.image.pullPolicy`                   | Image pull policy                                                                                     | `IfNotPresent`                                  |
+| `owlcodeEngine.serviceAccount.create`              | Specify whether to create a ServiceAccount                                                            | `true`                                          |
+| `owlcodeEngine.serviceAccount.annotations`         | ServiceAccount annotations                                                                            | `{}`                                            |
+| `owlcodeEngine.serviceAccount.name`                | The name of the ServiceAccount to create                                                              | Generated using the `patrowl.fullname` template |
+| `owlcodeEngine.podAnnotations`                     | Additional pod annotations                                                                            | `{}`                                            |
+| `owlcodeEngine.podLabels`                          | Additional pod labels                                                                                 | `{}`                                            |
+| `owlcodeEngine.podSecurityContext`                 | Pod security context                                                                                  | `{}`                                            |
+| `owlcodeEngine.securityContext`                    | Container security context                                                                            | `{}`                                            |
+| `owlcodeEngine.livenessProbe.enabled`              | Enable liveness probe                                                                                 | `true`                                          |
+| `owlcodeEngine.livenessProbe.initialDelaySeconds`  | Delay before the liveness probe is initiated                                                          | `0`                                             |
+| `owlcodeEngine.livenessProbe.periodSeconds`        | How often to perform the liveness probe                                                               | `10`                                            |
+| `owlcodeEngine.livenessProbe.timeoutSeconds`       | When the liveness probe times out                                                                     | `1`                                             |
+| `owlcodeEngine.livenessProbe.failureThreshold`     | Minimum consecutive failures for the liveness probe to be considered failed after having succeeded    | `3`                                             |
+| `owlcodeEngine.livenessProbe.successThreshold`     | Minimum consecutive successes for the liveness probe to be considered successful after having failed  | `1`                                             |
+| `owlcodeEngine.readinessProbe.enabled`             | Enable readiness probe                                                                                | `true`                                          |
+| `owlcodeEngine.readinessProbe.initialDelaySeconds` | Delay before the readiness probe is initiated                                                         | `0`                                             |
+| `owlcodeEngine.readinessProbe.periodSeconds`       | How often to perform the readiness probe                                                              | `10`                                            |
+| `owlcodeEngine.readinessProbe.timeoutSeconds`      | When the readiness probe times out                                                                    | `1`                                             |
+| `owlcodeEngine.readinessProbe.failureThreshold`    | Minimum consecutive failures for the readiness probe to be considered failed after having succeeded   | `3`                                             |
+| `owlcodeEngine.readinessProbe.successThreshold`    | Minimum consecutive successes for the readiness probe to be considered successful after having failed | `1`                                             |
+| `owlcodeEngine.service.type`                       | Kubernetes Service type                                                                               | `ClusterIP`                                     |
+| `owlcodeEngine.service.port`                       | PatrOwl service port                                                                                  | `5013`                                          |
+| `owlcodeEngine.resources`                          | CPU/Memory resource requests/limits                                                                   | `{}`                                            |
+| `owlcodeEngine.nodeSelector`                       | Node labels for pod assignment                                                                        | `{}`                                            |
+| `owlcodeEngine.tolerations`                        | Tolerations for pod assignment                                                                        | `[]`                                            |
+| `owlcodeEngine.affinity`                           | Map of node/pod affinities                                                                            | `{}`                                            |
+
+### OwlDNS engine parameters
+
+| Name                                              | Description                                                                                           | Default                                         |
+|---------------------------------------------------|-------------------------------------------------------------------------------------------------------|-------------------------------------------------|
+| `owldnsEngine.replicaCount`                       | Number of replicas                                                                                    | `1`                                             |
+| `owldnsEngine.image.repository`                   | PatrOwl image name                                                                                    | `patrowl/engine-owl_dns`                        |
+| `owldnsEngine.image.digest`                       | PatrOwl image digest                                                                                  | `1.3.5`                                         |
+| `owldnsEngine.image.pullPolicy`                   | Image pull policy                                                                                     | `IfNotPresent`                                  |
+| `owldnsEngine.serviceAccount.create`              | Specify whether to create a ServiceAccount                                                            | `true`                                          |
+| `owldnsEngine.serviceAccount.annotations`         | ServiceAccount annotations                                                                            | `{}`                                            |
+| `owldnsEngine.serviceAccount.name`                | The name of the ServiceAccount to create                                                              | Generated using the `patrowl.fullname` template |
+| `owldnsEngine.podAnnotations`                     | Additional pod annotations                                                                            | `{}`                                            |
+| `owldnsEngine.podLabels`                          | Additional pod labels                                                                                 | `{}`                                            |
+| `owldnsEngine.podSecurityContext`                 | Pod security context                                                                                  | `{}`                                            |
+| `owldnsEngine.securityContext`                    | Container security context                                                                            | `{}`                                            |
+| `owldnsEngine.livenessProbe.enabled`              | Enable liveness probe                                                                                 | `true`                                          |
+| `owldnsEngine.livenessProbe.initialDelaySeconds`  | Delay before the liveness probe is initiated                                                          | `0`                                             |
+| `owldnsEngine.livenessProbe.periodSeconds`        | How often to perform the liveness probe                                                               | `10`                                            |
+| `owldnsEngine.livenessProbe.timeoutSeconds`       | When the liveness probe times out                                                                     | `1`                                             |
+| `owldnsEngine.livenessProbe.failureThreshold`     | Minimum consecutive failures for the liveness probe to be considered failed after having succeeded    | `3`                                             |
+| `owldnsEngine.livenessProbe.successThreshold`     | Minimum consecutive successes for the liveness probe to be considered successful after having failed  | `1`                                             |
+| `owldnsEngine.readinessProbe.enabled`             | Enable readiness probe                                                                                | `true`                                          |
+| `owldnsEngine.readinessProbe.initialDelaySeconds` | Delay before the readiness probe is initiated                                                         | `0`                                             |
+| `owldnsEngine.readinessProbe.periodSeconds`       | How often to perform the readiness probe                                                              | `10`                                            |
+| `owldnsEngine.readinessProbe.timeoutSeconds`      | When the readiness probe times out                                                                    | `1`                                             |
+| `owldnsEngine.readinessProbe.failureThreshold`    | Minimum consecutive failures for the readiness probe to be considered failed after having succeeded   | `3`                                             |
+| `owldnsEngine.readinessProbe.successThreshold`    | Minimum consecutive successes for the readiness probe to be considered successful after having failed | `1`                                             |
+| `owldnsEngine.service.type`                       | Kubernetes Service type                                                                               | `ClusterIP`                                     |
+| `owldnsEngine.service.port`                       | PatrOwl service port                                                                                  | `5006`                                          |
+| `owldnsEngine.resources`                          | CPU/Memory resource requests/limits                                                                   | `{}`                                            |
+| `owldnsEngine.nodeSelector`                       | Node labels for pod assignment                                                                        | `{}`                                            |
+| `owldnsEngine.tolerations`                        | Tolerations for pod assignment                                                                        | `[]`                                            |
+| `owldnsEngine.affinity`                           | Map of node/pod affinities                                                                            | `{}`                                            |
+
+### OwlLeaks engine parameters
+
+| Name                                                | Description                                                                                           | Default                                         |
+|-----------------------------------------------------|-------------------------------------------------------------------------------------------------------|-------------------------------------------------|
+| `owlleaksEngine.replicaCount`                       | Number of replicas                                                                                    | `1`                                             |
+| `owlleaksEngine.image.repository`                   | PatrOwl image name                                                                                    | `patrowl/engine-owl_leaks`                      |
+| `owlleaksEngine.image.digest`                       | PatrOwl image digest                                                                                  | `1.3.5`                                         |
+| `owlleaksEngine.image.pullPolicy`                   | Image pull policy                                                                                     | `IfNotPresent`                                  |
+| `owlleaksEngine.serviceAccount.create`              | Specify whether to create a ServiceAccount                                                            | `true`                                          |
+| `owlleaksEngine.serviceAccount.annotations`         | ServiceAccount annotations                                                                            | `{}`                                            |
+| `owlleaksEngine.serviceAccount.name`                | The name of the ServiceAccount to create                                                              | Generated using the `patrowl.fullname` template |
+| `owlleaksEngine.podAnnotations`                     | Additional pod annotations                                                                            | `{}`                                            |
+| `owlleaksEngine.podLabels`                          | Additional pod labels                                                                                 | `{}`                                            |
+| `owlleaksEngine.podSecurityContext`                 | Pod security context                                                                                  | `{}`                                            |
+| `owlleaksEngine.securityContext`                    | Container security context                                                                            | `{}`                                            |
+| `owlleaksEngine.livenessProbe.enabled`              | Enable liveness probe                                                                                 | `true`                                          |
+| `owlleaksEngine.livenessProbe.initialDelaySeconds`  | Delay before the liveness probe is initiated                                                          | `0`                                             |
+| `owlleaksEngine.livenessProbe.periodSeconds`        | How often to perform the liveness probe                                                               | `10`                                            |
+| `owlleaksEngine.livenessProbe.timeoutSeconds`       | When the liveness probe times out                                                                     | `1`                                             |
+| `owlleaksEngine.livenessProbe.failureThreshold`     | Minimum consecutive failures for the liveness probe to be considered failed after having succeeded    | `3`                                             |
+| `owlleaksEngine.livenessProbe.successThreshold`     | Minimum consecutive successes for the liveness probe to be considered successful after having failed  | `1`                                             |
+| `owlleaksEngine.readinessProbe.enabled`             | Enable readiness probe                                                                                | `true`                                          |
+| `owlleaksEngine.readinessProbe.initialDelaySeconds` | Delay before the readiness probe is initiated                                                         | `0`                                             |
+| `owlleaksEngine.readinessProbe.periodSeconds`       | How often to perform the readiness probe                                                              | `10`                                            |
+| `owlleaksEngine.readinessProbe.timeoutSeconds`      | When the readiness probe times out                                                                    | `1`                                             |
+| `owlleaksEngine.readinessProbe.failureThreshold`    | Minimum consecutive failures for the readiness probe to be considered failed after having succeeded   | `3`                                             |
+| `owlleaksEngine.readinessProbe.successThreshold`    | Minimum consecutive successes for the readiness probe to be considered successful after having failed | `1`                                             |
+| `owlleaksEngine.service.type`                       | Kubernetes Service type                                                                               | `ClusterIP`                                     |
+| `owlleaksEngine.service.port`                       | PatrOwl service port                                                                                  | `5012`                                          |
+| `owlleaksEngine.resources`                          | CPU/Memory resource requests/limits                                                                   | `{}`                                            |
+| `owlleaksEngine.nodeSelector`                       | Node labels for pod assignment                                                                        | `{}`                                            |
+| `owlleaksEngine.tolerations`                        | Tolerations for pod assignment                                                                        | `[]`                                            |
+| `owlleaksEngine.affinity`                           | Map of node/pod affinities                                                                            | `{}`                                            |
+
 ### SSL Labs engine parameters
 
 | Name                                               | Description                                                                                           | Default                                         |
