@@ -134,6 +134,40 @@ The following tables list all the configurable parameters expose by the PatrOwl 
 | `arachniEngine.tolerations`                        | Tolerations for pod assignment                                                                        | `[]`                                            |
 | `arachniEngine.affinity`                           | Map of node/pod affinities                                                                            | `{}`                                            |
 
+### EyeWitness engine parameters
+
+| Name                                                  | Description                                                                                           | Default                                         |
+|-------------------------------------------------------|-------------------------------------------------------------------------------------------------------|-------------------------------------------------|
+| `eyewitnessEngine.replicaCount`                       | Number of replicas                                                                                    | `1`                                             |
+| `eyewitnessEngine.image.repository`                   | PatrOwl image name                                                                                    | `patrowl/engine-eyewitness`                     |
+| `eyewitnessEngine.image.digest`                       | PatrOwl image digest                                                                                  | `1.3.5`                                         |
+| `eyewitnessEngine.image.pullPolicy`                   | Image pull policy                                                                                     | `IfNotPresent`                                  |
+| `eyewitnessEngine.serviceAccount.create`              | Specify whether to create a ServiceAccount                                                            | `true`                                          |
+| `eyewitnessEngine.serviceAccount.annotations`         | ServiceAccount annotations                                                                            | `{}`                                            |
+| `eyewitnessEngine.serviceAccount.name`                | The name of the ServiceAccount to create                                                              | Generated using the `patrowl.fullname` template |
+| `eyewitnessEngine.podAnnotations`                     | Additional pod annotations                                                                            | `{}`                                            |
+| `eyewitnessEngine.podLabels`                          | Additional pod labels                                                                                 | `{}`                                            |
+| `eyewitnessEngine.podSecurityContext`                 | Pod security context                                                                                  | `{}`                                            |
+| `eyewitnessEngine.securityContext`                    | Container security context                                                                            | `{}`                                            |
+| `eyewitnessEngine.livenessProbe.enabled`              | Enable liveness probe                                                                                 | `true`                                          |
+| `eyewitnessEngine.livenessProbe.initialDelaySeconds`  | Delay before the liveness probe is initiated                                                          | `0`                                             |
+| `eyewitnessEngine.livenessProbe.periodSeconds`        | How often to perform the liveness probe                                                               | `10`                                            |
+| `eyewitnessEngine.livenessProbe.timeoutSeconds`       | When the liveness probe times out                                                                     | `1`                                             |
+| `eyewitnessEngine.livenessProbe.failureThreshold`     | Minimum consecutive failures for the liveness probe to be considered failed after having succeeded    | `3`                                             |
+| `eyewitnessEngine.livenessProbe.successThreshold`     | Minimum consecutive successes for the liveness probe to be considered successful after having failed  | `1`                                             |
+| `eyewitnessEngine.readinessProbe.enabled`             | Enable readiness probe                                                                                | `true`                                          |
+| `eyewitnessEngine.readinessProbe.initialDelaySeconds` | Delay before the readiness probe is initiated                                                         | `0`                                             |
+| `eyewitnessEngine.readinessProbe.periodSeconds`       | How often to perform the readiness probe                                                              | `10`                                            |
+| `eyewitnessEngine.readinessProbe.timeoutSeconds`      | When the readiness probe times out                                                                    | `1`                                             |
+| `eyewitnessEngine.readinessProbe.failureThreshold`    | Minimum consecutive failures for the readiness probe to be considered failed after having succeeded   | `3`                                             |
+| `eyewitnessEngine.readinessProbe.successThreshold`    | Minimum consecutive successes for the readiness probe to be considered successful after having failed | `1`                                             |
+| `eyewitnessEngine.service.type`                       | Kubernetes Service type                                                                               | `ClusterIP`                                     |
+| `eyewitnessEngine.service.port`                       | PatrOwl service port                                                                                  | `5018`                                          |
+| `eyewitnessEngine.resources`                          | CPU/Memory resource requests/limits                                                                   | `{}`                                            |
+| `eyewitnessEngine.nodeSelector`                       | Node labels for pod assignment                                                                        | `{}`                                            |
+| `eyewitnessEngine.tolerations`                        | Tolerations for pod assignment                                                                        | `[]`                                            |
+| `eyewitnessEngine.affinity`                           | Map of node/pod affinities                                                                            | `{}`                                            |
+
 ### Nmap engine parameters
 
 | Name                                            | Description                                                                                           | Default                                         |

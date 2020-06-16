@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "patrowl.eyewitnessEngine.fullname" . }}
+  labels:
+    {{- include "patrowl.eyewitnessEngine.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.eyewitnessEngine.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "patrowl.eyewitnessEngine.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "patrowl.eyewitnessEngine.selectorLabels" . | nindent 8 }}
+        {{- with .Values.eyewitnessEngine.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- with .Values.eyewitnessEngine.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "patrowl.eyewitnessEngine.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.eyewitnessEngine.podSecurityContext | nindent 8 }}
+      containers:
+        - name: eyewitness-engine
+          securityContext:
+            {{- toYaml .Values.eyewitnessEngine.securityContext | nindent 12 }}
+          image: "{{ .Values.eyewitnessEngine.image.repository }}:{{ .Values.eyewitnessEngine.image.tag }}"
+          imagePullPolicy: {{ .Values.eyewitnessEngine.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 5005
+              protocol: TCP
+          {{- if .Values.eyewitnessEngine.livenessProbe.enabled }}
+          livenessProbe:
+            httpGet:
+              path: /engines/eyewitness/status
+              port: http
+            initialDelaySeconds: {{ .Values.eyewitnessEngine.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.eyewitnessEngine.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.eyewitnessEngine.livenessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.eyewitnessEngine.livenessProbe.failureThreshold }}
+            successThreshold: {{ .Values.eyewitnessEngine.livenessProbe.successThreshold }}
+          {{- end }}
+          {{- if .Values.eyewitnessEngine.readinessProbe.enabled }}
+          readinessProbe:
+            httpGet:
+              path: /engines/eyewitness/status
+              port: http
+            initialDelaySeconds: {{ .Values.eyewitnessEngine.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.eyewitnessEngine.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.eyewitnessEngine.readinessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.eyewitnessEngine.readinessProbe.failureThreshold }}
+            successThreshold: {{ .Values.eyewitnessEngine.readinessProbe.successThreshold }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.eyewitnessEngine.resources | nindent 12 }}
+      {{- with .Values.eyewitnessEngine.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.eyewitnessEngine.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.eyewitnessEngine.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

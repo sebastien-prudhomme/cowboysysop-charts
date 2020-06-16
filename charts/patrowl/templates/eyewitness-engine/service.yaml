@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "patrowl.eyewitnessEngine.fullname" . }}
+  labels:
+    {{- include "patrowl.eyewitnessEngine.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.eyewitnessEngine.service.type }}
+  ports:
+    - port: {{ .Values.eyewitnessEngine.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "patrowl.eyewitnessEngine.selectorLabels" . | nindent 4 }}
