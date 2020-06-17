@@ -111,3 +111,11 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+postgresql:
+  # Whether to use the PostgreSQL chart
+  enabled: true
+
+  postgresqlUsername: openvas
+  postgresqlPassword: openvas
+  postgresqlDatabase: openvas
