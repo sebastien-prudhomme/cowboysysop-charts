@@ -98,6 +98,15 @@ The following table lists all the configurable parameters expose by the OpenVAS 
 | `tolerations`                        | Tolerations for pod assignment                                                                        | `[]`                                            |
 | `affinity`                           | Map of node/pod affinities                                                                            | `{}`                                            |
 
+### PostgreSQL parameters
+
+| Name                            | Description                         | Default   |
+|---------------------------------|-------------------------------------|-----------|
+| `postgresql.enabled`            | Whether to use the PostgreSQL chart | `true`    |
+| `postgresql.postgresqlUsername` | Image name                          | `openvas` |
+| `postgresql.postgresqlPassword` | Image name                          | `openvas` |
+| `postgresql.postgresqlDatabase` | Image name                          | `openvas` |
+
 Specify the parameters you which to customize using the `--set` argument to the `helm install` command. For instance,
 
 ```bash

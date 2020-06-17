@@ -34,6 +34,12 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: GVMD_POSTGRESQL_URI
+              value: {{ .Values.postgresql. | quote }}
+
+              postgresql://gvmduser:mypassword@gvm-postgres:5432/gvmd?application_name=gvmd
+
           ports:
             - name: http
               containerPort: 9390
