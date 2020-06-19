@@ -36,36 +36,33 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             - name: GVMD_POSTGRESQL_URI
-              value: {{ .Values.postgresql. | quote }}
-
-              postgresql://gvmduser:mypassword@gvm-postgres:5432/gvmd?application_name=gvmd
-
+              value: postgresql://{{ .Values.postgresql.postgresqlUsername }}:{{ .Values.postgresql.postgresqlPassword }}@openvas-postgresql:5432/{{ .Values.postgresql.postgresqlDatabase }}
           ports:
             - name: http
               containerPort: 9390
               protocol: TCP
-          {{- if .Values.livenessProbe.enabled }}
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
-            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
-            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
-            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
-            failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
-            successThreshold: {{ .Values.livenessProbe.successThreshold }}
-          {{- end }}
-          {{- if .Values.readinessProbe.enabled }}
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
-            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
-            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
-            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
-            failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
-            successThreshold: {{ .Values.readinessProbe.successThreshold }}
-          {{- end }}
+          # {{- if .Values.livenessProbe.enabled }}
+          # livenessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: http
+          #   initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+          #   periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+          #   timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+          #   failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+          #   successThreshold: {{ .Values.livenessProbe.successThreshold }}
+          # {{- end }}
+          # {{- if .Values.readinessProbe.enabled }}
+          # readinessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: http
+          #   initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+          #   periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+          #   timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+          #   failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+          #   successThreshold: {{ .Values.readinessProbe.successThreshold }}
+          # {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}

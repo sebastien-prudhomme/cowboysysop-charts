@@ -116,6 +116,6 @@ postgresql:
   # Whether to use the PostgreSQL chart
   enabled: true
 
-  postgresqlUsername: openvas
+  postgresqlUsername: gvmduser
   postgresqlPassword: openvas
-  postgresqlDatabase: openvas
+  postgresqlDatabase: gvmd
