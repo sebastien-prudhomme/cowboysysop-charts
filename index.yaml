@@ -1,0 +1,97 @@
+apiVersion: v1
+entries:
+  kubebox:
+  - apiVersion: v2
+    appVersion: 0.9.0
+    created: "2021-02-12T13:30:31.959361782Z"
+    description: Terminal and Web console for Kubernetes
+    digest: 14c9e6446d8a707f795d512b362007a30a2bcfe684087ceea54d172f4890949f
+    home: https://github.com/astefanutti/kubebox
+    maintainers:
+    - email: sebastien.prudhomme@gmail.com
+      name: sebastien-prudhomme
+    name: kubebox
+    urls:
+    - https://github.com/sebastien-prudhomme/cowboysysop-charts/releases/download/kubebox-2.2.0/kubebox-2.2.0.tgz
+    version: 2.2.0
+  kubeview:
+  - apiVersion: v2
+    appVersion: 0.1.11
+    created: "2021-02-12T13:30:32.305242237Z"
+    description: Kubernetes cluster visualiser and graphical explorer
+    digest: 1a31d7b357f648334a074734200615b1139c46a08612d8b6871b86438d39a7d1
+    home: https://github.com/benc-uk/kubeview
+    icon: https://raw.githubusercontent.com/benc-uk/kubeview/master/web/client/public/favicon.png
+    maintainers:
+    - email: sebastien.prudhomme@gmail.com
+      name: sebastien-prudhomme
+    name: kubeview
+    urls:
+    - https://github.com/sebastien-prudhomme/cowboysysop-charts/releases/download/kubeview-2.1.0/kubeview-2.1.0.tgz
+    version: 2.1.0
+  lighthouse-ci:
+  - apiVersion: v2
+    appVersion: 0.6.0
+    created: "2021-02-12T13:30:32.425294757Z"
+    description: Enables running a server to display Lighthouse CI results
+    digest: 366a363d7a8b4585e455990d208073d3de5b89bc12c54cd6e6ad24f5da3b0320
+    home: https://github.com/GoogleChrome/lighthouse-ci
+    icon: https://raw.githubusercontent.com/GoogleChrome/lighthouse-ci/master/packages/server/src/ui/logo.svg
+    maintainers:
+    - email: sebastien.prudhomme@gmail.com
+      name: sebastien-prudhomme
+    name: lighthouse-ci
+    urls:
+    - https://github.com/sebastien-prudhomme/cowboysysop-charts/releases/download/lighthouse-ci-2.1.0/lighthouse-ci-2.1.0.tgz
+    version: 2.1.0
+  mongo-express:
+  - apiVersion: v2
+    appVersion: 0.54.0
+    created: "2021-02-12T13:30:32.524956844Z"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami/
+      version: 10.0.5
+    description: Web-based MongoDB admin interface, written with Node.js and express
+    digest: 320e4fbdddc22cf0dc559489690a09deb698530a12bde295b53f2f4a5f0c8c5d
+    home: https://github.com/mongo-express/mongo-express
+    icon: https://raw.githubusercontent.com/mongo-express/mongo-express/master/public/images/mongo-express-logo.png
+    maintainers:
+    - email: sebastien.prudhomme@gmail.com
+      name: sebastien-prudhomme
+    name: mongo-express
+    urls:
+    - https://github.com/sebastien-prudhomme/cowboysysop-charts/releases/download/mongo-express-2.2.0/mongo-express-2.2.0.tgz
+    version: 2.2.0
+  vertical-pod-autoscaler:
+  - apiVersion: v2
+    appVersion: 0.9.0
+    created: "2021-02-12T13:30:32.62042508Z"
+    description: Set of components that automatically adjust the amount of CPU and
+      memory requested by pods running in the Kubernetes Cluster
+    digest: 2e66408a161379437e6b769da452a903a6e8743034b22fea0588b86d7afbe3b7
+    home: https://github.com/kubernetes/autoscaler
+    maintainers:
+    - email: sebastien.prudhomme@gmail.com
+      name: sebastien-prudhomme
+    name: vertical-pod-autoscaler
+    urls:
+    - https://github.com/sebastien-prudhomme/cowboysysop-charts/releases/download/vertical-pod-autoscaler-3.1.0/vertical-pod-autoscaler-3.1.0.tgz
+    version: 3.1.0
+  whoami:
+  - apiVersion: v2
+    appVersion: 1.5.0
+    created: "2021-02-12T13:30:32.711872671Z"
+    description: Tiny Go webserver that prints os information and HTTP request to
+      output
+    digest: c26c0c063e1c6caca01ca2b2179be8789d9f6f135c500bc88fc90a7757bd7a45
+    home: https://github.com/containous/whoami
+    maintainers:
+    - email: sebastien.prudhomme@gmail.com
+      name: sebastien-prudhomme
+    name: whoami
+    urls:
+    - https://github.com/sebastien-prudhomme/cowboysysop-charts/releases/download/whoami-2.1.0/whoami-2.1.0.tgz
+    version: 2.1.0
+generated: "2021-02-12T13:30:31.795408652Z"
