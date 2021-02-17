@@ -31,6 +31,20 @@ entries:
     version: 2.1.0
   lighthouse-ci:
   - apiVersion: v2
+    appVersion: 0.7.0
+    created: "2021-02-17T13:54:27.524374316Z"
+    description: Enables running a server to display Lighthouse CI results
+    digest: 9f9e255d541907fe911668f9ab5546a587cab05db85a1d79e0598eee23c1245f
+    home: https://github.com/GoogleChrome/lighthouse-ci
+    icon: https://raw.githubusercontent.com/GoogleChrome/lighthouse-ci/master/packages/server/src/ui/logo.svg
+    maintainers:
+    - email: sebastien.prudhomme@gmail.com
+      name: sebastien-prudhomme
+    name: lighthouse-ci
+    urls:
+    - https://github.com/sebastien-prudhomme/cowboysysop-charts/releases/download/lighthouse-ci-2.2.0/lighthouse-ci-2.2.0.tgz
+    version: 2.2.0
+  - apiVersion: v2
     appVersion: 0.6.0
     created: "2021-02-12T13:30:32.425294757Z"
     description: Enables running a server to display Lighthouse CI results
