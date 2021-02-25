@@ -102,6 +102,25 @@ entries:
   mongo-express:
   - apiVersion: v2
     appVersion: 0.54.0
+    created: "2021-02-25T12:42:44.150486282Z"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami/
+      version: 10.0.5
+    description: Web-based MongoDB admin interface, written with Node.js and express
+    digest: 7840bfe88635173545fed6b760018dfb207464546824b75ec8a3dd05633431ea
+    home: https://github.com/mongo-express/mongo-express
+    icon: https://raw.githubusercontent.com/mongo-express/mongo-express/master/public/images/mongo-express-logo.png
+    maintainers:
+    - email: sebastien.prudhomme@gmail.com
+      name: sebastien-prudhomme
+    name: mongo-express
+    urls:
+    - https://github.com/sebastien-prudhomme/cowboysysop-charts/releases/download/mongo-express-2.3.1/mongo-express-2.3.1.tgz
+    version: 2.3.1
+  - apiVersion: v2
+    appVersion: 0.54.0
     created: "2021-02-19T09:04:52.777766337Z"
     dependencies:
     - condition: mongodb.enabled
