@@ -1,0 +1,18 @@
+apiVersion: v2
+appVersion: 3.16.1
+description: Collaborative Penetration Test and Vulnerability Management Platform
+home: https://github.com/infobyte/faraday
+icon: https://raw.githubusercontent.com/infobyte/faraday_angular_frontend/master/www/images/logo-faraday.svg
+maintainers:
+  - name: sebastien-prudhomme
+    email: sebastien.prudhomme@gmail.com
+name: faraday
+version: 1.0.0
+dependencies:
+  - name: common
+    version: 1.6.1
+    repository: https://charts.bitnami.com/bitnami/
+  - name: postgresql
+    version: 10.4.9
+    repository: https://charts.bitnami.com/bitnami/
+    condition: postgresql.enabled

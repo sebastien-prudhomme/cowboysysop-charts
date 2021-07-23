@@ -1,0 +1,138 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "faraday.fullname" . }}
+  labels:
+    {{- include "faraday.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "faraday.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "faraday.selectorLabels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      annotations:
+        checksum/configmap: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      {{- if .Values.priorityClassName }}
+      priorityClassName: {{ .Values.priorityClassName | quote }}
+      {{- end }}
+      serviceAccountName: {{ include "faraday.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: faraday
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: LHCI_LOG_LEVEL
+              value: {{ .Values.logLevel | quote }}
+            {{- if and .Values.basicAuthUsername .Values.basicAuthPassword }}
+            - name: LHCI_BASIC_AUTH__USERNAME
+              value: {{ .Values.basicAuthUsername | quote }}
+            - name: LHCI_BASIC_AUTH__PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "faraday.secretName" . }}
+                  key: basic-auth-password
+            {{- end }}
+            - name: POSTGRESQL_HOST
+              value: {{ include "faraday.postgresql.host" . | quote }}
+            - name: POSTGRESQL_PORT
+              value: {{ include "faraday.postgresql.port" . | quote }}
+            - name: PGSQL_HOST
+              value: "$(POSTGRESQL_HOST):$(POSTGRESQL_PORT)"
+            - name: PGSQL_USER
+              value: {{ include "faraday.postgresql.username" . | quote }}
+            - name: PGSQL_PASSWD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "faraday.postgresql.secretName" . }}
+                  key: postgresql-password
+            - name: PGSQL_DBNAME
+              value: {{ include "faraday.postgresql.database" . | quote }}
+            {{- if .Values.extraEnvVars }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.extraEnvVars "context" $) | nindent 12 }}
+            {{- end }}
+          {{- if or .Values.extraEnvVarsCM .Values.extraEnvVarsSecret }}
+          envFrom:
+            {{- if .Values.extraEnvVarsCM }}
+            - configMapRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.extraEnvVarsCM "context" $) }}
+            {{- end }}
+            {{- if .Values.extraEnvVarsSecret }}
+            - secretRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.extraEnvVarsSecret "context" $) }}
+            {{- end }}
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: 9001
+              protocol: TCP
+          {{- if .Values.livenessProbe.enabled }}
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+            successThreshold: {{ .Values.livenessProbe.successThreshold }}
+          {{- end }}
+          {{- if .Values.readinessProbe.enabled }}
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+            successThreshold: {{ .Values.readinessProbe.successThreshold }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: config
+              mountPath: /usr/src/lhci/lighthouserc.json
+              subPath: lighthouserc.json
+            - name: data
+              mountPath: /data
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      volumes:
+        - name: config
+          configMap:
+            name: {{ include "faraday.fullname" . }}
+        - name: data
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ default (include "faraday.fullname" .) .Values.persistence.existingClaim }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
