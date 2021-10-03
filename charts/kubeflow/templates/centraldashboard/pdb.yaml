@@ -1,0 +1,25 @@
+{{- if .Values.centraldashboard.pdb.create }}
+apiVersion: {{ include "common.capabilities.policy.apiVersion" . }}
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "kubeflow.centraldashboard.fullname" . }}
+  labels:
+    {{- include "kubeflow.centraldashboard.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations:
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if .Values.centraldashboard.pdb.minAvailable }}
+  minAvailable: {{ .Values.centraldashboard.pdb.minAvailable }}
+  {{- end }}
+  {{- if .Values.centraldashboard.pdb.maxUnavailable }}
+  maxUnavailable: {{ .Values.centraldashboard.pdb.maxUnavailable }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "kubeflow.centraldashboard.selectorLabels" . | nindent 6 }}
+{{- end }}
