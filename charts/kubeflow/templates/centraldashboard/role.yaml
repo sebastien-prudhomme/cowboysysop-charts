@@ -14,7 +14,7 @@ metadata:
 rules:
   - apiGroups:
       - ""
-      - "app.k8s.io"
+      - app.k8s.io
     resources:
       - applications
       - pods
