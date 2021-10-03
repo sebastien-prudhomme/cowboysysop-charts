@@ -1,0 +1,24 @@
+apiVersion: {{ include "common.capabilities.rbac.apiVersion" . }}
+kind: ClusterRole
+metadata:
+  name: {{ include "kubeflow.centraldashboard.fullname" . }}
+  labels:
+    {{- include "kubeflow.centraldashboard.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations:
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - events
+      - namespaces
+      - nodes
+    verbs:
+      - get
+      - list
+      - watch
