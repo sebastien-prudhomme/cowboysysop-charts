@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "kubeflow.centraldashboard.fullname" . }}
+  labels:
+    {{- include "kubeflow.centraldashboard.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if or .Values.centraldashboard.service.annotations .Values.commonAnnotations }}
+  annotations:
+    {{- if .Values.centraldashboard.service.annotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.centraldashboard.service.annotations "context" $ ) | nindent 4 }}
+    {{- end }}
+    {{- if .Values.commonAnnotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- end }}
+spec:
+  type: {{ .Values.centraldashboard.service.type }}
+  {{- if and (eq .Values.centraldashboard.service.type "ClusterIP") .Values.centraldashboard.service.clusterIP }}
+  clusterIP: {{ .Values.centraldashboard.service.clusterIP }}
+  {{- end }}
+  {{- if and (eq .Values.centraldashboard.service.type "LoadBalancer") .Values.centraldashboard.service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.centraldashboard.service.loadBalancerIP }}
+  {{- end }}
+  {{- if and (eq .Values.centraldashboard.service.type "LoadBalancer") .Values.centraldashboard.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+    {{- toYaml .Values.centraldashboard.service.loadBalancerSourceRanges | nindent 4 }}
+  {{- end }}
+  {{- if or (eq .Values.centraldashboard.service.type "LoadBalancer") (eq .Values.centraldashboard.service.type "NodePort") }}
+  externalTrafficPolicy: {{ .Values.centraldashboard.service.externalTrafficPolicy }}
+  {{- end }}
+  ports:
+    - port: {{ .Values.centraldashboard.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+      {{- if and (or (eq .Values.centraldashboard.service.type "LoadBalancer") (eq .Values.centraldashboard.service.type "NodePort")) .Values.centraldashboard.service.nodePort }}
+      nodePort: {{ .Values.centraldashboard.service.nodePort }}
+      {{- end }}
+  selector:
+    {{- include "kubeflow.centraldashboard.selectorLabels" . | nindent 4 }}
