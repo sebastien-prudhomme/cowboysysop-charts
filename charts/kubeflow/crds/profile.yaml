@@ -6,6 +6,8 @@ metadata:
   creationTimestamp: null
   name: profiles.kubeflow.org
 spec:
+  conversion:
+    strategy: None
   group: kubeflow.org
   names:
     kind: Profile
