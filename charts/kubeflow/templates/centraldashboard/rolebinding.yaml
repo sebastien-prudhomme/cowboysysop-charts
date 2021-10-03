@@ -13,7 +13,7 @@ metadata:
   {{- end }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
+  kind: Role
   name: {{ include "kubeflow.centraldashboard.fullname" . }}
 subjects:
   - kind: ServiceAccount
