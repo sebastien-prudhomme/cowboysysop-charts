@@ -1,0 +1,125 @@
+apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
+kind: Deployment
+metadata:
+  name: {{ include "kubeflow.trainingOperator.fullname" . }}
+  labels:
+    {{- include "kubeflow.trainingOperator.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations:
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: {{ .Values.trainingOperator.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "kubeflow.trainingOperator.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "kubeflow.trainingOperator.selectorLabels" . | nindent 8 }}
+        {{- if .Values.trainingOperator.podLabels }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.trainingOperator.podLabels "context" $ ) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.commonLabels }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 8 }}
+        {{- end }}
+      {{- if or .Values.trainingOperator.podAnnotations .Values.commonAnnotations }}
+      annotations:
+        {{- if .Values.trainingOperator.podAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.trainingOperator.podAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.commonAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+      {{- end }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      {{- if .Values.trainingOperator.priorityClassName }}
+      priorityClassName: {{ .Values.trainingOperator.priorityClassName | quote }}
+      {{- end }}
+      serviceAccountName: {{ include "kubeflow.trainingOperator.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.trainingOperator.podSecurityContext | nindent 8 }}
+      containers:
+        - name: training-operator
+          securityContext:
+            {{- toYaml .Values.trainingOperator.securityContext | nindent 12 }}
+          image: "{{ .Values.trainingOperator.image.repository }}:{{ .Values.trainingOperator.image.tag }}"
+          imagePullPolicy: {{ .Values.trainingOperator.image.pullPolicy }}
+          {{- with .Values.trainingOperator.extraArgs }}
+          args:
+            {{- range $key, $value := . }}
+            - --{{ $key }}={{ $value }}
+            {{- end }}
+          {{- end }}
+          env:
+            - name: USERID_HEADER
+              value: kubeflow-userid
+            - name: USERID_PREFIX
+              value: ""
+            - name: PROFILES_KFAM_SERVICE_HOST
+              value: profiles-kfam.kubeflow
+            - name: REGISTRATION_FLOW
+              value: "false"
+            - name: DASHBOARD_CONFIGMAP
+              value: {{ include "kubeflow.trainingOperator.fullname" . }}
+            {{- if .Values.trainingOperator.extraEnvVars }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.trainingOperator.extraEnvVars "context" $) | nindent 12 }}
+            {{- end }}
+          {{- if or .Values.trainingOperator.extraEnvVarsCM .Values.trainingOperator.extraEnvVarsSecret }}
+          envFrom:
+            {{- if .Values.trainingOperator.extraEnvVarsCM }}
+            - configMapRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.trainingOperator.extraEnvVarsCM "context" $) }}
+            {{- end }}
+            {{- if .Values.trainingOperator.extraEnvVarsSecret }}
+            - secretRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.trainingOperator.extraEnvVarsSecret "context" $) }}
+            {{- end }}
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: 8082
+              protocol: TCP
+          # {{- if .Values.trainingOperator.livenessProbe.enabled }}
+          # livenessProbe:
+          #   httpGet:
+          #     path: /healthz
+          #     port: http
+          #   initialDelaySeconds: {{ .Values.trainingOperator.livenessProbe.initialDelaySeconds }}
+          #   periodSeconds: {{ .Values.trainingOperator.livenessProbe.periodSeconds }}
+          #   timeoutSeconds: {{ .Values.trainingOperator.livenessProbe.timeoutSeconds }}
+          #   failureThreshold: {{ .Values.trainingOperator.livenessProbe.failureThreshold }}
+          #   successThreshold: {{ .Values.trainingOperator.livenessProbe.successThreshold }}
+          # {{- end }}
+          # {{- if .Values.trainingOperator.readinessProbe.enabled }}
+          # readinessProbe:
+          #   httpGet:
+          #     path: /healthz
+          #     port: http
+          #   initialDelaySeconds: {{ .Values.trainingOperator.readinessProbe.initialDelaySeconds }}
+          #   periodSeconds: {{ .Values.trainingOperator.readinessProbe.periodSeconds }}
+          #   timeoutSeconds: {{ .Values.trainingOperator.readinessProbe.timeoutSeconds }}
+          #   failureThreshold: {{ .Values.trainingOperator.readinessProbe.failureThreshold }}
+          #   successThreshold: {{ .Values.trainingOperator.readinessProbe.successThreshold }}
+          # {{- end }}
+          resources:
+            {{- toYaml .Values.trainingOperator.resources | nindent 12 }}
+      {{- with .Values.trainingOperator.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.trainingOperator.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.trainingOperator.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
