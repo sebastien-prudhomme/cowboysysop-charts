@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "vertical-pod-autoscaler.trainingOperator.metrics.fullname" . }}
+  name: {{ include "kubeflow.trainingOperator.metrics.fullname" . }}
   labels:
-    {{- include "vertical-pod-autoscaler.trainingOperator.labels" . | nindent 4 }}
+    {{- include "kubeflow.trainingOperator.labels" . | nindent 4 }}
     {{- if .Values.commonLabels }}
     {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
     {{- end }}
@@ -27,4 +27,4 @@ spec:
       protocol: TCP
       name: http-metrics
   selector:
-    {{- include "vertical-pod-autoscaler.trainingOperator.selectorLabels" . | nindent 4 }}
+    {{- include "kubeflow.trainingOperator.selectorLabels" . | nindent 4 }}
