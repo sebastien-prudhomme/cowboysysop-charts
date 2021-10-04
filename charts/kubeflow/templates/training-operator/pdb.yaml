@@ -1,0 +1,25 @@
+{{- if .Values.trainingOperator.pdb.create }}
+apiVersion: {{ include "common.capabilities.policy.apiVersion" . }}
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "kubeflow.trainingOperator.fullname" . }}
+  labels:
+    {{- include "kubeflow.trainingOperator.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations:
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if .Values.trainingOperator.pdb.minAvailable }}
+  minAvailable: {{ .Values.trainingOperator.pdb.minAvailable }}
+  {{- end }}
+  {{- if .Values.trainingOperator.pdb.maxUnavailable }}
+  maxUnavailable: {{ .Values.trainingOperator.pdb.maxUnavailable }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "kubeflow.trainingOperator.selectorLabels" . | nindent 6 }}
+{{- end }}
