@@ -58,17 +58,17 @@ spec:
             - --{{ $key }}={{ $value }}
             {{- end }}
           {{- end }}
+          command:
+            - /manager
           env:
-            - name: USERID_HEADER
-              value: kubeflow-userid
-            - name: USERID_PREFIX
-              value: ""
-            - name: PROFILES_KFAM_SERVICE_HOST
-              value: profiles-kfam.kubeflow
-            - name: REGISTRATION_FLOW
-              value: "false"
-            - name: DASHBOARD_CONFIGMAP
-              value: {{ include "kubeflow.trainingOperator.fullname" . }}
+            - name: MY_POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: MY_POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
             {{- if .Values.trainingOperator.extraEnvVars }}
             {{- include "common.tplvalues.render" (dict "value" .Values.trainingOperator.extraEnvVars "context" $) | nindent 12 }}
             {{- end }}
@@ -84,31 +84,34 @@ spec:
             {{- end }}
           {{- end }}
           ports:
-            - name: http
-              containerPort: 8082
+            - name: http-metrics
+              containerPort: 8080
               protocol: TCP
-          # {{- if .Values.trainingOperator.livenessProbe.enabled }}
-          # livenessProbe:
-          #   httpGet:
-          #     path: /healthz
-          #     port: http
-          #   initialDelaySeconds: {{ .Values.trainingOperator.livenessProbe.initialDelaySeconds }}
-          #   periodSeconds: {{ .Values.trainingOperator.livenessProbe.periodSeconds }}
-          #   timeoutSeconds: {{ .Values.trainingOperator.livenessProbe.timeoutSeconds }}
-          #   failureThreshold: {{ .Values.trainingOperator.livenessProbe.failureThreshold }}
-          #   successThreshold: {{ .Values.trainingOperator.livenessProbe.successThreshold }}
-          # {{- end }}
-          # {{- if .Values.trainingOperator.readinessProbe.enabled }}
-          # readinessProbe:
-          #   httpGet:
-          #     path: /healthz
-          #     port: http
-          #   initialDelaySeconds: {{ .Values.trainingOperator.readinessProbe.initialDelaySeconds }}
-          #   periodSeconds: {{ .Values.trainingOperator.readinessProbe.periodSeconds }}
-          #   timeoutSeconds: {{ .Values.trainingOperator.readinessProbe.timeoutSeconds }}
-          #   failureThreshold: {{ .Values.trainingOperator.readinessProbe.failureThreshold }}
-          #   successThreshold: {{ .Values.trainingOperator.readinessProbe.successThreshold }}
-          # {{- end }}
+            - name: http-probes
+              containerPort: 8081
+              protocol: TCP
+          {{- if .Values.trainingOperator.livenessProbe.enabled }}
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http-probes
+            initialDelaySeconds: {{ .Values.trainingOperator.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.trainingOperator.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.trainingOperator.livenessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.trainingOperator.livenessProbe.failureThreshold }}
+            successThreshold: {{ .Values.trainingOperator.livenessProbe.successThreshold }}
+          {{- end }}
+          {{- if .Values.trainingOperator.readinessProbe.enabled }}
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: http-probes
+            initialDelaySeconds: {{ .Values.trainingOperator.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.trainingOperator.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.trainingOperator.readinessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.trainingOperator.readinessProbe.failureThreshold }}
+            successThreshold: {{ .Values.trainingOperator.readinessProbe.successThreshold }}
+          {{- end }}
           resources:
             {{- toYaml .Values.trainingOperator.resources | nindent 12 }}
       {{- with .Values.trainingOperator.nodeSelector }}
