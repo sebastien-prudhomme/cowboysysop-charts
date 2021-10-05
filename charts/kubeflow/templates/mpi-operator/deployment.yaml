@@ -1,0 +1,122 @@
+apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
+kind: Deployment
+metadata:
+  name: {{ include "kubeflow.mpiOperator.fullname" . }}
+  labels:
+    {{- include "kubeflow.mpiOperator.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations:
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: {{ .Values.mpiOperator.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "kubeflow.mpiOperator.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "kubeflow.mpiOperator.selectorLabels" . | nindent 8 }}
+        {{- if .Values.mpiOperator.podLabels }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.mpiOperator.podLabels "context" $ ) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.commonLabels }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 8 }}
+        {{- end }}
+      {{- if or .Values.mpiOperator.podAnnotations .Values.commonAnnotations }}
+      annotations:
+        {{- if .Values.mpiOperator.podAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.mpiOperator.podAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.commonAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+      {{- end }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      {{- if .Values.mpiOperator.priorityClassName }}
+      priorityClassName: {{ .Values.mpiOperator.priorityClassName | quote }}
+      {{- end }}
+      serviceAccountName: {{ include "kubeflow.mpiOperator.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.mpiOperator.podSecurityContext | nindent 8 }}
+      containers:
+        - name: mpi-operator
+          securityContext:
+            {{- toYaml .Values.mpiOperator.securityContext | nindent 12 }}
+          image: "{{ .Values.mpiOperator.image.repository }}:{{ .Values.mpiOperator.image.tag }}"
+          imagePullPolicy: {{ .Values.mpiOperator.image.pullPolicy }}
+          args:
+            - --alsologtostderr
+            - --lock-namespace
+            - {{ .Release.Namespace }}
+            - --kubectl-delivery-image
+            - {{ .Values.mpiOperator.kubectlDeliveryImage }}
+            {{- with .Values.mpiOperator.extraArgs }}
+            {{- range $key, $value := . }}
+            - --{{ $key }}={{ $value }}
+            {{- end }}
+            {{- end }}
+          command:
+            - /opt/mpi-operator.v1
+          {{- if .Values.mpiOperator.extraEnvVars }}
+          env:
+            {{- include "common.tplvalues.render" (dict "value" .Values.mpiOperator.extraEnvVars "context" $) | nindent 12 }}
+          {{- end }}
+          {{- if or .Values.mpiOperator.extraEnvVarsCM .Values.mpiOperator.extraEnvVarsSecret }}
+          envFrom:
+            {{- if .Values.mpiOperator.extraEnvVarsCM }}
+            - configMapRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.mpiOperator.extraEnvVarsCM "context" $) }}
+            {{- end }}
+            {{- if .Values.mpiOperator.extraEnvVarsSecret }}
+            - secretRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.mpiOperator.extraEnvVarsSecret "context" $) }}
+            {{- end }}
+          {{- end }}
+          ports:
+            - name: http-probes
+              containerPort: 8080
+              protocol: TCP
+          {{- if .Values.mpiOperator.livenessProbe.enabled }}
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http-probes
+            initialDelaySeconds: {{ .Values.mpiOperator.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.mpiOperator.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.mpiOperator.livenessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.mpiOperator.livenessProbe.failureThreshold }}
+            successThreshold: {{ .Values.mpiOperator.livenessProbe.successThreshold }}
+          {{- end }}
+          {{- if .Values.mpiOperator.readinessProbe.enabled }}
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http-probes
+            initialDelaySeconds: {{ .Values.mpiOperator.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.mpiOperator.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.mpiOperator.readinessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.mpiOperator.readinessProbe.failureThreshold }}
+            successThreshold: {{ .Values.mpiOperator.readinessProbe.successThreshold }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.mpiOperator.resources | nindent 12 }}
+      {{- with .Values.mpiOperator.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.mpiOperator.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.mpiOperator.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
