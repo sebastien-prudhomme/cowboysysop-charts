@@ -275,6 +275,23 @@ mpiOperator:
   # Name of existing Secret containing additional container environment variables
   extraEnvVarsSecret:
 
+  metrics:
+    service:
+      # Metrics service annotations
+      annotations: {}
+
+      # Metrics service type
+      type: ClusterIP
+
+      # Metrics static cluster IP address or None for headless service when service type is ClusterIP
+      # clusterIP: 10.43.0.100
+
+      # Metrics service port
+      port: 8081
+
+  # The container image used to deliver the kubectl binary
+  kubectlDeliveryImage: mpioperator/kubectl-delivery:latest
+
 profiles:
   replicaCount: 1
 
