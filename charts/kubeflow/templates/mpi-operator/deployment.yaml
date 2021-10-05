@@ -58,10 +58,8 @@ spec:
             - {{ .Release.Namespace }}
             - --kubectl-delivery-image
             - {{ .Values.mpiOperator.kubectlDeliveryImage }}
-            {{- with .Values.mpiOperator.extraArgs }}
-            {{- range $key, $value := . }}
+            {{- range $key, $value := .Values.mpiOperator.extraArgs }}
             - --{{ $key }}={{ $value }}
-            {{- end }}
             {{- end }}
           command:
             - /opt/mpi-operator.v1
