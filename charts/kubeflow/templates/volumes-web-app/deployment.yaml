@@ -64,7 +64,7 @@ spec:
             - name: USERID_HEADER
               value: {{ .Values.useridHeader }}
             - name: USERID_PREFIX
-              value: {{ .Values.useridPrefix }}
+              value: {{ .Values.useridPrefix | quote }}
             {{- if .Values.volumesWebApp.extraEnvVars }}
             {{- include "common.tplvalues.render" (dict "value" .Values.volumesWebApp.extraEnvVars "context" $) | nindent 12 }}
             {{- end }}
