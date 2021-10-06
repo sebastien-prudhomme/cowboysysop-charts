@@ -1,0 +1,123 @@
+apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
+kind: Deployment
+metadata:
+  name: {{ include "kubeflow.volumesWebApp.fullname" . }}
+  labels:
+    {{- include "kubeflow.volumesWebApp.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations:
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: {{ .Values.volumesWebApp.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "kubeflow.volumesWebApp.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "kubeflow.volumesWebApp.selectorLabels" . | nindent 8 }}
+        {{- if .Values.volumesWebApp.podLabels }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.volumesWebApp.podLabels "context" $ ) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.commonLabels }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 8 }}
+        {{- end }}
+      {{- if or .Values.volumesWebApp.podAnnotations .Values.commonAnnotations }}
+      annotations:
+        {{- if .Values.volumesWebApp.podAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.volumesWebApp.podAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.commonAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+      {{- end }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      {{- if .Values.volumesWebApp.priorityClassName }}
+      priorityClassName: {{ .Values.volumesWebApp.priorityClassName | quote }}
+      {{- end }}
+      serviceAccountName: {{ include "kubeflow.volumesWebApp.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.volumesWebApp.podSecurityContext | nindent 8 }}
+      containers:
+        - name: training-operator
+          securityContext:
+            {{- toYaml .Values.volumesWebApp.securityContext | nindent 12 }}
+          image: "{{ .Values.volumesWebApp.image.repository }}:{{ .Values.volumesWebApp.image.tag }}"
+          imagePullPolicy: {{ .Values.volumesWebApp.image.pullPolicy }}
+          {{- with .Values.volumesWebApp.extraArgs }}
+          args:
+            {{- range $key, $value := . }}
+            - --{{ $key }}={{ $value }}
+            {{- end }}
+          {{- end }}
+          command:
+            - /manager
+          env:
+            - name: APP_PREFIX
+              value: /volumes
+            - name: USERID_HEADER
+              value: {{ .Values.useridHeader }}
+            - name: USERID_PREFIX
+              value: {{ .Values.useridPrefix }}
+            {{- if .Values.volumesWebApp.extraEnvVars }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.volumesWebApp.extraEnvVars "context" $) | nindent 12 }}
+            {{- end }}
+          {{- if or .Values.volumesWebApp.extraEnvVarsCM .Values.volumesWebApp.extraEnvVarsSecret }}
+          envFrom:
+            {{- if .Values.volumesWebApp.extraEnvVarsCM }}
+            - configMapRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.volumesWebApp.extraEnvVarsCM "context" $) }}
+            {{- end }}
+            {{- if .Values.volumesWebApp.extraEnvVarsSecret }}
+            - secretRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.volumesWebApp.extraEnvVarsSecret "context" $) }}
+            {{- end }}
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: 5000
+              protocol: TCP
+          {{- if .Values.volumesWebApp.livenessProbe.enabled }}
+          livenessProbe:
+            httpGet:
+              path: /healthz/liveness
+              port: http
+            initialDelaySeconds: {{ .Values.volumesWebApp.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.volumesWebApp.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.volumesWebApp.livenessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.volumesWebApp.livenessProbe.failureThreshold }}
+            successThreshold: {{ .Values.volumesWebApp.livenessProbe.successThreshold }}
+          {{- end }}
+          {{- if .Values.volumesWebApp.readinessProbe.enabled }}
+          readinessProbe:
+            httpGet:
+              path: /healthz/readiness
+              port: http
+            initialDelaySeconds: {{ .Values.volumesWebApp.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.volumesWebApp.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.volumesWebApp.readinessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.volumesWebApp.readinessProbe.failureThreshold }}
+            successThreshold: {{ .Values.volumesWebApp.readinessProbe.successThreshold }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.volumesWebApp.resources | nindent 12 }}
+      {{- with .Values.volumesWebApp.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.volumesWebApp.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.volumesWebApp.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
