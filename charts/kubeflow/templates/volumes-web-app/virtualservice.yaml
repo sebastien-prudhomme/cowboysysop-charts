@@ -1,0 +1,38 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: {{ include "kubeflow.volumesWebApp.fullname" . }}
+  labels:
+    {{- include "kubeflow.volumesWebApp.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if or .Values.volumesWebApp.service.annotations .Values.commonAnnotations }}
+  annotations:
+    {{- if .Values.volumesWebApp.service.annotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.volumesWebApp.service.annotations "context" $ ) | nindent 4 }}
+    {{- end }}
+    {{- if .Values.commonAnnotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- end }}
+spec:
+  hosts:
+    - "*"
+  gateways:
+    - {{ include "kubeflow.fullname" . }}
+  http:
+    - match:
+        - uri:
+            prefix: /volumes/
+      route:
+        - destination:
+            host: {{ include "kubeflow.volumesWebApp.fullname" . }}
+            port:
+              number: {{ .Values.volumesWebApp.service.port }}
+      rewrite:
+        uri: /
+      headers:
+        request:
+          add:
+            x-forwarded-prefix: /volumes
