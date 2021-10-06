@@ -15,6 +15,11 @@ commonAnnotations: {}
 # Labels to add to all deployed objects
 commonLabels: {}
 
+# Istio labels for gateway assignment
+istioSelector:
+  app: istio-ingressgateway
+  istio: ingressgateway
+
 # Key of request header containing user id
 useridHeader: x-goog-authenticated-user-email
 
