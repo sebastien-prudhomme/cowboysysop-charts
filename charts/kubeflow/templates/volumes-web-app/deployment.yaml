@@ -47,7 +47,7 @@ spec:
       securityContext:
         {{- toYaml .Values.volumesWebApp.podSecurityContext | nindent 8 }}
       containers:
-        - name: training-operator
+        - name: volumes-web-app
           securityContext:
             {{- toYaml .Values.volumesWebApp.securityContext | nindent 12 }}
           image: "{{ .Values.volumesWebApp.image.repository }}:{{ .Values.volumesWebApp.image.tag }}"
@@ -58,8 +58,6 @@ spec:
             - --{{ $key }}={{ $value }}
             {{- end }}
           {{- end }}
-          command:
-            - /manager
           env:
             - name: APP_PREFIX
               value: /volumes
