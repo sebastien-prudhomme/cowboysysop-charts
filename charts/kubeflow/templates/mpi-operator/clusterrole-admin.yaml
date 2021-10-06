@@ -1,7 +1,7 @@
 apiVersion: {{ include "common.capabilities.rbac.apiVersion" . }}
 kind: ClusterRole
 metadata:
-  name: kubeflow-mpijobs-admin
+  name: kubeflow-mpi-operator-admin
   labels:
     rbac.authorization.kubeflow.org/aggregate-to-kubeflow-admin: "true"
     {{- include "kubeflow.mpiOperator.labels" . | nindent 4 }}
@@ -15,4 +15,4 @@ metadata:
 aggregationRule:
   clusterRoleSelectors:
     - matchLabels:
-        rbac.authorization.kubeflow.org/aggregate-to-kubeflow-mpijobs-admin: "true"
+        rbac.authorization.kubeflow.org/aggregate-to-kubeflow-mpi-operator-admin: "true"

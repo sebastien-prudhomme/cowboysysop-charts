@@ -1,10 +1,10 @@
 apiVersion: {{ include "common.capabilities.rbac.apiVersion" . }}
 kind: ClusterRole
 metadata:
-  name: kubeflow-mpijobs-edit
+  name: kubeflow-mpi-operator-edit
   labels:
     rbac.authorization.kubeflow.org/aggregate-to-kubeflow-edit: "true"
-    rbac.authorization.kubeflow.org/aggregate-to-kubeflow-mpijobs-admin: "true"
+    rbac.authorization.kubeflow.org/aggregate-to-kubeflow-mpi-operator-admin: "true"
     {{- include "kubeflow.mpiOperator.labels" . | nindent 4 }}
     {{- if .Values.commonLabels }}
     {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
