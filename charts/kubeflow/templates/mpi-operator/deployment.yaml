@@ -54,12 +54,9 @@ spec:
           imagePullPolicy: {{ .Values.mpiOperator.image.pullPolicy }}
           args:
             - --alsologtostderr
-            - --lock-namespace
-            - {{ .Release.Namespace }}
-            - --kubectl-delivery-image
-            - {{ .Values.mpiOperator.kubectlDeliveryImage }}
-            - --monitoring-port
-            - "8081"
+            - --lock-namespace={{ .Release.Namespace }}
+            - --kubectl-delivery-image={{ .Values.mpiOperator.kubectlDeliveryImage }}
+            - --monitoring-port=8081
             {{- range $key, $value := .Values.mpiOperator.extraArgs }}
             - --{{ $key }}={{ $value }}
             {{- end }}
