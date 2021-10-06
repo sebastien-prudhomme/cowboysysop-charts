@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "kubeflow.volumesWebApp.fullname" . }}
+  labels:
+    {{- include "kubeflow.volumesWebApp.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if or .Values.volumesWebApp.service.annotations .Values.commonAnnotations }}
+  annotations:
+    {{- if .Values.volumesWebApp.service.annotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.volumesWebApp.service.annotations "context" $ ) | nindent 4 }}
+    {{- end }}
+    {{- if .Values.commonAnnotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- end }}
+spec:
+  type: {{ .Values.volumesWebApp.service.type }}
+  {{- if and (eq .Values.volumesWebApp.service.type "ClusterIP") .Values.volumesWebApp.service.clusterIP }}
+  clusterIP: {{ .Values.volumesWebApp.service.clusterIP }}
+  {{- end }}
+  {{- if and (eq .Values.volumesWebApp.service.type "LoadBalancer") .Values.volumesWebApp.service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.volumesWebApp.service.loadBalancerIP }}
+  {{- end }}
+  {{- if and (eq .Values.volumesWebApp.service.type "LoadBalancer") .Values.volumesWebApp.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+    {{- toYaml .Values.volumesWebApp.service.loadBalancerSourceRanges | nindent 4 }}
+  {{- end }}
+  {{- if or (eq .Values.volumesWebApp.service.type "LoadBalancer") (eq .Values.volumesWebApp.service.type "NodePort") }}
+  externalTrafficPolicy: {{ .Values.volumesWebApp.service.externalTrafficPolicy }}
+  {{- end }}
+  ports:
+    - port: {{ .Values.volumesWebApp.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+      {{- if and (or (eq .Values.volumesWebApp.service.type "LoadBalancer") (eq .Values.volumesWebApp.service.type "NodePort")) .Values.volumesWebApp.service.nodePort }}
+      nodePort: {{ .Values.volumesWebApp.service.nodePort }}
+      {{- end }}
+  selector:
+    {{- include "kubeflow.volumesWebApp.selectorLabels" . | nindent 4 }}
