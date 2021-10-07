@@ -1,0 +1,33 @@
+{{- if and .Values.oidcAuthservice.persistence.enabled (not .Values.oidcAuthservice.persistence.existingClaim) }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "kubeflow.oidcAuthservice.fullname" . }}
+  labels:
+    {{- include "kubeflow.oidcAuthservice.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if or .Values.oidcAuthservice.persistence.annotations .Values.commonAnnotations }}
+  annotations:
+    {{- if .Values.oidcAuthservice.persistence.annotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.oidcAuthservice.persistence.annotations "context" $ ) | nindent 4 }}
+    {{- end }}
+    {{- if .Values.commonAnnotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- end }}
+spec:
+  accessModes:
+    - {{ .Values.oidcAuthservice.persistence.accessMode | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.oidcAuthservice.persistence.size | quote }}
+  {{- if .Values.oidcAuthservice.persistence.storageClass }}
+  {{- if (eq "-" .Values.oidcAuthservice.persistence.storageClass) }}
+  storageClassName: ""
+  {{- else }}
+  storageClassName: {{ .Values.oidcAuthservice.persistence.storageClass | quote }}
+  {{- end }}
+  {{- end }}
+{{- end }}
