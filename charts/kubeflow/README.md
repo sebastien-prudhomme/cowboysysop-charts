@@ -17,6 +17,7 @@ This chart bootstraps a Kubeflow deployment on a [Kubernetes](http://kubernetes.
 
 - Kubernetes 1.16+ (should work with 1.14+)
 - Istio 1.9+
+- an OIDC provider such as Dex (you can use the [dex/dex](https://artifacthub.io/packages/helm/dex/dex) chart) or Keycloak (you can use the [bitnami/keycloak](https://artifacthub.io/packages/helm/bitnami/keycloak) chart)
 - Helm 3.0+
 
 ## Installing
