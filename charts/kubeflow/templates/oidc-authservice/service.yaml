@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "kubeflow.oidcAuthservice.fullname" . }}
+  labels:
+    {{- include "kubeflow.oidcAuthservice.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if or .Values.oidcAuthservice.service.annotations .Values.commonAnnotations }}
+  annotations:
+    {{- if .Values.oidcAuthservice.service.annotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.oidcAuthservice.service.annotations "context" $ ) | nindent 4 }}
+    {{- end }}
+    {{- if .Values.commonAnnotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- end }}
+spec:
+  type: {{ .Values.oidcAuthservice.service.type }}
+  {{- if and (eq .Values.oidcAuthservice.service.type "ClusterIP") .Values.oidcAuthservice.service.clusterIP }}
+  clusterIP: {{ .Values.oidcAuthservice.service.clusterIP }}
+  {{- end }}
+  {{- if and (eq .Values.oidcAuthservice.service.type "LoadBalancer") .Values.oidcAuthservice.service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.oidcAuthservice.service.loadBalancerIP }}
+  {{- end }}
+  {{- if and (eq .Values.oidcAuthservice.service.type "LoadBalancer") .Values.oidcAuthservice.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+    {{- toYaml .Values.oidcAuthservice.service.loadBalancerSourceRanges | nindent 4 }}
+  {{- end }}
+  {{- if or (eq .Values.oidcAuthservice.service.type "LoadBalancer") (eq .Values.oidcAuthservice.service.type "NodePort") }}
+  externalTrafficPolicy: {{ .Values.oidcAuthservice.service.externalTrafficPolicy }}
+  {{- end }}
+  ports:
+    - port: {{ .Values.oidcAuthservice.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+      {{- if and (or (eq .Values.oidcAuthservice.service.type "LoadBalancer") (eq .Values.oidcAuthservice.service.type "NodePort")) .Values.oidcAuthservice.service.nodePort }}
+      nodePort: {{ .Values.oidcAuthservice.service.nodePort }}
+      {{- end }}
+  selector:
+    {{- include "kubeflow.oidcAuthservice.selectorLabels" . | nindent 4 }}
