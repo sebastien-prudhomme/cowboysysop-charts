@@ -1,0 +1,25 @@
+{{- if .Values.oidcAuthservice.pdb.create }}
+apiVersion: {{ include "common.capabilities.policy.apiVersion" . }}
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "kubeflow.oidcAuthservice.fullname" . }}
+  labels:
+    {{- include "kubeflow.oidcAuthservice.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations:
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if .Values.oidcAuthservice.pdb.minAvailable }}
+  minAvailable: {{ .Values.oidcAuthservice.pdb.minAvailable }}
+  {{- end }}
+  {{- if .Values.oidcAuthservice.pdb.maxUnavailable }}
+  maxUnavailable: {{ .Values.oidcAuthservice.pdb.maxUnavailable }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "kubeflow.oidcAuthservice.selectorLabels" . | nindent 6 }}
+{{- end }}
