@@ -254,11 +254,3 @@ $ helm install my-release \
 ```
 
 **Tip**: You can use the default [values.yaml](values.yaml).
-
-## Limitations
-
-Due to hard-coded values in Kubeflow, the chart configuration has some limitations:
-
-- Admission controller component service name is `vpa-webhook`
-- Admission controller component service port is `443`
-- Mutating webhook configuration name automatically created by admission controller component is `vpa-webhook-config`
