@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "kubeflow.tensorboardsWebApp.fullname" . }}
+  labels:
+    {{- include "kubeflow.tensorboardsWebApp.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if or .Values.tensorboardsWebApp.service.annotations .Values.commonAnnotations }}
+  annotations:
+    {{- if .Values.tensorboardsWebApp.service.annotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.tensorboardsWebApp.service.annotations "context" $ ) | nindent 4 }}
+    {{- end }}
+    {{- if .Values.commonAnnotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- end }}
+spec:
+  type: {{ .Values.tensorboardsWebApp.service.type }}
+  {{- if and (eq .Values.tensorboardsWebApp.service.type "ClusterIP") .Values.tensorboardsWebApp.service.clusterIP }}
+  clusterIP: {{ .Values.tensorboardsWebApp.service.clusterIP }}
+  {{- end }}
+  {{- if and (eq .Values.tensorboardsWebApp.service.type "LoadBalancer") .Values.tensorboardsWebApp.service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.tensorboardsWebApp.service.loadBalancerIP }}
+  {{- end }}
+  {{- if and (eq .Values.tensorboardsWebApp.service.type "LoadBalancer") .Values.tensorboardsWebApp.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+    {{- toYaml .Values.tensorboardsWebApp.service.loadBalancerSourceRanges | nindent 4 }}
+  {{- end }}
+  {{- if or (eq .Values.tensorboardsWebApp.service.type "LoadBalancer") (eq .Values.tensorboardsWebApp.service.type "NodePort") }}
+  externalTrafficPolicy: {{ .Values.tensorboardsWebApp.service.externalTrafficPolicy }}
+  {{- end }}
+  ports:
+    - port: {{ .Values.tensorboardsWebApp.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+      {{- if and (or (eq .Values.tensorboardsWebApp.service.type "LoadBalancer") (eq .Values.tensorboardsWebApp.service.type "NodePort")) .Values.tensorboardsWebApp.service.nodePort }}
+      nodePort: {{ .Values.tensorboardsWebApp.service.nodePort }}
+      {{- end }}
+  selector:
+    {{- include "kubeflow.tensorboardsWebApp.selectorLabels" . | nindent 4 }}
