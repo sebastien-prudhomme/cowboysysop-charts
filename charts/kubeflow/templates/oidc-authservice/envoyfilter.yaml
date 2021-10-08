@@ -1,0 +1,46 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: {{ include "kubeflow.oidcAuthservice.fullname" . }}
+  labels:
+    {{- include "kubeflow.oidcAuthservice.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations:
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  workloadSelector:
+    labels:
+      {{- toYaml .Values.istioSelector | nindent 6 }}
+  configPatches:
+    - applyTo: HTTP_FILTER
+      match:
+        context: GATEWAY
+        listener:
+          filterChain:
+            filter:
+              name: envoy.filters.network.http_connection_manager
+      patch:
+        operation: INSERT_BEFORE
+        value:
+          name: envoy.filters.http.ext_authz
+          typed_config:
+            "@type": type.googleapis.com/envoy.extensions.filters.http.ext_authz.v3.ExtAuthz
+            http_service:
+              server_uri:
+                uri: http://192.168.1.51:32556
+                cluster: outbound|32556||192.168.1.51
+                timeout: 10s
+              authorization_request:
+                allowed_headers:
+                  patterns:
+                    - exact: authorization
+                    - exact: cookie
+                    - exact: x-auth-token
+              authorization_response:
+                allowed_upstream_headers:
+                  patterns:
+                    - exact: kubeflow-userid
