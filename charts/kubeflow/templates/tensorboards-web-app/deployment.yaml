@@ -1,0 +1,121 @@
+apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
+kind: Deployment
+metadata:
+  name: {{ include "kubeflow.tensorboardsWebApp.fullname" . }}
+  labels:
+    {{- include "kubeflow.tensorboardsWebApp.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations:
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: {{ .Values.tensorboardsWebApp.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "kubeflow.tensorboardsWebApp.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "kubeflow.tensorboardsWebApp.selectorLabels" . | nindent 8 }}
+        {{- if .Values.tensorboardsWebApp.podLabels }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.tensorboardsWebApp.podLabels "context" $ ) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.commonLabels }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 8 }}
+        {{- end }}
+      {{- if or .Values.tensorboardsWebApp.podAnnotations .Values.commonAnnotations }}
+      annotations:
+        {{- if .Values.tensorboardsWebApp.podAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.tensorboardsWebApp.podAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.commonAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+      {{- end }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      {{- if .Values.tensorboardsWebApp.priorityClassName }}
+      priorityClassName: {{ .Values.tensorboardsWebApp.priorityClassName | quote }}
+      {{- end }}
+      serviceAccountName: {{ include "kubeflow.tensorboardsWebApp.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.tensorboardsWebApp.podSecurityContext | nindent 8 }}
+      containers:
+        - name: tensorboards-web-app
+          securityContext:
+            {{- toYaml .Values.tensorboardsWebApp.securityContext | nindent 12 }}
+          image: "{{ .Values.tensorboardsWebApp.image.repository }}:{{ .Values.tensorboardsWebApp.image.tag }}"
+          imagePullPolicy: {{ .Values.tensorboardsWebApp.image.pullPolicy }}
+          {{- with .Values.tensorboardsWebApp.extraArgs }}
+          args:
+            {{- range $key, $value := . }}
+            - --{{ $key }}={{ $value }}
+            {{- end }}
+          {{- end }}
+          env:
+            - name: APP_PREFIX
+              value: /tensorboards
+            - name: USERID_HEADER
+              value: {{ .Values.useridHeader }}
+            - name: USERID_PREFIX
+              value: {{ .Values.useridPrefix | quote }}
+            {{- if .Values.tensorboardsWebApp.extraEnvVars }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.tensorboardsWebApp.extraEnvVars "context" $) | nindent 12 }}
+            {{- end }}
+          {{- if or .Values.tensorboardsWebApp.extraEnvVarsCM .Values.tensorboardsWebApp.extraEnvVarsSecret }}
+          envFrom:
+            {{- if .Values.tensorboardsWebApp.extraEnvVarsCM }}
+            - configMapRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.tensorboardsWebApp.extraEnvVarsCM "context" $) }}
+            {{- end }}
+            {{- if .Values.tensorboardsWebApp.extraEnvVarsSecret }}
+            - secretRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.tensorboardsWebApp.extraEnvVarsSecret "context" $) }}
+            {{- end }}
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: 5000
+              protocol: TCP
+          {{- if .Values.tensorboardsWebApp.livenessProbe.enabled }}
+          livenessProbe:
+            httpGet:
+              path: /healthz/liveness
+              port: http
+            initialDelaySeconds: {{ .Values.tensorboardsWebApp.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.tensorboardsWebApp.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.tensorboardsWebApp.livenessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.tensorboardsWebApp.livenessProbe.failureThreshold }}
+            successThreshold: {{ .Values.tensorboardsWebApp.livenessProbe.successThreshold }}
+          {{- end }}
+          {{- if .Values.tensorboardsWebApp.readinessProbe.enabled }}
+          readinessProbe:
+            httpGet:
+              path: /healthz/readiness
+              port: http
+            initialDelaySeconds: {{ .Values.tensorboardsWebApp.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.tensorboardsWebApp.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.tensorboardsWebApp.readinessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.tensorboardsWebApp.readinessProbe.failureThreshold }}
+            successThreshold: {{ .Values.tensorboardsWebApp.readinessProbe.successThreshold }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.tensorboardsWebApp.resources | nindent 12 }}
+      {{- with .Values.tensorboardsWebApp.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.tensorboardsWebApp.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tensorboardsWebApp.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
