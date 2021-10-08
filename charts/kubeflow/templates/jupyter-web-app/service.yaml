@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "kubeflow.jupyterWebApp.fullname" . }}
+  labels:
+    {{- include "kubeflow.jupyterWebApp.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if or .Values.jupyterWebApp.service.annotations .Values.commonAnnotations }}
+  annotations:
+    {{- if .Values.jupyterWebApp.service.annotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.jupyterWebApp.service.annotations "context" $ ) | nindent 4 }}
+    {{- end }}
+    {{- if .Values.commonAnnotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- end }}
+spec:
+  type: {{ .Values.jupyterWebApp.service.type }}
+  {{- if and (eq .Values.jupyterWebApp.service.type "ClusterIP") .Values.jupyterWebApp.service.clusterIP }}
+  clusterIP: {{ .Values.jupyterWebApp.service.clusterIP }}
+  {{- end }}
+  {{- if and (eq .Values.jupyterWebApp.service.type "LoadBalancer") .Values.jupyterWebApp.service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.jupyterWebApp.service.loadBalancerIP }}
+  {{- end }}
+  {{- if and (eq .Values.jupyterWebApp.service.type "LoadBalancer") .Values.jupyterWebApp.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+    {{- toYaml .Values.jupyterWebApp.service.loadBalancerSourceRanges | nindent 4 }}
+  {{- end }}
+  {{- if or (eq .Values.jupyterWebApp.service.type "LoadBalancer") (eq .Values.jupyterWebApp.service.type "NodePort") }}
+  externalTrafficPolicy: {{ .Values.jupyterWebApp.service.externalTrafficPolicy }}
+  {{- end }}
+  ports:
+    - port: {{ .Values.jupyterWebApp.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+      {{- if and (or (eq .Values.jupyterWebApp.service.type "LoadBalancer") (eq .Values.jupyterWebApp.service.type "NodePort")) .Values.jupyterWebApp.service.nodePort }}
+      nodePort: {{ .Values.jupyterWebApp.service.nodePort }}
+      {{- end }}
+  selector:
+    {{- include "kubeflow.jupyterWebApp.selectorLabels" . | nindent 4 }}
