@@ -1,0 +1,33 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: {{ include "kubeflow.jupyterWebApp.fullname" . }}
+  labels:
+    {{- include "kubeflow.jupyterWebApp.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations:
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  hosts:
+    - "*"
+  gateways:
+    - {{ include "kubeflow.fullname" . }}
+  http:
+    - match:
+        - uri:
+            prefix: /jupyter/
+      route:
+        - destination:
+            host: {{ include "kubeflow.jupyterWebApp.fullname" . }}
+            port:
+              number: {{ .Values.jupyterWebApp.service.port }}
+      rewrite:
+        uri: /
+      headers:
+        request:
+          add:
+            x-forwarded-prefix: /jupyter
