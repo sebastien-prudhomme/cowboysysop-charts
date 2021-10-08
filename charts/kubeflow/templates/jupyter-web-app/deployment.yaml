@@ -1,0 +1,127 @@
+apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
+kind: Deployment
+metadata:
+  name: {{ include "kubeflow.jupyterWebApp.fullname" . }}
+  labels:
+    {{- include "kubeflow.jupyterWebApp.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations:
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: {{ .Values.jupyterWebApp.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "kubeflow.jupyterWebApp.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "kubeflow.jupyterWebApp.selectorLabels" . | nindent 8 }}
+        {{- if .Values.jupyterWebApp.podLabels }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.jupyterWebApp.podLabels "context" $ ) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.commonLabels }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 8 }}
+        {{- end }}
+      annotations:
+        checksum/configmap: {{ include (print $.Template.BasePath "/jupyter-web-app/configmap.yaml") . | sha256sum }}
+        {{- if .Values.jupyterWebApp.podAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.jupyterWebApp.podAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.commonAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      {{- if .Values.jupyterWebApp.priorityClassName }}
+      priorityClassName: {{ .Values.jupyterWebApp.priorityClassName | quote }}
+      {{- end }}
+      serviceAccountName: {{ include "kubeflow.jupyterWebApp.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.jupyterWebApp.podSecurityContext | nindent 8 }}
+      containers:
+        - name: jupyter-web-app
+          securityContext:
+            {{- toYaml .Values.jupyterWebApp.securityContext | nindent 12 }}
+          image: "{{ .Values.jupyterWebApp.image.repository }}:{{ .Values.jupyterWebApp.image.tag }}"
+          imagePullPolicy: {{ .Values.jupyterWebApp.image.pullPolicy }}
+          {{- with .Values.jupyterWebApp.extraArgs }}
+          args:
+            {{- range $key, $value := . }}
+            - --{{ $key }}={{ $value }}
+            {{- end }}
+          {{- end }}
+          env:
+            - name: APP_PREFIX
+              value: /jupyter
+            - name: USERID_HEADER
+              value: {{ .Values.useridHeader }}
+            - name: USERID_PREFIX
+              value: {{ .Values.useridPrefix | quote }}
+            {{- if .Values.jupyterWebApp.extraEnvVars }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.jupyterWebApp.extraEnvVars "context" $) | nindent 12 }}
+            {{- end }}
+          {{- if or .Values.jupyterWebApp.extraEnvVarsCM .Values.jupyterWebApp.extraEnvVarsSecret }}
+          envFrom:
+            {{- if .Values.jupyterWebApp.extraEnvVarsCM }}
+            - configMapRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.jupyterWebApp.extraEnvVarsCM "context" $) }}
+            {{- end }}
+            {{- if .Values.jupyterWebApp.extraEnvVarsSecret }}
+            - secretRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.jupyterWebApp.extraEnvVarsSecret "context" $) }}
+            {{- end }}
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: 5000
+              protocol: TCP
+          {{- if .Values.jupyterWebApp.livenessProbe.enabled }}
+          livenessProbe:
+            httpGet:
+              path: /healthz/liveness
+              port: http
+            initialDelaySeconds: {{ .Values.jupyterWebApp.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.jupyterWebApp.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.jupyterWebApp.livenessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.jupyterWebApp.livenessProbe.failureThreshold }}
+            successThreshold: {{ .Values.jupyterWebApp.livenessProbe.successThreshold }}
+          {{- end }}
+          {{- if .Values.jupyterWebApp.readinessProbe.enabled }}
+          readinessProbe:
+            httpGet:
+              path: /healthz/readiness
+              port: http
+            initialDelaySeconds: {{ .Values.jupyterWebApp.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.jupyterWebApp.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.jupyterWebApp.readinessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.jupyterWebApp.readinessProbe.failureThreshold }}
+            successThreshold: {{ .Values.jupyterWebApp.readinessProbe.successThreshold }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.jupyterWebApp.resources | nindent 12 }}
+          volumeMounts:
+            - name: config
+              mountPath: /etc/config
+      {{- with .Values.jupyterWebApp.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.jupyterWebApp.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.jupyterWebApp.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      volumes:
+        - name: config
+          configMap:
+            name: {{ include "kubeflow.jupyterWebApp.fullname" . }}
