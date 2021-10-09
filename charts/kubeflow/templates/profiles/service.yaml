@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "kubeflow.profiles.fullname" . }}
+  labels:
+    {{- include "kubeflow.profiles.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if or .Values.profiles.service.annotations .Values.commonAnnotations }}
+  annotations:
+    {{- if .Values.profiles.service.annotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.profiles.service.annotations "context" $ ) | nindent 4 }}
+    {{- end }}
+    {{- if .Values.commonAnnotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- end }}
+spec:
+  type: {{ .Values.profiles.service.type }}
+  {{- if and (eq .Values.profiles.service.type "ClusterIP") .Values.profiles.service.clusterIP }}
+  clusterIP: {{ .Values.profiles.service.clusterIP }}
+  {{- end }}
+  {{- if and (eq .Values.profiles.service.type "LoadBalancer") .Values.profiles.service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.profiles.service.loadBalancerIP }}
+  {{- end }}
+  {{- if and (eq .Values.profiles.service.type "LoadBalancer") .Values.profiles.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+    {{- toYaml .Values.profiles.service.loadBalancerSourceRanges | nindent 4 }}
+  {{- end }}
+  {{- if or (eq .Values.profiles.service.type "LoadBalancer") (eq .Values.profiles.service.type "NodePort") }}
+  externalTrafficPolicy: {{ .Values.profiles.service.externalTrafficPolicy }}
+  {{- end }}
+  ports:
+    - port: {{ .Values.profiles.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+      {{- if and (or (eq .Values.profiles.service.type "LoadBalancer") (eq .Values.profiles.service.type "NodePort")) .Values.profiles.service.nodePort }}
+      nodePort: {{ .Values.profiles.service.nodePort }}
+      {{- end }}
+  selector:
+    {{- include "kubeflow.profiles.selectorLabels" . | nindent 4 }}
