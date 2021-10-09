@@ -31,7 +31,7 @@ centraldashboard:
 
   image:
     repository: public.ecr.aws/j1r0q0g6/notebooks/central-dashboard
-    tag: v1.4-rc.1
+    tag: v1.4
     pullPolicy: IfNotPresent
 
   pdb:
