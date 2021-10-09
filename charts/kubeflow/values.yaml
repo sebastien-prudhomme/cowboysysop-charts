@@ -21,10 +21,10 @@ istioSelector:
   istio: ingressgateway
 
 # Key of request header containing user id
-useridHeader: x-goog-authenticated-user-email
+useridHeader: kubeflow-userid
 
 # Request header user id common prefix
-useridPrefix: "accounts.google.com:"
+useridPrefix: ""
 
 centraldashboard:
   replicaCount: 1
