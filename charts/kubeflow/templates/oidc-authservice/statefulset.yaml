@@ -1,0 +1,125 @@
+apiVersion: {{ include "common.capabilities.statefulset.apiVersion" . }}
+kind: StatefulSet
+metadata:
+  name: {{ include "kubeflow.oidcAuthservice.fullname" . }}
+  labels:
+    {{- include "kubeflow.oidcAuthservice.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations:
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: {{ .Values.oidcAuthservice.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "kubeflow.oidcAuthservice.selectorLabels" . | nindent 6 }}
+  serviceName: {{ include "kubeflow.oidcAuthservice.fullname" . }}
+  template:
+    metadata:
+      labels:
+        {{- include "kubeflow.oidcAuthservice.selectorLabels" . | nindent 8 }}
+        {{- if .Values.oidcAuthservice.podLabels }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.oidcAuthservice.podLabels "context" $ ) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.commonLabels }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 8 }}
+        {{- end }}
+      {{- if or .Values.oidcAuthservice.podAnnotations .Values.commonAnnotations }}
+      annotations:
+        {{- if .Values.oidcAuthservice.podAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.oidcAuthservice.podAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.commonAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+      {{- end }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      {{- if .Values.oidcAuthservice.priorityClassName }}
+      priorityClassName: {{ .Values.oidcAuthservice.priorityClassName | quote }}
+      {{- end }}
+      serviceAccountName: {{ include "kubeflow.oidcAuthservice.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.oidcAuthservice.podSecurityContext | nindent 8 }}
+      containers:
+        - name: oidc-authservice
+          securityContext:
+            {{- toYaml .Values.oidcAuthservice.securityContext | nindent 12 }}
+          image: "{{ .Values.oidcAuthservice.image.repository }}:{{ .Values.oidcAuthservice.image.tag }}"
+          imagePullPolicy: {{ .Values.oidcAuthservice.image.pullPolicy }}
+          {{- with .Values.oidcAuthservice.extraArgs }}
+          args:
+            {{- range $key, $value := . }}
+            - --{{ $key }}={{ $value }}
+            {{- end }}
+          {{- end }}
+          env:
+            - name: APP_PREFIX
+              value: /volumes
+            - name: USERID_HEADER
+              value: {{ .Values.useridHeader }}
+            - name: USERID_PREFIX
+              value: {{ .Values.useridPrefix | quote }}
+            {{- if .Values.oidcAuthservice.extraEnvVars }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.oidcAuthservice.extraEnvVars "context" $) | nindent 12 }}
+            {{- end }}
+          {{- if or .Values.oidcAuthservice.extraEnvVarsCM .Values.oidcAuthservice.extraEnvVarsSecret }}
+          envFrom:
+            {{- if .Values.oidcAuthservice.extraEnvVarsCM }}
+            - configMapRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.oidcAuthservice.extraEnvVarsCM "context" $) }}
+            {{- end }}
+            {{- if .Values.oidcAuthservice.extraEnvVarsSecret }}
+            - secretRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.oidcAuthservice.extraEnvVarsSecret "context" $) }}
+            {{- end }}
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+            - name: http-probes
+              containerPort: 8081
+              protocol: TCP
+          {{- if .Values.oidcAuthservice.livenessProbe.enabled }}
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http-probes
+            initialDelaySeconds: {{ .Values.oidcAuthservice.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.oidcAuthservice.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.oidcAuthservice.livenessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.oidcAuthservice.livenessProbe.failureThreshold }}
+            successThreshold: {{ .Values.oidcAuthservice.livenessProbe.successThreshold }}
+          {{- end }}
+          {{- if .Values.oidcAuthservice.readinessProbe.enabled }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http-probes
+            initialDelaySeconds: {{ .Values.oidcAuthservice.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.oidcAuthservice.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.oidcAuthservice.readinessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.oidcAuthservice.readinessProbe.failureThreshold }}
+            successThreshold: {{ .Values.oidcAuthservice.readinessProbe.successThreshold }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.oidcAuthservice.resources | nindent 12 }}
+      {{- with .Values.oidcAuthservice.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.oidcAuthservice.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.oidcAuthservice.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
