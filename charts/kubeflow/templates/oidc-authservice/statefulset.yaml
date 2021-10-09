@@ -60,12 +60,14 @@ spec:
             {{- end }}
           {{- end }}
           env:
-            - name: APP_PREFIX
-              value: /volumes
-            - name: USERID_HEADER
-              value: {{ .Values.useridHeader }}
-            - name: USERID_PREFIX
-              value: {{ .Values.useridPrefix | quote }}
+            - name: OIDC_PROVIDER
+              value: {{ .Values.oidcAuthservice.oidcProvider }}
+            # - name: APP_PREFIX
+            #   value: /volumes
+            # - name: USERID_HEADER
+            #   value: {{ .Values.useridHeader }}
+            # - name: USERID_PREFIX
+            #   value: {{ .Values.useridPrefix | quote }}
             {{- if .Values.oidcAuthservice.extraEnvVars }}
             {{- include "common.tplvalues.render" (dict "value" .Values.oidcAuthservice.extraEnvVars "context" $) | nindent 12 }}
             {{- end }}
@@ -111,6 +113,9 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.oidcAuthservice.resources | nindent 12 }}
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/authservice
       {{- with .Values.oidcAuthservice.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -123,3 +128,11 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
+      volumes:
+        - name: data
+          {{- if .Values.oidcAuthservice.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ default (include "kubeflow.oidcAuthservice.fullname" .) .Values.oidcAuthservice.persistence.existingClaim }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
