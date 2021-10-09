@@ -174,7 +174,7 @@ jupyterWebApp:
 
   image:
     repository: public.ecr.aws/j1r0q0g6/notebooks/jupyter-web-app
-    tag: v1.4-rc.1
+    tag: v1.4
     pullPolicy: IfNotPresent
 
   pdb:
@@ -613,12 +613,12 @@ profiles:
 
   # image:
   #   repository: public.ecr.aws/j1r0q0g6/notebooks/access-management
-  #   tag: v1.4-rc.1
+  #   tag: v1.4
   #   pullPolicy: IfNotPresent
 
   image:
     repository: public.ecr.aws/j1r0q0g6/notebooks/profile-controller
-    tag: v1.4-rc.1
+    tag: v1.4
     pullPolicy: IfNotPresent
 
   pdb:
@@ -761,7 +761,7 @@ tensorboardsWebApp:
 
   image:
     repository: public.ecr.aws/j1r0q0g6/notebooks/tensorboards-web-app
-    tag: v1.4-rc.1
+    tag: v1.4
     pullPolicy: IfNotPresent
 
   pdb:
@@ -904,7 +904,7 @@ trainingOperator:
 
   image:
     repository: public.ecr.aws/j1r0q0g6/training/training-operator
-    tag: d4423c83124ce7ab58b9a61a2e909b2e9c14c236
+    tag: 760ac1171dd30039a7363ffa03c77454bd714da5
     pullPolicy: IfNotPresent
 
   pdb:
@@ -1035,7 +1035,7 @@ volumesWebApp:
 
   image:
     repository: public.ecr.aws/j1r0q0g6/notebooks/volumes-web-app
-    tag: v1.4-rc.1
+    tag: v1.4
     pullPolicy: IfNotPresent
 
   pdb:
