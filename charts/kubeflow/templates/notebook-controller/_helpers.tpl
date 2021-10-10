@@ -7,6 +7,13 @@ Create a default fully qualified app name.
 {{- end -}}
 
 {{/*
+Create a default fully qualified metrics name.
+*/}}
+{{- define "kubeflow.notebookController.metrics.fullname" -}}
+{{- printf "%s-%s" (include "kubeflow.notebookController.fullname" .) "metrics" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
 Component labels
 */}}
 {{- define "kubeflow.notebookController.componentLabels" -}}
