@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "kubeflow.notebookController.metrics.fullname" . }}
+  labels:
+    {{- include "kubeflow.notebookController.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if or .Values.notebookController.metrics.service.annotations .Values.commonAnnotations }}
+  annotations:
+    {{- if .Values.notebookController.metrics.service.annotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.notebookController.metrics.service.annotations "context" $ ) | nindent 4 }}
+    {{- end }}
+    {{- if .Values.commonAnnotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- end }}
+spec:
+  type: {{ .Values.notebookController.metrics.service.type }}
+  {{- if and (eq .Values.notebookController.metrics.service.type "ClusterIP") .Values.notebookController.metrics.service.clusterIP }}
+  clusterIP: {{ .Values.notebookController.metrics.service.clusterIP }}
+  {{- end }}
+  ports:
+    - port: {{ .Values.notebookController.metrics.service.port }}
+      targetPort: http-metrics
+      protocol: TCP
+      name: http-metrics
+  selector:
+    {{- include "kubeflow.notebookController.selectorLabels" . | nindent 4 }}
