@@ -4,6 +4,8 @@ metadata:
   creationTimestamp: null
   name: notebooks.kubeflow.org
 spec:
+  conversion:
+    strategy: None
   group: kubeflow.org
   names:
     kind: Notebook
