@@ -1,5 +1,5 @@
 apiVersion: {{ include "common.capabilities.rbac.apiVersion" . }}
-kind: Role
+kind: ClusterRole
 metadata:
   name: {{ include "kubeflow.notebookController.fullname" . }}
   labels:
