@@ -9,9 +9,7 @@ metadata:
     {{- end }}
   {{- if .Values.commonAnnotations }}
   annotations:
-    {{- if .Values.commonAnnotations }}
     {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
-    {{- end }}
   {{- end }}
 spec:
   servers:
