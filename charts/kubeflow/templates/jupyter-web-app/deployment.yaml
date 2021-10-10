@@ -60,6 +60,8 @@ spec:
           env:
             - name: APP_PREFIX
               value: /jupyter
+            - name: APP_SECURE_COOKIES
+              value: "false"
             - name: USERID_HEADER
               value: {{ .Values.useridHeader }}
             - name: USERID_PREFIX
