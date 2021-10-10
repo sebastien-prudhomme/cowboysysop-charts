@@ -1,0 +1,121 @@
+apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
+kind: Deployment
+metadata:
+  name: {{ include "kubeflow.notebookController.fullname" . }}
+  labels:
+    {{- include "kubeflow.notebookController.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations:
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: {{ .Values.notebookController.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "kubeflow.notebookController.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "kubeflow.notebookController.selectorLabels" . | nindent 8 }}
+        {{- if .Values.notebookController.podLabels }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.notebookController.podLabels "context" $ ) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.commonLabels }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 8 }}
+        {{- end }}
+      {{- if or .Values.notebookController.podAnnotations .Values.commonAnnotations }}
+      annotations:
+        {{- if .Values.notebookController.podAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.notebookController.podAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.commonAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+      {{- end }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      {{- if .Values.notebookController.priorityClassName }}
+      priorityClassName: {{ .Values.notebookController.priorityClassName | quote }}
+      {{- end }}
+      serviceAccountName: {{ include "kubeflow.notebookController.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.notebookController.podSecurityContext | nindent 8 }}
+      containers:
+        - name: notebook-controller
+          securityContext:
+            {{- toYaml .Values.notebookController.securityContext | nindent 12 }}
+          image: "{{ .Values.notebookController.image.repository }}:{{ .Values.notebookController.image.tag }}"
+          imagePullPolicy: {{ .Values.notebookController.image.pullPolicy }}
+          {{- with .Values.notebookController.extraArgs }}
+          args:
+            {{- range $key, $value := . }}
+            - --{{ $key }}={{ $value }}
+            {{- end }}
+          {{- end }}
+          command:
+            - /manager
+          env:
+            - name: USE_ISTIO
+              value: "true"
+            - name: ISTIO_GATEWAY
+              value: {{ include "kubeflow.fullname" . }}
+            {{- if .Values.notebookController.extraEnvVars }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.notebookController.extraEnvVars "context" $) | nindent 12 }}
+            {{- end }}
+          {{- if or .Values.notebookController.extraEnvVarsCM .Values.notebookController.extraEnvVarsSecret }}
+          envFrom:
+            {{- if .Values.notebookController.extraEnvVarsCM }}
+            - configMapRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.notebookController.extraEnvVarsCM "context" $) }}
+            {{- end }}
+            {{- if .Values.notebookController.extraEnvVarsSecret }}
+            - secretRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.notebookController.extraEnvVarsSecret "context" $) }}
+            {{- end }}
+          {{- end }}
+          ports:
+            - name: http-metrics
+              containerPort: 8080
+              protocol: TCP
+          {{- if .Values.notebookController.livenessProbe.enabled }}
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: http-metrics
+            initialDelaySeconds: {{ .Values.notebookController.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.notebookController.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.notebookController.livenessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.notebookController.livenessProbe.failureThreshold }}
+            successThreshold: {{ .Values.notebookController.livenessProbe.successThreshold }}
+          {{- end }}
+          {{- if .Values.notebookController.readinessProbe.enabled }}
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: http-metrics
+            initialDelaySeconds: {{ .Values.notebookController.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.notebookController.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.notebookController.readinessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.notebookController.readinessProbe.failureThreshold }}
+            successThreshold: {{ .Values.notebookController.readinessProbe.successThreshold }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.notebookController.resources | nindent 12 }}
+      {{- with .Values.notebookController.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.notebookController.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.notebookController.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
