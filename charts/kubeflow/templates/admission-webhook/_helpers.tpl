@@ -39,3 +39,10 @@ Create the name of the service account to use
     {{ default "default" .Values.admissionWebhook.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Create the name of the tls secret to use
+*/}}
+{{- define "kubeflow.admissionWebhook.tls.secretName" -}}
+  {{- printf "%s-%s" (include "kubeflow.admissionWebhook.fullname" .) "tls" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
