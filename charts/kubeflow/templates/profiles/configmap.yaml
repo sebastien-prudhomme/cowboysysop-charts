@@ -30,4 +30,4 @@ data:
     katib-metricscollector-injection:      'enabled'
     serving.kubeflow.org/inferenceservice: 'enabled'
     pipelines.kubeflow.org/enabled:        'true'
-    app.kubernetes.io/created-by:          '{{ include "kubeflow.fullname" . }}'
+    app.kubernetes.io/created-by:          '{{ include "kubeflow.profiles.fullname" . }}'
