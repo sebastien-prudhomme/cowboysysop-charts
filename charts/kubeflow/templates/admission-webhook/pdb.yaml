@@ -1,0 +1,25 @@
+{{- if .Values.admissionWebhook.pdb.create }}
+apiVersion: {{ include "common.capabilities.policy.apiVersion" . }}
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "kubeflow.admissionWebhook.fullname" . }}
+  labels:
+    {{- include "kubeflow.admissionWebhook.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations:
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if .Values.admissionWebhook.pdb.minAvailable }}
+  minAvailable: {{ .Values.admissionWebhook.pdb.minAvailable }}
+  {{- end }}
+  {{- if .Values.admissionWebhook.pdb.maxUnavailable }}
+  maxUnavailable: {{ .Values.admissionWebhook.pdb.maxUnavailable }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "kubeflow.admissionWebhook.selectorLabels" . | nindent 6 }}
+{{- end }}
