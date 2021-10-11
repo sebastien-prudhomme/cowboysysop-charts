@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "kubeflow.admissionWebhook.fullname" . }}
+  labels:
+    {{- include "kubeflow.admissionWebhook.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if or .Values.admissionWebhook.service.annotations .Values.commonAnnotations }}
+  annotations:
+    {{- if .Values.admissionWebhook.service.annotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.admissionWebhook.service.annotations "context" $ ) | nindent 4 }}
+    {{- end }}
+    {{- if .Values.commonAnnotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- end }}
+spec:
+  type: {{ .Values.admissionWebhook.service.type }}
+  {{- if and (eq .Values.admissionWebhook.service.type "ClusterIP") .Values.admissionWebhook.service.clusterIP }}
+  clusterIP: {{ .Values.admissionWebhook.service.clusterIP }}
+  {{- end }}
+  {{- if and (eq .Values.admissionWebhook.service.type "LoadBalancer") .Values.admissionWebhook.service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.admissionWebhook.service.loadBalancerIP }}
+  {{- end }}
+  {{- if and (eq .Values.admissionWebhook.service.type "LoadBalancer") .Values.admissionWebhook.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+    {{- toYaml .Values.admissionWebhook.service.loadBalancerSourceRanges | nindent 4 }}
+  {{- end }}
+  {{- if or (eq .Values.admissionWebhook.service.type "LoadBalancer") (eq .Values.admissionWebhook.service.type "NodePort") }}
+  externalTrafficPolicy: {{ .Values.admissionWebhook.service.externalTrafficPolicy }}
+  {{- end }}
+  ports:
+    - port: {{ .Values.admissionWebhook.service.port }}
+      targetPort: https
+      protocol: TCP
+      name: https
+      {{- if and (or (eq .Values.admissionWebhook.service.type "LoadBalancer") (eq .Values.admissionWebhook.service.type "NodePort")) .Values.admissionWebhook.service.nodePort }}
+      nodePort: {{ .Values.admissionWebhook.service.nodePort }}
+      {{- end }}
+  selector:
+    {{- include "kubeflow.admissionWebhook.selectorLabels" . | nindent 4 }}
