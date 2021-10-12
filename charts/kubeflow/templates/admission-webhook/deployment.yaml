@@ -52,12 +52,12 @@ spec:
             {{- toYaml .Values.admissionWebhook.securityContext | nindent 12 }}
           image: "{{ .Values.admissionWebhook.image.repository }}:{{ .Values.admissionWebhook.image.tag }}"
           imagePullPolicy: {{ .Values.admissionWebhook.image.pullPolicy }}
-          {{- with .Values.admissionWebhook.extraArgs }}
           args:
-            {{- range $key, $value := . }}
+            - --tlsCertFile=/tls-secret/tls.crt
+            - --tlsKeyFile=/tls-secret/tls.key
+            {{- range $key, $value := .Values.admissionWebhook.extraArgs }}
             - --{{ $key }}={{ $value }}
             {{- end }}
-          {{- end }}
           {{- if .Values.admissionWebhook.extraEnvVars }}
           env:
             {{- include "common.tplvalues.render" (dict "value" .Values.admissionWebhook.extraEnvVars "context" $) | nindent 12 }}
@@ -79,6 +79,10 @@ spec:
               protocol: TCP
           resources:
             {{- toYaml .Values.admissionWebhook.resources | nindent 12 }}
+          volumeMounts:
+            - name: tls-secret
+              mountPath: /tls-secret
+              readOnly: true
       {{- with .Values.admissionWebhook.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -91,3 +95,7 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
+      volumes:
+        - name: tls-secret
+          secret:
+            secretName: {{ include "kubeflow.admissionWebhook.tls.secretName" . }}
