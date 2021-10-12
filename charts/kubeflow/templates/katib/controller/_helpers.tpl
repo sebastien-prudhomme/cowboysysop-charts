@@ -46,3 +46,10 @@ Create the name of the service account to use
     {{ default "default" .Values.katib.controller.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Create the name of the tls secret to use
+*/}}
+{{- define "kubeflow.katib.controller.tls.secretName" -}}
+  {{- printf "%s-%s" (include "kubeflow.katib.controller.fullname" .) "tls" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
