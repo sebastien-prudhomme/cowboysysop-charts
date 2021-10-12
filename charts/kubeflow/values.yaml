@@ -486,7 +486,7 @@ katib:
       externalTrafficPolicy: Cluster
 
       # Service port
-      port: 80
+      port: 8080
 
       # Service node port when service type is LoadBalancer or NodePort
       # nodePort: 30000
