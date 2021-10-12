@@ -33,9 +33,9 @@ spec:
   {{- end }}
   ports:
     - port: {{ .Values.katib.controller.service.port }}
-      targetPort: http
+      targetPort: https
       protocol: TCP
-      name: http
+      name: https
       {{- if and (or (eq .Values.katib.controller.service.type "LoadBalancer") (eq .Values.katib.controller.service.type "NodePort")) .Values.katib.controller.service.nodePort }}
       nodePort: {{ .Values.katib.controller.service.nodePort }}
       {{- end }}
