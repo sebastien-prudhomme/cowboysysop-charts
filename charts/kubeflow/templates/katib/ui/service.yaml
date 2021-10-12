@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "kubeflow.katib.ui.fullname" . }}
+  labels:
+    {{- include "kubeflow.katib.ui.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if or .Values.katib.ui.service.annotations .Values.commonAnnotations }}
+  annotations:
+    {{- if .Values.katib.ui.service.annotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.katib.ui.service.annotations "context" $ ) | nindent 4 }}
+    {{- end }}
+    {{- if .Values.commonAnnotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- end }}
+spec:
+  type: {{ .Values.katib.ui.service.type }}
+  {{- if and (eq .Values.katib.ui.service.type "ClusterIP") .Values.katib.ui.service.clusterIP }}
+  clusterIP: {{ .Values.katib.ui.service.clusterIP }}
+  {{- end }}
+  {{- if and (eq .Values.katib.ui.service.type "LoadBalancer") .Values.katib.ui.service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.katib.ui.service.loadBalancerIP }}
+  {{- end }}
+  {{- if and (eq .Values.katib.ui.service.type "LoadBalancer") .Values.katib.ui.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+    {{- toYaml .Values.katib.ui.service.loadBalancerSourceRanges | nindent 4 }}
+  {{- end }}
+  {{- if or (eq .Values.katib.ui.service.type "LoadBalancer") (eq .Values.katib.ui.service.type "NodePort") }}
+  externalTrafficPolicy: {{ .Values.katib.ui.service.externalTrafficPolicy }}
+  {{- end }}
+  ports:
+    - port: {{ .Values.katib.ui.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+      {{- if and (or (eq .Values.katib.ui.service.type "LoadBalancer") (eq .Values.katib.ui.service.type "NodePort")) .Values.katib.ui.service.nodePort }}
+      nodePort: {{ .Values.katib.ui.service.nodePort }}
+      {{- end }}
+  selector:
+    {{- include "kubeflow.katib.ui.selectorLabels" . | nindent 4 }}
