@@ -3,7 +3,7 @@
 Create a default fully qualified app name.
 */}}
 {{- define "kubeflow.katib.controller.fullname" -}}
-{{- printf "%s-%s" (include "kubeflow.fullname" .) "volumes-web-app" | trunc 63 | trimSuffix "-" -}}
+{{- printf "%s-%s" (include "kubeflow.fullname" .) "katib-controller" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
@@ -17,7 +17,7 @@ Create a default fully qualified metrics name.
 Component labels
 */}}
 {{- define "kubeflow.katib.controller.componentLabels" -}}
-app.kubernetes.io/component: volumes-web-app
+app.kubernetes.io/component: katib-controller
 {{- end -}}
 
 {{/*
