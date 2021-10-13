@@ -1,9 +1,9 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: {{ include "kubeflow.katib.controller.fullname" . }}
+  name: {{ include "kubeflow.admissionWebhook.fullname" . }}
   labels:
-    {{- include "kubeflow.katib.controller.labels" . | nindent 4 }}
+    {{- include "kubeflow.admissionWebhook.labels" . | nindent 4 }}
     {{- if .Values.commonLabels }}
     {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
     {{- end }}
@@ -12,10 +12,10 @@ metadata:
     {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
   {{- end }}
 spec:
-  commonName: {{ include "kubeflow.katib.controller.fullname" . }}.{{ .Release.Namespace }}.svc
+  commonName: {{ include "kubeflow.admissionWebhook.fullname" . }}.{{ .Release.Namespace }}.svc
   dnsNames:
-    - {{ include "kubeflow.katib.controller.fullname" . }}.{{ .Release.Namespace }}.svc
-  secretName: {{ include "kubeflow.katib.controller.tls.secretName" . }}
+    - {{ include "kubeflow.admissionWebhook.fullname" . }}.{{ .Release.Namespace }}.svc
+  secretName: {{ include "kubeflow.admissionWebhook.tls.secretName" . }}
   issuerRef:
     kind: Issuer
-    name: {{ include "kubeflow.katib.controller.fullname" . }}
+    name: {{ include "kubeflow.admissionWebhook.fullname" . }}
