@@ -25,10 +25,10 @@ Common labels
 MariaDB fully qualified app name
 */}}
 {{- define "kubeflow.katib.mariadb.fullname" -}}
-{{- if .Values.katib.mariadb.fullnameOverride -}}
-{{- .Values.katib.mariadb.fullnameOverride | trunc 63 | trimSuffix "-" -}}
+{{- if .Values.katibMariadb.fullnameOverride -}}
+{{- .Values.katibMariadb.fullnameOverride | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
-{{- $name := default "mariadb" .Values.katib.mariadb.nameOverride -}}
+{{- $name := default "mariadb" .Values.katibMariadb.nameOverride -}}
 {{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 {{- end -}}
@@ -37,19 +37,19 @@ MariaDB fully qualified app name
 MariaDB host
 */}}
 {{- define "kubeflow.katib.mariadb.host" -}}
-{{- if .Values.katib.mariadb.enabled -}}
-{{- if eq .Values.katib.mariadb.architecture "replication" -}}
-    {{- if .Values.katib.mariadb.fullnameOverride -}}
-    {{- printf "%s-%s" .Values.katib.mariadb.fullnameOverride "primary" | trunc 63 | trimSuffix "-" -}}
+{{- if .Values.katibMariadb.enabled -}}
+{{- if eq .Values.katibMariadb.architecture "replication" -}}
+    {{- if .Values.katibMariadb.fullnameOverride -}}
+    {{- printf "%s-%s" .Values.katibMariadb.fullnameOverride "primary" | trunc 63 | trimSuffix "-" -}}
     {{- else -}}
-    {{- $name := default "mariadb" .Values.katib.mariadb.nameOverride -}}
+    {{- $name := default "mariadb" .Values.katibMariadb.nameOverride -}}
     {{- printf "%s-%s-%s" .Release.Name $name "primary" | trunc 63 | trimSuffix "-" -}}
     {{- end -}}
 {{- else -}}
     {{ include "kubeflow.katib.mariadb.fullname" . }}
 {{- end -}}
 {{- else -}}
-    {{ .Values.katib.externalMariadb.host }}
+    {{ .Values.katibExternalMariadb.host }}
 {{- end -}}
 {{- end -}}
 
@@ -57,10 +57,10 @@ MariaDB host
 MariaDB port
 */}}
 {{- define "kubeflow.katib.mariadb.port" -}}
-{{- if .Values.katib.mariadb.enabled -}}
-    {{ .Values.katib.mariadb.primary.service.port }}
+{{- if .Values.katibMariadb.enabled -}}
+    {{ .Values.katibMariadb.primary.service.port }}
 {{- else -}}
-    {{ .Values.katib.externalMariadb.port }}
+    {{ .Values.katibExternalMariadb.port }}
 {{- end -}}
 {{- end -}}
 
@@ -68,10 +68,10 @@ MariaDB port
 MariaDB user
 */}}
 {{- define "kubeflow.katib.mariadb.username" -}}
-{{- if .Values.katib.mariadb.enabled -}}
-    {{ .Values.katib.mariadb.auth.username }}
+{{- if .Values.katibMariadb.enabled -}}
+    {{ .Values.katibMariadb.auth.username }}
 {{- else -}}
-    {{ .Values.katib.externalMariadb.username }}
+    {{ .Values.katibExternalMariadb.username }}
 {{- end -}}
 {{- end -}}
 
@@ -79,10 +79,10 @@ MariaDB user
 MariaDB secret name
 */}}
 {{- define "kubeflow.katib.mariadb.secretName" -}}
-{{- if .Values.katib.mariadb.auth.existingSecret -}}
-    {{ .Values.katib.mariadb.auth.existingSecret }}
-{{- else if .Values.katib.externalMariadb.existingSecret -}}
-    {{ .Values.katib.externalMariadb.existingSecret }}
+{{- if .Values.katibMariadb.auth.existingSecret -}}
+    {{ .Values.katibMariadb.auth.existingSecret }}
+{{- else if .Values.katibExternalMariadb.existingSecret -}}
+    {{ .Values.katibExternalMariadb.existingSecret }}
 {{- else -}}
     {{ include "kubeflow.katib.mariadb.fullname" . }}
 {{- end -}}
@@ -92,9 +92,9 @@ MariaDB secret name
 MariaDB database
 */}}
 {{- define "kubeflow.katib.mariadb.database" -}}
-{{- if .Values.katib.mariadb.enabled -}}
-    {{ .Values.katib.mariadb.auth.database }}
+{{- if .Values.katibMariadb.enabled -}}
+    {{ .Values.katibMariadb.auth.database }}
 {{- else -}}
-    {{ .Values.katib.externalMariadb.database }}
+    {{ .Values.katibExternalMariadb.database }}
 {{- end -}}
 {{- end -}}
