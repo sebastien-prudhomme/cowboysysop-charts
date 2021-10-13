@@ -66,6 +66,12 @@ spec:
           env:
             - name: KATIB_CORE_NAMESPACE
               value: {{ .Release.Namespace }}
+            - name: KATIB_DB_MANAGER_SERVICE_NAMESPACE
+              value: {{ .Release.Namespace }}
+            - name: KATIB_DB_MANAGER_SERVICE_IP
+              value: {{ include "kubeflow.katib.dbManager.fullname" . }}
+            - name: KATIB_DB_MANAGER_SERVICE_PORT
+              value: {{ .Values.katib.dbManager.service.port | quote }}
             {{- if .Values.katib.controller.extraEnvVars }}
             {{- include "common.tplvalues.render" (dict "value" .Values.katib.controller.extraEnvVars "context" $) | nindent 12 }}
             {{- end }}
