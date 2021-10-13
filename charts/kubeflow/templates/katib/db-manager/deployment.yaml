@@ -61,13 +61,21 @@ spec:
           command:
             - ./katib-db-manager
           env:
-            # - name: DB_NAME
-            #   value: mysql
-            # - name: DB_USER
-            # - name: DB_PASSWORD
-            # - name: KATIB_MYSQL_DB_HOST
-            # - name: KATIB_MYSQL_DB_PORT
-            # - name: KATIB_MYSQL_DB_DATABASE
+            - name: DB_NAME
+              value: mysql
+            - name: KATIB_MYSQL_DB_HOST
+              value: {{ include "kubeflow.katib.mariadb.host" . | quote }}
+            - name: KATIB_MYSQL_DB_PORT
+              value: {{ include "kubeflow.katib.mariadb.port" . | quote }}
+            - name: DB_USER
+              value: {{ include "kubeflow.katib.mariadb.username" . | quote }}
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "kubeflow.katib.mariadb.secretName" . }}
+                  key: mariadb-password
+            - name: KATIB_MYSQL_DB_DATABASE
+              value: {{ include "kubeflow.katib.mariadb.database" . | quote }}
             {{- if .Values.katib.dbManager.extraEnvVars }}
             {{- include "common.tplvalues.render" (dict "value" .Values.katib.dbManager.extraEnvVars "context" $) | nindent 12 }}
             {{- end }}
