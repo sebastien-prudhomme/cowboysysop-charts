@@ -823,6 +823,53 @@ katib:
     # Name of existing Secret containing additional container environment variables
     extraEnvVarsSecret:
 
+  mariadb:
+    # Whether to use the MariaDB chart
+    enabled: true
+
+    # MariaDB architecture
+    architecture: standalone
+
+    auth:
+      # MariaDB database
+      database: kubeflow-katib
+
+      # MariaDB user
+      username: kubeflow-katib
+
+      # MariaDB password
+      password: kubeflow-katib
+
+      # Name of existing Secret to use
+      existingSecret: ""
+
+    primary:
+      service:
+        # MariaDB port
+        port: 3306
+
+  externalMariadb:
+    # Whether to use an external MariaDB
+    enabled: false
+
+    # External MariaDB host
+    host: mariadb
+
+    # External MariaDB port
+    port: 3306
+
+    # External MariaDB user
+    username: kubeflow-katib
+
+    # External MariaDB password
+    password: kubeflow-katib
+
+    # Name of existing Secret to use
+    existingSecret: ""
+
+    # External MariaDB database
+    database: kubeflow-katib
+
 mpiOperator:
   replicaCount: 1
 
