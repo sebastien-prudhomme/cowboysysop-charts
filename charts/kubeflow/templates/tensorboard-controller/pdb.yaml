@@ -1,0 +1,25 @@
+{{- if .Values.tensorboardController.pdb.create }}
+apiVersion: {{ include "common.capabilities.policy.apiVersion" . }}
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "kubeflow.tensorboardController.fullname" . }}
+  labels:
+    {{- include "kubeflow.tensorboardController.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations:
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if .Values.tensorboardController.pdb.minAvailable }}
+  minAvailable: {{ .Values.tensorboardController.pdb.minAvailable }}
+  {{- end }}
+  {{- if .Values.tensorboardController.pdb.maxUnavailable }}
+  maxUnavailable: {{ .Values.tensorboardController.pdb.maxUnavailable }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "kubeflow.tensorboardController.selectorLabels" . | nindent 6 }}
+{{- end }}
