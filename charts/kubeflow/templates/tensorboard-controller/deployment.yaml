@@ -1,0 +1,119 @@
+apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
+kind: Deployment
+metadata:
+  name: {{ include "kubeflow.tensorboardController.fullname" . }}
+  labels:
+    {{- include "kubeflow.tensorboardController.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations:
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: {{ .Values.tensorboardController.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "kubeflow.tensorboardController.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "kubeflow.tensorboardController.selectorLabels" . | nindent 8 }}
+        {{- if .Values.tensorboardController.podLabels }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.tensorboardController.podLabels "context" $ ) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.commonLabels }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 8 }}
+        {{- end }}
+      {{- if or .Values.tensorboardController.podAnnotations .Values.commonAnnotations }}
+      annotations:
+        {{- if .Values.tensorboardController.podAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.tensorboardController.podAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.commonAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+      {{- end }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      {{- if .Values.tensorboardController.priorityClassName }}
+      priorityClassName: {{ .Values.tensorboardController.priorityClassName | quote }}
+      {{- end }}
+      serviceAccountName: {{ include "kubeflow.tensorboardController.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.tensorboardController.podSecurityContext | nindent 8 }}
+      containers:
+        - name: tensorboard-controller
+          securityContext:
+            {{- toYaml .Values.tensorboardController.securityContext | nindent 12 }}
+          image: "{{ .Values.tensorboardController.image.repository }}:{{ .Values.tensorboardController.image.tag }}"
+          imagePullPolicy: {{ .Values.tensorboardController.image.pullPolicy }}
+          {{- with .Values.tensorboardController.extraArgs }}
+          args:
+            {{- range $key, $value := . }}
+            - --{{ $key }}={{ $value }}
+            {{- end }}
+          {{- end }}
+          command:
+            - /manager
+          env:
+            - name: RWO_PVC_SCHEDULING
+              value: "true"
+            {{- if .Values.tensorboardController.extraEnvVars }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.tensorboardController.extraEnvVars "context" $) | nindent 12 }}
+            {{- end }}
+          {{- if or .Values.tensorboardController.extraEnvVarsCM .Values.tensorboardController.extraEnvVarsSecret }}
+          envFrom:
+            {{- if .Values.tensorboardController.extraEnvVarsCM }}
+            - configMapRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.tensorboardController.extraEnvVarsCM "context" $) }}
+            {{- end }}
+            {{- if .Values.tensorboardController.extraEnvVarsSecret }}
+            - secretRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.tensorboardController.extraEnvVarsSecret "context" $) }}
+            {{- end }}
+          {{- end }}
+          ports:
+            - name: http-metrics
+              containerPort: 8080
+              protocol: TCP
+          {{- if .Values.tensorboardController.livenessProbe.enabled }}
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: http-metrics
+            initialDelaySeconds: {{ .Values.tensorboardController.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.tensorboardController.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.tensorboardController.livenessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.tensorboardController.livenessProbe.failureThreshold }}
+            successThreshold: {{ .Values.tensorboardController.livenessProbe.successThreshold }}
+          {{- end }}
+          {{- if .Values.tensorboardController.readinessProbe.enabled }}
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: http-metrics
+            initialDelaySeconds: {{ .Values.tensorboardController.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.tensorboardController.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.tensorboardController.readinessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.tensorboardController.readinessProbe.failureThreshold }}
+            successThreshold: {{ .Values.tensorboardController.readinessProbe.successThreshold }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.tensorboardController.resources | nindent 12 }}
+      {{- with .Values.tensorboardController.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.tensorboardController.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tensorboardController.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
