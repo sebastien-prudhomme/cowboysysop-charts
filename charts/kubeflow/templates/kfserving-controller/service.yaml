@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "kubeflow.kfservingController.fullname" . }}
+  labels:
+    {{- include "kubeflow.kfservingController.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if or .Values.kfservingController.service.annotations .Values.commonAnnotations }}
+  annotations:
+    {{- if .Values.kfservingController.service.annotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.kfservingController.service.annotations "context" $ ) | nindent 4 }}
+    {{- end }}
+    {{- if .Values.commonAnnotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- end }}
+spec:
+  type: {{ .Values.kfservingController.service.type }}
+  {{- if and (eq .Values.kfservingController.service.type "ClusterIP") .Values.kfservingController.service.clusterIP }}
+  clusterIP: {{ .Values.kfservingController.service.clusterIP }}
+  {{- end }}
+  {{- if and (eq .Values.kfservingController.service.type "LoadBalancer") .Values.kfservingController.service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.kfservingController.service.loadBalancerIP }}
+  {{- end }}
+  {{- if and (eq .Values.kfservingController.service.type "LoadBalancer") .Values.kfservingController.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+    {{- toYaml .Values.kfservingController.service.loadBalancerSourceRanges | nindent 4 }}
+  {{- end }}
+  {{- if or (eq .Values.kfservingController.service.type "LoadBalancer") (eq .Values.kfservingController.service.type "NodePort") }}
+  externalTrafficPolicy: {{ .Values.kfservingController.service.externalTrafficPolicy }}
+  {{- end }}
+  ports:
+    - port: {{ .Values.kfservingController.service.port }}
+      targetPort: https
+      protocol: TCP
+      name: https
+      {{- if and (or (eq .Values.kfservingController.service.type "LoadBalancer") (eq .Values.kfservingController.service.type "NodePort")) .Values.kfservingController.service.nodePort }}
+      nodePort: {{ .Values.kfservingController.service.nodePort }}
+      {{- end }}
+  selector:
+    {{- include "kubeflow.kfservingController.selectorLabels" . | nindent 4 }}
