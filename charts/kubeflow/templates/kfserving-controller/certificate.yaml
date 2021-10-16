@@ -1,9 +1,9 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: {{ include "kubeflow.kfserving-controller.fullname" . }}
+  name: {{ include "kubeflow.kfservingController.fullname" . }}
   labels:
-    {{- include "kubeflow.kfserving-controller.labels" . | nindent 4 }}
+    {{- include "kubeflow.kfservingController.labels" . | nindent 4 }}
     {{- if .Values.commonLabels }}
     {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
     {{- end }}
@@ -12,10 +12,10 @@ metadata:
     {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
   {{- end }}
 spec:
-  commonName: {{ include "kubeflow.kfserving-controller.fullname" . }}.{{ .Release.Namespace }}.svc
+  commonName: {{ include "kubeflow.kfservingController.fullname" . }}.{{ .Release.Namespace }}.svc
   dnsNames:
-    - {{ include "kubeflow.kfserving-controller.fullname" . }}.{{ .Release.Namespace }}.svc
-  secretName: {{ include "kubeflow.kfserving-controller.tls.secretName" . }}
+    - {{ include "kubeflow.kfservingController.fullname" . }}.{{ .Release.Namespace }}.svc
+  secretName: {{ include "kubeflow.kfservingController.tls.secretName" . }}
   issuerRef:
     kind: Issuer
-    name: {{ include "kubeflow.kfserving-controller.fullname" . }}
+    name: {{ include "kubeflow.kfservingController.fullname" . }}
