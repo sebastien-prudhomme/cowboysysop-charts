@@ -1,0 +1,21 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ include "kubeflow.kfserving-controller.fullname" . }}
+  labels:
+    {{- include "kubeflow.kfserving-controller.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations:
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  commonName: {{ include "kubeflow.kfserving-controller.fullname" . }}.{{ .Release.Namespace }}.svc
+  dnsNames:
+    - {{ include "kubeflow.kfserving-controller.fullname" . }}.{{ .Release.Namespace }}.svc
+  secretName: {{ include "kubeflow.kfserving-controller.tls.secretName" . }}
+  issuerRef:
+    kind: Issuer
+    name: {{ include "kubeflow.kfserving-controller.fullname" . }}
