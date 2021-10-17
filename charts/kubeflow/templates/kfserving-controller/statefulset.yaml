@@ -1,0 +1,133 @@
+apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
+kind: StatefulSet
+metadata:
+  name: {{ include "kubeflow.kfservingController.fullname" . }}
+  labels:
+    {{- include "kubeflow.kfservingController.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations:
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: {{ .Values.kfservingController.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "kubeflow.kfservingController.selectorLabels" . | nindent 6 }}
+  serviceName: {{ include "kubeflow.kfservingController.fullname" . }}
+  template:
+    metadata:
+      labels:
+        {{- include "kubeflow.kfservingController.selectorLabels" . | nindent 8 }}
+        {{- if .Values.kfservingController.podLabels }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.kfservingController.podLabels "context" $ ) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.commonLabels }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 8 }}
+        {{- end }}
+      {{- if or .Values.kfservingController.podAnnotations .Values.commonAnnotations }}
+      annotations:
+        {{- if .Values.kfservingController.podAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.kfservingController.podAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.commonAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+      {{- end }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      {{- if .Values.kfservingController.priorityClassName }}
+      priorityClassName: {{ .Values.kfservingController.priorityClassName | quote }}
+      {{- end }}
+      serviceAccountName: {{ include "kubeflow.kfservingController.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.kfservingController.podSecurityContext | nindent 8 }}
+      containers:
+        - name: kfserving-controller
+          securityContext:
+            {{- toYaml .Values.kfservingController.securityContext | nindent 12 }}
+          image: "{{ .Values.kfservingController.image.repository }}:{{ .Values.kfservingController.image.tag }}"
+          imagePullPolicy: {{ .Values.kfservingController.image.pullPolicy }}
+          {{- with .Values.kfservingController.extraArgs }}
+          args:
+            {{- range $key, $value := . }}
+            - --{{ $key }}={{ $value }}
+            {{- end }}
+          {{- end }}
+          command:
+            - /manager
+          env:
+            - name: MY_POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            {{- if .Values.kfservingController.extraEnvVars }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.kfservingController.extraEnvVars "context" $) | nindent 12 }}
+            {{- end }}
+          {{- if or .Values.kfservingController.extraEnvVarsCM .Values.kfservingController.extraEnvVarsSecret }}
+          envFrom:
+            {{- if .Values.kfservingController.extraEnvVarsCM }}
+            - configMapRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.kfservingController.extraEnvVarsCM "context" $) }}
+            {{- end }}
+            {{- if .Values.kfservingController.extraEnvVarsSecret }}
+            - secretRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.kfservingController.extraEnvVarsSecret "context" $) }}
+            {{- end }}
+          {{- end }}
+          ports:
+            - name: https
+              containerPort: 9443
+              protocol: TCP
+            - name: http-metrics
+              containerPort: 8080
+              protocol: TCP
+          {{- if .Values.kfservingController.livenessProbe.enabled }}
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: http-metrics
+            initialDelaySeconds: {{ .Values.kfservingController.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.kfservingController.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.kfservingController.livenessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.kfservingController.livenessProbe.failureThreshold }}
+            successThreshold: {{ .Values.kfservingController.livenessProbe.successThreshold }}
+          {{- end }}
+          {{- if .Values.kfservingController.readinessProbe.enabled }}
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: http-metrics
+            initialDelaySeconds: {{ .Values.kfservingController.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.kfservingController.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.kfservingController.readinessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.kfservingController.readinessProbe.failureThreshold }}
+            successThreshold: {{ .Values.kfservingController.readinessProbe.successThreshold }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.kfservingController.resources | nindent 12 }}
+          volumeMounts:
+            - name: tls-secret
+              mountPath: /tmp/k8s-webhook-server/serving-certs
+              readOnly: true
+      {{- with .Values.kfservingController.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.kfservingController.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.kfservingController.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      volumes:
+        - name: tls-secret
+          secret:
+            secretName: {{ include "kubeflow.kfservingController.tls.secretName" . }}
