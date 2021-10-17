@@ -46,3 +46,10 @@ Create the name of the service account to use
     {{ default "default" .Values.kfservingController.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Create the name of the tls secret to use
+*/}}
+{{- define "kubeflow.kfservingController.tls.secretName" -}}
+  {{- printf "%s-%s" (include "kubeflow.kfservingController.fullname" .) "tls" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
