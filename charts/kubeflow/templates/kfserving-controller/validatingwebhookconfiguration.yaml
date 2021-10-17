@@ -19,6 +19,46 @@ webhooks:
       service:
         name: {{ include "kubeflow.kfservingController.fullname" . }}
         namespace: {{ .Release.Namespace }}
+        path: /validate-serving-kubeflow-org-v1alpha2-inferenceservice
+        port: {{ .Values.kfservingController.service.port }}
+    name: validate-inferenceservice-v1alpha2.kfserving-controller.kubeflow.org
+    rules:
+      - apiGroups:
+          - serving.kubeflow.org
+        apiVersions:
+          - v1alpha2
+        operations:
+          - CREATE
+          - UPDATE
+        resources:
+          - inferenceservices
+    sideEffects: None
+  - admissionReviewVersions:
+      - v1beta1
+    clientConfig:
+      service:
+        name: {{ include "kubeflow.kfservingController.fullname" . }}
+        namespace: {{ .Release.Namespace }}
+        path: /validate-serving-kubeflow-org-v1beta1-inferenceservice
+        port: {{ .Values.kfservingController.service.port }}
+    name: validate-inferenceservice-v1beta1.kfserving-controller.kubeflow.org
+    rules:
+      - apiGroups:
+          - serving.kubeflow.org
+        apiVersions:
+          - v1beta1
+        operations:
+          - CREATE
+          - UPDATE
+        resources:
+          - inferenceservices
+    sideEffects: None
+  - admissionReviewVersions:
+      - v1beta1
+    clientConfig:
+      service:
+        name: {{ include "kubeflow.kfservingController.fullname" . }}
+        namespace: {{ .Release.Namespace }}
         path: /validate-serving-kubeflow-org-v1alpha1-trainedmodel
         port: {{ .Values.kfservingController.service.port }}
     name: validate-trainedmodel.kfserving-controller.kubeflow.org
