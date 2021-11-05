@@ -1,4 +1,4 @@
-# Default values for training-operator.
+# Default values for notebook-controller.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
@@ -18,8 +18,8 @@ commonLabels: {}
 replicaCount: 1
 
 image:
-  repository: public.ecr.aws/j1r0q0g6/training/training-operator
-  tag: 760ac1171dd30039a7363ffa03c77454bd714da5
+  repository: public.ecr.aws/j1r0q0g6/notebooks/notebook-controller
+  tag: v1.4
   pullPolicy: IfNotPresent
 
 pdb:
@@ -148,3 +148,6 @@ metrics:
 kubeflow:
   # Enable integration with Kubeflow
   enabled: false
+
+  # Istio gateway name
+  gatewayName: kubeflow

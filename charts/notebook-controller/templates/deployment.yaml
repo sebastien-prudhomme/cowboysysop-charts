@@ -1,9 +1,9 @@
 apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
 kind: Deployment
 metadata:
-  name: {{ include "mpi-operator.fullname" . }}
+  name: {{ include "notebook-controller.fullname" . }}
   labels:
-    {{- include "mpi-operator.labels" . | nindent 4 }}
+    {{- include "notebook-controller.labels" . | nindent 4 }}
     {{- if .Values.commonLabels }}
     {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
     {{- end }}
@@ -15,11 +15,11 @@ spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "mpi-operator.selectorLabels" . | nindent 6 }}
+      {{- include "notebook-controller.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "mpi-operator.selectorLabels" . | nindent 8 }}
+        {{- include "notebook-controller.selectorLabels" . | nindent 8 }}
         {{- if .Values.podLabels }}
         {{- include "common.tplvalues.render" ( dict "value" .Values.podLabels "context" $ ) | nindent 8 }}
         {{- end }}
@@ -46,27 +46,33 @@ spec:
       {{- if .Values.priorityClassName }}
       priorityClassName: {{ .Values.priorityClassName | quote }}
       {{- end }}
-      serviceAccountName: {{ include "mpi-operator.serviceAccountName" . }}
+      serviceAccountName: {{ include "notebook-controller.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: mpi-operator
+        - name: notebook-controller
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           command:
-            - /opt/mpi-operator.v1
+            - /manager
           args:
-            - -lock-namespace={{ .Release.Namespace }}
-            - -kubectl-delivery-image={{ .Values.kubectlDeliveryImage }}
-            - -monitoring-port=8081
+            - -enable-leader-election
             {{- range $key, $value := .Values.extraArgs }}
             - -{{ $key }}={{ $value }}
             {{- end }}
-          {{- if .Values.extraEnvVars }}
+          {{- if or .Values.kubeflow.enabled .Values.extraEnvVars }}
           env:
+            {{- if .Values.kubeflow.enabled }}
+            - name: USE_ISTIO
+              value: "true"
+            - name: ISTIO_GATEWAY
+              value: {{ .Release.Namespace }}/{{ .Values.kubeflow.gatewayName }}
+            {{- end }}
+            {{- if .Values.extraEnvVars }}
             {{- include "common.tplvalues.render" (dict "value" .Values.extraEnvVars "context" $) | nindent 12 }}
+            {{- end }}
           {{- end }}
           {{- if or .Values.extraEnvVarsCM .Values.extraEnvVarsSecret }}
           envFrom:
@@ -80,17 +86,14 @@ spec:
             {{- end }}
           {{- end }}
           ports:
-            - name: http-probes
-              containerPort: 8080
-              protocol: TCP
             - name: http-metrics
-              containerPort: 8081
+              containerPort: 8080
               protocol: TCP
           {{- if .Values.livenessProbe.enabled }}
           livenessProbe:
             httpGet:
-              path: /healthz
-              port: http-probes
+              path: /metrics
+              port: http-metrics
             initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
             timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
@@ -100,8 +103,8 @@ spec:
           {{- if .Values.readinessProbe.enabled }}
           readinessProbe:
             httpGet:
-              path: /healthz
-              port: http-probes
+              path: /metrics
+              port: http-metrics
             initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
             timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}

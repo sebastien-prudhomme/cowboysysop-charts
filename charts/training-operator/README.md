@@ -16,7 +16,7 @@ This chart bootstraps a Training Operator deployment on a [Kubernetes](http://ku
 ## Prerequisites
 
 - Kubernetes 1.16+
-- Helm 3.0+
+- Helm 3.1+
 
 ## Installing
 
@@ -129,6 +129,7 @@ The following tables lists all the configurable parameters expose by the chart a
 | `metrics.service.type`               | Metrics service type                                                                                  | `ClusterIP`                                               |
 | `metrics.service.clusterIP`          | Metrics static cluster IP address or None for headless service when service type is ClusterIP         | `nil`                                                     |
 | `metrics.service.port`               | Metrics service port                                                                                  | `8080`                                                    |
+| `kubeflow.enabled`                   | Enable integration with Kubeflow                                                                      | `false`                                                   |
 
 Specify the parameters you which to customize using the `--set` argument to the `helm install` command. For instance,
 
