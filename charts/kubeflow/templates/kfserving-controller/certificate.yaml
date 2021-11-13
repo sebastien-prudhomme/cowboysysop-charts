@@ -19,3 +19,4 @@ spec:
   issuerRef:
     kind: Issuer
     name: {{ include "kubeflow.kfservingController.fullname" . }}
+  isCA: true

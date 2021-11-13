@@ -19,3 +19,4 @@ spec:
   issuerRef:
     kind: Issuer
     name: {{ include "kubeflow.admissionWebhook.fullname" . }}
+  isCA: true
