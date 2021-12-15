@@ -16,7 +16,7 @@ This chart bootstraps a Vertical Pod Autoscaler deployment on a [Kubernetes](htt
 ## Prerequisites
 
 - Kubernetes 1.16+
-- Metrics Server 0.2+ (you can use the [stable/metrics-server](https://hub.helm.sh/charts/stable/metrics-server) chart)
+- Metrics Server 0.2+ (you can use the [bitnami/metrics-server](https://artifacthub.io/packages/helm/bitnami/metrics-server) chart)
 - Helm 3.1+
 
 ## Installing
@@ -79,6 +79,8 @@ The command deletes the release named `my-release` and frees all the kubernetes 
 
 Optionally, delete the custom resource definitions created by the chart using:
 
+**WARNING**: It will also try to delete all instances of the custom resource definitions.
+
 ```bash
 $ kubectl delete crd verticalpodautoscalers.autoscaling.k8s.io
 $ kubectl delete crd verticalpodautoscalercheckpoints.autoscaling.k8s.io
@@ -103,6 +105,7 @@ The following tables lists all the configurable parameters expose by the chart a
 
 | Name                                                     | Description                                                                                           | Default                                                                             |
 |----------------------------------------------------------|-------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------|
+| `admissionController.enabled`                            | Enable the admission controller                                                                       | `true`                                                                              |
 | `admissionController.replicaCount`                       | Number of replicas                                                                                    | `1`                                                                                 |
 | `admissionController.image.repository`                   | Image name                                                                                            | `k8s.gcr.io/autoscaling/vpa-admission-controller`                                   |
 | `admissionController.image.tag`                          | Image tag                                                                                             | `0.9.2`                                                                             |
@@ -198,6 +201,7 @@ The following tables lists all the configurable parameters expose by the chart a
 
 | Name                                         | Description                                                                                           | Default                                                                 |
 |----------------------------------------------|-------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------|
+| `updater.enabled`                            | Enable the updater                                                                                    | `true`                                                                  |
 | `updater.replicaCount`                       | Number of replicas                                                                                    | `1`                                                                     |
 | `updater.image.repository`                   | Image name                                                                                            | `k8s.gcr.io/autoscaling/vpa-updater`                                    |
 | `updater.image.tag`                          | Image tag                                                                                             | `0.9.2`                                                                 |
@@ -238,6 +242,16 @@ The following tables lists all the configurable parameters expose by the chart a
 | `updater.metrics.service.clusterIP`          | Metrics static cluster IP address or None for headless service when service type is ClusterIP         | `nil`                                                                   |
 | `updater.metrics.service.port`               | Metrics service port                                                                                  | `8943`                                                                  |
 
+### Tests parameters
+
+| Name                     | Description       | Default                      |
+|--------------------------|-------------------|------------------------------|
+| `tests.image.repository` | Image name        | `ghcr.io/cowboysysop/pytest` |
+| `tests.image.tag`        | Image tag         | `1.0.0`                      |
+| `tests.image.pullPolicy` | Image pull policy | `IfNotPresent`               |
+
+### Setting parameters
+
 Specify the parameters you which to customize using the `--set` argument to the `helm install` command. For instance,
 
 ```bash
@@ -254,7 +268,7 @@ $ helm install my-release \
     --values values.yaml cowboysysop/vertical-pod-autoscaler
 ```
 
-**Tip**: You can use the default [values.yaml](values.yaml).
+**TIP**: You can use the default [values.yaml](values.yaml).
 
 ## Limitations
 

@@ -20,21 +20,21 @@
   "packageRules": [
     {
       "matchPaths": [
-	".github/workflows/**"
+        ".github/workflows/**"
       ],
       "groupName": "github workflows",
       "semanticCommitType": "ci"
     },
     {
       "matchPackageNames": [
-	"helm",
+        "helm",
         "kindest/node"
       ],
       "separateMinorPatch": true
     },
     {
       "matchPackageNames": [
-	"helm",
+        "helm",
         "kindest/node"
       ],
       "matchUpdateTypes": [
@@ -45,6 +45,15 @@
     }
   ],
   "regexManagers": [
+    {
+      "fileMatch": ["^\\.github\\/workflows\\/.*$"],
+      "matchStrings": [
+        "(?<currentValue>v\\d+\\.\\d+\\.\\d+).* # renovate: cert-manager\\n"
+      ],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "cert-manager",
+      "lookupNameTemplate": "jetstack/cert-manager"
+    },
     {
       "fileMatch": ["^\\.github\\/workflows\\/.*$"],
       "matchStrings": [
