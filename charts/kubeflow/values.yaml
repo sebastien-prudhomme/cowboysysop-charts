@@ -418,8 +418,9 @@ jupyterWebApp:
   extraEnvVarsSecret:
 
 katib:
-  # Enable integration with Kubeflow (do not change this value)
-  enabled: true
+  kubeflow:
+    # Enable integration with Kubeflow (do not change this value)
+    enabled: true
 
 kfservingController:
   replicaCount: 1
