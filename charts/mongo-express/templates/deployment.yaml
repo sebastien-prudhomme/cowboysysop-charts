@@ -28,6 +28,7 @@ spec:
         {{- end }}
       annotations:
         checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+        checksum/mongodb-secret: {{ include (print $.Template.BasePath "/mongodb-secret.yaml") . | sha256sum }}
         {{- if .Values.podAnnotations }}
         {{- include "common.tplvalues.render" ( dict "value" .Values.podAnnotations "context" $ ) | nindent 8 }}
         {{- end }}
@@ -64,7 +65,7 @@ spec:
             - name: ME_CONFIG_MONGODB_ADMINPASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "mongo-express.secretName" . }}
+                  name: {{ include "mongo-express.mongodb.secretName" . }}
                   key: mongodb-admin-password
             {{- else }}
             - name: ME_CONFIG_MONGODB_AUTH_DATABASE
@@ -74,7 +75,7 @@ spec:
             - name: ME_CONFIG_MONGODB_AUTH_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "mongo-express.secretName" . }}
+                  name: {{ include "mongo-express.mongodb.secretName" . }}
                   key: mongodb-auth-password
             {{- end }}
             - name: ME_CONFIG_SITE_BASEURL
