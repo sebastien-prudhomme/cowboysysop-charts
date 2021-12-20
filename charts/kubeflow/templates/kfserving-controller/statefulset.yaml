@@ -53,14 +53,14 @@ spec:
             {{- toYaml .Values.kfservingController.securityContext | nindent 12 }}
           image: "{{ .Values.kfservingController.image.repository }}:{{ .Values.kfservingController.image.tag }}"
           imagePullPolicy: {{ .Values.kfservingController.image.pullPolicy }}
+          command:
+            - /manager
           {{- with .Values.kfservingController.extraArgs }}
           args:
             {{- range $key, $value := . }}
             - --{{ $key }}={{ $value }}
             {{- end }}
           {{- end }}
-          command:
-            - /manager
           env:
             - name: POD_NAMESPACE
               valueFrom:
