@@ -206,6 +206,65 @@ cacheServer:
   # Name of existing Secret containing additional container environment variables
   extraEnvVarsSecret:
 
+mariadb:
+  # Whether to use the MariaDB chart
+  enabled: true
+
+  # MariaDB architecture
+  architecture: standalone
+
+  auth:
+    # MariaDB database
+    database: kubeflow-pipelines
+
+    # MariaDB user
+    username: kubeflow-pipelines
+
+    # MariaDB password
+    password: kubeflow-pipelines
+
+    # Name of existing Secret to use
+    existingSecret: ""
+
+  primary:
+    # Additional pod annotations for MariaDB primary pods
+    podAnnotations:
+      sidecar.istio.io/inject: "false"
+
+    service:
+      # MariaDB port
+      port: 3306
+
+  secondary:
+    # Additional pod annotations for MariaDB secondary pods
+    podAnnotations:
+      sidecar.istio.io/inject: "false"
+
+externalMariadb:
+  # Whether to use an external MariaDB
+  enabled: false
+
+  # External MariaDB host
+  host: mariadb
+
+  # External MariaDB port
+  port: 3306
+
+  # External MariaDB user
+  username: kubeflow-pipelines
+
+  # External MariaDB password
+  password: kubeflow-pipelines
+
+  # Name of existing Secret to use
+  existingSecret: ""
+
+  # Name of the key in existing Secret that contains MariaDB password
+  existingSecretKeyPassword: mariadb-password
+
+  # External MariaDB database
+  database: kubeflow-pipelines
+
 tests:
   image:
     # Image name

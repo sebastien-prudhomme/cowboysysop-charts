@@ -14,3 +14,7 @@ dependencies:
   - name: common
     version: 1.7.1
     repository: https://charts.bitnami.com/bitnami/
+  - name: mariadb
+    version: 9.4.4
+    repository: https://charts.bitnami.com/bitnami/
+    condition: mariadb.enabled
