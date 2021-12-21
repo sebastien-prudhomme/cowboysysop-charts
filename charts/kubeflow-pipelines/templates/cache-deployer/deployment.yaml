@@ -1,0 +1,92 @@
+apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
+kind: Deployment
+metadata:
+  name: {{ include "kubeflow-pipelines.cacheDeployer.fullname" . }}
+  labels:
+    {{- include "kubeflow-pipelines.cacheDeployer.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations:
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: {{ .Values.cacheDeployer.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "kubeflow-pipelines.cacheDeployer.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "kubeflow-pipelines.cacheDeployer.selectorLabels" . | nindent 8 }}
+        {{- if .Values.cacheDeployer.podLabels }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.cacheDeployer.podLabels "context" $ ) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.commonLabels }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 8 }}
+        {{- end }}
+      annotations:
+        {{- if .Values.kubeflow.enabled }}
+        sidecar.istio.io/inject: "false"
+        {{- end }}
+        {{- if .Values.cacheDeployer.podAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.cacheDeployer.podAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.commonAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      {{- if .Values.cacheDeployer.priorityClassName }}
+      priorityClassName: {{ .Values.cacheDeployer.priorityClassName | quote }}
+      {{- end }}
+      serviceAccountName: {{ include "kubeflow-pipelines.cacheDeployer.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.cacheDeployer.podSecurityContext | nindent 8 }}
+      containers:
+        - name: cache-deployer
+          securityContext:
+            {{- toYaml .Values.cacheDeployer.securityContext | nindent 12 }}
+          image: "{{ .Values.cacheDeployer.image.repository }}:{{ .Values.cacheDeployer.image.tag }}"
+          imagePullPolicy: {{ .Values.cacheDeployer.image.pullPolicy }}
+          {{- with .Values.cacheDeployer.extraArgs }}
+          args:
+            {{- range $key, $value := . }}
+            - --{{ $key }}={{ $value }}
+            {{- end }}
+          {{- end }}
+          env:
+            - name: NAMESPACE_TO_WATCH
+              value: {{ .Release.Namespace }}
+            {{- if .Values.cacheDeployer.extraEnvVars }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.cacheDeployer.extraEnvVars "context" $) | nindent 12 }}
+            {{- end }}
+          {{- if or .Values.cacheDeployer.extraEnvVarsCM .Values.cacheDeployer.extraEnvVarsSecret }}
+          envFrom:
+            {{- if .Values.cacheDeployer.extraEnvVarsCM }}
+            - configMapRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.cacheDeployer.extraEnvVarsCM "context" $) }}
+            {{- end }}
+            {{- if .Values.cacheDeployer.extraEnvVarsSecret }}
+            - secretRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.cacheDeployer.extraEnvVarsSecret "context" $) }}
+            {{- end }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.cacheDeployer.resources | nindent 12 }}
+      {{- with .Values.cacheDeployer.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.cacheDeployer.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.cacheDeployer.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
