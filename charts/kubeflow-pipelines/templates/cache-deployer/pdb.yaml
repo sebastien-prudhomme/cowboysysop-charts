@@ -1,0 +1,25 @@
+{{- if .Values.cacheDeployer.pdb.create }}
+apiVersion: {{ include "common.capabilities.policy.apiVersion" . }}
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "kubeflow-pipelines.cacheDeployer.fullname" . }}
+  labels:
+    {{- include "kubeflow-pipelines.cacheDeployer.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations:
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if .Values.cacheDeployer.pdb.minAvailable }}
+  minAvailable: {{ .Values.cacheDeployer.pdb.minAvailable }}
+  {{- end }}
+  {{- if .Values.cacheDeployer.pdb.maxUnavailable }}
+  maxUnavailable: {{ .Values.cacheDeployer.pdb.maxUnavailable }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "kubeflow-pipelines.cacheDeployer.selectorLabels" . | nindent 6 }}
+{{- end }}
