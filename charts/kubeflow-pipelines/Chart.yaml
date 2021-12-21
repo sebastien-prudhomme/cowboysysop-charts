@@ -1,0 +1,16 @@
+apiVersion: v2
+appVersion: 1.7.0
+description: Machine Learning Pipelines for Kubeflow
+home: https://github.com/kubeflow/pipelines
+maintainers:
+  - name: sebastien-prudhomme
+    email: sebastien.prudhomme@gmail.com
+name: kubeflow-pipelines
+sources:
+  - https://github.com/kubeflow/pipelines
+  - https://github.com/cowboysysop/charts/tree/master/charts/kubeflow-pipelines
+version: 1.0.0
+dependencies:
+  - name: common
+    version: 1.7.1
+    repository: https://charts.bitnami.com/bitnami/
