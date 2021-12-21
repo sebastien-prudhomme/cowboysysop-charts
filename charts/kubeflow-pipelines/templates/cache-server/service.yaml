@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "kubeflow-pipelines.cacheServer.fullname" . }}
+  labels:
+    {{- include "kubeflow-pipelines.cacheServer.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if or .Values.cacheServer.service.annotations .Values.commonAnnotations }}
+  annotations:
+    {{- if .Values.cacheServer.service.annotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.cacheServer.service.annotations "context" $ ) | nindent 4 }}
+    {{- end }}
+    {{- if .Values.commonAnnotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- end }}
+spec:
+  type: {{ .Values.cacheServer.service.type }}
+  {{- if and (eq .Values.cacheServer.service.type "ClusterIP") .Values.cacheServer.service.clusterIP }}
+  clusterIP: {{ .Values.cacheServer.service.clusterIP }}
+  {{- end }}
+  {{- if and (eq .Values.cacheServer.service.type "LoadBalancer") .Values.cacheServer.service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.cacheServer.service.loadBalancerIP }}
+  {{- end }}
+  {{- if and (eq .Values.cacheServer.service.type "LoadBalancer") .Values.cacheServer.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+    {{- toYaml .Values.cacheServer.service.loadBalancerSourceRanges | nindent 4 }}
+  {{- end }}
+  {{- if or (eq .Values.cacheServer.service.type "LoadBalancer") (eq .Values.cacheServer.service.type "NodePort") }}
+  externalTrafficPolicy: {{ .Values.cacheServer.service.externalTrafficPolicy }}
+  {{- end }}
+  ports:
+    - port: {{ .Values.cacheServer.service.port }}
+      targetPort: https
+      protocol: TCP
+      name: https
+      {{- if and (or (eq .Values.cacheServer.service.type "LoadBalancer") (eq .Values.cacheServer.service.type "NodePort")) .Values.cacheServer.service.nodePort }}
+      nodePort: {{ .Values.cacheServer.service.nodePort }}
+      {{- end }}
+  selector:
+    {{- include "kubeflow-pipelines.cacheServer.selectorLabels" . | nindent 4 }}
