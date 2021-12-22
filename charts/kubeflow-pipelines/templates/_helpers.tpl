@@ -50,3 +50,72 @@ Selector labels
 app.kubernetes.io/name: {{ include "kubeflow-pipelines.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
+
+{{/*
+MinIO fully qualified app name
+*/}}
+{{- define "katib.minio.fullname" -}}
+{{- if .Values.minio.fullnameOverride -}}
+{{- .Values.minio.fullnameOverride | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- $name := default "minio" .Values.minio.nameOverride -}}
+{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+MinIO host
+*/}}
+{{- define "katib.minio.host" -}}
+{{- if .Values.minio.enabled -}}
+    {{ include "katib.minio.fullname" . }}
+{{- else -}}
+    {{ .Values.externalMinio.host }}
+{{- end -}}
+{{- end -}}
+
+{{/*
+MinIO port
+*/}}
+{{- define "katib.minio.port" -}}
+{{- if .Values.minio.enabled -}}
+    {{ .Values.minio.service.ports.api }}
+{{- else -}}
+    {{ .Values.externalMinio.port }}
+{{- end -}}
+{{- end -}}
+
+{{/*
+MinIO secret name
+*/}}
+{{- define "katib.minio.secretName" -}}
+{{- if .Values.minio.auth.existingSecret -}}
+    {{ .Values.minio.auth.existingSecret }}
+{{- else if .Values.externalMinio.existingSecret -}}
+    {{ .Values.externalMinio.existingSecret }}
+{{- else -}}
+    {{ include "katib.minio.fullname" . }}
+{{- end -}}
+{{- end -}}
+
+{{/*
+MinIO root user secret key name
+*/}}
+{{- define "katib.minio.secretKeyNameRootUser" -}}
+{{- if .Values.externalMinio.existingSecret -}}
+    {{ .Values.externalMinio.existingSecretKeyRootUser }}
+{{- else -}}
+    root-user
+{{- end -}}
+{{- end -}}
+
+{{/*
+MinIO root password secret key name
+*/}}
+{{- define "katib.minio.secretKeyNameRootPassword" -}}
+{{- if .Values.externalMinio.existingSecret -}}
+    {{ .Values.externalMinio.existingSecretKeyRootPassword }}
+{{- else -}}
+    root-password
+{{- end -}}
+{{- end -}}
