@@ -64,20 +64,20 @@ spec:
           env:
             - name: VIEWER_TENSORBOARD_POD_TEMPLATE_SPEC_PATH
               value: /config/viewer-pod-template.json
-            # - name: MINIO_NAMESPACE
-            #   value: {{ .Release.Namespace }}
-            # - name: MINIO_ACCESS_KEY
-            #   valueFrom:
-            #     secretKeyRef:
-            #       name: mlpipeline-minio-artifact
-            #       key: accesskey
-            # - name: MINIO_SECRET_KEY
-            #   valueFrom:
-            #     secretKeyRef:
-            #       name: mlpipeline-minio-artifact
-            #       key: secretkey
-            # - name: ALLOW_CUSTOM_VISUALIZATIONS
-            #   value: "true"
+            - name: MINIO_NAMESPACE
+              value: {{ .Release.Namespace }}
+            - name: MINIO_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "kubeflow-pipelines.minio.secretName" . }}
+                  key: {{ include "kubeflow-pipelines.minio.secretKeyNameRootUser" . }}
+            - name: MINIO_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "kubeflow-pipelines.minio.secretName" . }}
+                  key: {{ include "kubeflow-pipelines.minio.secretKeyNameRootPassword" . }}
+            - name: ALLOW_CUSTOM_VISUALIZATIONS
+              value: "true"
             {{- if .Values.ui.extraEnvVars }}
             {{- include "common.tplvalues.render" (dict "value" .Values.ui.extraEnvVars "context" $) | nindent 12 }}
             {{- end }}
