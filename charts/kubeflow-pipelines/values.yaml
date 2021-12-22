@@ -429,6 +429,54 @@ externalMariadb:
   # External MariaDB database
   database: kubeflow-pipelines
 
+minio:
+  # Whether to use the MinIO chart
+  enabled: true
+
+  auth:
+    # MinIO root user
+    rootUser: kubeflow-pipelines
+
+    # MinIO root password
+    rootPassword: kubeflow-pipelines
+
+    # Name of existing Secret to use
+    existingSecret: ""
+
+  # Additional pod annotations for MinIO pods
+  podAnnotations:
+    sidecar.istio.io/inject: "false"
+
+  service:
+    ports:
+      # MinIO port
+      api: 9000
+
+externalMinio:
+  # Whether to use an external MinIO
+  enabled: false
+
+  # External MinIO host
+  host: minio
+
+  # External MinIO port
+  port: 9000
+
+  # External MinIO root user
+  rootUser: kubeflow-pipelines
+
+  # External MinIO root password
+  rootPassword: kubeflow-pipelines
+
+  # Name of existing Secret to use
+  existingSecret: ""
+
+  # Name of the key in existing Secret that contains MinIO root user
+  existingSecretKeyRootUser: root-user
+
+  # Name of the key in existing Secret that contains MinIO root password
+  existingSecretKeyRootPassword: root-password
+
 tests:
   image:
     # Image name

@@ -18,3 +18,7 @@ dependencies:
     version: 9.4.4
     repository: https://charts.bitnami.com/bitnami/
     condition: mariadb.enabled
+  - name: minio
+    version: 9.2.5
+    repository: https://charts.bitnami.com/bitnami/
+    condition: minio.enabled
