@@ -1,0 +1,50 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "kubeflow-pipelines.apiServer.fullname" . }}
+  labels:
+    {{- include "kubeflow-pipelines.apiServer.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if or .Values.apiServer.service.annotations .Values.commonAnnotations }}
+  annotations:
+    {{- if .Values.apiServer.service.annotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.apiServer.service.annotations "context" $ ) | nindent 4 }}
+    {{- end }}
+    {{- if .Values.commonAnnotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- end }}
+spec:
+  type: {{ .Values.apiServer.service.type }}
+  {{- if and (eq .Values.apiServer.service.type "ClusterIP") .Values.apiServer.service.clusterIP }}
+  clusterIP: {{ .Values.apiServer.service.clusterIP }}
+  {{- end }}
+  {{- if and (eq .Values.apiServer.service.type "LoadBalancer") .Values.apiServer.service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.apiServer.service.loadBalancerIP }}
+  {{- end }}
+  {{- if and (eq .Values.apiServer.service.type "LoadBalancer") .Values.apiServer.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+    {{- toYaml .Values.apiServer.service.loadBalancerSourceRanges | nindent 4 }}
+  {{- end }}
+  {{- if or (eq .Values.apiServer.service.type "LoadBalancer") (eq .Values.apiServer.service.type "NodePort") }}
+  externalTrafficPolicy: {{ .Values.apiServer.service.externalTrafficPolicy }}
+  {{- end }}
+  ports:
+    - port: {{ .Values.apiServer.service.ports.http }}
+      targetPort: http
+      protocol: TCP
+      name: http
+      {{- if and (or (eq .Values.apiServer.service.type "LoadBalancer") (eq .Values.apiServer.service.type "NodePort")) .Values.apiServer.service.nodePorts.http }}
+      nodePort: {{ .Values.apiServer.service.nodePorts.http }}
+      {{- end }}
+    - port: {{ .Values.apiServer.service.ports.grpc }}
+      targetPort: grpc
+      protocol: TCP
+      name: grpc
+      {{- if and (or (eq .Values.apiServer.service.type "LoadBalancer") (eq .Values.apiServer.service.type "NodePort")) .Values.apiServer.service.nodePorts.grpc }}
+      nodePort: {{ .Values.apiServer.service.nodePorts.grpc }}
+      {{- end }}
+  selector:
+    {{- include "kubeflow-pipelines.apiServer.selectorLabels" . | nindent 4 }}
