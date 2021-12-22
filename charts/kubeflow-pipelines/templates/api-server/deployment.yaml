@@ -1,0 +1,158 @@
+apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
+kind: Deployment
+metadata:
+  name: {{ include "kubeflow-pipelines.apiServer.fullname" . }}
+  labels:
+    {{- include "kubeflow-pipelines.apiServer.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations:
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: {{ .Values.apiServer.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "kubeflow-pipelines.apiServer.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "kubeflow-pipelines.apiServer.selectorLabels" . | nindent 8 }}
+        {{- if .Values.apiServer.podLabels }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.apiServer.podLabels "context" $ ) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.commonLabels }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 8 }}
+        {{- end }}
+      {{- if or .Values.kubeflow.enabled .Values.apiServer.podAnnotations .Values.commonAnnotations }}
+      annotations:
+        {{- if .Values.kubeflow.enabled }}
+        sidecar.istio.io/inject: "false"
+        {{- end }}
+        {{- if .Values.apiServer.podAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.apiServer.podAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.commonAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+      {{- end }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      {{- if .Values.apiServer.priorityClassName }}
+      priorityClassName: {{ .Values.apiServer.priorityClassName | quote }}
+      {{- end }}
+      serviceAccountName: {{ include "kubeflow-pipelines.apiServer.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.apiServer.podSecurityContext | nindent 8 }}
+      containers:
+        - name: api-server
+          securityContext:
+            {{- toYaml .Values.apiServer.securityContext | nindent 12 }}
+          image: "{{ .Values.apiServer.image.repository }}:{{ .Values.apiServer.image.tag }}"
+          imagePullPolicy: {{ .Values.apiServer.image.pullPolicy }}
+          {{- with .Values.apiServer.extraArgs }}
+          args:
+            {{- range $key, $value := . }}
+            - --{{ $key }}={{ $value }}
+            {{- end }}
+          {{- end }}
+          env:
+            - name: AUTO_UPDATE_PIPELINE_DEFAULT_VERSION
+              value: "true"
+            - name: POD_NAMESPACE
+              value: {{ .Release.Namespace }}
+            - name: DBCONFIG_HOST
+              value: {{ include "kubeflow-pipelines.mariadb.host" . | quote }}
+            - name: DBCONFIG_PORT
+              value: {{ include "kubeflow-pipelines.mariadb.port" . | quote }}
+            - name: DBCONFIG_USER
+              value: {{ include "kubeflow-pipelines.mariadb.username" . | quote }}
+            - name: DBCONFIG_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "kubeflow-pipelines.mariadb.secretName" . }}
+                  key: {{ include "kubeflow-pipelines.mariadb.secretKeyNamePassword" . }}
+            - name: DBCONFIG_DBNAME
+              value: {{ include "kubeflow-pipelines.mariadb.database" . | quote }}
+            - name: DBCONFIG_CONMAXLIFETIMESEC
+              value: "120"
+            - name: OBJECTSTORECONFIG_HOST
+              value: {{ include "kubeflow-pipelines.minio.host" . | quote }}
+            - name: OBJECTSTORECONFIG_PORT
+              value: {{ include "kubeflow-pipelines.minio.port" . | quote }}
+            - name: OBJECTSTORECONFIG_ACCESSKEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "kubeflow-pipelines.minio.secretName" . }}
+                  key: {{ include "kubeflow-pipelines.minio.secretKeyNameRootUser" . }}
+            - name: OBJECTSTORECONFIG_SECRETACCESSKEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "kubeflow-pipelines.minio.secretName" . }}
+                  key: {{ include "kubeflow-pipelines.minio.secretKeyNameRootPassword" . }}
+            - name: OBJECTSTORECONFIG_BUCKETNAME
+              value: kubeflow-pipelines
+            - name: OBJECTSTORECONFIG_SECURE
+              value: "false"
+            {{- if .Values.apiServer.extraEnvVars }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.apiServer.extraEnvVars "context" $) | nindent 12 }}
+            {{- end }}
+          {{- if or .Values.apiServer.extraEnvVarsCM .Values.apiServer.extraEnvVarsSecret }}
+          envFrom:
+            {{- if .Values.apiServer.extraEnvVarsCM }}
+            - configMapRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.apiServer.extraEnvVarsCM "context" $) }}
+            {{- end }}
+            {{- if .Values.apiServer.extraEnvVarsSecret }}
+            - secretRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.apiServer.extraEnvVarsSecret "context" $) }}
+            {{- end }}
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: 8888
+              protocol: TCP
+            - name: grpc
+              containerPort: 8887
+              protocol: TCP
+          {{- if .Values.apiServer.livenessProbe.enabled }}
+          livenessProbe:
+            httpGet:
+              path: /apis/v1beta1/healthz
+              port: http
+            initialDelaySeconds: {{ .Values.apiServer.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.apiServer.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.apiServer.livenessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.apiServer.livenessProbe.failureThreshold }}
+            successThreshold: {{ .Values.apiServer.livenessProbe.successThreshold }}
+          {{- end }}
+          {{- if .Values.apiServer.readinessProbe.enabled }}
+          readinessProbe:
+            httpGet:
+              path: /apis/v1beta1/healthz
+              port: http
+            initialDelaySeconds: {{ .Values.apiServer.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.apiServer.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.apiServer.readinessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.apiServer.readinessProbe.failureThreshold }}
+            successThreshold: {{ .Values.apiServer.readinessProbe.successThreshold }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.apiServer.resources | nindent 12 }}
+      {{- with .Values.apiServer.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.apiServer.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.apiServer.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
