@@ -54,7 +54,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{/*
 MinIO fully qualified app name
 */}}
-{{- define "katib.minio.fullname" -}}
+{{- define "kubeflow-pipelines.minio.fullname" -}}
 {{- if .Values.minio.fullnameOverride -}}
 {{- .Values.minio.fullnameOverride | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
@@ -66,9 +66,9 @@ MinIO fully qualified app name
 {{/*
 MinIO host
 */}}
-{{- define "katib.minio.host" -}}
+{{- define "kubeflow-pipelines.minio.host" -}}
 {{- if .Values.minio.enabled -}}
-    {{ include "katib.minio.fullname" . }}
+    {{ include "kubeflow-pipelines.minio.fullname" . }}
 {{- else -}}
     {{ .Values.externalMinio.host }}
 {{- end -}}
@@ -77,7 +77,7 @@ MinIO host
 {{/*
 MinIO port
 */}}
-{{- define "katib.minio.port" -}}
+{{- define "kubeflow-pipelines.minio.port" -}}
 {{- if .Values.minio.enabled -}}
     {{ .Values.minio.service.ports.api }}
 {{- else -}}
@@ -88,20 +88,20 @@ MinIO port
 {{/*
 MinIO secret name
 */}}
-{{- define "katib.minio.secretName" -}}
+{{- define "kubeflow-pipelines.minio.secretName" -}}
 {{- if .Values.minio.auth.existingSecret -}}
     {{ .Values.minio.auth.existingSecret }}
 {{- else if .Values.externalMinio.existingSecret -}}
     {{ .Values.externalMinio.existingSecret }}
 {{- else -}}
-    {{ include "katib.minio.fullname" . }}
+    {{ include "kubeflow-pipelines.minio.fullname" . }}
 {{- end -}}
 {{- end -}}
 
 {{/*
 MinIO root user secret key name
 */}}
-{{- define "katib.minio.secretKeyNameRootUser" -}}
+{{- define "kubeflow-pipelines.minio.secretKeyNameRootUser" -}}
 {{- if .Values.externalMinio.existingSecret -}}
     {{ .Values.externalMinio.existingSecretKeyRootUser }}
 {{- else -}}
@@ -112,7 +112,7 @@ MinIO root user secret key name
 {{/*
 MinIO root password secret key name
 */}}
-{{- define "katib.minio.secretKeyNameRootPassword" -}}
+{{- define "kubeflow-pipelines.minio.secretKeyNameRootPassword" -}}
 {{- if .Values.externalMinio.existingSecret -}}
     {{ .Values.externalMinio.existingSecretKeyRootPassword }}
 {{- else -}}
