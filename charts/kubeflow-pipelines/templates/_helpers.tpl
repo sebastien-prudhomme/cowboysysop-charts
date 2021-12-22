@@ -52,6 +52,95 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
 
 {{/*
+MariaDB fully qualified app name
+*/}}
+{{- define "kubeflow-pipelines.mariadb.fullname" -}}
+{{- if .Values.mariadb.fullnameOverride -}}
+{{- .Values.mariadb.fullnameOverride | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- $name := default "mariadb" .Values.mariadb.nameOverride -}}
+{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+MariaDB host
+*/}}
+{{- define "kubeflow-pipelines.mariadb.host" -}}
+{{- if .Values.mariadb.enabled -}}
+{{- if eq .Values.mariadb.architecture "replication" -}}
+    {{- if .Values.mariadb.fullnameOverride -}}
+    {{- printf "%s-%s" .Values.mariadb.fullnameOverride "primary" | trunc 63 | trimSuffix "-" -}}
+    {{- else -}}
+    {{- $name := default "mariadb" .Values.mariadb.nameOverride -}}
+    {{- printf "%s-%s-%s" .Release.Name $name "primary" | trunc 63 | trimSuffix "-" -}}
+    {{- end -}}
+{{- else -}}
+    {{ include "kubeflow-pipelines.mariadb.fullname" . }}
+{{- end -}}
+{{- else -}}
+    {{ .Values.externalMariadb.host }}
+{{- end -}}
+{{- end -}}
+
+{{/*
+MariaDB port
+*/}}
+{{- define "kubeflow-pipelines.mariadb.port" -}}
+{{- if .Values.mariadb.enabled -}}
+    {{ .Values.mariadb.primary.service.port }}
+{{- else -}}
+    {{ .Values.externalMariadb.port }}
+{{- end -}}
+{{- end -}}
+
+{{/*
+MariaDB user
+*/}}
+{{- define "kubeflow-pipelines.mariadb.username" -}}
+{{- if .Values.mariadb.enabled -}}
+    {{ .Values.mariadb.auth.username }}
+{{- else -}}
+    {{ .Values.externalMariadb.username }}
+{{- end -}}
+{{- end -}}
+
+{{/*
+MariaDB secret name
+*/}}
+{{- define "kubeflow-pipelines.mariadb.secretName" -}}
+{{- if .Values.mariadb.auth.existingSecret -}}
+    {{ .Values.mariadb.auth.existingSecret }}
+{{- else if .Values.externalMariadb.existingSecret -}}
+    {{ .Values.externalMariadb.existingSecret }}
+{{- else -}}
+    {{ include "kubeflow-pipelines.mariadb.fullname" . }}
+{{- end -}}
+{{- end -}}
+
+{{/*
+MariaDB password secret key name
+*/}}
+{{- define "kubeflow-pipelines.mariadb.secretKeyNamePassword" -}}
+{{- if .Values.externalMariadb.existingSecret -}}
+    {{ .Values.externalMariadb.existingSecretKeyPassword }}
+{{- else -}}
+    mariadb-password
+{{- end -}}
+{{- end -}}
+
+{{/*
+MariaDB database
+*/}}
+{{- define "kubeflow-pipelines.mariadb.database" -}}
+{{- if .Values.mariadb.enabled -}}
+    {{ .Values.mariadb.auth.database }}
+{{- else -}}
+    {{ .Values.externalMariadb.database }}
+{{- end -}}
+{{- end -}}
+
+{{/*
 MinIO fully qualified app name
 */}}
 {{- define "kubeflow-pipelines.minio.fullname" -}}
