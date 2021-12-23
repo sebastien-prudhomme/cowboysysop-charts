@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "kubeflow-pipelines.visualizationServer.fullname" . }}
+  labels:
+    {{- include "kubeflow-pipelines.visualizationServer.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if or .Values.visualizationServer.service.annotations .Values.commonAnnotations }}
+  annotations:
+    {{- if .Values.visualizationServer.service.annotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.visualizationServer.service.annotations "context" $ ) | nindent 4 }}
+    {{- end }}
+    {{- if .Values.commonAnnotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- end }}
+spec:
+  type: {{ .Values.visualizationServer.service.type }}
+  {{- if and (eq .Values.visualizationServer.service.type "ClusterIP") .Values.visualizationServer.service.clusterIP }}
+  clusterIP: {{ .Values.visualizationServer.service.clusterIP }}
+  {{- end }}
+  {{- if and (eq .Values.visualizationServer.service.type "LoadBalancer") .Values.visualizationServer.service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.visualizationServer.service.loadBalancerIP }}
+  {{- end }}
+  {{- if and (eq .Values.visualizationServer.service.type "LoadBalancer") .Values.visualizationServer.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+    {{- toYaml .Values.visualizationServer.service.loadBalancerSourceRanges | nindent 4 }}
+  {{- end }}
+  {{- if or (eq .Values.visualizationServer.service.type "LoadBalancer") (eq .Values.visualizationServer.service.type "NodePort") }}
+  externalTrafficPolicy: {{ .Values.visualizationServer.service.externalTrafficPolicy }}
+  {{- end }}
+  ports:
+    - port: {{ .Values.visualizationServer.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+      {{- if and (or (eq .Values.visualizationServer.service.type "LoadBalancer") (eq .Values.visualizationServer.service.type "NodePort")) .Values.visualizationServer.service.nodePort }}
+      nodePort: {{ .Values.visualizationServer.service.nodePort }}
+      {{- end }}
+  selector:
+    {{- include "kubeflow-pipelines.visualizationServer.selectorLabels" . | nindent 4 }}
