@@ -80,6 +80,10 @@ spec:
                 secretKeyRef:
                   name: {{ include "kubeflow-pipelines.minio.secretName" . }}
                   key: {{ include "kubeflow-pipelines.minio.secretKeyNameRootPassword" . }}
+            - name: ML_PIPELINE_SERVICE_HOST
+              value: {{ include "kubeflow-pipelines.apiServer.fullname" . }}
+            - name: ML_PIPELINE_SERVICE_PORT
+              value: {{ .Values.apiServer.service.ports.http | quote }}
             - name: ALLOW_CUSTOM_VISUALIZATIONS
               value: "true"
             {{- if .Values.ui.extraEnvVars }}
