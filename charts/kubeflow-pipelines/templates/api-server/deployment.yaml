@@ -81,6 +81,10 @@ spec:
               value: {{ include "kubeflow-pipelines.mariadb.database" . | quote }}
             - name: DBCONFIG_CONMAXLIFETIMESEC
               value: "120"
+            - name: ML_PIPELINE_VISUALIZATIONSERVER_SERVICE_HOST
+              value: {{ include "kubeflow-pipelines.visualizationServer.fullname" . }}
+            - name: ML_PIPELINE_VISUALIZATIONSERVER_SERVICE_PORT
+              value: {{ .Values.visualizationServer.service.port | quote }}
             - name: OBJECTSTORECONFIG_HOST
               value: {{ include "kubeflow-pipelines.minio.host" . | quote }}
             - name: OBJECTSTORECONFIG_PORT
