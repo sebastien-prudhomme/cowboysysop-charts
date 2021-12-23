@@ -1,0 +1,118 @@
+apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
+kind: Deployment
+metadata:
+  name: {{ include "kubeflow-pipelines.mlMetadata.fullname" . }}
+  labels:
+    {{- include "kubeflow-pipelines.mlMetadata.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations:
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: {{ .Values.mlMetadata.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "kubeflow-pipelines.mlMetadata.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "kubeflow-pipelines.mlMetadata.selectorLabels" . | nindent 8 }}
+        {{- if .Values.mlMetadata.podLabels }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.mlMetadata.podLabels "context" $ ) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.commonLabels }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 8 }}
+        {{- end }}
+      {{- if or .Values.kubeflow.enabled .Values.mlMetadata.podAnnotations .Values.commonAnnotations }}
+      annotations:
+        {{- if .Values.kubeflow.enabled }}
+        sidecar.istio.io/inject: "false"
+        {{- end }}
+        {{- if .Values.mlMetadata.podAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.mlMetadata.podAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.commonAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+      {{- end }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      {{- if .Values.mlMetadata.priorityClassName }}
+      priorityClassName: {{ .Values.mlMetadata.priorityClassName | quote }}
+      {{- end }}
+      serviceAccountName: {{ include "kubeflow-pipelines.mlMetadata.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.mlMetadata.podSecurityContext | nindent 8 }}
+      containers:
+        - name: ml-metadata
+          securityContext:
+            {{- toYaml .Values.mlMetadata.securityContext | nindent 12 }}
+          image: "{{ .Values.mlMetadata.image.repository }}:{{ .Values.mlMetadata.image.tag }}"
+          imagePullPolicy: {{ .Values.mlMetadata.image.pullPolicy }}
+          command:
+            - /bin/metadata_store_server
+          {{- with .Values.mlMetadata.extraArgs }}
+          args:
+            {{- range $key, $value := . }}
+            - --{{ $key }}={{ $value }}
+            {{- end }}
+          {{- end }}
+          {{- if .Values.mlMetadata.extraEnvVars }}
+          env:
+            {{- include "common.tplvalues.render" (dict "value" .Values.mlMetadata.extraEnvVars "context" $) | nindent 12 }}
+          {{- end }}
+          {{- if or .Values.mlMetadata.extraEnvVarsCM .Values.mlMetadata.extraEnvVarsSecret }}
+          envFrom:
+            {{- if .Values.mlMetadata.extraEnvVarsCM }}
+            - configMapRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.mlMetadata.extraEnvVarsCM "context" $) }}
+            {{- end }}
+            {{- if .Values.mlMetadata.extraEnvVarsSecret }}
+            - secretRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.mlMetadata.extraEnvVarsSecret "context" $) }}
+            {{- end }}
+          {{- end }}
+          ports:
+            - name: grpc
+              containerPort: 8080
+              protocol: TCP
+          {{- if .Values.mlMetadata.livenessProbe.enabled }}
+          livenessProbe:
+            tcpSocket:
+              port: grpc
+            initialDelaySeconds: {{ .Values.mlMetadata.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.mlMetadata.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.mlMetadata.livenessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.mlMetadata.livenessProbe.failureThreshold }}
+            successThreshold: {{ .Values.mlMetadata.livenessProbe.successThreshold }}
+          {{- end }}
+          {{- if .Values.mlMetadata.readinessProbe.enabled }}
+          readinessProbe:
+            tcpSocket:
+              port: grpc
+            initialDelaySeconds: {{ .Values.mlMetadata.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.mlMetadata.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.mlMetadata.readinessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.mlMetadata.readinessProbe.failureThreshold }}
+            successThreshold: {{ .Values.mlMetadata.readinessProbe.successThreshold }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.mlMetadata.resources | nindent 12 }}
+      {{- with .Values.mlMetadata.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.mlMetadata.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.mlMetadata.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
