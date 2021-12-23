@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "kubeflow-pipelines.mlMetadata.fullname" . }}
+  labels:
+    {{- include "kubeflow-pipelines.mlMetadata.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if or .Values.mlMetadata.service.annotations .Values.commonAnnotations }}
+  annotations:
+    {{- if .Values.mlMetadata.service.annotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.mlMetadata.service.annotations "context" $ ) | nindent 4 }}
+    {{- end }}
+    {{- if .Values.commonAnnotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- end }}
+spec:
+  type: {{ .Values.mlMetadata.service.type }}
+  {{- if and (eq .Values.mlMetadata.service.type "ClusterIP") .Values.mlMetadata.service.clusterIP }}
+  clusterIP: {{ .Values.mlMetadata.service.clusterIP }}
+  {{- end }}
+  {{- if and (eq .Values.mlMetadata.service.type "LoadBalancer") .Values.mlMetadata.service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.mlMetadata.service.loadBalancerIP }}
+  {{- end }}
+  {{- if and (eq .Values.mlMetadata.service.type "LoadBalancer") .Values.mlMetadata.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+    {{- toYaml .Values.mlMetadata.service.loadBalancerSourceRanges | nindent 4 }}
+  {{- end }}
+  {{- if or (eq .Values.mlMetadata.service.type "LoadBalancer") (eq .Values.mlMetadata.service.type "NodePort") }}
+  externalTrafficPolicy: {{ .Values.mlMetadata.service.externalTrafficPolicy }}
+  {{- end }}
+  ports:
+    - port: {{ .Values.mlMetadata.service.port }}
+      targetPort: grpc
+      protocol: TCP
+      name: grpc
+      {{- if and (or (eq .Values.mlMetadata.service.type "LoadBalancer") (eq .Values.mlMetadata.service.type "NodePort")) .Values.mlMetadata.service.nodePort }}
+      nodePort: {{ .Values.mlMetadata.service.nodePort }}
+      {{- end }}
+  selector:
+    {{- include "kubeflow-pipelines.mlMetadata.selectorLabels" . | nindent 4 }}
