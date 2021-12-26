@@ -61,7 +61,11 @@ spec:
           {{- end }}
           env:
             - name: NAMESPACE
+              {{- if .Values.kubeflow.enabled }}
+              value: ""
+              {{- else }}
               value: {{ .Release.Namespace }}
+              {{- end }}
             - name: TTL_SECONDS_AFTER_WORKFLOW_FINISH
               value: "86400"
             - name: NUM_WORKERS
