@@ -1,0 +1,96 @@
+apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
+kind: Deployment
+metadata:
+  name: {{ include "kubeflow-pipelines.persistenceAgent.fullname" . }}
+  labels:
+    {{- include "kubeflow-pipelines.persistenceAgent.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations:
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: {{ .Values.persistenceAgent.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "kubeflow-pipelines.persistenceAgent.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "kubeflow-pipelines.persistenceAgent.selectorLabels" . | nindent 8 }}
+        {{- if .Values.persistenceAgent.podLabels }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.persistenceAgent.podLabels "context" $ ) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.commonLabels }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 8 }}
+        {{- end }}
+      annotations:
+        {{- if .Values.kubeflow.enabled }}
+        sidecar.istio.io/inject: "false"
+        {{- end }}
+        {{- if .Values.persistenceAgent.podAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.persistenceAgent.podAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.commonAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      {{- if .Values.persistenceAgent.priorityClassName }}
+      priorityClassName: {{ .Values.persistenceAgent.priorityClassName | quote }}
+      {{- end }}
+      serviceAccountName: {{ include "kubeflow-pipelines.persistenceAgent.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.persistenceAgent.podSecurityContext | nindent 8 }}
+      containers:
+        - name: persistence-agent
+          securityContext:
+            {{- toYaml .Values.persistenceAgent.securityContext | nindent 12 }}
+          image: "{{ .Values.persistenceAgent.image.repository }}:{{ .Values.persistenceAgent.image.tag }}"
+          imagePullPolicy: {{ .Values.persistenceAgent.image.pullPolicy }}
+          {{- with .Values.persistenceAgent.extraArgs }}
+          args:
+            {{- range $key, $value := . }}
+            - --{{ $key }}={{ $value }}
+            {{- end }}
+          {{- end }}
+          env:
+            - name: NAMESPACE
+              value: {{ .Release.Namespace }}
+            - name: TTL_SECONDS_AFTER_WORKFLOW_FINISH
+              value: "86400"
+            - name: NUM_WORKERS
+              value: "2"
+            {{- if .Values.persistenceAgent.extraEnvVars }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.persistenceAgent.extraEnvVars "context" $) | nindent 12 }}
+            {{- end }}
+          {{- if or .Values.persistenceAgent.extraEnvVarsCM .Values.persistenceAgent.extraEnvVarsSecret }}
+          envFrom:
+            {{- if .Values.persistenceAgent.extraEnvVarsCM }}
+            - configMapRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.persistenceAgent.extraEnvVarsCM "context" $) }}
+            {{- end }}
+            {{- if .Values.persistenceAgent.extraEnvVarsSecret }}
+            - secretRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.persistenceAgent.extraEnvVarsSecret "context" $) }}
+            {{- end }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.persistenceAgent.resources | nindent 12 }}
+      {{- with .Values.persistenceAgent.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.persistenceAgent.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.persistenceAgent.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
