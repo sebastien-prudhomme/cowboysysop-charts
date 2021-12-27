@@ -53,26 +53,23 @@ spec:
             {{- toYaml .Values.persistenceAgent.securityContext | nindent 12 }}
           image: "{{ .Values.persistenceAgent.image.repository }}:{{ .Values.persistenceAgent.image.tag }}"
           imagePullPolicy: {{ .Values.persistenceAgent.image.pullPolicy }}
-          {{- with .Values.persistenceAgent.extraArgs }}
+          command:
+            - persistence_agent
           args:
-            {{- range $key, $value := . }}
+            - --logtostderr=true
+            - --mlPipelineAPIServerName={{ include "kubeflow-pipelines.apiServer.fullname" . }}
+            - --mlPipelineServiceGRPCPort={{ .Values.apiServer.service.ports.grpc }}
+            - --mlPipelineServiceHttpPort={{ .Values.apiServer.service.ports.http }}
+            {{- if (not .Values.kubeflow.enabled) }}
+            - --namespace={{ .Release.Namespace }}
+            {{- end }}
+            {{- range $key, $value := .Values.persistenceAgent.extraArgs }}
             - --{{ $key }}={{ $value }}
             {{- end }}
-          {{- end }}
+          {{- if .Values.persistenceAgent.extraEnvVars }}
           env:
-            - name: NAMESPACE
-              {{- if .Values.kubeflow.enabled }}
-              value: ""
-              {{- else }}
-              value: {{ .Release.Namespace }}
-              {{- end }}
-            - name: TTL_SECONDS_AFTER_WORKFLOW_FINISH
-              value: "86400"
-            - name: NUM_WORKERS
-              value: "2"
-            {{- if .Values.persistenceAgent.extraEnvVars }}
             {{- include "common.tplvalues.render" (dict "value" .Values.persistenceAgent.extraEnvVars "context" $) | nindent 12 }}
-            {{- end }}
+          {{- end }}
           {{- if or .Values.persistenceAgent.extraEnvVarsCM .Values.persistenceAgent.extraEnvVarsSecret }}
           envFrom:
             {{- if .Values.persistenceAgent.extraEnvVarsCM }}
