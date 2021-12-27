@@ -565,8 +565,14 @@ persistenceAgent:
 
   affinity: {}
 
-  extraArgs: {}
-    # name: ""
+  extraArgs:
+    # clientBurst: 10
+    # clientQPS: 5
+    # initializeTimeout: 2m0s
+    # numWorker: 2
+    # timeout: 1m0s
+    ttlSecondsAfterWorkflowFinish: 86400
+    # v: 0
 
   # Additional container environment variables
   extraEnvVars: []
