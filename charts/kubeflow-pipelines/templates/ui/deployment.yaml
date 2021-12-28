@@ -80,11 +80,17 @@ spec:
                 secretKeyRef:
                   name: {{ include "kubeflow-pipelines.minio.secretName" . }}
                   key: {{ include "kubeflow-pipelines.minio.secretKeyNameRootPassword" . }}
+            - name: METADATA_ENVOY_SERVICE_SERVICE_HOST
+              value: {{ include "kubeflow-pipelines.mlMetadata.fullname" . }}
+            - name: METADATA_ENVOY_SERVICE_SERVICE_PORT
+              value: {{ .Values.mlMetadata.service.ports.http | quote }}
             - name: ML_PIPELINE_SERVICE_HOST
               value: {{ include "kubeflow-pipelines.apiServer.fullname" . }}
             - name: ML_PIPELINE_SERVICE_PORT
               value: {{ .Values.apiServer.service.ports.http | quote }}
             - name: ALLOW_CUSTOM_VISUALIZATIONS
+              value: "true"
+            - name: DISABLE_GKE_METADATA
               value: "true"
             {{- if .Values.ui.extraEnvVars }}
             {{- include "common.tplvalues.render" (dict "value" .Values.ui.extraEnvVars "context" $) | nindent 12 }}
