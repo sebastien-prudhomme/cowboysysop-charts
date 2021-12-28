@@ -1,0 +1,91 @@
+apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
+kind: Deployment
+metadata:
+  name: {{ include "kubeflow-pipelines.metadataWriter.fullname" . }}
+  labels:
+    {{- include "kubeflow-pipelines.metadataWriter.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations:
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: {{ .Values.metadataWriter.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "kubeflow-pipelines.metadataWriter.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "kubeflow-pipelines.metadataWriter.selectorLabels" . | nindent 8 }}
+        {{- if .Values.metadataWriter.podLabels }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.metadataWriter.podLabels "context" $ ) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.commonLabels }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 8 }}
+        {{- end }}
+      annotations:
+        {{- if .Values.kubeflow.enabled }}
+        sidecar.istio.io/inject: "false"
+        {{- end }}
+        {{- if .Values.metadataWriter.podAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.metadataWriter.podAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.commonAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      {{- if .Values.metadataWriter.priorityClassName }}
+      priorityClassName: {{ .Values.metadataWriter.priorityClassName | quote }}
+      {{- end }}
+      serviceAccountName: {{ include "kubeflow-pipelines.metadataWriter.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.metadataWriter.podSecurityContext | nindent 8 }}
+      containers:
+        - name: metadata-writer
+          securityContext:
+            {{- toYaml .Values.metadataWriter.securityContext | nindent 12 }}
+          image: "{{ .Values.metadataWriter.image.repository }}:{{ .Values.metadataWriter.image.tag }}"
+          imagePullPolicy: {{ .Values.metadataWriter.image.pullPolicy }}
+          {{- with .Values.metadataWriter.extraArgs }}
+          args:
+            {{- range $key, $value := . }}
+            - --{{ $key }}={{ $value }}
+            {{- end }}
+          {{- end }}
+          env:
+            - name: NAMESPACE_TO_WATCH
+              value: {{ .Release.Namespace }}
+            {{- if .Values.metadataWriter.extraEnvVars }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.metadataWriter.extraEnvVars "context" $) | nindent 12 }}
+            {{- end }}          {{- if or .Values.metadataWriter.extraEnvVarsCM .Values.metadataWriter.extraEnvVarsSecret }}
+          envFrom:
+            {{- if .Values.metadataWriter.extraEnvVarsCM }}
+            - configMapRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.metadataWriter.extraEnvVarsCM "context" $) }}
+            {{- end }}
+            {{- if .Values.metadataWriter.extraEnvVarsSecret }}
+            - secretRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.metadataWriter.extraEnvVarsSecret "context" $) }}
+            {{- end }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.metadataWriter.resources | nindent 12 }}
+      {{- with .Values.metadataWriter.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.metadataWriter.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.metadataWriter.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
