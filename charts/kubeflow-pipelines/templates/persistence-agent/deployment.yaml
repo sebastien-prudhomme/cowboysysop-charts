@@ -60,7 +60,9 @@ spec:
             - --mlPipelineAPIServerName={{ include "kubeflow-pipelines.apiServer.fullname" . }}
             - --mlPipelineServiceGRPCPort={{ .Values.apiServer.service.ports.grpc }}
             - --mlPipelineServiceHttpPort={{ .Values.apiServer.service.ports.http }}
-            {{- if (not .Values.kubeflow.enabled) }}
+            {{- if .Values.kubeflow.enabled }}
+            - --namespace=""
+            {{- else }}
             - --namespace={{ .Release.Namespace }}
             {{- end }}
             {{- range $key, $value := .Values.persistenceAgent.extraArgs }}

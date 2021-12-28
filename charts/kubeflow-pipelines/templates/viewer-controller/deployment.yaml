@@ -57,7 +57,9 @@ spec:
             - /bin/controller
           args:
             - --logtostderr=true
-            {{- if (not .Values.kubeflow.enabled) }}
+            {{- if .Values.kubeflow.enabled }}
+            - --namespace=""
+            {{- else }}
             - --namespace={{ .Release.Namespace }}
             {{- end }}
             {{- range $key, $value := .Values.viewerController.extraArgs }}
