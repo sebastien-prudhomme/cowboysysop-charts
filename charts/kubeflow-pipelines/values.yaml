@@ -462,8 +462,19 @@ mlMetadata:
     # External traffic routing policy when service type is LoadBalancer or NodePort
     externalTrafficPolicy: Cluster
 
-    # Service port
-    port: 8080
+    ports:
+      # Service HTTP port
+      http: 9090
+
+      # Service gRPC port
+      grpc: 8080
+
+    nodePorts: {}
+      # Service HTTP node port when service type is LoadBalancer or NodePort
+      # http: 30000
+
+      # Service gRPC node port when service type is LoadBalancer or NodePort
+      # grpc: 30001
 
     # Service node port when service type is LoadBalancer or NodePort
     # nodePort: 30000
