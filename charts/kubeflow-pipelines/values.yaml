@@ -749,6 +749,88 @@ ui:
   # Name of existing Secret containing additional container environment variables
   extraEnvVarsSecret:
 
+viewerController:
+  replicaCount: 1
+
+  image:
+    repository: gcr.io/ml-pipeline/viewer-crd-controller
+    tag: 1.7.0
+    pullPolicy: IfNotPresent
+
+  pdb:
+    # Specifies whether a pod disruption budget should be created
+    create: false
+
+    # Minimum number/percentage of pods that should remain scheduled
+    minAvailable: 1
+
+    # Maximum number/percentage of pods that may be made unavailable
+    # maxUnavailable: 1
+
+  serviceAccount:
+    # Specifies whether a service account should be created
+    create: true
+    # Annotations to add to the service account
+    annotations: {}
+    # The name of the service account to use.
+    # If not set and create is true, a name is generated using the fullname template
+    name:
+
+  # Additional pod annotations
+  podAnnotations: {}
+
+  # Additional pod labels
+  podLabels: {}
+
+  podSecurityContext: {}
+    # fsGroup: 2000
+
+  # Priority class name
+  # priorityClassName : high-priority
+
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+
+  resources: {}
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
+
+  extraArgs: {}
+    # client_burst: 10
+    # client_qps: 5
+    # max_num_viewers: 50
+    # v: 0
+
+  # Additional container environment variables
+  extraEnvVars: []
+  #  - name: MY-NAME
+  #    value: "MY-VALUE"
+
+  # Name of existing ConfigMap containing additional container environment variables
+  extraEnvVarsCM:
+
+  # Name of existing Secret containing additional container environment variables
+  extraEnvVarsSecret:
+
 visualizationServer:
   replicaCount: 1
 
