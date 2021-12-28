@@ -50,6 +50,63 @@ spec:
       securityContext:
         {{- toYaml .Values.mlMetadata.podSecurityContext | nindent 8 }}
       containers:
+        - name: envoy
+          securityContext:
+            {{- toYaml .Values.mlMetadata.envoy.securityContext | nindent 12 }}
+          image: "{{ .Values.mlMetadata.envoy.image.repository }}:{{ .Values.mlMetadata.envoy.image.tag }}"
+          imagePullPolicy: {{ .Values.mlMetadata.envoy.image.pullPolicy }}
+          {{- with .Values.mlMetadata.envoy.extraArgs }}
+          args:
+            {{- range $key, $value := . }}
+            - --{{ $key }}={{ $value }}
+            {{- end }}
+          {{- end }}
+          {{- if .Values.mlMetadata.envoy.extraEnvVars }}
+          env:
+            {{- include "common.tplvalues.render" (dict "value" .Values.mlMetadata.envoy.extraEnvVars "context" $) | nindent 12 }}
+          {{- end }}
+          {{- if or .Values.mlMetadata.envoy.extraEnvVarsCM .Values.mlMetadata.envoy.extraEnvVarsSecret }}
+          envFrom:
+            {{- if .Values.mlMetadata.envoy.extraEnvVarsCM }}
+            - configMapRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.mlMetadata.envoy.extraEnvVarsCM "context" $) }}
+            {{- end }}
+            {{- if .Values.mlMetadata.envoy.extraEnvVarsSecret }}
+            - secretRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.mlMetadata.envoy.extraEnvVarsSecret "context" $) }}
+            {{- end }}
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: 9090
+              protocol: TCP
+            - name: http-admin
+              containerPort: 9901
+              protocol: TCP
+          {{- if .Values.mlMetadata.envoy.livenessProbe.enabled }}
+          livenessProbe:
+            httpGet:
+              path: /ready
+              port: http-admin
+            initialDelaySeconds: {{ .Values.mlMetadata.envoy.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.mlMetadata.envoy.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.mlMetadata.envoy.livenessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.mlMetadata.envoy.livenessProbe.failureThreshold }}
+            successThreshold: {{ .Values.mlMetadata.envoy.livenessProbe.successThreshold }}
+          {{- end }}
+          {{- if .Values.mlMetadata.envoy.readinessProbe.enabled }}
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: http-admin
+            initialDelaySeconds: {{ .Values.mlMetadata.envoy.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.mlMetadata.envoy.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.mlMetadata.envoy.readinessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.mlMetadata.envoy.readinessProbe.failureThreshold }}
+            successThreshold: {{ .Values.mlMetadata.envoy.readinessProbe.successThreshold }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.mlMetadata.envoy.resources | nindent 12 }}
         - name: ml-metadata
           securityContext:
             {{- toYaml .Values.mlMetadata.securityContext | nindent 12 }}
@@ -57,16 +114,25 @@ spec:
           imagePullPolicy: {{ .Values.mlMetadata.image.pullPolicy }}
           command:
             - /bin/metadata_store_server
-          {{- with .Values.mlMetadata.extraArgs }}
           args:
-            {{- range $key, $value := . }}
+            - --mysql_config_host={{ include "kubeflow-pipelines.mariadb.host" . }}
+            - --mysql_config_port={{ include "kubeflow-pipelines.mariadb.port" . }}
+            - --mysql_config_user={{ include "kubeflow-pipelines.mariadb.username" . }}
+            - --mysql_config_password=$(MARIADB_PASSWORD)
+            - --mysql_config_database={{ include "kubeflow-pipelines.mariadb.database" . }}
+            - --enable_database_upgrade=true
+            {{- range $key, $value := .Values.mlMetadata.extraArgs }}
             - --{{ $key }}={{ $value }}
             {{- end }}
-          {{- end }}
-          {{- if .Values.mlMetadata.extraEnvVars }}
           env:
+            - name: MARIADB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "kubeflow-pipelines.mariadb.secretName" . }}
+                  key: {{ include "kubeflow-pipelines.mariadb.secretKeyNamePassword" . }}
+            {{- if .Values.mlMetadata.extraEnvVars }}
             {{- include "common.tplvalues.render" (dict "value" .Values.mlMetadata.extraEnvVars "context" $) | nindent 12 }}
-          {{- end }}
+            {{- end }}
           {{- if or .Values.mlMetadata.extraEnvVarsCM .Values.mlMetadata.extraEnvVarsSecret }}
           envFrom:
             {{- if .Values.mlMetadata.extraEnvVarsCM }}
@@ -116,3 +182,7 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
+      hostAliases:
+        - ip: 127.0.0.1
+          hostnames:
+            - metadata-grpc-service
