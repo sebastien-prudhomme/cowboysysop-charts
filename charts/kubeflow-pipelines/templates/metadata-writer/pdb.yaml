@@ -1,0 +1,25 @@
+{{- if .Values.metadataWriter.pdb.create }}
+apiVersion: {{ include "common.capabilities.policy.apiVersion" . }}
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "kubeflow-pipelines.metadataWriter.fullname" . }}
+  labels:
+    {{- include "kubeflow-pipelines.metadataWriter.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations:
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if .Values.metadataWriter.pdb.minAvailable }}
+  minAvailable: {{ .Values.metadataWriter.pdb.minAvailable }}
+  {{- end }}
+  {{- if .Values.metadataWriter.pdb.maxUnavailable }}
+  maxUnavailable: {{ .Values.metadataWriter.pdb.maxUnavailable }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "kubeflow-pipelines.metadataWriter.selectorLabels" . | nindent 6 }}
+{{- end }}
