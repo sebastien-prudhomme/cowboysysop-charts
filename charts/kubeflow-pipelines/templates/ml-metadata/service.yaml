@@ -32,12 +32,19 @@ spec:
   externalTrafficPolicy: {{ .Values.mlMetadata.service.externalTrafficPolicy }}
   {{- end }}
   ports:
-    - port: {{ .Values.mlMetadata.service.port }}
+    - port: {{ .Values.mlMetadata.service.ports.http }}
+      targetPort: http
+      protocol: TCP
+      name: http
+      {{- if and (or (eq .Values.mlMetadata.service.type "LoadBalancer") (eq .Values.mlMetadata.service.type "NodePort")) .Values.mlMetadata.service.nodePorts.http }}
+      nodePort: {{ .Values.mlMetadata.service.nodePorts.http }}
+      {{- end }}
+    - port: {{ .Values.mlMetadata.service.ports.grpc }}
       targetPort: grpc
       protocol: TCP
       name: grpc
-      {{- if and (or (eq .Values.mlMetadata.service.type "LoadBalancer") (eq .Values.mlMetadata.service.type "NodePort")) .Values.mlMetadata.service.nodePort }}
-      nodePort: {{ .Values.mlMetadata.service.nodePort }}
+      {{- if and (or (eq .Values.mlMetadata.service.type "LoadBalancer") (eq .Values.mlMetadata.service.type "NodePort")) .Values.mlMetadata.service.nodePorts.grpc }}
+      nodePort: {{ .Values.mlMetadata.service.nodePorts.grpc }}
       {{- end }}
   selector:
     {{- include "kubeflow-pipelines.mlMetadata.selectorLabels" . | nindent 4 }}
