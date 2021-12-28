@@ -61,7 +61,11 @@ spec:
           {{- end }}
           env:
             - name: NAMESPACE_TO_WATCH
+              {{- if .Values.kubeflow.enabled }}
+              value: ""
+              {{- else }}
               value: {{ .Release.Namespace }}
+              {{- end }}
             - name: METADATA_GRPC_SERVICE_SERVICE_HOST
               value: {{ include "kubeflow-pipelines.mlMetadata.fullname" . }}
             - name: METADATA_GRPC_SERVICE_SERVICE_PORT
