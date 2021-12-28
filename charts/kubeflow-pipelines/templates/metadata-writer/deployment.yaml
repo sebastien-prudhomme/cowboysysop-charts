@@ -62,6 +62,10 @@ spec:
           env:
             - name: NAMESPACE_TO_WATCH
               value: {{ .Release.Namespace }}
+            - name: METADATA_GRPC_SERVICE_SERVICE_HOST
+              value: {{ include "kubeflow-pipelines.mlMetadata.fullname" . }}
+            - name: METADATA_GRPC_SERVICE_SERVICE_PORT
+              value: {{ .Values.mlMetadata.service.ports.grpc | quote }}
             {{- if .Values.metadataWriter.extraEnvVars }}
             {{- include "common.tplvalues.render" (dict "value" .Values.metadataWriter.extraEnvVars "context" $) | nindent 12 }}
             {{- end }}          {{- if or .Values.metadataWriter.extraEnvVarsCM .Values.metadataWriter.extraEnvVarsSecret }}
