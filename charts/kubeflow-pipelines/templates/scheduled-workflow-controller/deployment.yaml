@@ -1,0 +1,98 @@
+apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
+kind: Deployment
+metadata:
+  name: {{ include "kubeflow-pipelines.scheduledWorkflowController.fullname" . }}
+  labels:
+    {{- include "kubeflow-pipelines.scheduledWorkflowController.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations:
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: {{ .Values.scheduledWorkflowController.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "kubeflow-pipelines.scheduledWorkflowController.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "kubeflow-pipelines.scheduledWorkflowController.selectorLabels" . | nindent 8 }}
+        {{- if .Values.scheduledWorkflowController.podLabels }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.scheduledWorkflowController.podLabels "context" $ ) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.commonLabels }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 8 }}
+        {{- end }}
+      annotations:
+        {{- if .Values.kubeflow.enabled }}
+        sidecar.istio.io/inject: "false"
+        {{- end }}
+        {{- if .Values.scheduledWorkflowController.podAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.scheduledWorkflowController.podAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.commonAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      {{- if .Values.scheduledWorkflowController.priorityClassName }}
+      priorityClassName: {{ .Values.scheduledWorkflowController.priorityClassName | quote }}
+      {{- end }}
+      serviceAccountName: {{ include "kubeflow-pipelines.scheduledWorkflowController.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.scheduledWorkflowController.podSecurityContext | nindent 8 }}
+      containers:
+        - name: scheduled-workflow-controller
+          securityContext:
+            {{- toYaml .Values.scheduledWorkflowController.securityContext | nindent 12 }}
+          image: "{{ .Values.scheduledWorkflowController.image.repository }}:{{ .Values.scheduledWorkflowController.image.tag }}"
+          imagePullPolicy: {{ .Values.scheduledWorkflowController.image.pullPolicy }}
+          command:
+            - /bin/controller
+          args:
+            - --logtostderr=true
+            {{- if .Values.kubeflow.enabled }}
+            - --namespace=""
+            {{- else }}
+            - --namespace={{ .Release.Namespace }}
+            {{- end }}
+            {{- range $key, $value := .Values.scheduledWorkflowController.extraArgs }}
+            - --{{ $key }}={{ $value }}
+            {{- end }}
+          env:
+            - name: CRON_SCHEDULE_TIMEZONE
+              value: UTC
+            {{- if .Values.scheduledWorkflowController.extraEnvVars }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.scheduledWorkflowController.extraEnvVars "context" $) | nindent 12 }}
+            {{- end }}
+          {{- if or .Values.scheduledWorkflowController.extraEnvVarsCM .Values.scheduledWorkflowController.extraEnvVarsSecret }}
+          envFrom:
+            {{- if .Values.scheduledWorkflowController.extraEnvVarsCM }}
+            - configMapRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.scheduledWorkflowController.extraEnvVarsCM "context" $) }}
+            {{- end }}
+            {{- if .Values.scheduledWorkflowController.extraEnvVarsSecret }}
+            - secretRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.scheduledWorkflowController.extraEnvVarsSecret "context" $) }}
+            {{- end }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.scheduledWorkflowController.resources | nindent 12 }}
+      {{- with .Values.scheduledWorkflowController.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.scheduledWorkflowController.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.scheduledWorkflowController.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
