@@ -39,3 +39,10 @@ Create the name of the service account to use
     {{ default "default" .Values.cacheServer.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Create the name of the tls secret to use
+*/}}
+{{- define "kubeflow-pipelines.cacheServer.tls.secretName" -}}
+  {{- printf "%s-%s" (include "kubeflow-pipelines.cacheServer.fullname" .) "tls" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}

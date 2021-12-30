@@ -88,8 +88,16 @@ spec:
                 name: {{ include "common.tplvalues.render" (dict "value" .Values.cacheServer.extraEnvVarsSecret "context" $) }}
             {{- end }}
           {{- end }}
+          ports:
+            - name: https
+              containerPort: 8443
+              protocol: TCP
           resources:
             {{- toYaml .Values.cacheServer.resources | nindent 12 }}
+          volumeMounts:
+            - name: tls-secret
+              mountPath: /etc/webhook/certs
+              readOnly: true
       {{- with .Values.cacheServer.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -102,3 +110,7 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
+      volumes:
+        - name: tls-secret
+          secret:
+            secretName: {{ include "kubeflow-pipelines.cacheServer.tls.secretName" . }}
