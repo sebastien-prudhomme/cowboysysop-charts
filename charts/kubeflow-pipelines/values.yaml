@@ -344,7 +344,11 @@ cacheServer:
   affinity: {}
 
   extraArgs: {}
-    # name: ""
+    # db_extra_params: ""
+    # db_group_concat_max_len: 4194304
+    # kube_client_burst: 10
+    # kube_client_qps: 5
+    # v: 0
 
   # Additional container environment variables
   extraEnvVars: []
