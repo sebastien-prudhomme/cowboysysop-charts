@@ -13,4 +13,4 @@ metadata:
   {{- end }}
 data:
   METADATA_GRPC_SERVICE_HOST: {{ include "kubeflow-pipelines.mlMetadata.fullname" . }}
-  METADATA_GRPC_SERVICE_PORT: {{ .Values.mlMetadata.service.ports.grpc }}
+  METADATA_GRPC_SERVICE_PORT: {{ .Values.mlMetadata.service.ports.grpc | quote }}
