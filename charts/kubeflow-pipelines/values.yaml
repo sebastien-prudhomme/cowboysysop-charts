@@ -320,7 +320,7 @@ cacheServer:
     externalTrafficPolicy: Cluster
 
     # Service port
-    port: 443
+    port: 8443
 
     # Service node port when service type is LoadBalancer or NodePort
     # nodePort: 30000
