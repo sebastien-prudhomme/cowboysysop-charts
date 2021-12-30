@@ -53,15 +53,27 @@ spec:
             {{- toYaml .Values.cacheServer.securityContext | nindent 12 }}
           image: "{{ .Values.cacheServer.image.repository }}:{{ .Values.cacheServer.image.tag }}"
           imagePullPolicy: {{ .Values.cacheServer.image.pullPolicy }}
-          {{- with .Values.cacheServer.extraArgs }}
           args:
-            {{- range $key, $value := . }}
+            - --db_host={{ include "kubeflow-pipelines.mariadb.host" . }}
+            - --db_port={{ include "kubeflow-pipelines.mariadb.port" . }}
+            - --db_user={{ include "kubeflow-pipelines.mariadb.username" . }}
+            - --db_password=$(MARIADB_PASSWORD)
+            - --db_name={{ include "kubeflow-pipelines.mariadb.database" . }}
+            - --logtostderr=true
+            - --namespace_to_watch={{ .Release.Namespace }}
+            {{- range $key, $value := .Values.cacheServer.extraArgs }}
             - --{{ $key }}={{ $value }}
             {{- end }}
-          {{- end }}
           env:
-            - name: NAMESPACE_TO_WATCH
-              value: {{ .Release.Namespace }}
+            - name: CACHE_IMAGE
+              value: gcr.io/google-containers/busybox
+            - name: CACHE_NODE_RESTRICTIONS
+              value: "false"
+            - name: MARIADB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "kubeflow-pipelines.mariadb.secretName" . }}
+                  key: {{ include "kubeflow-pipelines.mariadb.secretKeyNamePassword" . }}
             {{- if .Values.cacheServer.extraEnvVars }}
             {{- include "common.tplvalues.render" (dict "value" .Values.cacheServer.extraEnvVars "context" $) | nindent 12 }}
             {{- end }}
