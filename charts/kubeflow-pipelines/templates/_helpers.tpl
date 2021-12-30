@@ -52,6 +52,13 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
 
 {{/*
+Runner fully qualified app name
+*/}}
+{{- define "kubeflow-pipelines.runner.fullname" -}}
+{{- printf "%s-%s" (include "kubeflow-pipelines.fullname" .) "runner" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
 MariaDB fully qualified app name
 */}}
 {{- define "kubeflow-pipelines.mariadb.fullname" -}}

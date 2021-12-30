@@ -64,6 +64,8 @@ spec:
           env:
             - name: AUTO_UPDATE_PIPELINE_DEFAULT_VERSION
               value: "true"
+            - name: DEFAULTPIPELINERUNNERSERVICEACCOUNT
+              value: {{ include "kubeflow-pipelines.runner.fullname" . }}
             - name: POD_NAMESPACE
               value: {{ .Release.Namespace }}
             - name: DBCONFIG_HOST
