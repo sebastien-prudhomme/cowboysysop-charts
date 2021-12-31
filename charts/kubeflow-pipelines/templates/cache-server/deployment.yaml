@@ -114,3 +114,8 @@ spec:
         - name: tls-secret
           secret:
             secretName: {{ include "kubeflow-pipelines.cacheServer.tls.secretName" . }}
+            items:
+              - key: tls.crt
+                path: cert.pem
+              - key: tls.key
+                path: key.pem
