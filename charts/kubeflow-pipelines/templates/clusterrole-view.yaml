@@ -1,0 +1,42 @@
+{{- if .Values.kubeflow.enabled }}
+apiVersion: {{ include "common.capabilities.rbac.apiVersion" . }}
+kind: ClusterRole
+metadata:
+  name: kubeflow-kubeflow-pipelines-view
+  labels:
+    rbac.authorization.kubeflow.org/aggregate-to-kubeflow-view: "true"
+    {{- include "kubeflow-pipelines.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations:
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+rules:
+  - apiGroups:
+      - pipelines.kubeflow.org
+    resources:
+      - pipelines
+      - pipelines/versions
+      - experiments
+      - runs
+      - jobs
+    verbs:
+      - get
+      - list
+  - apiGroups:
+      - kubeflow.org
+    resources:
+      - viewers
+    verbs:
+      - create
+      - get
+      - delete
+  - apiGroups:
+      - pipelines.kubeflow.org
+    resources:
+      - visualizations
+    verbs:
+      - create
+{{- end }}
