@@ -60,7 +60,11 @@ spec:
             - --db_password=$(MARIADB_PASSWORD)
             - --db_name={{ include "kubeflow-pipelines.mariadb.database" . }}
             - --logtostderr=true
+            {{- if .Values.kubeflow.enabled }}
+            - --namespace_to_watch=""
+            {{- else }}
             - --namespace_to_watch={{ .Release.Namespace }}
+            {{- end }}
             {{- range $key, $value := .Values.cacheServer.extraArgs }}
             - --{{ $key }}={{ $value }}
             {{- end }}
