@@ -65,7 +65,11 @@ spec:
             - name: AUTO_UPDATE_PIPELINE_DEFAULT_VERSION
               value: "true"
             - name: DEFAULTPIPELINERUNNERSERVICEACCOUNT
+              {{- if .Values.kubeflow.enabled }}
+              value: default-editor
+              {{- else }}
               value: {{ include "kubeflow-pipelines.runner.fullname" . }}
+              {{- end }}
             - name: POD_NAMESPACE
               value: {{ .Release.Namespace }}
             - name: DBCONFIG_HOST
@@ -102,9 +106,21 @@ spec:
                   name: {{ include "kubeflow-pipelines.minio.secretName" . }}
                   key: {{ include "kubeflow-pipelines.minio.secretKeyNameRootPassword" . }}
             - name: OBJECTSTORECONFIG_BUCKETNAME
-              value: kubeflow-pipelines
+              value: mlpipeline
             - name: OBJECTSTORECONFIG_SECURE
               value: "false"
+            {{- if .Values.kubeflow.enabled }}
+            - name: KUBEFLOW_USERID_HEADER
+              value: {{ .Values.kubeflow.useridHeader }}
+            - name: KUBEFLOW_USERID_PREFIX
+              value: {{ .Values.kubeflow.useridPrefix | quote }}
+            - name: MULTIUSER
+              value: "true"
+            - name: VISUALIZATIONSERVICE_NAME
+              value: {{ include "kubeflow-pipelines.visualizationServer.fullname" . }}
+            - name: VISUALIZATIONSERVICE_PORT
+              value: {{ .Values.visualizationServer.service.port | quote }}
+            {{- end }}
             {{- if .Values.apiServer.extraEnvVars }}
             {{- include "common.tplvalues.render" (dict "value" .Values.apiServer.extraEnvVars "context" $) | nindent 12 }}
             {{- end }}

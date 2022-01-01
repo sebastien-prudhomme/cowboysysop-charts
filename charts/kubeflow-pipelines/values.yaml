@@ -22,6 +22,12 @@ kubeflow:
   # Istio gateway name
   gatewayName: kubeflow
 
+  # Key of request header containing user id
+  useridHeader: kubeflow-userid
+
+  # Request header user id common prefix
+  useridPrefix: ""
+
 apiServer:
   replicaCount: 1
 
