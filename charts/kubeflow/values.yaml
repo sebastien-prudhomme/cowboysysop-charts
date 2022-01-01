@@ -422,6 +422,10 @@ katib:
     # Enable integration with Kubeflow (do not change this value)
     enabled: true
 
+  mariadb:
+    # Partially override fully qualified name (do not change this value)
+    nameOverride: katib-mariadb
+
 kfservingController:
   replicaCount: 1
 
@@ -583,6 +587,14 @@ kubeflow-pipelines:
   kubeflow:
     # Enable integration with Kubeflow (do not change this value)
     enabled: true
+
+  minio:
+    # Partially override fully qualified name (do not change this value)
+    nameOverride: kubeflow-pipelines-minio
+
+  mariadb:
+    # Partially override fully qualified name (do not change this value)
+    nameOverride: kubeflow-pipelines-mariadb
 
 modelsWebApp:
   replicaCount: 1
