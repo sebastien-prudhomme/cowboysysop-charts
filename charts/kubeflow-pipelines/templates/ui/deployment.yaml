@@ -92,6 +92,16 @@ spec:
               value: "true"
             - name: DISABLE_GKE_METADATA
               value: "true"
+            {{- if .Values.kubeflow.enabled }}
+            - name: DEPLOYMENT
+              value: KUBEFLOW
+            - name: ENABLE_AUTHZ
+              value: "true"
+            - name: KUBEFLOW_USERID_HEADER
+              value: {{ .Values.kubeflow.useridHeader }}
+            - name: KUBEFLOW_USERID_PREFIX
+              value: {{ .Values.kubeflow.useridPrefix | quote }}
+            {{- end }}
             {{- if .Values.ui.extraEnvVars }}
             {{- include "common.tplvalues.render" (dict "value" .Values.ui.extraEnvVars "context" $) | nindent 12 }}
             {{- end }}
