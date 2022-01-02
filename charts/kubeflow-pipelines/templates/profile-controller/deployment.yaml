@@ -1,0 +1,151 @@
+{{- if .Values.kubeflow.enabled }}
+apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
+kind: Deployment
+metadata:
+  name: {{ include "kubeflow-pipelines.profileController.fullname" . }}
+  labels:
+    {{- include "kubeflow-pipelines.profileController.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations:
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: {{ .Values.profileController.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "kubeflow-pipelines.profileController.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "kubeflow-pipelines.profileController.selectorLabels" . | nindent 8 }}
+        {{- if .Values.profileController.podLabels }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.profileController.podLabels "context" $ ) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.commonLabels }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 8 }}
+        {{- end }}
+      {{- if or .Values.kubeflow.enabled .Values.profileController.podAnnotations .Values.commonAnnotations }}
+      annotations:
+        {{- if .Values.kubeflow.enabled }}
+        sidecar.istio.io/inject: "false"
+        {{- end }}
+        {{- if .Values.profileController.podAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.profileController.podAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.commonAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+      {{- end }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      {{- if .Values.profileController.priorityClassName }}
+      priorityClassName: {{ .Values.profileController.priorityClassName | quote }}
+      {{- end }}
+      serviceAccountName: {{ include "kubeflow-pipelines.profileController.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.profileController.podSecurityContext | nindent 8 }}
+      containers:
+        - name: profile-controller
+          securityContext:
+            {{- toYaml .Values.profileController.securityContext | nindent 12 }}
+          image: "{{ .Values.profileController.image.repository }}:{{ .Values.profileController.image.tag }}"
+          imagePullPolicy: {{ .Values.profileController.image.pullPolicy }}
+          command:
+            - python
+            - /config/sync.py
+          {{- with .Values.profileController.extraArgs }}
+          args:
+            {{- range $key, $value := . }}
+            - --{{ $key }}={{ $value }}
+            {{- end }}
+          {{- end }}
+          env:
+            - name: DISABLE_ISTIO_SIDECAR
+              value: "false"
+            - name: FRONTEND_IMAGE
+              value: {{ .Values.ui.image.repository }}
+            - name: FRONTEND_TAG
+              value: {{ .Values.ui.image.tag }}
+            - name: KFP_DEFAULT_PIPELINE_ROOT
+              value: ""
+            - name: MINIO_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "kubeflow-pipelines.minio.secretName" . }}
+                  key: {{ include "kubeflow-pipelines.minio.secretKeyNameRootUser" . }}
+            - name: MINIO_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "kubeflow-pipelines.minio.secretName" . }}
+                  key: {{ include "kubeflow-pipelines.minio.secretKeyNameRootPassword" . }}
+            - name: VISUALIZATION_SERVER_IMAGE
+              value: {{ .Values.visualizationServer.image.repository }}
+            - name: VISUALIZATION_SERVER_TAG
+              value: {{ .Values.visualizationServer.image.tag }}
+            {{- if .Values.profileController.extraEnvVars }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.profileController.extraEnvVars "context" $) | nindent 12 }}
+            {{- end }}
+          {{- if or .Values.profileController.extraEnvVarsCM .Values.profileController.extraEnvVarsSecret }}
+          envFrom:
+            {{- if .Values.profileController.extraEnvVarsCM }}
+            - configMapRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.profileController.extraEnvVarsCM "context" $) }}
+            {{- end }}
+            {{- if .Values.profileController.extraEnvVarsSecret }}
+            - secretRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.profileController.extraEnvVarsSecret "context" $) }}
+            {{- end }}
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          {{- if .Values.profileController.livenessProbe.enabled }}
+          livenessProbe:
+            tcpSocket:
+              port: http
+            initialDelaySeconds: {{ .Values.profileController.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.profileController.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.profileController.livenessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.profileController.livenessProbe.failureThreshold }}
+            successThreshold: {{ .Values.profileController.livenessProbe.successThreshold }}
+          {{- end }}
+          {{- if .Values.profileController.readinessProbe.enabled }}
+          readinessProbe:
+            tcpSocket:
+              port: http
+            initialDelaySeconds: {{ .Values.profileController.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.profileController.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.profileController.readinessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.profileController.readinessProbe.failureThreshold }}
+            successThreshold: {{ .Values.profileController.readinessProbe.successThreshold }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.profileController.resources | nindent 12 }}
+          volumeMounts:
+            - name: config
+              mountPath: /config
+              readOnly: true
+      {{- with .Values.profileController.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.profileController.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.profileController.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      volumes:
+        - name: config
+          configMap:
+            name: {{ include "kubeflow-pipelines.profileController.fullname" . }}
+{{- end }}
