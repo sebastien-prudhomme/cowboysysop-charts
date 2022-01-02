@@ -1,0 +1,50 @@
+{{- if .Values.kubeflow.enabled }}
+apiVersion: metacontroller.k8s.io/v1alpha1
+kind: CompositeController
+metadata:
+  name: {{ include "kubeflow-pipelines.profileController.fullname" . }}
+  labels:
+    {{- include "kubeflow-pipelines.profileController.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations:
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  parentResource:
+    apiVersion: v1
+    resource: namespaces
+  childResources:
+  - apiVersion: v1
+    resource: secrets
+    updateStrategy:
+      method: OnDelete
+  - apiVersion: v1
+    resource: configmaps
+    updateStrategy:
+      method: OnDelete
+  - apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
+    resource: deployments
+    updateStrategy:
+      method: InPlace
+  - apiVersion: v1
+    resource: services
+    updateStrategy:
+      method: InPlace
+  - apiVersion: networking.istio.io/v1alpha3
+    resource: destinationrules
+    updateStrategy:
+      method: InPlace
+  - apiVersion: security.istio.io/v1beta1
+    resource: authorizationpolicies
+    updateStrategy:
+      method: InPlace
+  resyncPeriodSeconds: 3600
+  generateSelector: true
+  hooks:
+    sync:
+      webhook:
+        url: http://{{ include "kubeflow-pipelines.profileController.fullname" . }}.{{ .Release.Namespace }}:{{ .Values.profileController.service.port }}/sync
+{{- end }}
