@@ -1,0 +1,45 @@
+{{- if .Values.kubeflow.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "kubeflow-pipelines.profileController.fullname" . }}
+  labels:
+    {{- include "kubeflow-pipelines.profileController.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if or .Values.profileController.service.annotations .Values.commonAnnotations }}
+  annotations:
+    {{- if .Values.profileController.service.annotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.profileController.service.annotations "context" $ ) | nindent 4 }}
+    {{- end }}
+    {{- if .Values.commonAnnotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- end }}
+spec:
+  type: {{ .Values.profileController.service.type }}
+  {{- if and (eq .Values.profileController.service.type "ClusterIP") .Values.profileController.service.clusterIP }}
+  clusterIP: {{ .Values.profileController.service.clusterIP }}
+  {{- end }}
+  {{- if and (eq .Values.profileController.service.type "LoadBalancer") .Values.profileController.service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.profileController.service.loadBalancerIP }}
+  {{- end }}
+  {{- if and (eq .Values.profileController.service.type "LoadBalancer") .Values.profileController.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+    {{- toYaml .Values.profileController.service.loadBalancerSourceRanges | nindent 4 }}
+  {{- end }}
+  {{- if or (eq .Values.profileController.service.type "LoadBalancer") (eq .Values.profileController.service.type "NodePort") }}
+  externalTrafficPolicy: {{ .Values.profileController.service.externalTrafficPolicy }}
+  {{- end }}
+  ports:
+    - port: {{ .Values.profileController.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+      {{- if and (or (eq .Values.profileController.service.type "LoadBalancer") (eq .Values.profileController.service.type "NodePort")) .Values.profileController.service.nodePort }}
+      nodePort: {{ .Values.profileController.service.nodePort }}
+      {{- end }}
+  selector:
+    {{- include "kubeflow-pipelines.profileController.selectorLabels" . | nindent 4 }}
+{{- end }}
