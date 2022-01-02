@@ -1,0 +1,27 @@
+{{- if .Values.kubeflow.enabled }}
+{{- if .Values.profileController.pdb.create }}
+apiVersion: {{ include "common.capabilities.policy.apiVersion" . }}
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "kubeflow-pipelines.profileController.fullname" . }}
+  labels:
+    {{- include "kubeflow-pipelines.profileController.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations:
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if .Values.profileController.pdb.minAvailable }}
+  minAvailable: {{ .Values.profileController.pdb.minAvailable }}
+  {{- end }}
+  {{- if .Values.profileController.pdb.maxUnavailable }}
+  maxUnavailable: {{ .Values.profileController.pdb.maxUnavailable }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "kubeflow-pipelines.profileController.selectorLabels" . | nindent 6 }}
+{{- end }}
+{{- end }}
