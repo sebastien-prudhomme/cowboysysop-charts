@@ -52,10 +52,24 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
 
 {{/*
+Builder fully qualified app name
+*/}}
+{{- define "kubeflow-pipelines.builder.fullname" -}}
+{{- printf "%s-%s" (include "kubeflow-pipelines.fullname" .) "builder" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
 Runner fully qualified app name
 */}}
 {{- define "kubeflow-pipelines.runner.fullname" -}}
 {{- printf "%s-%s" (include "kubeflow-pipelines.fullname" .) "runner" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
+Viewer fully qualified app name
+*/}}
+{{- define "kubeflow-pipelines.viewer.fullname" -}}
+{{- printf "%s-%s" (include "kubeflow-pipelines.fullname" .) "viewer" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
