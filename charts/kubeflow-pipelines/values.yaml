@@ -33,7 +33,7 @@ apiServer:
 
   image:
     repository: gcr.io/ml-pipeline/api-server
-    tag: 1.7.0
+    tag: 1.7.1
     pullPolicy: IfNotPresent
 
   pdb:
@@ -184,7 +184,7 @@ cacheServer:
 
   image:
     repository: gcr.io/ml-pipeline/cache-server
-    tag: 1.7.0
+    tag: 1.7.1
     pullPolicy: IfNotPresent
 
   pdb:
@@ -293,7 +293,7 @@ metadataWriter:
 
   image:
     repository: gcr.io/ml-pipeline/metadata-writer
-    tag: 1.7.0
+    tag: 1.7.1
     pullPolicy: IfNotPresent
 
   pdb:
@@ -524,7 +524,7 @@ mlMetadata:
   envoy:
     image:
       repository: gcr.io/ml-pipeline/metadata-envoy
-      tag: 1.7.0
+      tag: 1.7.1
       pullPolicy: IfNotPresent
 
     securityContext: {}
@@ -604,7 +604,7 @@ persistenceAgent:
 
   image:
     repository: gcr.io/ml-pipeline/persistenceagent
-    tag: 1.7.0
+    tag: 1.7.1
     pullPolicy: IfNotPresent
 
   pdb:
@@ -832,7 +832,7 @@ scheduledWorkflowController:
 
   image:
     repository: gcr.io/ml-pipeline/scheduledworkflow
-    tag: 1.7.0
+    tag: 1.7.1
     pullPolicy: IfNotPresent
 
   pdb:
@@ -913,7 +913,7 @@ ui:
 
   image:
     repository: gcr.io/ml-pipeline/frontend
-    tag: 1.7.0
+    tag: 1.7.1
     pullPolicy: IfNotPresent
 
   pdb:
@@ -1077,7 +1077,7 @@ viewerController:
 
   image:
     repository: gcr.io/ml-pipeline/viewer-crd-controller
-    tag: 1.7.0
+    tag: 1.7.1
     pullPolicy: IfNotPresent
 
   pdb:
@@ -1159,7 +1159,7 @@ visualizationServer:
 
   image:
     repository: gcr.io/ml-pipeline/visualization-server
-    tag: 1.7.0
+    tag: 1.7.1
     pullPolicy: IfNotPresent
 
   pdb:
