@@ -85,8 +85,8 @@ spec:
                   key: {{ include "kubeflow-pipelines.mariadb.secretKeyNamePassword" . }}
             - name: DBCONFIG_DBNAME
               value: {{ include "kubeflow-pipelines.mariadb.database" . | quote }}
-            - name: DBCONFIG_CONMAXLIFETIMESEC
-              value: "120"
+            - name: DBCONFIG_CONMAXLIFETIME
+              value: "120s"
             - name: ML_PIPELINE_VISUALIZATIONSERVER_SERVICE_HOST
               value: {{ include "kubeflow-pipelines.visualizationServer.fullname" . }}
             - name: ML_PIPELINE_VISUALIZATIONSERVER_SERVICE_PORT
