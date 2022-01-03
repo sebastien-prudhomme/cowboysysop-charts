@@ -18,7 +18,7 @@ data:
         {{- if .Values.kubeflow.enabled }}
         "serviceAccountName": "default-editor"
         {{- else }}
-        "serviceAccountName": "kubeflow-pipelines-viewer"
+        "serviceAccountName": "{{ include "kubeflow-pipelines.viewer.fullname" . }}"
         {{- end }}
       }
     }
