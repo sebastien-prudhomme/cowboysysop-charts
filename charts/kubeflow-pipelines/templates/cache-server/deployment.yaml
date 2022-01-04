@@ -96,6 +96,26 @@ spec:
             - name: https
               containerPort: 8443
               protocol: TCP
+          {{- if .Values.cacheServer.livenessProbe.enabled }}
+          livenessProbe:
+            tcpSocket:
+              port: https
+            initialDelaySeconds: {{ .Values.cacheServer.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.cacheServer.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.cacheServer.livenessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.cacheServer.livenessProbe.failureThreshold }}
+            successThreshold: {{ .Values.cacheServer.livenessProbe.successThreshold }}
+          {{- end }}
+          {{- if .Values.cacheServer.readinessProbe.enabled }}
+          readinessProbe:
+            tcpSocket:
+              port: https
+            initialDelaySeconds: {{ .Values.cacheServer.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.cacheServer.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.cacheServer.readinessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.cacheServer.readinessProbe.failureThreshold }}
+            successThreshold: {{ .Values.cacheServer.readinessProbe.successThreshold }}
+          {{- end }}
           resources:
             {{- toYaml .Values.cacheServer.resources | nindent 12 }}
           volumeMounts:
