@@ -162,7 +162,7 @@ data:
                         },
                         "data": {
                             "METADATA_GRPC_SERVICE_HOST":
-                                "{{ include "kubeflow-pipelines.mlMetadata.fullname" . }}",
+                                "{{ include "kubeflow-pipelines.mlMetadata.fullname" . }}.{{ .Release.Namespace }}",
                             "METADATA_GRPC_SERVICE_PORT": "{{ .Values.mlMetadata.service.ports.grpc }}",
                         },
                     },
