@@ -162,8 +162,8 @@ data:
                         },
                         "data": {
                             "METADATA_GRPC_SERVICE_HOST":
-                                "metadata-grpc-service.kubeflow",
-                            "METADATA_GRPC_SERVICE_PORT": "8080",
+                                "{{ include "kubeflow-pipelines.mlMetadata.fullname" . }}",
+                            "METADATA_GRPC_SERVICE_PORT": "{{ .Values.mlMetadata.service.ports.grpc }}",
                         },
                     },
                     # Visualization server related manifests below
