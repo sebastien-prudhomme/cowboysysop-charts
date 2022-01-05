@@ -148,8 +148,6 @@ data:
                         len(children["ConfigMap.v1"]) == desired_configmap_count and
                         len(children["Deployment.apps/v1"]) == 2 and
                         len(children["Service.v1"]) == 2 and
-                        len(children["DestinationRule.networking.istio.io/v1alpha3"]) == 1 and
-                        len(children["AuthorizationPolicy.security.istio.io/v1beta1"]) == 1 and
                         "True" or "False"
                 }
 
@@ -220,44 +218,6 @@ data:
                                 },
                             },
                         },
-                    },
-                    {
-                        "apiVersion": "networking.istio.io/v1alpha3",
-                        "kind": "DestinationRule",
-                        "metadata": {
-                            "name": "ml-pipeline-visualizationserver",
-                            "namespace": namespace,
-                        },
-                        "spec": {
-                            "host": "ml-pipeline-visualizationserver",
-                            "trafficPolicy": {
-                                "tls": {
-                                    "mode": "ISTIO_MUTUAL"
-                                }
-                            }
-                        }
-                    },
-                    {
-                        "apiVersion": "security.istio.io/v1beta1",
-                        "kind": "AuthorizationPolicy",
-                        "metadata": {
-                            "name": "ml-pipeline-visualizationserver",
-                            "namespace": namespace,
-                        },
-                        "spec": {
-                            "selector": {
-                                "matchLabels": {
-                                    "app": "ml-pipeline-visualizationserver"
-                                }
-                            },
-                            "rules": [{
-                                "from": [{
-                                    "source": {
-                                        "principals": ["cluster.local/ns/kubeflow/sa/ml-pipeline"]
-                                    }
-                                }]
-                            }]
-                        }
                     },
                     {
                         "apiVersion": "v1",
