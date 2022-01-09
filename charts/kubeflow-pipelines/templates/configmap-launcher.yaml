@@ -12,4 +12,4 @@ metadata:
     {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
   {{- end }}
 data:
-  defaultPipelineRoot: ""
+  defaultPipelineRoot: minio://mlpipeline/v2/artifacts
