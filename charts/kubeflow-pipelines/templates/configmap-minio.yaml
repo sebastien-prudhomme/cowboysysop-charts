@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: artifact-repositories
+  labels:
+    {{- include "kubeflow-pipelines.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  annotations:
+    workflows.argoproj.io/default-artifact-repository: default
+    {{- if .Values.commonAnnotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+    {{- end }}
+data:
+  default: |
+    archiveLogs: true
+    s3:
+      endpoint: {{ include "kubeflow-pipelines.minio.host" . }}:{{ include "kubeflow-pipelines.minio.port" . }}
+      bucket: mlpipeline
+      accessKeySecret:
+        name: {{ include "kubeflow-pipelines.minio.secretName" . }}
+        key: {{ include "kubeflow-pipelines.minio.secretKeyNameRootUser" . }}
+      secretKeySecret:
+        name: {{ include "kubeflow-pipelines.minio.secretName" . }}
+        key: {{ include "kubeflow-pipelines.minio.secretKeyNameRootPassword" . }}
+      insecure: true
+      keyFormat: {{ "artifacts/{{workflow.name}}/{{workflow.creationTimestamp.Y}}/{{workflow.creationTimestamp.m}}/{{workflow.creationTimestamp.d}}/{{pod.name}}" }}
