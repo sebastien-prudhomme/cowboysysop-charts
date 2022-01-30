@@ -2,6 +2,8 @@
 
 [Kubeflow](https://github.com/kubernetes/autoscaler) is a set of components that automatically adjust the amount of CPU and memory requested by pods running in the Kubernetes Cluster.
 
+**DISCLAIMER**: This is an unofficial chart not supported by Kubeflow authors.
+
 ## TL;DR;
 
 ```bash
