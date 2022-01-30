@@ -2,6 +2,7 @@ apiVersion: v2
 appVersion: 1.7.1
 description: Machine Learning Pipelines for Kubeflow
 home: https://github.com/kubeflow/pipelines
+kubeVersion: ">=1.16"
 maintainers:
   - name: sebastien-prudhomme
     email: sebastien.prudhomme@gmail.com
