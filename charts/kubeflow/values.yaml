@@ -421,27 +421,27 @@ katib:
   # Whether to use the Katib chart
   enabled: true
 
-  kubeflow:
-    # Enable integration with Kubeflow (do not change this value)
-    enabled: true
-
   mariadb:
     # Partially override fully qualified name (do not change this value)
     nameOverride: katib-mariadb
 
+  kubeflow:
+    # Enable integration with Kubeflow (do not change this value)
+    enabled: true
+
 kfserving:
   # Whether to use the KFServing chart
-  enabled: false
+  enabled: true
+
+  knative:
+    # Istio gateway for external access
+    ingressGateway: kubeflow/kubeflow-gateway
 
   kubeflow:
     # Enable integration with Kubeflow (do not change this value)
     enabled: true
 
 kubeflow-pipelines:
-  kubeflow:
-    # Enable integration with Kubeflow (do not change this value)
-    enabled: true
-
   minio:
     # Partially override fully qualified name (do not change this value)
     nameOverride: kubeflow-pipelines-minio
@@ -449,6 +449,10 @@ kubeflow-pipelines:
   mariadb:
     # Partially override fully qualified name (do not change this value)
     nameOverride: kubeflow-pipelines-mariadb
+
+  kubeflow:
+    # Enable integration with Kubeflow (do not change this value)
+    enabled: true
 
 mpi-operator:
   kubeflow:
