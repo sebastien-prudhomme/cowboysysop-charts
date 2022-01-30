@@ -15,19 +15,6 @@ commonAnnotations: {}
 # Labels to add to all deployed objects
 commonLabels: {}
 
-kubeflow:
-  # Enable integration with Kubeflow
-  enabled: false
-
-  # Istio gateway name
-  gatewayName: kubeflow
-
-  # Key of request header containing user id
-  useridHeader: kubeflow-userid
-
-  # Request header user id common prefix
-  useridPrefix: ""
-
 apiServer:
   replicaCount: 1
 
@@ -1441,6 +1428,19 @@ externalMinio:
 
   # Name of the key in existing Secret that contains MinIO root password
   existingSecretKeyRootPassword: root-password
+
+kubeflow:
+  # Enable integration with Kubeflow
+  enabled: false
+
+  # Istio gateway name
+  gatewayName: kubeflow
+
+  # Key of request header containing user id
+  useridHeader: kubeflow-userid
+
+  # Request header user id common prefix
+  useridPrefix: ""
 
 tests:
   image:
