@@ -15,10 +15,12 @@ This chart bootstraps a Kubeflow deployment on a [Kubernetes](http://kubernetes.
 
 ## Prerequisites
 
-- Kubernetes 1.16+ (should work with 1.14+)
-- Istio 1.9+
+- Kubernetes >= 1.16
+- cert-manager >= 1.3 (you can use the [cert-manager/cert-manager](https://artifacthub.io/packages/helm/cert-manager/cert-manager) chart)
+- Istio >= 1.9
+- Knative Serving >= 0.22 with Istio network layer
 - an OIDC provider such as Dex (you can use the [dex/dex](https://artifacthub.io/packages/helm/dex/dex) chart) or Keycloak (you can use the [bitnami/keycloak](https://artifacthub.io/packages/helm/bitnami/keycloak) chart)
-- Helm 3.0+
+- Helm >= 3.1
 
 ## Installing
 
@@ -78,6 +80,8 @@ The command deletes the release named `my-release` and frees all the kubernetes 
 **TIP**: Specify the `--purge` argument to the above command to remove the release from the store and make its name free for later use.
 
 Optionally, delete the custom resource definitions created by the chart using:
+
+**WARNING**: It will also try to delete all instances of the custom resource definitions.
 
 ```bash
 $ kubectl delete crd profiles.kubeflow.org
@@ -237,6 +241,16 @@ The following tables lists all the configurable parameters expose by the chart a
 | `updater.metrics.service.clusterIP`          | Metrics static cluster IP address or None for headless service when service type is ClusterIP         | `nil`                                                                   |
 | `updater.metrics.service.port`               | Metrics service port                                                                                  | `8943`                                                                  |
 
+### Tests parameters
+
+| Name                     | Description       | Default                      |
+|--------------------------|-------------------|------------------------------|
+| `tests.image.repository` | Image name        | `ghcr.io/cowboysysop/pytest` |
+| `tests.image.tag`        | Image tag         | `1.0.0`                      |
+| `tests.image.pullPolicy` | Image pull policy | `IfNotPresent`               |
+
+### Setting parameters
+
 Specify the parameters you which to customize using the `--set` argument to the `helm install` command. For instance,
 
 ```bash
@@ -253,4 +267,4 @@ $ helm install my-release \
     --values values.yaml cowboysysop/kubeflow
 ```
 
-**Tip**: You can use the default [values.yaml](values.yaml).
+**TIP**: You can use the default [values.yaml](values.yaml).
