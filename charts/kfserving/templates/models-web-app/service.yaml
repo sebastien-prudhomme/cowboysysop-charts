@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "kfserving.modelsWebApp.fullname" . }}
+  name: {{ include "kserve.modelsWebApp.fullname" . }}
   labels:
-    {{- include "kfserving.modelsWebApp.labels" . | nindent 4 }}
+    {{- include "kserve.modelsWebApp.labels" . | nindent 4 }}
     {{- if .Values.commonLabels }}
     {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
     {{- end }}
@@ -40,4 +40,4 @@ spec:
       nodePort: {{ .Values.modelsWebApp.service.nodePort }}
       {{- end }}
   selector:
-    {{- include "kfserving.modelsWebApp.selectorLabels" . | nindent 4 }}
+    {{- include "kserve.modelsWebApp.selectorLabels" . | nindent 4 }}

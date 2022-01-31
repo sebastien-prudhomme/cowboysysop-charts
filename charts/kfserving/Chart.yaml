@@ -7,10 +7,10 @@ kubeVersion: ">=1.16 <=1.21"
 maintainers:
   - name: sebastien-prudhomme
     email: sebastien.prudhomme@gmail.com
-name: kfserving
+name: kserve
 sources:
   - https://github.com/kserve/kserve
-  - https://github.com/cowboysysop/charts/tree/master/charts/kfserving
+  - https://github.com/cowboysysop/charts/tree/master/charts/kserve
 version: 1.0.1
 dependencies:
   - name: common

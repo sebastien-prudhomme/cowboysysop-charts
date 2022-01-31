@@ -2,46 +2,46 @@
 {{/*
 Create a default fully qualified app name.
 */}}
-{{- define "kfserving.controller.fullname" -}}
-{{- printf "%s-%s" (include "kfserving.fullname" .) "controller" | trunc 63 | trimSuffix "-" -}}
+{{- define "kserve.controller.fullname" -}}
+{{- printf "%s-%s" (include "kserve.fullname" .) "controller" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
 Create a default fully qualified metrics name.
 */}}
-{{- define "kfserving.controller.metrics.fullname" -}}
-{{- printf "%s-%s" (include "kfserving.controller.fullname" .) "metrics" | trunc 63 | trimSuffix "-" -}}
+{{- define "kserve.controller.metrics.fullname" -}}
+{{- printf "%s-%s" (include "kserve.controller.fullname" .) "metrics" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
 Component labels
 */}}
-{{- define "kfserving.controller.componentLabels" -}}
+{{- define "kserve.controller.componentLabels" -}}
 app.kubernetes.io/component: controller
 {{- end -}}
 
 {{/*
 Common labels
 */}}
-{{- define "kfserving.controller.labels" -}}
-{{ include "kfserving.labels" . }}
-{{ include "kfserving.controller.componentLabels" . }}
+{{- define "kserve.controller.labels" -}}
+{{ include "kserve.labels" . }}
+{{ include "kserve.controller.componentLabels" . }}
 {{- end -}}
 
 {{/*
 Selector labels
 */}}
-{{- define "kfserving.controller.selectorLabels" -}}
-{{ include "kfserving.selectorLabels" . }}
-{{ include "kfserving.controller.componentLabels" . }}
+{{- define "kserve.controller.selectorLabels" -}}
+{{ include "kserve.selectorLabels" . }}
+{{ include "kserve.controller.componentLabels" . }}
 {{- end -}}
 
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "kfserving.controller.serviceAccountName" -}}
+{{- define "kserve.controller.serviceAccountName" -}}
 {{- if .Values.controller.serviceAccount.create -}}
-    {{ default (include "kfserving.controller.fullname" .) .Values.controller.serviceAccount.name }}
+    {{ default (include "kserve.controller.fullname" .) .Values.controller.serviceAccount.name }}
 {{- else -}}
     {{ default "default" .Values.controller.serviceAccount.name }}
 {{- end -}}
@@ -50,6 +50,6 @@ Create the name of the service account to use
 {{/*
 Create the name of the tls secret to use
 */}}
-{{- define "kfserving.controller.tls.secretName" -}}
-  {{- printf "%s-%s" (include "kfserving.controller.fullname" .) "tls" | trunc 63 | trimSuffix "-" -}}
+{{- define "kserve.controller.tls.secretName" -}}
+  {{- printf "%s-%s" (include "kserve.controller.fullname" .) "tls" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}

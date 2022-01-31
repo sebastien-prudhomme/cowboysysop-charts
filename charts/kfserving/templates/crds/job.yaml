@@ -1,9 +1,9 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ include "kfserving.crds.fullname" . }}
+  name: {{ include "kserve.crds.fullname" . }}
   labels:
-    {{- include "kfserving.crds.labels" . | nindent 4 }}
+    {{- include "kserve.crds.labels" . | nindent 4 }}
     {{- if .Values.commonLabels }}
     {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
     {{- end }}
@@ -20,7 +20,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "kfserving.crds.fullname" . }}
+      serviceAccountName: {{ include "kserve.crds.fullname" . }}
       containers:
         - name: kubectl
           image: "{{ .Values.crds.image.repository }}:{{ .Values.crds.image.tag }}"
@@ -38,4 +38,4 @@ spec:
       volumes:
         - name: config
           configMap:
-            name: {{ include "kfserving.crds.fullname" . }}
+            name: {{ include "kserve.crds.fullname" . }}

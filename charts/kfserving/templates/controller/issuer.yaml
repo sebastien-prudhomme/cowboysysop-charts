@@ -1,9 +1,9 @@
 apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
-  name: {{ include "kfserving.controller.fullname" . }}
+  name: {{ include "kserve.controller.fullname" . }}
   labels:
-    {{- include "kfserving.controller.labels" . | nindent 4 }}
+    {{- include "kserve.controller.labels" . | nindent 4 }}
     {{- if .Values.commonLabels }}
     {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
     {{- end }}

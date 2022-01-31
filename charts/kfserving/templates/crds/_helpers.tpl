@@ -2,21 +2,21 @@
 {{/*
 Create a default fully qualified app name.
 */}}
-{{- define "kfserving.crds.fullname" -}}
-{{- printf "%s-%s" (include "kfserving.fullname" .) "crds" | trunc 63 | trimSuffix "-" -}}
+{{- define "kserve.crds.fullname" -}}
+{{- printf "%s-%s" (include "kserve.fullname" .) "crds" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
 Component labels
 */}}
-{{- define "kfserving.crds.componentLabels" -}}
+{{- define "kserve.crds.componentLabels" -}}
 app.kubernetes.io/component: crds
 {{- end -}}
 
 {{/*
 Common labels
 */}}
-{{- define "kfserving.crds.labels" -}}
-{{ include "kfserving.labels" . }}
-{{ include "kfserving.crds.componentLabels" . }}
+{{- define "kserve.crds.labels" -}}
+{{ include "kserve.labels" . }}
+{{ include "kserve.crds.componentLabels" . }}
 {{- end -}}

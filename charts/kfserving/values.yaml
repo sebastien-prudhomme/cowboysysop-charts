@@ -1,4 +1,4 @@
-# Default values for kfserving.
+# Default values for kserve.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
@@ -19,8 +19,8 @@ controller:
   replicaCount: 1
 
   image:
-    repository: kfserving/kfserving-controller
-    tag: v0.6.1
+    repository: kserve/kserve-controller
+    tag: v0.7.0
     pullPolicy: IfNotPresent
 
   pdb:
@@ -176,8 +176,8 @@ modelsWebApp:
   replicaCount: 1
 
   image:
-    repository: kfserving/models-web-app
-    tag: v0.6.1
+    repository: kserve/models-web-app
+    tag: v0.7.0
     pullPolicy: IfNotPresent
 
   pdb:
@@ -296,13 +296,13 @@ modelsWebApp:
       # kubernetes.io/ingress.class: nginx
       # kubernetes.io/tls-acme: "true"
     hosts:
-      - host: kfserving.local
+      - host: kserve.local
         paths:
           - /
     tls: []
-    #  - secretName: kfserving-tls
+    #  - secretName: kserve-tls
     #    hosts:
-    #      - kfserving.local
+    #      - kserve.local
 
   resources: {}
     # We usually recommend not to specify default resources and to leave this as a conscious
@@ -336,7 +336,7 @@ modelsWebApp:
   # Name of existing Secret containing additional container environment variables
   extraEnvVarsSecret:
 
-knative:
+ingress:
   # Istio gateway for external access
   ingressGateway: knative-serving/knative-ingress-gateway
 
@@ -348,6 +348,8 @@ knative:
 
   # Service for cluster local access
   localGatewayService: knative-local-gateway.istio-system.svc.cluster.local
+
+  ingressDomain: local
 
 kubeflow:
   # Enable integration with Kubeflow

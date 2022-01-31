@@ -1,9 +1,9 @@
 apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
 kind: Deployment
 metadata:
-  name: {{ include "kfserving.modelsWebApp.fullname" . }}
+  name: {{ include "kserve.modelsWebApp.fullname" . }}
   labels:
-    {{- include "kfserving.modelsWebApp.labels" . | nindent 4 }}
+    {{- include "kserve.modelsWebApp.labels" . | nindent 4 }}
     {{- if .Values.commonLabels }}
     {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
     {{- end }}
@@ -15,11 +15,11 @@ spec:
   replicas: {{ .Values.modelsWebApp.replicaCount }}
   selector:
     matchLabels:
-      {{- include "kfserving.modelsWebApp.selectorLabels" . | nindent 6 }}
+      {{- include "kserve.modelsWebApp.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "kfserving.modelsWebApp.selectorLabels" . | nindent 8 }}
+        {{- include "kserve.modelsWebApp.selectorLabels" . | nindent 8 }}
         {{- if .Values.modelsWebApp.podLabels }}
         {{- include "common.tplvalues.render" ( dict "value" .Values.modelsWebApp.podLabels "context" $ ) | nindent 8 }}
         {{- end }}
@@ -46,7 +46,7 @@ spec:
       {{- if .Values.modelsWebApp.priorityClassName }}
       priorityClassName: {{ .Values.modelsWebApp.priorityClassName | quote }}
       {{- end }}
-      serviceAccountName: {{ include "kfserving.modelsWebApp.serviceAccountName" . }}
+      serviceAccountName: {{ include "kserve.modelsWebApp.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.modelsWebApp.podSecurityContext | nindent 8 }}
       containers:

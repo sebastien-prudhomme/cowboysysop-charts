@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "kfserving.crds.fullname" . }}
+  name: {{ include "kserve.crds.fullname" . }}
   labels:
-    {{- include "kfserving.crds.labels" . | nindent 4 }}
+    {{- include "kserve.crds.labels" . | nindent 4 }}
     {{- if .Values.commonLabels }}
     {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
     {{- end }}

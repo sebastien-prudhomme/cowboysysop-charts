@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: {{ include "kfserving.tests.fullname" . }}
+  name: {{ include "kserve.tests.fullname" . }}
   labels:
-    {{- include "kfserving.tests.labels" . | nindent 4 }}
+    {{- include "kserve.tests.labels" . | nindent 4 }}
     {{- if .Values.commonLabels }}
     {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
     {{- end }}
@@ -33,7 +33,7 @@ spec:
   volumes:
     - name: tests
       configMap:
-        name: {{ include "kfserving.tests.fullname" . }}
+        name: {{ include "kserve.tests.fullname" . }}
     - name: controller-tls-secret
       secret:
-        secretName: {{ include "kfserving.controller.tls.secretName" . }}
+        secretName: {{ include "kserve.controller.tls.secretName" . }}

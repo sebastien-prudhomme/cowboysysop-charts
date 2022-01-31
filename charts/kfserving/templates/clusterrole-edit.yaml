@@ -2,11 +2,11 @@
 apiVersion: {{ include "common.capabilities.rbac.apiVersion" . }}
 kind: ClusterRole
 metadata:
-  name: kubeflow-kfserving-edit
+  name: kubeflow-kserve-edit
   labels:
     rbac.authorization.kubeflow.org/aggregate-to-kubeflow-edit: "true"
-    rbac.authorization.kubeflow.org/aggregate-to-kubeflow-kfserving-admin: "true"
-    {{- include "kfserving.labels" . | nindent 4 }}
+    rbac.authorization.kubeflow.org/aggregate-to-kubeflow-kserve-admin: "true"
+    {{- include "kserve.labels" . | nindent 4 }}
     {{- if .Values.commonLabels }}
     {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
     {{- end }}
@@ -16,7 +16,7 @@ metadata:
   {{- end }}
 rules:
   - apiGroups:
-      - serving.kubeflow.org
+      - serving.kserve.io
     resources:
       - inferenceservices
     verbs:

@@ -2,10 +2,10 @@
 apiVersion: {{ include "common.capabilities.rbac.apiVersion" . }}
 kind: ClusterRole
 metadata:
-  name: kubeflow-kfserving-admin
+  name: kubeflow-kserve-admin
   labels:
     rbac.authorization.kubeflow.org/aggregate-to-kubeflow-admin: "true"
-    {{- include "kfserving.labels" . | nindent 4 }}
+    {{- include "kserve.labels" . | nindent 4 }}
     {{- if .Values.commonLabels }}
     {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
     {{- end }}
@@ -16,5 +16,5 @@ metadata:
 aggregationRule:
   clusterRoleSelectors:
     - matchLabels:
-        rbac.authorization.kubeflow.org/aggregate-to-kubeflow-kfserving-admin: "true"
+        rbac.authorization.kubeflow.org/aggregate-to-kubeflow-kserve-admin: "true"
 {{- end }}

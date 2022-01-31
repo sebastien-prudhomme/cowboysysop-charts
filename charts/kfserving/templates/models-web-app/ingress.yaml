@@ -2,9 +2,9 @@
 apiVersion: {{ include "common.capabilities.ingress.apiVersion" . }}
 kind: Ingress
 metadata:
-  name: {{ include "kfserving.modelsWebApp.fullname" . }}
+  name: {{ include "kserve.modelsWebApp.fullname" . }}
   labels:
-    {{- include "kfserving.modelsWebApp.labels" . | nindent 4 }}
+    {{- include "kserve.modelsWebApp.labels" . | nindent 4 }}
     {{- if .Values.commonLabels }}
     {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
     {{- end }}
@@ -42,7 +42,7 @@ spec:
             pathType: {{ $.Values.modelsWebApp.ingress.pathType }}
             {{- end }}
             backend:
-              {{- include "common.ingress.backend" (dict "serviceName" (include "kfserving.modelsWebApp.fullname" $) "servicePort" $.Values.modelsWebApp.service.port "context" $) | nindent 14 }}
+              {{- include "common.ingress.backend" (dict "serviceName" (include "kserve.modelsWebApp.fullname" $) "servicePort" $.Values.modelsWebApp.service.port "context" $) | nindent 14 }}
           {{- end }}
     {{- end }}
 {{- end }}

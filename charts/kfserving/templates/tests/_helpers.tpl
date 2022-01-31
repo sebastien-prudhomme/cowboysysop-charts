@@ -2,21 +2,21 @@
 {{/*
 Create a default fully qualified app name.
 */}}
-{{- define "kfserving.tests.fullname" -}}
-{{- printf "%s-%s" (include "kfserving.fullname" .) "tests" | trunc 63 | trimSuffix "-" -}}
+{{- define "kserve.tests.fullname" -}}
+{{- printf "%s-%s" (include "kserve.fullname" .) "tests" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
 Component labels
 */}}
-{{- define "kfserving.tests.componentLabels" -}}
+{{- define "kserve.tests.componentLabels" -}}
 app.kubernetes.io/component: tests
 {{- end -}}
 
 {{/*
 Common labels
 */}}
-{{- define "kfserving.tests.labels" -}}
-{{ include "kfserving.labels" . }}
-{{ include "kfserving.tests.componentLabels" . }}
+{{- define "kserve.tests.labels" -}}
+{{ include "kserve.labels" . }}
+{{ include "kserve.tests.componentLabels" . }}
 {{- end -}}

@@ -1,9 +1,9 @@
 apiVersion: {{ include "common.capabilities.rbac.apiVersion" . }}
 kind: ClusterRole
 metadata:
-  name: {{ include "kfserving.controller.fullname" . }}
+  name: {{ include "kserve.controller.fullname" . }}
   labels:
-    {{- include "kfserving.controller.labels" . | nindent 4 }}
+    {{- include "kserve.controller.labels" . | nindent 4 }}
     {{- if .Values.commonLabels }}
     {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
     {{- end }}
@@ -17,6 +17,30 @@ rules:
     resources:
       - mutatingwebhookconfigurations
       - validatingwebhookconfigurations
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - apps
+    resources:
+      - deployments
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - autoscaling
+    resources:
+      - horizontalpodautoscalers
     verbs:
       - create
       - delete
@@ -120,6 +144,18 @@ rules:
       - patch
       - update
   - apiGroups:
+      - networking.k8s.io
+    resources:
+      - ingresses
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
       - serving.knative.dev
     resources:
       - services
@@ -152,7 +188,7 @@ rules:
       - patch
       - update
   - apiGroups:
-      - serving.kubeflow.org
+      - serving.kserve.io
     resources:
       - inferenceservices
       - inferenceservices/finalizers
@@ -165,7 +201,7 @@ rules:
       - update
       - watch
   - apiGroups:
-      - serving.kubeflow.org
+      - serving.kserve.io
     resources:
       - inferenceservices/status
     verbs:
@@ -173,7 +209,7 @@ rules:
       - patch
       - update
   - apiGroups:
-      - serving.kubeflow.org
+      - serving.kserve.io
     resources:
       - trainedmodels
     verbs:
@@ -185,7 +221,7 @@ rules:
       - update
       - watch
   - apiGroups:
-      - serving.kubeflow.org
+      - serving.kserve.io
     resources:
       - trainedmodels/status
     verbs:

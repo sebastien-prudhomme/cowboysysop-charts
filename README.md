@@ -13,8 +13,8 @@
 | Name                                                      | Description                                                                                                                  |
 |-----------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------|
 | [katib](charts/katib)                                     | A Kubernetes-native project for automated machine learning                                                                   |
-| [kfserving](charts/kfserving)                             | Highly scalable and standards based Model Inference Platform on Kubernetes                                                   |
 | [kroki](charts/kroki)                                     | Creates diagrams from textual descriptions                                                                                   |
+| [kserve](charts/kserve)                                   | Highly scalable and standards based Model Inference Platform on Kubernetes                                                   |
 | [kubebox](charts/kubebox)                                 | Terminal and Web console for Kubernetes                                                                                      |
 | [kubeview](charts/kubeview)                               | Kubernetes cluster visualiser and graphical explorer                                                                         |
 | [lighthouse-ci](charts/lighthouse-ci)                     | Enables running a server to display Lighthouse CI results                                                                    |

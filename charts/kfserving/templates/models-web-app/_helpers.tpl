@@ -2,39 +2,39 @@
 {{/*
 Create a default fully qualified app name.
 */}}
-{{- define "kfserving.modelsWebApp.fullname" -}}
-{{- printf "%s-%s" (include "kfserving.fullname" .) "models-web-app" | trunc 63 | trimSuffix "-" -}}
+{{- define "kserve.modelsWebApp.fullname" -}}
+{{- printf "%s-%s" (include "kserve.fullname" .) "models-web-app" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
 Component labels
 */}}
-{{- define "kfserving.modelsWebApp.componentLabels" -}}
+{{- define "kserve.modelsWebApp.componentLabels" -}}
 app.kubernetes.io/component: models-web-app
 {{- end -}}
 
 {{/*
 Common labels
 */}}
-{{- define "kfserving.modelsWebApp.labels" -}}
-{{ include "kfserving.labels" . }}
-{{ include "kfserving.modelsWebApp.componentLabels" . }}
+{{- define "kserve.modelsWebApp.labels" -}}
+{{ include "kserve.labels" . }}
+{{ include "kserve.modelsWebApp.componentLabels" . }}
 {{- end -}}
 
 {{/*
 Selector labels
 */}}
-{{- define "kfserving.modelsWebApp.selectorLabels" -}}
-{{ include "kfserving.selectorLabels" . }}
-{{ include "kfserving.modelsWebApp.componentLabels" . }}
+{{- define "kserve.modelsWebApp.selectorLabels" -}}
+{{ include "kserve.selectorLabels" . }}
+{{ include "kserve.modelsWebApp.componentLabels" . }}
 {{- end -}}
 
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "kfserving.modelsWebApp.serviceAccountName" -}}
+{{- define "kserve.modelsWebApp.serviceAccountName" -}}
 {{- if .Values.modelsWebApp.serviceAccount.create -}}
-    {{ default (include "kfserving.modelsWebApp.fullname" .) .Values.modelsWebApp.serviceAccount.name }}
+    {{ default (include "kserve.modelsWebApp.fullname" .) .Values.modelsWebApp.serviceAccount.name }}
 {{- else -}}
     {{ default "default" .Values.modelsWebApp.serviceAccount.name }}
 {{- end -}}

@@ -2,9 +2,9 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: {{ include "kfserving.modelsWebApp.fullname" . }}
+  name: {{ include "kserve.modelsWebApp.fullname" . }}
   labels:
-    {{- include "kfserving.modelsWebApp.labels" . | nindent 4 }}
+    {{- include "kserve.modelsWebApp.labels" . | nindent 4 }}
     {{- if .Values.commonLabels }}
     {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
     {{- end }}
@@ -23,7 +23,7 @@ spec:
             prefix: /models/
       route:
         - destination:
-            host: {{ include "kfserving.modelsWebApp.fullname" . }}
+            host: {{ include "kserve.modelsWebApp.fullname" . }}
             port:
               number: {{ .Values.modelsWebApp.service.port }}
       rewrite:

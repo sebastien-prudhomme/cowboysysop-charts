@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  # name: {{ include "kfserving.controller.fullname" . }}
+  # name: {{ include "kserve.controller.fullname" . }}
   name: inferenceservice-config
   labels:
-    {{- include "kfserving.controller.labels" . | nindent 4 }}
+    {{- include "kserve.controller.labels" . | nindent 4 }}
     {{- if .Values.commonLabels }}
     {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
     {{- end }}
@@ -35,8 +35,8 @@ data:
         },
         "sklearn": {
             "v1": {
-                "image": "kfserving/sklearnserver",
-                "defaultImageVersion": "v0.6.1",
+                "image": "kserve/sklearnserver",
+                "defaultImageVersion": "v0.7.0",
                 "supportedFrameworks": [
                     "sklearn"
                 ],
@@ -53,8 +53,8 @@ data:
         },
         "xgboost": {
             "v1": {
-                "image": "kfserving/xgbserver",
-                "defaultImageVersion": "v0.6.1",
+                "image": "kserve/xgbserver",
+                "defaultImageVersion": "v0.7.0",
                 "supportedFrameworks": [
                     "xgboost"
                 ],
@@ -71,9 +71,9 @@ data:
         },
         "pytorch": {
             "v1": {
-                "image": "kfserving/pytorchserver",
-                "defaultImageVersion": "v0.6.1",
-                "defaultGpuImageVersion": "v0.6.1-gpu",
+                "image": "kserve/pytorchserver",
+                "defaultImageVersion": "v0.7.0",
+                "defaultGpuImageVersion": "v0.7.0-gpu",
                 "supportedFrameworks": [
                     "pytorch"
                 ],
@@ -81,8 +81,8 @@ data:
             },
             "v2": {
                 "image": "pytorch/torchserve-kfs",
-                "defaultImageVersion": "0.4.0",
-                "defaultGpuImageVersion": "0.4.0-gpu",
+                "defaultImageVersion": "0.4.1",
+                "defaultGpuImageVersion": "0.4.1-gpu",
                 "supportedFrameworks": [
                     "pytorch"
                 ],
@@ -91,35 +91,34 @@ data:
         },
         "triton": {
             "image": "nvcr.io/nvidia/tritonserver",
-            "defaultImageVersion": "20.08-py3",
+            "defaultImageVersion": "21.09-py3",
             "supportedFrameworks": [
                 "tensorrt",
                 "tensorflow",
                 "onnx",
-                "pytorch",
-                "caffe2"
+                "pytorch"
             ],
             "multiModelServer": true
         },
         "pmml": {
-            "image": "kfserving/pmmlserver",
-            "defaultImageVersion": "v0.6.1",
+            "image": "kserve/pmmlserver",
+            "defaultImageVersion": "v0.7.0",
             "supportedFrameworks": [
                 "pmml"
             ],
             "multiModelServer": false
         },
         "lightgbm": {
-            "image": "kfserving/lgbserver",
-            "defaultImageVersion": "v0.6.1",
+            "image": "kserve/lgbserver",
+            "defaultImageVersion": "v0.7.0",
             "supportedFrameworks": [
                 "lightgbm"
             ],
             "multiModelServer": false
         },
         "paddle": {
-            "image": "kfserving/paddleserver",
-            "defaultImageVersion": "v0.6.1",
+            "image": "kserve/paddleserver",
+            "defaultImageVersion": "v0.7.0",
             "supportedFrameworks": [
                 "paddle"
             ],
@@ -132,21 +131,21 @@ data:
   explainers: |
     {
         "alibi": {
-            "image": "kfserving/alibi-explainer",
-            "defaultImageVersion": "v0.6.1"
+            "image": "kserve/alibi-explainer",
+            "defaultImageVersion": "v0.7.0"
         },
         "aix": {
-            "image": "kfserving/aix-explainer",
-            "defaultImageVersion": "v0.6.1"
+            "image": "kserve/aix-explainer",
+            "defaultImageVersion": "v0.7.0"
         },
         "art": {
-            "image": "kfserving/art-explainer",
-            "defaultImageVersion": "v0.6.1"
+            "image": "kserve/art-explainer",
+            "defaultImageVersion": "v0.7.0"
         }
     }
   storageInitializer: |
     {
-        "image": "kfserving/storage-initializer:v0.6.1",
+        "image": "kserve/storage-initializer:v0.7.0",
         "memoryRequest": "100Mi",
         "memoryLimit": "1Gi",
         "cpuRequest": "100m",
@@ -167,11 +166,12 @@ data:
         "ingressGateway": "{{ .Values.knative.ingressGateway }}",
         "ingressService": "{{ .Values.knative.ingressService }}",
         "localGateway": "{{ .Values.knative.localGateway }}",
-        "localGatewayService": "{{ .Values.knative.localGatewayService }}"
+        "localGatewayService": "{{ .Values.knative.localGatewayService }}",
+        "ingressDomain": "{{ .Values.knative.ingressDomain }}"
     }
   logger: |
     {
-        "image": "kfserving/agent:v0.6.1",
+        "image": "kserve/agent:v0.7.0",
         "memoryRequest": "100Mi",
         "memoryLimit": "1Gi",
         "cpuRequest": "100m",
@@ -180,7 +180,7 @@ data:
     }
   batcher: |
     {
-        "image": "kfserving/agent:v0.6.1",
+        "image": "kserve/agent:v0.7.0",
         "memoryRequest": "1Gi",
         "memoryLimit": "1Gi",
         "cpuRequest": "1",
@@ -188,9 +188,13 @@ data:
     }
   agent: |
     {
-        "image": "kfserving/agent:v0.6.1",
+        "image": "kserve/agent:v0.7.0",
         "memoryRequest": "100Mi",
         "memoryLimit": "1Gi",
         "cpuRequest": "100m",
         "cpuLimit": "1"
+    }
+  deploy: |
+    {
+        "defaultDeploymentMode": "Serverless"
     }

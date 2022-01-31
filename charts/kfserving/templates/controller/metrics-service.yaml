@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "kfserving.controller.metrics.fullname" . }}
+  name: {{ include "kserve.controller.metrics.fullname" . }}
   labels:
-    {{- include "kfserving.controller.labels" . | nindent 4 }}
+    {{- include "kserve.controller.labels" . | nindent 4 }}
     {{- if .Values.commonLabels }}
     {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
     {{- end }}
@@ -27,4 +27,4 @@ spec:
       protocol: TCP
       name: http-metrics
   selector:
-    {{- include "kfserving.controller.selectorLabels" . | nindent 4 }}
+    {{- include "kserve.controller.selectorLabels" . | nindent 4 }}

@@ -1,9 +1,9 @@
 apiVersion: {{ include "common.capabilities.rbac.apiVersion" . }}
 kind: ClusterRoleBinding
 metadata:
-  name: {{ include "kfserving.modelsWebApp.fullname" . }}
+  name: {{ include "kserve.modelsWebApp.fullname" . }}
   labels:
-    {{- include "kfserving.modelsWebApp.labels" . | nindent 4 }}
+    {{- include "kserve.modelsWebApp.labels" . | nindent 4 }}
     {{- if .Values.commonLabels }}
     {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
     {{- end }}
@@ -14,8 +14,8 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: {{ include "kfserving.modelsWebApp.fullname" . }}
+  name: {{ include "kserve.modelsWebApp.fullname" . }}
 subjects:
   - kind: ServiceAccount
-    name: {{ include "kfserving.modelsWebApp.serviceAccountName" . }}
+    name: {{ include "kserve.modelsWebApp.serviceAccountName" . }}
     namespace: {{ .Release.Namespace }}
