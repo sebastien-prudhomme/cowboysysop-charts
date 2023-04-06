@@ -1,0 +1,3 @@
+fullnameOverride: dependency-track
+postgresql:
+  fullnameOverride: postgresql
