@@ -1,0 +1,48 @@
+{{- if .Values.frontend.ingress.enabled -}}
+apiVersion: {{ include "common.capabilities.ingress.apiVersion" . }}
+kind: Ingress
+metadata:
+  name: {{ include "dependency-track.frontend.fullname" . }}
+  labels:
+    {{- include "dependency-track.frontend.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if or .Values.frontend.ingress.annotations .Values.commonAnnotations }}
+  annotations:
+    {{- if .Values.frontend.ingress.annotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.frontend.ingress.annotations "context" $ ) | nindent 4 }}
+    {{- end }}
+    {{- if .Values.commonAnnotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- end }}
+spec:
+  {{- if and .Values.frontend.ingress.ingressClassName (eq "true" (include "common.ingress.supportsIngressClassname" .)) }}
+  ingressClassName: {{ .Values.frontend.ingress.ingressClassName | quote }}
+  {{- end }}
+  {{- if .Values.frontend.ingress.tls }}
+  tls:
+    {{- range .Values.frontend.ingress.tls }}
+    - hosts:
+        {{- range .hosts }}
+        - {{ . | quote }}
+        {{- end }}
+      secretName: {{ .secretName }}
+    {{- end }}
+  {{- end }}
+  rules:
+    {{- range .Values.frontend.ingress.hosts }}
+    - host: {{ .host | quote }}
+      http:
+        paths:
+          {{- range .paths }}
+          - path: {{ . }}
+            {{- if eq "true" (include "common.ingress.supportsPathType" $) }}
+            pathType: {{ $.Values.frontend.ingress.pathType }}
+            {{- end }}
+            backend:
+              {{- include "common.ingress.backend" (dict "serviceName" (include "dependency-track.frontend.fullname" $) "servicePort" $.Values.frontend.service.port "context" $) | nindent 14 }}
+          {{- end }}
+    {{- end }}
+{{- end }}
