@@ -60,7 +60,7 @@ spec:
           {{- end }}
           env:
             - name: API_BASE_URL
-              value: {{ Values.frontend.apiBaseUrl | quote }}
+              value: {{ .Values.frontend.apiBaseUrl | quote }}
             {{- if .Values.frontend.extraEnvVars }}
             {{- include "common.tplvalues.render" (dict "value" .Values.frontend.extraEnvVars "context" $) | nindent 12 }}
             {{- end }}
