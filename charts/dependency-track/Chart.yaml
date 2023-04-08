@@ -1,0 +1,26 @@
+apiVersion: v2
+appVersion: 4.7.1
+description: An intelligent Component Analysis platform that allows organizations to identify and reduce risk in the software supply chain
+home: https://dependencytrack.org/
+icon: https://raw.githubusercontent.com/DependencyTrack/branding/master/dt-logo-symbol.svg
+maintainers:
+  - name: sebastien-prudhomme
+    email: sebastien.prudhomme@gmail.com
+name: dependency-track
+sources:
+  - https://github.com/DependencyTrack/dependency-track
+  - https://github.com/cowboysysop/charts/tree/master/charts/dependency-track
+version: 1.0.0
+dependencies:
+  - name: common
+    version: 2.2.4
+    repository: https://charts.bitnami.com/bitnami/
+  - name: postgresql
+    version: 12.2.7
+    repository: https://charts.bitnami.com/bitnami/
+    condition: postgresql.enabled
+annotations:
+  artifacthub.io/signKey: |
+    fingerprint: 9E57D2479D48B84463EF491F66D280CE667AD6C8
+    url: https://cowboysysop.github.io/charts/pgp-public-key-2022-02-19.asc
+  kubeVersion: ">=1.19"

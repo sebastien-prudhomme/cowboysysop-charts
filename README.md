@@ -10,17 +10,18 @@
 
 ## Charts
 
-| Name                                                      | Description                                                                                                                  |
-|-----------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------|
-| [dolibarr](charts/dolibarr)                               | A modern software package to manage your company or foundation's activity                                                    |
-| [kroki](charts/kroki)                                     | Creates diagrams from textual descriptions                                                                                   |
-| [kubebox](charts/kubebox)                                 | Terminal and Web console for Kubernetes                                                                                      |
-| [kubeview](charts/kubeview)                               | Kubernetes cluster visualiser and graphical explorer                                                                         |
-| [lighthouse-ci](charts/lighthouse-ci)                     | Enables running a server to display Lighthouse CI results                                                                    |
-| [mongo-express](charts/mongo-express)                     | Web-based MongoDB admin interface, written with Node.js and express                                                          |
-| [quickchart](charts/quickchart)                           | Chart image and QR code web API                                                                                              |
-| [vertical-pod-autoscaler](charts/vertical-pod-autoscaler) | Set of components that automatically adjust the amount of CPU and memory requested by pods running in the Kubernetes Cluster |
-| [whoami](charts/whoami)                                   | Tiny Go webserver that prints os information and HTTP request to output                                                      |
+| Name                                                      | Description                                                                                                                   |
+|-----------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------|
+| [dependency-track](charts/dependency-track)               | An intelligent Component Analysis platform that allows organizations to identify and reduce risk in the software supply chain |
+| [dolibarr](charts/dolibarr)                               | A modern software package to manage your company or foundation's activity                                                     |
+| [kroki](charts/kroki)                                     | Creates diagrams from textual descriptions                                                                                    |
+| [kubebox](charts/kubebox)                                 | Terminal and Web console for Kubernetes                                                                                       |
+| [kubeview](charts/kubeview)                               | Kubernetes cluster visualiser and graphical explorer                                                                          |
+| [lighthouse-ci](charts/lighthouse-ci)                     | Enables running a server to display Lighthouse CI results                                                                     |
+| [mongo-express](charts/mongo-express)                     | Web-based MongoDB admin interface, written with Node.js and express                                                           |
+| [quickchart](charts/quickchart)                           | Chart image and QR code web API                                                                                               |
+| [vertical-pod-autoscaler](charts/vertical-pod-autoscaler) | Set of components that automatically adjust the amount of CPU and memory requested by pods running in the Kubernetes Cluster  |
+| [whoami](charts/whoami)                                   | Tiny Go webserver that prints os information and HTTP request to output                                                       |
 
 ## Quality
 
