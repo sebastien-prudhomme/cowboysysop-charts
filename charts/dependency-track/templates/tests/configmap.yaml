@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "dependency-track.tests.fullname" . }}
+  labels:
+    {{- include "dependency-track.tests.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  annotations:
+    helm.sh/hook: test
+    {{- if .Values.commonAnnotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+    {{- end }}
+data:
+  test_all.py: |
+    import requests
+
+
+    def test_api_server_service_connection():
+        url = "http://{{ include "dependency-track.apiServer.fullname" . }}:{{ .Values.apiServer.service.port }}/"
+
+        response = requests.get(url)
+
+        assert response.status_code == 200
+
+
+    def test_frontend_service_connection():
+        url = "http://{{ include "dependency-track.frontend.fullname" . }}:{{ .Values.frontend.service.port }}/"
+
+        response = requests.get(url)
+
+        assert response.status_code == 200
