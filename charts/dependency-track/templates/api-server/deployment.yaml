@@ -1,0 +1,130 @@
+apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
+kind: Deployment
+metadata:
+  name: {{ include "dependency-track.apiServer.fullname" . }}
+  labels:
+    {{- include "dependency-track.apiServer.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations:
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: {{ .Values.apiServer.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "dependency-track.apiServer.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "dependency-track.apiServer.selectorLabels" . | nindent 8 }}
+        {{- if .Values.apiServer.podLabels }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.apiServer.podLabels "context" $ ) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.commonLabels }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 8 }}
+        {{- end }}
+      annotations:
+        checksum/postgresql-secret: {{ include (print $.Template.BasePath "/postgresql-secret.yaml") . | sha256sum }}
+        {{- if .Values.apiServer.podAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.apiServer.podAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.commonAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- include "common.images.pullSecrets" ( dict "images" ( list .Values.apiServer.image ) "global" .Values.global ) | nindent 6 }}
+      {{- if .Values.apiServer.priorityClassName }}
+      priorityClassName: {{ .Values.apiServer.priorityClassName | quote }}
+      {{- end }}
+      serviceAccountName: {{ include "dependency-track.apiServer.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.apiServer.podSecurityContext | nindent 8 }}
+      containers:
+        - name: api-server
+          securityContext:
+            {{- toYaml .Values.apiServer.securityContext | nindent 12 }}
+          image: {{ include "common.images.image" ( dict "imageRoot" .Values.apiServer.image "global" .Values.global ) }}
+          imagePullPolicy: {{ .Values.apiServer.image.pullPolicy }}
+          {{- with .Values.apiServer.extraArgs }}
+          args:
+            {{- range $key, $value := . }}
+            - --{{ $key }}={{ $value }}
+            {{- end }}
+          {{- end }}
+          env:
+            - name: ALPINE_DATABASE_MODE
+              value: external
+            - name: ALPINE_DATABASE_DRIVER
+              value: org.postgresql.Driver
+            - name: POSTGRESQL_HOST
+              value: {{ include "dependency-track.postgresql.host" . | quote }}
+            - name: POSTGRESQL_PORT
+              value: {{ include "dependency-track.postgresql.port" . | quote }}
+            - name: ALPINE_DATABASE_USERNAME
+              value: {{ include "dependency-track.postgresql.username" . | quote }}
+            - name: ALPINE_DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "dependency-track.postgresql.secretName" . }}
+                  key: {{ include "dependency-track.postgresql.secretKeyNamePassword" . }}
+            - name: POSTGRESQL_DATABASE
+              value: {{ include "dependency-track.postgresql.database" . | quote }}
+            - name: ALPINE_DATABASE_URL
+              value: "jdbc:postgresql://$(POSTGRESQL_HOST):$(POSTGRESQL_PORT)/$(POSTGRESQL_DATABASE)"
+            {{- if .Values.apiServer.extraEnvVars }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.apiServer.extraEnvVars "context" $) | nindent 12 }}
+            {{- end }}
+          {{- if or .Values.apiServer.extraEnvVarsCM .Values.apiServer.extraEnvVarsSecret }}
+          envFrom:
+            {{- if .Values.apiServer.extraEnvVarsCM }}
+            - configMapRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.apiServer.extraEnvVarsCM "context" $) }}
+            {{- end }}
+            {{- if .Values.apiServer.extraEnvVarsSecret }}
+            - secretRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.apiServer.extraEnvVarsSecret "context" $) }}
+            {{- end }}
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          {{- if .Values.apiServer.livenessProbe.enabled }}
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: {{ .Values.apiServer.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.apiServer.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.apiServer.livenessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.apiServer.livenessProbe.failureThreshold }}
+            successThreshold: {{ .Values.apiServer.livenessProbe.successThreshold }}
+          {{- end }}
+          {{- if .Values.apiServer.readinessProbe.enabled }}
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: {{ .Values.apiServer.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.apiServer.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.apiServer.readinessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.apiServer.readinessProbe.failureThreshold }}
+            successThreshold: {{ .Values.apiServer.readinessProbe.successThreshold }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.apiServer.resources | nindent 12 }}
+      {{- with .Values.apiServer.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.apiServer.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.apiServer.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
