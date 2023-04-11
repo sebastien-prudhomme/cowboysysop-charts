@@ -13,6 +13,9 @@ metadata:
   {{- end }}
 spec:
   replicas: {{ .Values.apiServer.replicaCount }}
+  {{- if .Values.apiServer.updateStrategy }}
+  strategy: {{- toYaml .Values.apiServer.updateStrategy | nindent 4 }}
+  {{- end }}
   selector:
     matchLabels:
       {{- include "dependency-track.apiServer.selectorLabels" . | nindent 6 }}
