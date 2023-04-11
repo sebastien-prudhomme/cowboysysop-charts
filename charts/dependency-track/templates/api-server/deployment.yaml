@@ -116,6 +116,9 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.apiServer.resources | nindent 12 }}
+          volumeMounts:
+            - name: data
+              mountPath: /data
       {{- with .Values.apiServer.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -128,3 +131,11 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
+      volumes:
+        - name: data
+          {{- if .Values.apiServer.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ default (include "dependency-track.apiServer.fullname" .) .Values.apiServer.persistence.existingClaim }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}

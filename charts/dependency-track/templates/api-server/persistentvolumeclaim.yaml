@@ -1,0 +1,33 @@
+{{- if and .Values.apiServer.persistence.enabled (not .Values.apiServer.persistence.existingClaim) }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "dependency-track.apiServer.fullname" . }}
+  labels:
+    {{- include "dependency-track.apiServer.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if or .Values.apiServer.persistence.annotations .Values.commonAnnotations }}
+  annotations:
+    {{- if .Values.apiServer.persistence.annotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.apiServer.persistence.annotations "context" $ ) | nindent 4 }}
+    {{- end }}
+    {{- if .Values.commonAnnotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- end }}
+spec:
+  accessModes:
+    - {{ .Values.apiServer.persistence.accessMode | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.apiServer.persistence.size | quote }}
+  {{- if .Values.apiServer.persistence.storageClass }}
+  {{- if (eq "-" .Values.apiServer.persistence.storageClass) }}
+  storageClassName: ""
+  {{- else }}
+  storageClassName: {{ .Values.apiServer.persistence.storageClass | quote }}
+  {{- end }}
+  {{- end }}
+{{- end }}
