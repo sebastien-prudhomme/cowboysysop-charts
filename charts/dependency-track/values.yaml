@@ -167,6 +167,7 @@ apiServer:
       - host: dependency-track.local
         paths:
           - /api/
+          - /mirror/
     tls: []
     #  - secretName: dependency-track-tls
     #    hosts:
