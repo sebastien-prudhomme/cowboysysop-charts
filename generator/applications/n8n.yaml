@@ -1,3 +1,6 @@
 name: n8n
 components:
   - name: webhook
+    service:
+      ports:
+        - name: http

@@ -18,6 +18,13 @@ jinja2_environment = jinja2.Environment(
     loader=jinja2.FileSystemLoader(templates_directory)
 )
 
+def render(template_file, file, *args, **kwargs):
+    template = jinja2_environment.get_template(template_file)
+    output = template.render(*args, **kwargs)
+
+    with open(file, "w") as stream:
+        stream.write(output)
+
 with open(sys.argv[1], "r") as stream:
     application = yaml.safe_load(stream)
 
@@ -44,15 +51,10 @@ with open(sys.argv[1], "r") as stream:
         os.mkdir(component_directory)
 
         # Manage PodDisruptionBudget
-        pdb_template = jinja2_environment.get_template("templates/component/pdb.yaml")
-        pdb_output = pdb_template.render(application=application, component=component)
-
-        with open(f"{component_directory}/pdb.yaml", "w") as pdb_stream:
-            pdb_stream.write(pdb_output)
+        render("templates/component/pdb.yaml", f"{component_directory}/pdb.yaml", application=application, component=component)
 
         # Manage ServiceAccount
-        serviceaccount_template = jinja2_environment.get_template("templates/component/serviceaccount.yaml")
-        serviceaccount_output = serviceaccount_template.render(application=application, component=component)
+        render("templates/component/serviceaccount.yaml", f"{component_directory}/serviceaccount.yaml", application=application, component=component)
 
-        with open(f"{component_directory}/serviceaccount.yaml", "w") as serviceaccount_stream:
-            serviceaccount_stream.write(serviceaccount_output)
+        # Manage Service
+        render("templates/component/service.yaml", f"{component_directory}/service.yaml", application=application, component=component)

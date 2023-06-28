@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "[[ application.name ]].[[ component.name | to_lower_camel ]].fullname" . }}
+  labels:
+    {{- include "[[ application.name ]].[[ component.name | to_lower_camel ]].labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if or .Values.[[ component.name | to_lower_camel ]].service.annotations .Values.commonAnnotations }}
+  annotations:
+    {{- if .Values.[[ component.name | to_lower_camel ]].service.annotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.[[ component.name | to_lower_camel ]].service.annotations "context" $ ) | nindent 4 }}
+    {{- end }}
+    {{- if .Values.commonAnnotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- end }}
+spec:
+  type: {{ .Values.[[ component.name | to_lower_camel ]].service.type }}
+  {{- if and (eq .Values.[[ component.name | to_lower_camel ]].service.type "ClusterIP") .Values.[[ component.name | to_lower_camel ]].service.clusterIP }}
+  clusterIP: {{ .Values.[[ component.name | to_lower_camel ]].service.clusterIP }}
+  {{- end }}
+  ports:
+    [%- for port in component.service.ports %]
+    - port: {{ .Values.[[ component.name | to_lower_camel ]].service.port }}
+      targetPort: [[ port.name ]]
+      protocol: TCP
+      name: [[ port.name ]]
+    [%- endfor %]
+  selector:
+    {{- include "[[ application.name ]].[[ component.name | to_lower_camel ]].selectorLabels" . | nindent 4 }}
