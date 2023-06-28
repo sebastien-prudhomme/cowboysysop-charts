@@ -51,20 +51,29 @@ with open(sys.argv[1], "r") as stream:
             component_directory = f"{templates_directory}/{component_name}"
             os.mkdir(component_directory)
 
+        print(component)
+
+        # Manage Ingress
+        if component.get("ingress"):
+          if component_name == name:
+              render("templates/ingress.yaml", f"{templates_directory}/ingress.yaml", application=application, component=component)
+          else:
+              render("templates/component/ingress.yaml", f"{component_directory}/ingress.yaml", application=application, component=component)
+
         # Manage PodDisruptionBudget
         if component_name == name:
             render("templates/pdb.yaml", f"{templates_directory}/pdb.yaml", application=application, component=component)
         else:
             render("templates/component/pdb.yaml", f"{component_directory}/pdb.yaml", application=application, component=component)
 
-        # Manage ServiceAccount
-        if component_name == name:
-            render("templates/serviceaccount.yaml", f"{templates_directory}/serviceaccount.yaml", application=application, component=component)
-        else:
-            render("templates/component/serviceaccount.yaml", f"{component_directory}/serviceaccount.yaml", application=application, component=component)
-
         # Manage Service
         if component_name == name:
             render("templates/service.yaml", f"{templates_directory}/service.yaml", application=application, component=component)
         else:
             render("templates/component/service.yaml", f"{component_directory}/service.yaml", application=application, component=component)
+
+        # Manage ServiceAccount
+        if component_name == name:
+            render("templates/serviceaccount.yaml", f"{templates_directory}/serviceaccount.yaml", application=application, component=component)
+        else:
+            render("templates/component/serviceaccount.yaml", f"{component_directory}/serviceaccount.yaml", application=application, component=component)
