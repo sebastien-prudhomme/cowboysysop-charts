@@ -1,0 +1,6 @@
+name: whoami
+components:
+  - name: whoami
+    service:
+      ports:
+        - name: http
