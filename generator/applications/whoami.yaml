@@ -1,7 +1,7 @@
 name: whoami
 components:
   - name: whoami
+    ingress: true
     service:
       ports:
         - name: http
-    ingress: true

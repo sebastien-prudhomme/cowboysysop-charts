@@ -60,6 +60,13 @@ with open(sys.argv[1], "r") as stream:
           else:
               render("templates/component/ingress.yaml", f"{component_directory}/ingress.yaml", application=application, component=component)
 
+        # Manage PersistentVolumeClaim
+        if component.get("persistentvolumeclaim"):
+          if component_name == name:
+              render("templates/persistentvolumeclaim.yaml", f"{templates_directory}/persistentvolumeclaim.yaml", application=application, component=component)
+          else:
+              render("templates/component/persistentvolumeclaim.yaml", f"{component_directory}/persistentvolumeclaim.yaml", application=application, component=component)
+
         # Manage PodDisruptionBudget
         if component_name == name:
             render("templates/pdb.yaml", f"{templates_directory}/pdb.yaml", application=application, component=component)

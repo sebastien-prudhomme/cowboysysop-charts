@@ -1,0 +1,33 @@
+{{- if and .Values.[[ component.name | to_lower_camel ]].persistence.enabled (not .Values.[[ component.name | to_lower_camel ]].persistence.existingClaim) }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "[[ application.name ]].[[ component.name | to_lower_camel ]].fullname" . }}
+  labels:
+    {{- include "[[ application.name ]].[[ component.name | to_lower_camel ]].labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if or .Values.[[ component.name | to_lower_camel ]].persistence.annotations .Values.commonAnnotations }}
+  annotations:
+    {{- if .Values.[[ component.name | to_lower_camel ]].persistence.annotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.[[ component.name | to_lower_camel ]].persistence.annotations "context" $ ) | nindent 4 }}
+    {{- end }}
+    {{- if .Values.commonAnnotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- end }}
+spec:
+  accessModes:
+    - {{ .Values.[[ component.name | to_lower_camel ]].persistence.accessMode | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.[[ component.name | to_lower_camel ]].persistence.size | quote }}
+  {{- if .Values.[[ component.name | to_lower_camel ]].persistence.storageClass }}
+  {{- if (eq "-" .Values.[[ component.name | to_lower_camel ]].persistence.storageClass) }}
+  storageClassName: ""
+  {{- else }}
+  storageClassName: {{ .Values.[[ component.name | to_lower_camel ]].persistence.storageClass | quote }}
+  {{- end }}
+  {{- end }}
+{{- end }}
