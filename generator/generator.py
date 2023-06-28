@@ -50,14 +50,9 @@ with open(sys.argv[1], "r") as stream:
         with open(f"{component_directory}/pdb.yaml", "w") as pdb_stream:
             pdb_stream.write(pdb_output)
 
-#         serviceaccount_template = jinja2_environment.get_template(
-#             "templates/component/serviceaccount.yaml"
-#         )
-#         serviceaccount_output = serviceaccount_template.render(
-#             chart=generator_yaml, component=component
-#         )
+        # Manage ServiceAccount
+        serviceaccount_template = jinja2_environment.get_template("templates/component/serviceaccount.yaml")
+        serviceaccount_output = serviceaccount_template.render(application=application, component=component)
 
-#         with open(
-#             f"{component_directory}/serviceaccount.yaml", "w"
-#         ) as serviceaccount_stream:
-#             serviceaccount_stream.write(serviceaccount_output)
+        with open(f"{component_directory}/serviceaccount.yaml", "w") as serviceaccount_stream:
+            serviceaccount_stream.write(serviceaccount_output)
