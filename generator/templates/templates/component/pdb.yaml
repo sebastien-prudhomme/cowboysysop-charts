@@ -1,0 +1,25 @@
+{{- if .Values.[[ component.name | to_lower_camel ]].pdb.create }}
+apiVersion: {{ include "common.capabilities.policy.apiVersion" . }}
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "[[ application.name ]].[[ component.name | to_lower_camel ]].fullname" . }}
+  labels:
+    {{- include "[[ application.name ]].[[ component.name | to_lower_camel ]].labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations:
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if .Values.[[ component.name | to_lower_camel ]].pdb.minAvailable }}
+  minAvailable: {{ .Values.[[ component.name | to_lower_camel ]].pdb.minAvailable }}
+  {{- end }}
+  {{- if .Values.[[ component.name | to_lower_camel ]].pdb.maxUnavailable }}
+  maxUnavailable: {{ .Values.[[ component.name | to_lower_camel ]].pdb.maxUnavailable }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "[[ application.name ]].[[ component.name | to_lower_camel ]].selectorLabels" . | nindent 6 }}
+{{- end }}

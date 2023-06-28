@@ -2,19 +2,23 @@ import jinja2
 import os
 import pathlib
 import shutil
+import sys
 import yaml
 
 templates_directory = f"{pathlib.Path(__file__).parent}/templates"
-applications_directory = f"{pathlib.Path(__file__).parent}/applications"
 charts_directory = f"{pathlib.Path(__file__).parent}/charts"
 
 jinja2_environment = jinja2.Environment(
-    variable_start_string="%%",
-    variable_end_string="%%",
-    loader=jinja2.FileSystemLoader(templates_directory),
+    block_start_string="[%",
+    block_end_string="%]",
+    variable_start_string="[[",
+    variable_end_string="]]",
+    keep_trailing_newline=True,
+    extensions=["jinja2_strcase.StrcaseExtension"],
+    loader=jinja2.FileSystemLoader(templates_directory)
 )
 
-with open(f"applications/n8n.yaml", "r") as stream:
+with open(sys.argv[1], "r") as stream:
     application = yaml.safe_load(stream)
 
     # Manage chart directory
@@ -27,26 +31,24 @@ with open(f"applications/n8n.yaml", "r") as stream:
 
     os.mkdir(chart_directory)
 
-#     templates_directory = f"{chart_directory}/templates"
+    templates_directory = f"{chart_directory}/templates"
+    os.mkdir(templates_directory)
 
-#     if not os.path.exists(templates_directory):
-#         os.mkdir(templates_directory)
+    components = application["components"]
 
-#     components = generator_yaml["components"]
+    for component in components:
+        # Manage component
+        component_name = component["name"]
 
-#     for component in components:
-#         component_name = component["name"]
+        component_directory = f"{templates_directory}/{component_name}"
+        os.mkdir(component_directory)
 
-#         component_directory = f"{templates_directory}/{component_name}"
+        # Manage PodDisruptionBudget
+        pdb_template = jinja2_environment.get_template("templates/component/pdb.yaml")
+        pdb_output = pdb_template.render(application=application, component=component)
 
-#         if not os.path.exists(component_directory):
-#             os.mkdir(component_directory)
-
-#         pdb_template = jinja2_environment.get_template("templates/component/pdb.yaml")
-#         pdb_output = pdb_template.render(chart=generator_yaml, component=component)
-
-#         with open(f"{component_directory}/pdb.yaml", "w") as pdb_stream:
-#             pdb_stream.write(pdb_output)
+        with open(f"{component_directory}/pdb.yaml", "w") as pdb_stream:
+            pdb_stream.write(pdb_output)
 
 #         serviceaccount_template = jinja2_environment.get_template(
 #             "templates/component/serviceaccount.yaml"
