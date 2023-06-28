@@ -21,6 +21,16 @@ spec:
   {{- if and (eq .Values.[[ component.name | to_lower_camel ]].service.type "ClusterIP") .Values.[[ component.name | to_lower_camel ]].service.clusterIP }}
   clusterIP: {{ .Values.[[ component.name | to_lower_camel ]].service.clusterIP }}
   {{- end }}
+  {{- if and (eq .Values.[[ component.name | to_lower_camel ]].service.type "LoadBalancer") .Values.[[ component.name | to_lower_camel ]].service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.[[ component.name | to_lower_camel ]].service.loadBalancerIP }}
+  {{- end }}
+  {{- if and (eq .Values.[[ component.name | to_lower_camel ]].service.type "LoadBalancer") .Values.[[ component.name | to_lower_camel ]].service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+    {{- toYaml .Values.[[ component.name | to_lower_camel ]].service.loadBalancerSourceRanges | nindent 4 }}
+  {{- end }}
+  {{- if or (eq .Values.[[ component.name | to_lower_camel ]].service.type "LoadBalancer") (eq .Values.[[ component.name | to_lower_camel ]].service.type "NodePort") }}
+  externalTrafficPolicy: {{ .Values.[[ component.name | to_lower_camel ]].service.externalTrafficPolicy }}
+  {{- end }}
   ports:
     [%- for port in component.service.ports %]
     - port: {{ .Values.[[ component.name | to_lower_camel ]].service.port }}

@@ -1,0 +1,6 @@
+name: local-ai
+components:
+  - name: local-ai
+    service:
+      ports:
+        - name: http

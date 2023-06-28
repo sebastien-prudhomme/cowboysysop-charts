@@ -51,10 +51,19 @@ with open(sys.argv[1], "r") as stream:
         os.mkdir(component_directory)
 
         # Manage PodDisruptionBudget
-        render("templates/component/pdb.yaml", f"{component_directory}/pdb.yaml", application=application, component=component)
+        if component_name == name:
+            render("templates/pdb.yaml", f"{templates_directory}/pdb.yaml", application=application, component=component)
+        else:
+            render("templates/component/pdb.yaml", f"{component_directory}/pdb.yaml", application=application, component=component)
 
         # Manage ServiceAccount
-        render("templates/component/serviceaccount.yaml", f"{component_directory}/serviceaccount.yaml", application=application, component=component)
+        if component_name == name:
+            render("templates/serviceaccount.yaml", f"{templates_directory}/serviceaccount.yaml", application=application, component=component)
+        else:
+            render("templates/component/serviceaccount.yaml", f"{component_directory}/serviceaccount.yaml", application=application, component=component)
 
         # Manage Service
-        render("templates/component/service.yaml", f"{component_directory}/service.yaml", application=application, component=component)
+        if component_name == name:
+            render("templates/service.yaml", f"{templates_directory}/service.yaml", application=application, component=component)
+        else:
+            render("templates/component/service.yaml", f"{component_directory}/service.yaml", application=application, component=component)
