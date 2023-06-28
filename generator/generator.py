@@ -41,6 +41,9 @@ with open(sys.argv[1], "r") as stream:
     templates_directory = f"{chart_directory}/templates"
     os.mkdir(templates_directory)
 
+    # Manage extra
+    render("templates/extra-list.yaml", f"{templates_directory}/extra-list.yaml", application=application)
+
     components = application["components"]
 
     for component in components:
