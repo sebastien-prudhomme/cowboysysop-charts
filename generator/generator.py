@@ -47,8 +47,9 @@ with open(sys.argv[1], "r") as stream:
         # Manage component
         component_name = component["name"]
 
-        component_directory = f"{templates_directory}/{component_name}"
-        os.mkdir(component_directory)
+        if component_name != name:
+            component_directory = f"{templates_directory}/{component_name}"
+            os.mkdir(component_directory)
 
         # Manage PodDisruptionBudget
         if component_name == name:
