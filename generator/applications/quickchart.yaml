@@ -7,6 +7,7 @@ version: 2.0.0
 components:
   - name: quickchart
     deployment:
+      type: deployment
       container:
         livenessProbe:
           httpGet:
@@ -14,6 +15,10 @@ components:
         readinessProbe:
           httpGet:
             path: /healthcheck
+    image:
+      registry: docker.io
+      repository: ianw/quickchart
+      tag: v1.7.1
     ingress: true
     service:
       ports:
