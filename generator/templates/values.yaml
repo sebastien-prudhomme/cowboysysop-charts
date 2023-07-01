@@ -25,7 +25,16 @@ commonLabels: {}
 extraDeploy: []
 [%- for component in application.components %]
 
+[%- if component.deployment.volumes and component.deployment.volumes.data %]
+# Number of replicas (do not change it)
+[%- endif %]
 replicaCount: 1
+[%- if component.deployment.volumes and component.deployment.volumes.data %]
+
+updateStrategy:
+  # Update strategy type (do not change it)
+  type: Recreate
+[%- endif %]
 
 image:
   # Image registry
