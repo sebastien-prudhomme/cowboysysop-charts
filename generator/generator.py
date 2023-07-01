@@ -70,32 +70,31 @@ with open(sys.argv[1], "r") as stream:
 
         # Manage ConfigMap
         if component.get("configmap"):
-          if component_name == name:
-              render("templates/configmap.yaml", f"{templates_directory}/configmap.yaml", application=application, component=component)
-          else:
-              render("templates/component/configmap.yaml", f"{component_directory}/configmap.yaml", application=application, component=component)
+            if component_name == name:
+                render("templates/configmap.yaml", f"{templates_directory}/configmap.yaml", application=application, component=component)
+            else:
+                render("templates/component/configmap.yaml", f"{component_directory}/configmap.yaml", application=application, component=component)
 
-        # Manage Deployment
+        # Manage Deployment/Statefulset
         if component.get("deployment"):
-          if component_name == name:
-                render(f"templates/{component['deployment']['type']}.yaml", f"{templates_directory}/{component['deployment']['type']}.yaml", application=application, component=component)
-          else:
-              if component["deployment"]["type"] == "deployment":
-                render(f"templates/component/{component['deployment']['type']}.yaml", f"{component_directory}/{component['deployment']['type']}.yaml", application=application, component=component)
+            if component_name == name:
+                render(f"templates/deployment.yaml", f"{templates_directory}/{component['deployment']['type']}.yaml", application=application, component=component)
+            else:
+                render(f"templates/component/deployment.yaml", f"{component_directory}/{component['deployment']['type']}.yaml", application=application, component=component)
 
         # Manage Ingress
         if component.get("ingress"):
-          if component_name == name:
-              render("templates/ingress.yaml", f"{templates_directory}/ingress.yaml", application=application, component=component)
-          else:
-              render("templates/component/ingress.yaml", f"{component_directory}/ingress.yaml", application=application, component=component)
+            if component_name == name:
+                render("templates/ingress.yaml", f"{templates_directory}/ingress.yaml", application=application, component=component)
+            else:
+                render("templates/component/ingress.yaml", f"{component_directory}/ingress.yaml", application=application, component=component)
 
         # Manage PersistentVolumeClaim
         if component.get("persistentvolumeclaim"):
-          if component_name == name:
-              render("templates/persistentvolumeclaim.yaml", f"{templates_directory}/persistentvolumeclaim.yaml", application=application, component=component)
-          else:
-              render("templates/component/persistentvolumeclaim.yaml", f"{component_directory}/persistentvolumeclaim.yaml", application=application, component=component)
+            if component_name == name:
+                render("templates/persistentvolumeclaim.yaml", f"{templates_directory}/persistentvolumeclaim.yaml", application=application, component=component)
+            else:
+                render("templates/component/persistentvolumeclaim.yaml", f"{component_directory}/persistentvolumeclaim.yaml", application=application, component=component)
 
         # Manage PodDisruptionBudget
         if component_name == name:

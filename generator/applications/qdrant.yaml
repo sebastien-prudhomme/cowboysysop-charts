@@ -20,6 +20,20 @@ components:
     deployment:
       type: statefulset
       container:
+        command: |
+          - /bin/bash
+          - -ec
+          - |
+            args="--uri http://${POD_NAME}.{{ include "qdrant.headless.fullname" . }}:{{ .Values.containerPorts.p2p }}/"
+            if [ "${POD_NAME}" != "{{ include "qdrant.fullname" . }}-0" ]; then
+                args="${args} --bootstrap http://{{ include "qdrant.fullname" . }}-0.{{ include "qdrant.headless.fullname" . }}:{{ .Values.containerPorts.p2p }}/"
+
+                # With current tick period of 100ms, leader will be established in approximately 4000ms.
+                # To avoid rejected operations - add peers and submit operations only after this period.
+                sleep 4
+            fi
+            ./entrypoint.sh "${args}" "$@"
+          - $@
         env: |
           - name: POD_NAME
             valueFrom:

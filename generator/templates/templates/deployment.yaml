@@ -1,5 +1,10 @@
+[%- if component.deployment.type == "deployment" %]
 apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
 kind: Deployment
+[%- elif component.deployment.type == "statefulset" %]
+apiVersion: {{ include "common.capabilities.statefulset.apiVersion" . }}
+kind: StatefulSet
+[%- endif %]
 metadata:
   name: {{ include "[[ application.name ]].fullname" . }}
   labels:
@@ -16,7 +21,10 @@ spec:
   selector:
     matchLabels:
       {{- include "[[ application.name ]].selectorLabels" . | nindent 6 }}
-  [%- if component.deployment.volumes and component.deployment.volumes.data %]
+  [%- if component.deployment.type == "statefulset" %]
+  serviceName: {{ include "[[ application.name ]].headless.fullname" . }}
+  [%- endif %]
+  [%- if component.deployment.type == "deployment" and component.deployment.volumes and component.deployment.volumes.data %]
   {{- if .Values.updateStrategy }}
   strategy: {{- toYaml .Values.updateStrategy | nindent 4 }}
   {{- end }}
@@ -79,6 +87,10 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: {{ include "common.images.image" ( dict "imageRoot" .Values.image "global" .Values.global ) }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          [%- if component.deployment.container.command %]
+          command:
+            [[ component.deployment.container.command | indent(12) | trim ]]
+          [%- endif %]
           {{- with .Values.extraArgs }}
           args:
             {{- range $key, $value := . }}
