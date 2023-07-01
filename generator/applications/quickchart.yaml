@@ -1,4 +1,9 @@
 name: quickchart
+appVersion: 1.7.1
+description: Chart image and QR code web API
+home: https://quickchart.io/
+source: https://github.com/typpo/quickchart
+version: 2.0.0
 components:
   - name: quickchart
     deployment:

@@ -1,4 +1,10 @@
 name: local-ai
+appVersion: 1.20.1
+description: A drop-in replacement REST API compatible with OpenAI API specifications for local inferencing
+home: https://localai.io/
+icon: https://user-images.githubusercontent.com/2420543/233147843-88697415-6dbf-4368-a862-ab217f9f7342.jpeg
+source: https://github.com/go-skynet/LocalAI
+version: 1.3.0
 components:
   - name: local-ai
     configmap: |

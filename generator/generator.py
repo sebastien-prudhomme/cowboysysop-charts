@@ -42,6 +42,7 @@ with open(sys.argv[1], "r") as stream:
     os.mkdir(chart_directory)
 
     render(".helmignore", f"{chart_directory}/.helmignore", application=application)
+    render("Chart.yaml", f"{chart_directory}/Chart.yaml", application=application)
     render("LICENSE", f"{chart_directory}/LICENSE", application=application)
 
     ci_directory = f"{chart_directory}/ci"

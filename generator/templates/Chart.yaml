@@ -1,0 +1,24 @@
+apiVersion: v2
+appVersion: [[ application.appVersion ]]
+description: [[ application.description ]]
+home: [[ application.home ]]
+[%- if application.icon %]
+icon: [[ application.icon ]]
+[%- endif %]
+maintainers:
+  - name: sebastien-prudhomme
+    email: sebastien.prudhomme@gmail.com
+name: [[ application.name ]]
+sources:
+  - [[ application.source ]]
+  - https://github.com/cowboysysop/charts/tree/master/charts/[[ application.name ]]
+version: [[ application.version ]]
+dependencies:
+  - name: common
+    version: 2.2.4
+    repository: https://charts.bitnami.com/bitnami/
+annotations:
+  artifacthub.io/signKey: |
+    fingerprint: 9E57D2479D48B84463EF491F66D280CE667AD6C8
+    url: https://cowboysysop.github.io/charts/pgp-public-key-2022-02-19.asc
+  kubeVersion: ">=1.19"
