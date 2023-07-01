@@ -55,6 +55,7 @@ with open(sys.argv[1], "r") as stream:
 
     render("templates/_helpers.tpl", f"{templates_directory}/_helpers.tpl", application=application)
     render("templates/extra-list.yaml", f"{templates_directory}/extra-list.yaml", application=application)
+    render("templates/NOTES.txt", f"{templates_directory}/NOTES.txt", application=application)
 
     components = application["components"]
 
