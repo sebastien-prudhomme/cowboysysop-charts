@@ -31,6 +31,9 @@ spec:
         {{- if .Values.commonLabels }}
         {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 8 }}
         {{- end }}
+      [%- if not component.configmap %]
+      {{- if or .Values.podAnnotations .Values.commonAnnotations }}
+      [%- endif %]
       annotations:
         [%- if component.configmap %]
         checksum/configmap: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
@@ -41,6 +44,9 @@ spec:
         {{- if .Values.commonAnnotations }}
         {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 8 }}
         {{- end }}
+      [%- if not component.configmap %]
+      {{- end }}
+      [%- endif %]
     spec:
       {{- include "common.images.pullSecrets" ( dict "images" ( list .Values.image ) "global" .Values.global ) | nindent 6 }}
       {{- if .Values.priorityClassName }}
@@ -79,13 +85,21 @@ spec:
             - --{{ $key }}={{ $value }}
             {{- end }}
           {{- end }}
+          [%- if not component.deployment.container.env %]
+          {{- if .Values.extraEnvVars }}
+          [%- endif %]
           env:
             [%- if component.deployment.container.env %]
             [[ component.deployment.container.env | indent(12) | trim ]]
-            [%- endif %]
             {{- if .Values.extraEnvVars }}
+            [%- endif %]
             {{- include "common.tplvalues.render" (dict "value" .Values.extraEnvVars "context" $) | nindent 12 }}
+            [%- if component.deployment.container.env %]
             {{- end }}
+            [%- endif %]
+          [%- if not component.deployment.container.env %]
+          {{- end }}
+          [%- endif %]
           {{- if or .Values.extraEnvVarsCM .Values.extraEnvVarsSecret }}
           envFrom:
             {{- if .Values.extraEnvVarsCM }}
