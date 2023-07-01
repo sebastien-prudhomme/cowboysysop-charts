@@ -1,0 +1,170 @@
+apiVersion: {{ include "common.capabilities.statefulset.apiVersion" . }}
+kind: StatefulSet
+metadata:
+  name: {{ include "[[ application.name ]].fullname" . }}
+  labels:
+    {{- include "[[ application.name ]].labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations:
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "[[ application.name ]].selectorLabels" . | nindent 6 }}
+  serviceName: {{ include "qdrant.headless.fullname" . }}
+  template:
+    metadata:
+      labels:
+        {{- include "[[ application.name ]].selectorLabels" . | nindent 8 }}
+        {{- if .Values.podLabels }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.podLabels "context" $ ) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.commonLabels }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 8 }}
+        {{- end }}
+      [%- if not component.configmap %]
+      {{- if or .Values.podAnnotations .Values.commonAnnotations }}
+      [%- endif %]
+      annotations:
+        [%- if component.configmap %]
+        checksum/configmap: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        [%- endif %]
+        {{- if .Values.podAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.podAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.commonAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+      [%- if not component.configmap %]
+      {{- end }}
+      [%- endif %]
+    spec:
+      {{- include "common.images.pullSecrets" ( dict "images" ( list .Values.image ) "global" .Values.global ) | nindent 6 }}
+      {{- if .Values.priorityClassName }}
+      priorityClassName: {{ .Values.priorityClassName | quote }}
+      {{- end }}
+      serviceAccountName: {{ include "[[ application.name ]].serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      [%- if component.deployment.initContainer %]
+      initContainers:
+        - name: init
+          securityContext:
+            {{- toYaml .Values.init.securityContext | nindent 12 }}
+          image: {{ include "common.images.image" ( dict "imageRoot" .Values.image "global" .Values.global ) }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          [%- if component.deployment.initContainer.command %]
+          command:
+            [[ component.deployment.initContainer.command | indent(12) | trim ]]
+          [%- endif %]
+          resources:
+            {{- toYaml .Values.init.resources | nindent 12 }}
+          [%- if component.deployment.initContainer.volumeMounts %]
+          volumeMounts:
+            [[ component.deployment.initContainer.volumeMounts | indent(12) | trim ]]
+          [%- endif %]
+      [%- endif %]
+      containers:
+        - name: [[ application.name ]]
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: {{ include "common.images.image" ( dict "imageRoot" .Values.image "global" .Values.global ) }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- with .Values.extraArgs }}
+          args:
+            {{- range $key, $value := . }}
+            - --{{ $key }}={{ $value }}
+            {{- end }}
+          {{- end }}
+          [%- if not component.deployment.container.env %]
+          {{- if .Values.extraEnvVars }}
+          [%- endif %]
+          env:
+            [%- if component.deployment.container.env %]
+            [[ component.deployment.container.env | indent(12) | trim ]]
+            {{- if .Values.extraEnvVars }}
+            [%- endif %]
+            {{- include "common.tplvalues.render" (dict "value" .Values.extraEnvVars "context" $) | nindent 12 }}
+            [%- if component.deployment.container.env %]
+            {{- end }}
+            [%- endif %]
+          [%- if not component.deployment.container.env %]
+          {{- end }}
+          [%- endif %]
+          {{- if or .Values.extraEnvVarsCM .Values.extraEnvVarsSecret }}
+          envFrom:
+            {{- if .Values.extraEnvVarsCM }}
+            - configMapRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.extraEnvVarsCM "context" $) }}
+            {{- end }}
+            {{- if .Values.extraEnvVarsSecret }}
+            - secretRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.extraEnvVarsSecret "context" $) }}
+            {{- end }}
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.containerPorts.http }}
+              protocol: TCP
+          {{- if .Values.livenessProbe.enabled }}
+          livenessProbe:
+            httpGet:
+              path: [[ component.deployment.container.livenessProbe.httpGet.path ]]
+              port: http
+            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+            successThreshold: {{ .Values.livenessProbe.successThreshold }}
+          {{- end }}
+          {{- if .Values.readinessProbe.enabled }}
+          readinessProbe:
+            httpGet:
+              path: [[ component.deployment.container.readinessProbe.httpGet.path ]]
+              port: http
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+            successThreshold: {{ .Values.readinessProbe.successThreshold }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          [%- if component.deployment.container.volumeMounts %]
+          volumeMounts:
+            [[ component.deployment.container.volumeMounts | indent(12) | trim ]]
+          [%- endif %]
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      [%- if component.deployment.volumes %]
+      volumes:
+        [%- if component.deployment.volumes.config %]
+        - name: config
+          configMap:
+            name: {{ include "[[ application.name ]].fullname" . }}
+        [%- endif %]
+        [%- if component.deployment.volumes.data %]
+        - name: data
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ default (include "[[ application.name ]].fullname" .) .Values.persistence.existingClaim }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+        [%- endif %]
+      [%- endif %]

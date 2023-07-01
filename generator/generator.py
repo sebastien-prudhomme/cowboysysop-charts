@@ -78,9 +78,10 @@ with open(sys.argv[1], "r") as stream:
         # Manage Deployment
         if component.get("deployment"):
           if component_name == name:
-              render("templates/deployment.yaml", f"{templates_directory}/deployment.yaml", application=application, component=component)
+                render(f"templates/{component['deployment']['type']}.yaml", f"{templates_directory}/{component['deployment']['type']}.yaml", application=application, component=component)
           else:
-              render("templates/component/deployment.yaml", f"{component_directory}/deployment.yaml", application=application, component=component)
+              if component["deployment"]["type"] == "deployment":
+                render(f"templates/component/{component['deployment']['type']}.yaml", f"{component_directory}/{component['deployment']['type']}.yaml", application=application, component=component)
 
         # Manage Ingress
         if component.get("ingress"):
