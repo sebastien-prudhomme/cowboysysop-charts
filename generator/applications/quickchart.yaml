@@ -1,17 +1,14 @@
-name: whoami
+name: quickchart
 components:
-  - name: whoami
+  - name: quickchart
     deployment:
       container:
-        env: |
-          - name: WHOAMI_PORT_NUMBER
-            value: {{ .Values.containerPorts.http | quote }}
         livenessProbe:
           httpGet:
-            path: /health
+            path: /healthcheck
         readinessProbe:
           httpGet:
-            path: /health
+            path: /healthcheck
     ingress: true
     service:
       ports:
@@ -21,7 +18,7 @@ tests: |
 
 
   def test_service_connection():
-      url = "http://{{ include "whoami.fullname" . }}:{{ .Values.service.ports.http }}/"
+      url = "http://{{ include "quickchart.fullname" . }}:{{ .Values.service.ports.http }}/"
 
       response = requests.get(url)
 

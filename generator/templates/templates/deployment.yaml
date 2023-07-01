@@ -78,7 +78,9 @@ spec:
             {{- end }}
           {{- end }}
           env:
+            [%- if component.deployment.container.env %]
             [[ component.deployment.container.env | indent(12) | trim ]]
+            [%- endif %]
             {{- if .Values.extraEnvVars }}
             {{- include "common.tplvalues.render" (dict "value" .Values.extraEnvVars "context" $) | nindent 12 }}
             {{- end }}
@@ -100,7 +102,7 @@ spec:
           {{- if .Values.livenessProbe.enabled }}
           livenessProbe:
             httpGet:
-              path: [[ component.deployment.livenessProbe.httpGet.path ]]
+              path: [[ component.deployment.container.livenessProbe.httpGet.path ]]
               port: http
             initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
@@ -111,7 +113,7 @@ spec:
           {{- if .Values.readinessProbe.enabled }}
           readinessProbe:
             httpGet:
-              path: [[ component.deployment.readinessProbe.httpGet.path ]]
+              path: [[ component.deployment.container.readinessProbe.httpGet.path ]]
               port: http
             initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.readinessProbe.periodSeconds }}

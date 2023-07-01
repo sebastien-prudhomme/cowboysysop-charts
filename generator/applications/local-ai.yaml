@@ -29,18 +29,18 @@ components:
             value: /config/preload-models.json
           - name: REBUILD
             value: "false"
+        livenessProbe:
+          httpGet:
+            path: /healthz
+        readinessProbe:
+          httpGet:
+            path: /readyz
         volumeMounts: |
           - name: config
             mountPath: /config/preload-models.json
             subPath: preload-models.json
           - name: data
             mountPath: /data
-      livenessProbe:
-        httpGet:
-          path: /healthz
-      readinessProbe:
-        httpGet:
-          path: /readyz
       volumes:
         config: true
         data: true
