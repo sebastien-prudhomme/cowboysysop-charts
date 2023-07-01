@@ -1,2 +1,3 @@
 jinja2
+jinja2-ansible-filters
 jinja2-strcase

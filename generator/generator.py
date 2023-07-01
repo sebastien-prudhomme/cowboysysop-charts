@@ -14,7 +14,10 @@ jinja2_environment = jinja2.Environment(
     variable_start_string="[[",
     variable_end_string="]]",
     keep_trailing_newline=True,
-    extensions=["jinja2_strcase.StrcaseExtension"],
+    extensions=[
+        "jinja2_ansible_filters.AnsibleCoreFiltersExtension",
+        "jinja2_strcase.StrcaseExtension"
+    ],
     loader=jinja2.FileSystemLoader(templates_directory)
 )
 
@@ -54,7 +57,12 @@ with open(sys.argv[1], "r") as stream:
             component_directory = f"{templates_directory}/{component_name}"
             os.mkdir(component_directory)
 
-        print(component)
+        # Manage Deployment
+        if component.get("deployment"):
+          if component_name == name:
+              render("templates/deployment.yaml", f"{templates_directory}/deployment.yaml", application=application, component=component)
+          else:
+              render("templates/component/deployment.yaml", f"{component_directory}/deployment.yaml", application=application, component=component)
 
         # Manage Ingress
         if component.get("ingress"):
