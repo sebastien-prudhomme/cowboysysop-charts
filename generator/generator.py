@@ -41,6 +41,9 @@ with open(sys.argv[1], "r") as stream:
 
     os.mkdir(chart_directory)
 
+    render(".helmignore", f"{templates_directory}/.helmignore", application=application)
+    render("LICENSE", f"{templates_directory}/LICENSE", application=application)
+
     templates_directory = f"{chart_directory}/templates"
     os.mkdir(templates_directory)
 
@@ -95,3 +98,10 @@ with open(sys.argv[1], "r") as stream:
             render("templates/serviceaccount.yaml", f"{templates_directory}/serviceaccount.yaml", application=application, component=component)
         else:
             render("templates/component/serviceaccount.yaml", f"{component_directory}/serviceaccount.yaml", application=application, component=component)
+
+    tests_directory = f"{templates_directory}/tests"
+    os.mkdir(tests_directory)
+
+    render("templates/tests/_helpers.tpl", f"{tests_directory}/_helpers.tpl", application=application)
+    render("templates/tests/configmap.yaml", f"{tests_directory}/configmap.yaml", application=application)
+    render("templates/tests/pod.yaml", f"{tests_directory}/pod.yaml", application=application)

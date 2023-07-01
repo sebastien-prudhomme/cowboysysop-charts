@@ -16,3 +16,13 @@ components:
     service:
       ports:
         - name: http
+tests: |
+  import requests
+
+
+  def test_service_connection():
+      url = "http://{{ include "whoami.fullname" . }}:{{ .Values.service.ports.http }}/"
+
+      response = requests.get(url)
+
+      assert response.status_code == 200

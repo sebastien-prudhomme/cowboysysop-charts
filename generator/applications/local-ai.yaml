@@ -44,3 +44,13 @@ components:
     service:
       ports:
         - name: http
+tests: |
+  import requests
+
+
+  def test_service_connection():
+      url = "http://{{ include "local-ai.fullname" . }}:{{ .Values.service.ports.http }}/v1/models"
+
+      response = requests.get(url)
+
+      assert response.status_code == 200
