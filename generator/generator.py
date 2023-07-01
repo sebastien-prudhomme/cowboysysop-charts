@@ -60,6 +60,13 @@ with open(sys.argv[1], "r") as stream:
             component_directory = f"{templates_directory}/{component_name}"
             os.mkdir(component_directory)
 
+        # Manage ConfigMap
+        if component.get("configmap"):
+          if component_name == name:
+              render("templates/configmap.yaml", f"{templates_directory}/configmap.yaml", application=application, component=component)
+          else:
+              render("templates/component/configmap.yaml", f"{component_directory}/configmap.yaml", application=application, component=component)
+
         # Manage Deployment
         if component.get("deployment"):
           if component_name == name:
