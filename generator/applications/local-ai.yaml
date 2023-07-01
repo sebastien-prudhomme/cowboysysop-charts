@@ -63,6 +63,8 @@ components:
     service:
       ports:
         - name: http
+          number: 8080
+          description: HTTP
     extraValues: |
       config:
         # Model galleries

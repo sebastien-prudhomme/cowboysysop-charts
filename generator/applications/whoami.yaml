@@ -26,6 +26,8 @@ components:
     service:
       ports:
         - name: http
+          number: 80
+          description: HTTP
 tests: |
   import requests
 

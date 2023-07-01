@@ -24,7 +24,7 @@ commonLabels: {}
 # Array of extra objects to deploy with the release
 extraDeploy: []
 [%- for component in application.components %]
-
+[[ "" ]]
 [%- if component.deployment.volumes and component.deployment.volumes.data %]
 # Number of replicas (do not change it)
 [%- endif %]
@@ -154,12 +154,22 @@ service:
   externalTrafficPolicy: Cluster
 
   ports:
-    # Service port for HTTP
-    http: 80
+    [%- for port in component.service.ports %]
+    [%- if loop.index0 > 0 %]
+[[ "" ]]
+    [%- endif %]
+    # Service port for [[ port.description ]]
+    [[ port.name ]]: [[ port.number ]]
+    [%- endfor %]
 
   nodePorts: {}
-    # Service node port for HTTP when service type is LoadBalancer or NodePort
-    # http: 30000
+    [%- for port in component.service.ports %]
+    [%- if loop.index0 > 0 %]
+[[ "" ]]
+    [%- endif %]
+    # Service node port for [[ port.description ]] when service type is LoadBalancer or NodePort
+    # [[ port.name ]]: [[ 30000 + loop.index0 ]]
+    [%- endfor %]
 
 ingress:
   enabled: false
@@ -238,14 +248,32 @@ init:
     #   cpu: 100m
     #   memory: 128Mi
 [%- endif %]
+[%- if component.headless %]
+
+headless:
+  service:
+    # Headless service annotations
+    annotations: {}
+
+    ports:
+      [%- for port in component.headless.ports %]
+      [%- if loop.index0 > 0 %]
+[[ "" ]]
+      [%- endif %]
+      # Headless service port for [[ port.description ]]
+      [[ port.name ]]: [[ port.number ]]
+      [%- endfor %]
+  [%- endif %]
 [%- if component.persistentvolumeclaim %]
 
 persistence:
   # Enable persistence using PVC
   enabled: false
+  [%- if component.deployment.type == "deployment" %]
 
   # Name of an existing PVC to use
   # existingClaim: my-pvc
+  [%- endif %]
 
   # PVC access mode
   accessMode: ReadWriteOnce

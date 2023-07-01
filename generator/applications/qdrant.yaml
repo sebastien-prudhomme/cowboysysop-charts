@@ -40,6 +40,16 @@ components:
     service:
       ports:
         - name: http
+          number: 6333
+          description: HTTP
+        - name: grpc
+          number: 6334
+          description: gRPC
+    headless:
+      ports:
+        - name: p2p
+          number: 6335
+          description: P2P
 tests: |
   import requests
 

@@ -23,6 +23,8 @@ components:
     service:
       ports:
         - name: http
+          number: 3400
+          description: HTTP
 tests: |
   import requests
 
