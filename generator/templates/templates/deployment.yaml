@@ -124,9 +124,15 @@ spec:
             {{- end }}
           {{- end }}
           ports:
-            - name: http
-              containerPort: {{ .Values.containerPorts.http }}
+            [%- set ports = component.service.ports %]
+            [%- if component.headless %]
+            [%- set ports = ports + component.headless.ports %]
+            [%- endif %]
+            [%- for port in ports %]
+            - name: [[ port.name ]]
+              containerPort: {{ .Values.containerPorts.[[ port.name ]] }}
               protocol: TCP
+            [%- endfor %]
           {{- if .Values.livenessProbe.enabled }}
           livenessProbe:
             httpGet:
