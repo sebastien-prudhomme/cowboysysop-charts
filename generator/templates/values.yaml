@@ -25,9 +25,7 @@ commonLabels: {}
 extraDeploy: []
 [%- for component in application.components %]
 [[ "" ]]
-[%- if component.deployment.volumes and component.deployment.volumes.data %]
-# Number of replicas (do not change it)
-[%- endif %]
+# Number of replicas[%- if component.deployment.volumes and component.deployment.volumes.data %] (do not change it)[%- endif %]
 replicaCount: 1
 [%- if component.deployment.volumes and component.deployment.volumes.data %]
 
@@ -92,8 +90,17 @@ securityContext: {}
   # runAsUser: 1000
 
 containerPorts:
-  # Container port for HTTP
-  http: 80
+  [%- set ports = component.service.ports %]
+  [%- if component.headless %]
+  [%- set ports = ports + component.headless.ports %]
+  [%- endif %]
+  [%- for port in ports %]
+  [%- if loop.index0 > 0 %]
+[[ "" ]]
+  [%- endif %]
+  # Container port for [[ port.description ]]
+  [[ port.name ]]: [[ port.number ]]
+  [%- endfor %]
 
 livenessProbe:
   # Enable liveness probe
@@ -263,7 +270,7 @@ headless:
       # Headless service port for [[ port.description ]]
       [[ port.name ]]: [[ port.number ]]
       [%- endfor %]
-  [%- endif %]
+[%- endif %]
 [%- if component.persistentvolumeclaim %]
 
 persistence:
