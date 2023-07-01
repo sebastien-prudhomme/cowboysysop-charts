@@ -47,23 +47,24 @@ spec:
       serviceAccountName: {{ include "[[ application.name ]].serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      [%- if component.deployment.initContainer %]
       initContainers:
         - name: init
           securityContext:
             {{- toYaml .Values.init.securityContext | nindent 12 }}
           image: {{ include "common.images.image" ( dict "imageRoot" .Values.image "global" .Values.global ) }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          [%- if component.deployment.initContainer.command %]
           command:
-            - /bin/bash
-            - -ec
-            - |
-              mkdir -p /data/generated-images
-              mkdir -p /data/models
+            [[ component.deployment.initContainer.command | indent(12) | trim ]]
+          [%- endif %]
           resources:
             {{- toYaml .Values.init.resources | nindent 12 }}
+          [%- if component.deployment.initContainer.volumeMounts %]
           volumeMounts:
-            - name: data
-              mountPath: /data
+            [[ component.deployment.initContainer.volumeMounts | indent(12) | trim ]]
+          [%- endif %]
+      [%- endif %]
       containers:
         - name: [[ application.name ]]
           securityContext:

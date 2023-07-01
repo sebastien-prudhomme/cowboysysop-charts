@@ -2,6 +2,16 @@ name: local-ai
 components:
   - name: local-ai
     deployment:
+      initContainer:
+        command: |
+          - /bin/bash
+          - -ec
+          - |
+            mkdir -p /data/generated-images
+            mkdir -p /data/models
+        volumeMounts: |
+          - name: data
+            mountPath: /data
       container:
         env: |
           - name: ADDRESS
