@@ -1,6 +1,34 @@
 name: local-ai
 components:
   - name: local-ai
+    deployment:
+      container:
+        env: |
+          - name: ADDRESS
+            value: ":{{ .Values.containerPorts.http }}"
+          - name: IMAGE_PATH
+            value: /data/generated-images
+          - name: MODELS_PATH
+            value: /data/models
+          - name: PRELOAD_MODELS_CONFIG
+            value: /config/preload-models.json
+          - name: REBUILD
+            value: "false"
+        volumeMounts: |
+          - name: config
+            mountPath: /config/preload-models.json
+            subPath: preload-models.json
+          - name: data
+            mountPath: /data
+      livenessProbe:
+        httpGet:
+          path: /healthz
+      readinessProbe:
+        httpGet:
+          path: /readyz
+      volumes:
+        config: true
+        data: true
     ingress: true
     persistentvolumeclaim: true
     service:

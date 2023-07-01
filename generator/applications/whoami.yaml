@@ -1,6 +1,17 @@
 name: whoami
 components:
   - name: whoami
+    deployment:
+      container:
+        env: |
+          - name: WHOAMI_PORT_NUMBER
+            value: {{ .Values.containerPorts.http | quote }}
+      livenessProbe:
+        httpGet:
+          path: /health
+      readinessProbe:
+        httpGet:
+          path: /health
     ingress: true
     service:
       ports:

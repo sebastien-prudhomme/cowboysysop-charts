@@ -16,9 +16,11 @@ spec:
   selector:
     matchLabels:
       {{- include "[[ application.name ]].selectorLabels" . | nindent 6 }}
+  [%- if component.deployment.volumes and component.deployment.volumes.data %]
   {{- if .Values.updateStrategy }}
   strategy: {{- toYaml .Values.updateStrategy | nindent 4 }}
   {{- end }}
+  [%- endif %]
   template:
     metadata:
       labels:
@@ -118,12 +120,10 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          [%- if component.deployment.container.volumeMounts %]
           volumeMounts:
-            - name: config
-              mountPath: /config/preload-models.json
-              subPath: preload-models.json
-            - name: data
-              mountPath: /data
+            [[ component.deployment.container.volumeMounts | indent(12) | trim ]]
+          [%- endif %]
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
