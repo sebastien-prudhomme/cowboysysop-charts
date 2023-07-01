@@ -44,10 +44,15 @@ with open(sys.argv[1], "r") as stream:
     render(".helmignore", f"{chart_directory}/.helmignore", application=application)
     render("LICENSE", f"{chart_directory}/LICENSE", application=application)
 
+    ci_directory = f"{chart_directory}/ci"
+    os.mkdir(ci_directory)
+
+    render("ci/default-values.yaml", f"{ci_directory}/default-values.yaml", application=application)
+
     templates_directory = f"{chart_directory}/templates"
     os.mkdir(templates_directory)
 
-    # Manage extra
+    render("templates/_helpers.tpl", f"{templates_directory}/_helpers.tpl", application=application)
     render("templates/extra-list.yaml", f"{templates_directory}/extra-list.yaml", application=application)
 
     components = application["components"]
