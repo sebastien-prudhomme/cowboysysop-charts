@@ -41,8 +41,8 @@ with open(sys.argv[1], "r") as stream:
 
     os.mkdir(chart_directory)
 
-    render(".helmignore", f"{templates_directory}/.helmignore", application=application)
-    render("LICENSE", f"{templates_directory}/LICENSE", application=application)
+    render(".helmignore", f"{chart_directory}/.helmignore", application=application)
+    render("LICENSE", f"{chart_directory}/LICENSE", application=application)
 
     templates_directory = f"{chart_directory}/templates"
     os.mkdir(templates_directory)
