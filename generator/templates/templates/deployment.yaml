@@ -24,7 +24,7 @@ spec:
   [%- if component.deployment.type == "statefulset" %]
   serviceName: {{ include "[[ application.name ]].headless.fullname" . }}
   [%- endif %]
-  [%- if component.deployment.type == "deployment" and component.deployment.volumes and component.deployment.volumes.data %]
+  [%- if component.deployment.type == "deployment" and component.persistentvolumeclaim %]
   {{- if .Values.updateStrategy }}
   strategy: {{- toYaml .Values.updateStrategy | nindent 4 }}
   {{- end }}
@@ -173,14 +173,15 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-      [%- if component.deployment.volumes %]
+      [%- if component.configmap or component.persistentvolumeclaim %]
       volumes:
-        [%- if component.deployment.volumes.config %]
+        [%- if component.configmap %]
         - name: config
           configMap:
             name: {{ include "[[ application.name ]].fullname" . }}
         [%- endif %]
-        [%- if component.deployment.volumes.data %]
+        [%- if component.persistentvolumeclaim %]
+        [%- if component.deployment.type == "deployment" %]
         - name: data
           {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:
@@ -188,6 +189,12 @@ spec:
           {{- else }}
           emptyDir: {}
           {{- end }}
+        [%- elif component.deployment.type == "statefulset" %]
+        {{- if not .Values.persistence.enabled }}
+        - name: data
+          emptyDir: {}
+        {{- end }}
+        [%- endif %]
         [%- endif %]
       [%- endif %]
   [%- if component.deployment.type == "statefulset" and component.persistentvolumeclaim %]

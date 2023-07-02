@@ -51,9 +51,6 @@ components:
             subPath: preload-models.json
           - name: data
             mountPath: /data
-      volumes:
-        config: true
-        data: true
     image:
       registry: quay.io
       repository: go-skynet/local-ai

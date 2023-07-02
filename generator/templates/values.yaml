@@ -25,9 +25,9 @@ commonLabels: {}
 extraDeploy: []
 [%- for component in application.components %]
 [[ "" ]]
-# Number of replicas[%- if component.deployment.volumes and component.deployment.volumes.data %] (do not change it)[%- endif %]
+# Number of replicas[%- if component.persistentvolumeclaim%] (do not change it)[%- endif %]
 replicaCount: 1
-[%- if component.deployment.volumes and component.deployment.volumes.data %]
+[%- if component.persistentvolumeclaim %]
 
 updateStrategy:
   # Update strategy type (do not change it)
