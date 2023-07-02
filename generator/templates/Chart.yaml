@@ -15,7 +15,7 @@ sources:
 version: [[ application.version ]]
 dependencies:
   - name: common
-    version: 2.2.4
+    version: 2.5.0
     repository: https://charts.bitnami.com/bitnami/
 annotations:
   artifacthub.io/signKey: |
