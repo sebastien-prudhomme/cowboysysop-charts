@@ -67,7 +67,8 @@ pdb:
   minAvailable: 1
 
   ## @param pdb.maxUnavailable Maximum number/percentage of pods that may be made unavailable
-  maxUnavailable: 1
+  maxUnavailable:
+  # maxUnavailable: 1
 
 serviceAccount:
   ## @param serviceAccount.create Specifies whether a service account should be created
@@ -161,14 +162,16 @@ service:
   type: ClusterIP
 
   ## @param service.clusterIP Static cluster IP address or None for headless service when service type is ClusterIP
+  clusterIP:
   # clusterIP: 10.43.0.100
 
   ## @param service.loadBalancerIP Static load balancer IP address when service type is LoadBalancer
+  loadBalancerIP:
   # loadBalancerIP: 10.0.0.100
 
   ## @param service.loadBalancerSourceRanges Source IP address ranges when service type is LoadBalancer
-  # loadBalancerSourceRanges:
-  #   - 10.0.0.0/24
+  loadBalancerSourceRanges:
+    # - 10.0.0.0/24
 
   ## @param service.externalTrafficPolicy External traffic routing policy when service type is LoadBalancer or NodePort
   externalTrafficPolicy: Cluster
@@ -182,12 +185,13 @@ service:
     [[ port.name ]]: [[ port.number ]]
     [%- endfor %]
 
-  nodePorts: {}
+  nodePorts:
     [%- for port in component.service.ports %]
     [%- if loop.index0 > 0 %]
 [[ "" ]]
     [%- endif %]
     ## @param service.nodePorts.[[ port.name ]] Service node port for [[ port.description ]] when service type is LoadBalancer or NodePort
+    [[ port.name ]]:
     # [[ port.name ]]: [[ 30000 + loop.index0 ]]
     [%- endfor %]
 
@@ -215,9 +219,9 @@ ingress:
 
   ## @param ingress.tls
   tls: []
-  #  - secretName: [[ application.name ]]-tls
-  #    hosts:
-  #      - [[ application.name ]].local
+    # - secretName: [[ application.name ]]-tls
+    #   hosts:
+    #     - [[ application.name ]].local
 
 ## @param resources CPU/Memory resource requests/limits
 resources: {}
@@ -247,8 +251,8 @@ extraArgs: {}
 
 ## @param extraEnvVars Additional container environment variables
 extraEnvVars: []
-#  - name: MY-NAME
-#    value: "MY-VALUE"
+  # - name: MY-NAME
+  #   value: "MY-VALUE"
 
 ## @param extraEnvVarsCM Name of existing ConfigMap containing additional container environment variables
 extraEnvVarsCM:
@@ -260,12 +264,12 @@ extraEnvVarsSecret:
 init:
   # Init security context
   securityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
 
   # Init CPU/Memory resource requests/limits
   resources: {}
@@ -324,6 +328,8 @@ persistence:
 [[ component.extraValues | trim ]]
 [%- endif %]
 [%- endfor %]
+
+## @section Tests parameters
 
 tests:
   image:
