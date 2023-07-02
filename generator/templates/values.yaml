@@ -32,62 +32,68 @@ commonLabels: {}
 extraDeploy: []
 [%- for component in application.components %]
 [[ "" ]]
-# Number of replicas[%- if component.persistentvolumeclaim%] (do not change it)[%- endif %]
+## @section Parameters
+
+## @param replicaCount Number of replicas[%- if component.persistentvolumeclaim%] (do not change it)[%- endif %]
 replicaCount: 1
 [%- if component.deployment.type == "deployment" and component.persistentvolumeclaim %]
 
 updateStrategy:
-  # Update strategy type (do not change it)
+  ## @param updateStrategy.type Update strategy type (do not change it)
   type: Recreate
 [%- endif %]
 
 image:
-  # Image registry
+  ## @param image.registry Image registry
   registry: [[ component.image.registry ]]
 
-  # Image repository
+  ## @param image.repository Image repository
   repository: [[ component.image.repository ]]
 
-  # Image tag
+  ## @param image.tag Image tag
   tag: [[ component.image.tag ]]
 
-  # Image digest
+  ## @param image.digest Image digest
   digest: ""
 
-  # Image pull policy
+  ## @param image.pullPolicy Image pull policy
   pullPolicy: IfNotPresent
 
 pdb:
-  # Specifies whether a pod disruption budget should be created
+  ## @param pdb.create Specifies whether a pod disruption budget should be created
   create: false
 
-  # Minimum number/percentage of pods that should remain scheduled
+  ## @param pdb.minAvailable Minimum number/percentage of pods that should remain scheduled
   minAvailable: 1
 
-  # Maximum number/percentage of pods that may be made unavailable
-  # maxUnavailable: 1
+  ## @param pdb.maxUnavailable Maximum number/percentage of pods that may be made unavailable
+  maxUnavailable: 1
 
 serviceAccount:
-  # Specifies whether a service account should be created
+  ## @param serviceAccount.create Specifies whether a service account should be created
   create: true
-  # Annotations to add to the service account
+
+  ## @param serviceAccount.annotations Annotations to add to the service account
   annotations: {}
-  # The name of the service account to use.
+
+  ## @param serviceAccount.name The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
   name:
 
-# Additional pod annotations
+## @param podAnnotations Additional pod annotations
 podAnnotations: {}
 
-# Additional pod labels
+## @param podLabels Additional pod labels
 podLabels: {}
 
+## @param podSecurityContext Pod security context
 podSecurityContext: {}
   # fsGroup: 2000
 
-# Priority class name
-# priorityClassName : high-priority
+## @param priorityClassName Priority class name
+priorityClassName : high-priority
 
+## @param securityContext Container security context
 securityContext: {}
   # capabilities:
   #   drop:
@@ -105,46 +111,46 @@ containerPorts:
   [%- if loop.index0 > 0 %]
 [[ "" ]]
   [%- endif %]
-  # Container port for [[ port.description ]]
+  ## @param containerPorts.[[ port.name ]] Container port for [[ port.description ]]
   [[ port.name ]]: [[ port.number ]]
   [%- endfor %]
 
 livenessProbe:
-  # Enable liveness probe
+  ## @param livenessProbe.enabled Enable liveness probe
   enabled: true
 
-  # Delay before the liveness probe is initiated
+  ## @param livenessProbe.initialDelaySeconds Delay before the liveness probe is initiated
   initialDelaySeconds: 0
 
-  # How often to perform the liveness probe
+  ## @param livenessProbe.periodSeconds How often to perform the liveness probe
   periodSeconds: 10
 
-  # When the liveness probe times out
+  ## @param livenessProbe.timeoutSeconds When the liveness probe times out
   timeoutSeconds: 1
 
-  # Minimum consecutive failures for the liveness probe to be considered failed after having succeeded
+  ## @param livenessProbe.failureThreshold Minimum consecutive failures for the liveness probe to be considered failed after having succeeded
   failureThreshold: 3
 
-  # Minimum consecutive successes for the liveness probe to be considered successful after having failed
+  ## @param livenessProbe.successThreshold Minimum consecutive successes for the liveness probe to be considered successful after having failed
   successThreshold: 1
 
 readinessProbe:
-  # Enable readiness probe
+  ## @param readinessProbe.enabled Enable readiness probe
   enabled: true
 
-  # Delay before the readiness probe is initiated
+  ## @param readinessProbe.initialDelaySeconds Delay before the readiness probe is initiated
   initialDelaySeconds: 0
 
-  # How often to perform the readiness probe
+  ## @param readinessProbe.periodSeconds How often to perform the readiness probe
   periodSeconds: 10
 
-  # When the readiness probe times out
+  ## @param readinessProbe.timeoutSeconds When the readiness probe times out
   timeoutSeconds: 1
 
-  # Minimum consecutive failures for the readiness probe to be considered failed after having succeeded
+  ## @param readinessProbe.failureThreshold Minimum consecutive failures for the readiness probe to be considered failed after having succeeded
   failureThreshold: 3
 
-  # Minimum consecutive successes for the readiness probe to be considered successful after having failed
+  ## @param readinessProbe.successThreshold Minimum consecutive successes for the readiness probe to be considered successful after having failed
   successThreshold: 1
 
 service:
