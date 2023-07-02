@@ -92,7 +92,8 @@ podSecurityContext: {}
   # fsGroup: 2000
 
 ## @param priorityClassName Priority class name
-priorityClassName : high-priority
+priorityClassName:
+# priorityClassName : high-priority
 
 ## @param securityContext Container security context
 securityContext: {}
