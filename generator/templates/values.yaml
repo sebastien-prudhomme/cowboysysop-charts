@@ -2,26 +2,33 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+## @section Global parameters
+
 global:
-  # Global Docker image registry
+  ## @param global.imageRegistry Global Docker image registry
   imageRegistry: ""
 
-  # Global Docker registry secret names as an array
+  ## @param global.imagePullSecrets Global Docker registry secret names as an array
   imagePullSecrets: []
 
-# Override Kubernetes version
+## @section Common parameters
+
+## @param kubeVersion Override Kubernetes version
 kubeVersion: ""
 
+## @param nameOverride Partially override `[[ application.name ]].fullname` template with a string (will prepend the release name)
 nameOverride: ""
+
+## @param fullnameOverride Fully override `[[ application.name ]].fullname` template with a string
 fullnameOverride: ""
 
-# Annotations to add to all deployed objects
+## @param commonAnnotations Annotations to add to all deployed objects
 commonAnnotations: {}
 
-# Labels to add to all deployed objects
+## @param commonLabels Labels to add to all deployed objects
 commonLabels: {}
 
-# Array of extra objects to deploy with the release
+## @param extraDeploy Array of extra objects to deploy with the release
 extraDeploy: []
 [%- for component in application.components %]
 [[ "" ]]

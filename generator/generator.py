@@ -2,6 +2,7 @@ import jinja2
 import os
 import pathlib
 import shutil
+import subprocess
 import sys
 import yaml
 
@@ -46,6 +47,16 @@ with open(sys.argv[1], "r") as stream:
     render("LICENSE", f"{chart_directory}/LICENSE", application=application)
     render("README.md", f"{chart_directory}/README.md", application=application)
     render("values.yaml", f"{chart_directory}/values.yaml", application=application)
+
+    subprocess.run([
+      "readme-generator",
+      "--values",
+      f"{chart_directory}/values.yaml",
+      "--readme",
+      f"{chart_directory}/README.md",
+      "--config",
+      f"{pathlib.Path(__file__).parent}/config.json"
+    ])
 
     ci_directory = f"{chart_directory}/ci"
     os.mkdir(ci_directory)
