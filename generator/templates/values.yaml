@@ -219,6 +219,7 @@ ingress:
   #    hosts:
   #      - [[ application.name ]].local
 
+## @param resources CPU/Memory resource requests/limits
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
@@ -231,24 +232,28 @@ resources: {}
   #   cpu: 100m
   #   memory: 128Mi
 
+## @param nodeSelector Node labels for pod assignment
 nodeSelector: {}
 
+## @param tolerations Tolerations for pod assignment
 tolerations: []
 
+## @param affinity Map of node/pod affinities
 affinity: {}
 
+## @param extraArgs Additional container arguments
 extraArgs: {}
   # name: ""
 
-# Additional container environment variables
+## @param extraEnvVars Additional container environment variables
 extraEnvVars: []
 #  - name: MY-NAME
 #    value: "MY-VALUE"
 
-# Name of existing ConfigMap containing additional container environment variables
+## @param extraEnvVarsCM Name of existing ConfigMap containing additional container environment variables
 extraEnvVarsCM:
 
-# Name of existing Secret containing additional container environment variables
+## @param extraEnvVarsSecret Name of existing Secret containing additional container environment variables
 extraEnvVarsSecret:
 [%- if component.deployment.initContainer %]
 
@@ -322,17 +327,17 @@ persistence:
 
 tests:
   image:
-    # Image registry
+    ## @param tests.image.registry Image registry
     registry: ghcr.io
 
-    # Image repository
+    ## @param tests.image.repository Image repository
     repository: cowboysysop/pytest
 
-    # Image tag
+    ## @param tests.image.tag Image tag
     tag: 1.0.35
 
-    # Image digest
+    ## @param tests.image.digest Image digest
     digest: ""
 
-    # Image pull policy
+    ## @param tests.image.pullPolicy Image pull policy
     pullPolicy: IfNotPresent
