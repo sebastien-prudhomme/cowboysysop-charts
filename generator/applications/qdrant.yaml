@@ -45,6 +45,19 @@ components:
         readinessProbe:
           httpGet:
             path: /
+        volumeMounts: |
+          - name: config
+            mountPath: /qdrant/config/production.yaml
+            subPath: production.yaml
+          - name: data
+            mountPath: /qdrant/storage
+            subPath: storage
+          - name: data
+            mountPath: /qdrant/snapshots
+            subPath: snapshots
+      volumes:
+        config: true
+        data: true
     image:
       registry: docker.io
       repository: qdrant/qdrant

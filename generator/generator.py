@@ -90,7 +90,7 @@ with open(sys.argv[1], "r") as stream:
                 render("templates/component/ingress.yaml", f"{component_directory}/ingress.yaml", application=application, component=component)
 
         # Manage PersistentVolumeClaim
-        if component.get("persistentvolumeclaim"):
+        if component["deployment"]["type"] == "deployment" and component.get("persistentvolumeclaim"):
             if component_name == name:
                 render("templates/persistentvolumeclaim.yaml", f"{templates_directory}/persistentvolumeclaim.yaml", application=application, component=component)
             else:
