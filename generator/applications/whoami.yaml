@@ -1,9 +1,31 @@
 name: whoami
+productName: Whoami
 appVersion: 1.9.0
-description: Tiny Go webserver that prints os information and HTTP request to output
+descriptionVerb: is a
+description: tiny Go webserver that prints os information and HTTP request to output
 home: https://github.com/traefik/whoami
 source: https://github.com/traefik/whoami
 version: 4.1.0
+updates: |
+  ### Upgrading to version 4.0.0
+
+  Some parameters related to port management have been modified:
+
+  - Parameter `service.port` has been renamed `service.ports.http`.
+  - Parameter `service.nodePort` has been renamed `service.nodePorts.http`.
+
+  ### Upgrading to version 3.0.0
+
+  Some parameters related to image management have been modified:
+
+  - Registry prefix in `image.repository` parameters is now configured in `image.registry`.
+  - Parameter `imagePullSecrets` has been renamed `global.imagePullSecrets`.
+
+  ### Upgrading to version 2.0.0
+
+  The chart is no more compatible with Helm 2.
+
+  Refer to the [Helm documentation](https://helm.sh/docs/topics/v2_v3_migration/) for more information.
 components:
   - name: whoami
     deployment:

@@ -1,6 +1,6 @@
 apiVersion: v2
 appVersion: [[ application.appVersion ]]
-description: [[ application.description ]]
+description: [[ application.description | capitalize ]]
 home: [[ application.home ]]
 [%- if application.icon %]
 icon: [[ application.icon ]]

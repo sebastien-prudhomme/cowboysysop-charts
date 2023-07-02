@@ -44,6 +44,7 @@ with open(sys.argv[1], "r") as stream:
     render(".helmignore", f"{chart_directory}/.helmignore", application=application)
     render("Chart.yaml", f"{chart_directory}/Chart.yaml", application=application)
     render("LICENSE", f"{chart_directory}/LICENSE", application=application)
+    render("README.md", f"{chart_directory}/README.md", application=application)
     render("values.yaml", f"{chart_directory}/values.yaml", application=application)
 
     ci_directory = f"{chart_directory}/ci"

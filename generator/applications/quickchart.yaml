@@ -1,6 +1,8 @@
 name: quickchart
+producName: Kubebox
 appVersion: 1.7.1
-description: Chart image and QR code web API
+descriptionVerb: is a
+description: chart image and QR code web API
 home: https://quickchart.io/
 source: https://github.com/typpo/quickchart
 version: 2.1.0
