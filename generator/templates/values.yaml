@@ -27,7 +27,7 @@ extraDeploy: []
 [[ "" ]]
 # Number of replicas[%- if component.persistentvolumeclaim%] (do not change it)[%- endif %]
 replicaCount: 1
-[%- if component.persistentvolumeclaim %]
+[%- if component.deployment.type == "deployment" and component.persistentvolumeclaim %]
 
 updateStrategy:
   # Update strategy type (do not change it)

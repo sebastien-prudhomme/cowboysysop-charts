@@ -23,6 +23,15 @@ If release name contains chart name it will be used as a full name.
 {{- end -}}
 {{- end -}}
 {{- end -}}
+[%- if component.headless %]
+
+{{/*
+Create a default fully qualified headless name.
+*/}}
+{{- define "[[ application.name ]].headless.fullname" -}}
+{{- printf "%s-%s" (include "[[ application.name ]].fullname" .) "headless" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+[%- endif %]
 
 {{/*
 Create chart name and version as used by the chart label.

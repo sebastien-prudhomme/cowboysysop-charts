@@ -54,7 +54,6 @@ with open(sys.argv[1], "r") as stream:
     templates_directory = f"{chart_directory}/templates"
     os.mkdir(templates_directory)
 
-    render("templates/_helpers.tpl", f"{templates_directory}/_helpers.tpl", application=application)
     render("templates/extra-list.yaml", f"{templates_directory}/extra-list.yaml", application=application)
     render("templates/NOTES.txt", f"{templates_directory}/NOTES.txt", application=application)
 
@@ -67,6 +66,13 @@ with open(sys.argv[1], "r") as stream:
         if component_name != name:
             component_directory = f"{templates_directory}/{component_name}"
             os.mkdir(component_directory)
+
+        # Manage helper
+        if component_name == name:
+            if component_name == name:
+                render("templates/_helpers.tpl", f"{templates_directory}/_helpers.tpl", application=application, component=component)
+            else:
+                render("templates/component/_helpers.tpl", f"{component_directory}/_helpers.tpl", application=application, component=component)
 
         # Manage ConfigMap
         if component.get("configmap"):
