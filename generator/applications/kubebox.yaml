@@ -6,6 +6,15 @@ source: https://github.com/astefanutti/kubebox
 version: 3.0.0
 components:
   - name: kubebox
+    clusterrole: |
+      - apiGroups:
+          - "*"
+        resources:
+          - "*"
+        verbs:
+          - get
+          - watch
+          - list
     deployment:
       type: deployment
       container:

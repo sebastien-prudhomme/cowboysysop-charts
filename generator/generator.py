@@ -74,6 +74,15 @@ with open(sys.argv[1], "r") as stream:
             else:
                 render("templates/component/_helpers.tpl", f"{component_directory}/_helpers.tpl", application=application, component=component)
 
+       # Manage ClusterRole/ClusterRoleBinding
+        if component.get("clusterrole"):
+            if component_name == name:
+                render("templates/clusterrole.yaml", f"{templates_directory}/clusterrole.yaml", application=application, component=component)
+                render("templates/clusterrolebinding.yaml", f"{templates_directory}/clusterrolebinding.yaml", application=application, component=component)
+            else:
+                render("templates/component/clusterrole.yaml", f"{component_directory}/clusterrole.yaml", application=application, component=component)
+                render("templates/component/clusterrolebinding.yaml", f"{component_directory}/clusterrolebinding.yaml", application=application, component=component)
+
         # Manage ConfigMap
         if component.get("configmap"):
             if component_name == name:
