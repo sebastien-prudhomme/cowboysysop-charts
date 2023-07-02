@@ -1,0 +1,37 @@
+name: kubebox
+appVersion: 0.9.0
+description: Terminal and Web console for Kubernetes
+home: https://github.com/astefanutti/kubebox
+source: https://github.com/astefanutti/kubebox
+version: 3.0.0
+components:
+  - name: kubebox
+    deployment:
+      type: deployment
+      container:
+        livenessProbe:
+          httpGet:
+            path: /
+        readinessProbe:
+          httpGet:
+            path: /
+    image:
+      registry: docker.io
+      repository: astefanutti/kubebox
+      tag: 0.9.0-server
+    ingress: true
+    service:
+      ports:
+        - name: http
+          number: 8080
+          description: HTTP
+tests: |
+  import requests
+
+
+  def test_service_connection():
+      url = "http://{{ include "kubebox.fullname" . }}:{{ .Values.service.ports.http }}/"
+
+      response = requests.get(url)
+
+      assert response.status_code == 200
