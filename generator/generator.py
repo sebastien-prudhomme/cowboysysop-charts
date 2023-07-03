@@ -55,7 +55,9 @@ with open(sys.argv[1], "r") as stream:
       "--readme",
       f"{chart_directory}/README.md",
       "--config",
-      f"{pathlib.Path(__file__).parent}/config.json"
+      f"{pathlib.Path(__file__).parent}/config.json",
+      "--schema",
+      f"{chart_directory}/values.schema.json",
     ])
 
     ci_directory = f"{chart_directory}/ci"
