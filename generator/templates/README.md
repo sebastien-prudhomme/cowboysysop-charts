@@ -61,9 +61,9 @@ The command deletes the release named `my-release` and frees all the kubernetes 
 
 ## Configuration
 
-The following tables lists all the configurable parameters expose by the chart and their default values.
+###
 
-### Setting parameters
+## Setting parameters
 
 Specify the parameters you which to customize using the `--set` argument to the `helm install` command. For instance,
 
