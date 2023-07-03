@@ -5,11 +5,18 @@ descriptionVerb: is a
 description: Terminal and Web console for Kubernetes
 home: https://github.com/astefanutti/kubebox
 source: https://github.com/astefanutti/kubebox
-version: 3.1.0
+version: 4.0.0
 prerequisites: |
   - Kubernetes >= 1.19
   - cAdvisor >= 0.36 (you can use the [ckotzbauer/cadvisor](https://artifacthub.io/packages/helm/ckotzbauer/cadvisor) chart)
 updates: |
+  ### Upgrading to version 4.0.0
+
+  Some parameters related to port management have been modified:
+
+  - Parameter `service.port` has been renamed `service.ports.http`.
+  - Parameter `service.nodePort` has been renamed `service.nodePorts.http`.
+
   ### Upgrading to version 3.0.0
 
   Some parameters related to image management have been modified:

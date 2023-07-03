@@ -5,7 +5,7 @@ descriptionVerb: is a
 description: tiny Go webserver that prints os information and HTTP request to output
 home: https://github.com/traefik/whoami
 source: https://github.com/traefik/whoami
-version: 4.1.0
+version: 4.1.1
 prerequisites: |
   - Kubernetes >= 1.19
 updates: |
