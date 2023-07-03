@@ -17,7 +17,7 @@ This chart bootstraps a [[ application.productName ]] deployment on a [Kubernete
 
 ## Prerequisites
 
-- Kubernetes >= 1.19
+[[ application.prerequisites | trim ]]
 - Helm >= 3.1
 
 ## Installing

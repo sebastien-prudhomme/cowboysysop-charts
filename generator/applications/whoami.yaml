@@ -6,6 +6,8 @@ description: tiny Go webserver that prints os information and HTTP request to ou
 home: https://github.com/traefik/whoami
 source: https://github.com/traefik/whoami
 version: 4.1.0
+prerequisites: |
+  - Kubernetes >= 1.19
 updates: |
   ### Upgrading to version 4.0.0
 
