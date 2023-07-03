@@ -72,7 +72,7 @@ components:
             mountPath: /var/www/documents
     image:
       registry: docker.io
-      repository: astefanutti/kubebox
+      repository: tuxgasy/dolibarr
       tag: 15.0.3
     ingress: true
     persistentvolumeclaim: true

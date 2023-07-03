@@ -70,3 +70,107 @@ Create the name of the service account to use
     {{ default "default" .Values.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
+[%- if component.secret %]
+
+{{/*
+Create the name of the secret to use
+*/}}
+{{- define "[[ application.name ]].secretName" -}}
+{{- if .Values.existingSecret -}}
+    {{ .Values.existingSecret }}
+{{- else -}}
+    {{ include "[[ application.name ]].fullname" . }}
+{{- end -}}
+{{- end -}}
+[%- endif %]
+[%- if application.mariadb %]
+
+{{/*
+MariaDB fully qualified app name
+*/}}
+{{- define "[[ application.name ]].mariadb.fullname" -}}
+{{- if .Values.mariadb.fullnameOverride -}}
+{{- .Values.mariadb.fullnameOverride | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- $name := default "mariadb" .Values.mariadb.nameOverride -}}
+{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+MariaDB host
+*/}}
+{{- define "[[ application.name ]].mariadb.host" -}}
+{{- if .Values.mariadb.enabled -}}
+{{- if eq .Values.mariadb.architecture "replication" -}}
+    {{- if .Values.mariadb.fullnameOverride -}}
+    {{- printf "%s-%s" .Values.mariadb.fullnameOverride "primary" | trunc 63 | trimSuffix "-" -}}
+    {{- else -}}
+    {{- $name := default "mariadb" .Values.mariadb.nameOverride -}}
+    {{- printf "%s-%s-%s" .Release.Name $name "primary" | trunc 63 | trimSuffix "-" -}}
+    {{- end -}}
+{{- else -}}
+    {{ include "[[ application.name ]].mariadb.fullname" . }}
+{{- end -}}
+{{- else -}}
+    {{ .Values.externalMariadb.host }}
+{{- end -}}
+{{- end -}}
+
+{{/*
+MariaDB port
+*/}}
+{{- define "[[ application.name ]].mariadb.port" -}}
+{{- if .Values.mariadb.enabled -}}
+    {{ .Values.mariadb.primary.service.ports.mysql }}
+{{- else -}}
+    {{ .Values.externalMariadb.port }}
+{{- end -}}
+{{- end -}}
+
+{{/*
+MariaDB user
+*/}}
+{{- define "[[ application.name ]].mariadb.username" -}}
+{{- if .Values.mariadb.enabled -}}
+    {{ .Values.mariadb.auth.username }}
+{{- else -}}
+    {{ .Values.externalMariadb.username }}
+{{- end -}}
+{{- end -}}
+
+{{/*
+MariaDB secret name
+*/}}
+{{- define "[[ application.name ]].mariadb.secretName" -}}
+{{- if .Values.mariadb.auth.existingSecret -}}
+    {{ .Values.mariadb.auth.existingSecret }}
+{{- else if .Values.externalMariadb.existingSecret -}}
+    {{ .Values.externalMariadb.existingSecret }}
+{{- else -}}
+    {{ include "[[ application.name ]].mariadb.fullname" . }}
+{{- end -}}
+{{- end -}}
+
+{{/*
+MariaDB password secret key name
+*/}}
+{{- define "[[ application.name ]].mariadb.secretKeyNamePassword" -}}
+{{- if .Values.externalMariadb.existingSecret -}}
+    {{ .Values.externalMariadb.existingSecretKeyPassword }}
+{{- else -}}
+    mariadb-password
+{{- end -}}
+{{- end -}}
+
+{{/*
+MariaDB database
+*/}}
+{{- define "[[ application.name ]].mariadb.database" -}}
+{{- if .Values.mariadb.enabled -}}
+    {{ .Values.mariadb.auth.database }}
+{{- else -}}
+    {{ .Values.externalMariadb.database }}
+{{- end -}}
+{{- end -}}
+[%- endif %]
