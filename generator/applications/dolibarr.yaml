@@ -67,15 +67,24 @@ components:
         readinessProbe:
           httpGet:
             path: /
+        volumeMounts: |
+          - name: data
+            mountPath: /var/www/documents
     image:
       registry: docker.io
       repository: astefanutti/kubebox
       tag: 15.0.3
     ingress: true
+    persistentvolumeclaim: true
+    secret: |
+      dolibarr-admin-password: {{ .Values.dolibarr.admin.password | b64enc | quote }}
+      {{- if .Values.dolibarr.cron.enabled }}
+      dolibarr-cron-security-key: {{ .Values.dolibarr.cron.securityKey | b64enc | quote }}
+      {{- end }}
     service:
       ports:
         - name: http
-          number: 8080
+          number: 80
           description: HTTP
 mariadb: true
 tests: |

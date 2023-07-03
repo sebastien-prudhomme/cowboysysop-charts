@@ -129,6 +129,13 @@ with open(sys.argv[1], "r") as stream:
         else:
             render("templates/component/pdb.yaml", f"{component_directory}/pdb.yaml", application=application, component=component)
 
+        # Manage Secret
+        if component.get("secret"):
+            if component_name == name:
+                render("templates/secret.yaml", f"{templates_directory}/secret.yaml", application=application, component=component)
+            else:
+                render("templates/component/secret.yaml", f"{component_directory}/secret.yaml", application=application, component=component)
+
         # Manage Service
         if component_name == name:
             render("templates/service.yaml", f"{templates_directory}/service.yaml", application=application, component=component)
