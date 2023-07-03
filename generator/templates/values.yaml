@@ -325,6 +325,61 @@ persistence:
 [[ component.extraValues | trim ]]
 [%- endif %]
 [%- endfor %]
+[%- if application.mariadb %]
+
+## @section MariaDB parameters
+
+mariadb:
+  ## @param mariadb.enabled Whether to use the MariaDB chart
+  enabled: true
+
+  ## @param mariadb.architecture MariaDB architecture
+  architecture: standalone
+
+  auth:
+    ## @param mariadb.auth.database MariaDB database
+    database: [[ application.name ]]
+
+    ## @param mariadb.auth.username MariaDB user
+    username: [[ application.name ]]
+
+    ## @param mariadb.auth.password MariaDB password
+    password: [[ application.name ]]
+
+    ## @param mariadb.auth.existingSecret Name of existing Secret to use
+    existingSecret: ""
+
+  primary:
+    service:
+      ports:
+        ## @param mariadb.primary.service.ports.mysql MariaDB port
+        mysql: 3306
+
+externalMariadb:
+  ## @param externalMariadb.enabled Whether to use an external MariaDB
+  enabled: false
+
+  ## @param externalMariadb.host External MariaDB host
+  host: mariadb
+
+  ## @param externalMariadb.port External MariaDB port
+  port: 3306
+
+  ## @param externalMariadb.username External MariaDB user
+  username: [[ application.name ]]
+
+  ## @param externalMariadb.password External MariaDB password
+  password: [[ application.name ]]
+
+  ## @param externalMariadb.existingSecret Name of existing Secret to use
+  existingSecret: ""
+
+  ## @param externalMariadb.existingSecretKeyPassword Name of the key in existing Secret that contains MariaDB password
+  existingSecretKeyPassword: mariadb-password
+
+  ## @param externalMariadb.database External MariaDB database
+  database: [[ application.name ]]
+[%- endif %]
 
 ## @section Tests parameters
 

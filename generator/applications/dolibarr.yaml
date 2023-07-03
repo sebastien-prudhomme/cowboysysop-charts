@@ -1,0 +1,90 @@
+name: dolibarr
+productName: Dolibarr
+appVersion: 15.0.3
+descriptionVerb: is
+description: a modern software package to manage your company or foundation's activity
+home: https://www.dolibarr.org/
+icon: https://raw.githubusercontent.com/Dolibarr/dolibarr/develop/doc/images/dolibarr_256x256_color.svg
+source: https://github.com/Dolibarr/dolibarr
+version: 3.0.0
+prerequisites: |
+  - Kubernetes >= 1.19
+updates: |
+  ### Upgrading to version 3.0.0
+
+  Some parameters related to port management have been modified:
+
+  - Parameter `service.port` has been renamed `service.ports.http`.
+  - Parameter `service.nodePort` has been renamed `service.nodePorts.http`.
+
+  ### Upgrading to version 2.0.0
+
+  Some parameters related to image management have been modified:
+
+  - Registry prefix in `image.repository` parameters is now configured in `image.registry`.
+  - Parameter `imagePullSecrets` has been renamed `global.imagePullSecrets`.
+components:
+  - name: dolibarr
+    deployment:
+      type: deployment
+      initContainer:
+        securityContext:
+        command: |
+          - /bin/bash
+          - -ec
+          - |
+            rm -f /var/www/documents/install.lock
+        volumeMounts: |
+          - name: data
+            mountPath: /var/www/documents
+      container:
+        env: |
+          - name: DOLI_ADMIN_LOGIN
+            value: {{ .Values.dolibarr.admin.username | quote }}
+          - name: DOLI_ADMIN_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "dolibarr.secretName" . }}
+                key: dolibarr-admin-password
+          - name: DOLI_DB_HOST
+            value: {{ include "dolibarr.mariadb.host" . | quote }}
+          - name: DOLI_DB_HOST_PORT
+            value: {{ include "dolibarr.mariadb.port" . | quote }}
+          - name: DOLI_DB_USER
+            value: {{ include "dolibarr.mariadb.username" . | quote }}
+          - name: DOLI_DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "dolibarr.mariadb.secretName" . }}
+                key: {{ include "dolibarr.mariadb.secretKeyNamePassword" . }}
+          - name: DOLI_DB_NAME
+            value: {{ include "dolibarr.mariadb.database" . | quote }}
+          - name: DOLI_URL_ROOT
+            value: {{ .Values.dolibarr.externalUrl | quote }}
+        livenessProbe:
+          httpGet:
+            path: /
+        readinessProbe:
+          httpGet:
+            path: /
+    image:
+      registry: docker.io
+      repository: astefanutti/kubebox
+      tag: 15.0.3
+    ingress: true
+    service:
+      ports:
+        - name: http
+          number: 8080
+          description: HTTP
+mariadb: true
+tests: |
+  import requests
+
+
+  def test_service_connection():
+      url = "http://{{ include "dolibarr.fullname" . }}:{{ .Values.service.ports.http }}/"
+
+      response = requests.get(url)
+
+      assert response.status_code == 200

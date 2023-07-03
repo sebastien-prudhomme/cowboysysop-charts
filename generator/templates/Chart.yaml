@@ -17,6 +17,12 @@ dependencies:
   - name: common
     version: 2.5.0
     repository: https://charts.bitnami.com/bitnami/
+  [%- if application.mariadb %]
+  - name: mariadb
+    version: 11.5.7
+    repository: https://charts.bitnami.com/bitnami/
+    condition: mariadb.enabled
+  [%- endif %]
 annotations:
   artifacthub.io/signKey: |
     fingerprint: 9E57D2479D48B84463EF491F66D280CE667AD6C8
