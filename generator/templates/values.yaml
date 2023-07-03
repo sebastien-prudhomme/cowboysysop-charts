@@ -300,29 +300,35 @@ headless:
 [%- if component.persistentvolumeclaim %]
 
 persistence:
-  # Enable persistence using PVC
+  ## @param persistence.enabled Enable persistence using PVC
   enabled: false
   [%- if component.deployment.type == "deployment" %]
 
-  # Name of an existing PVC to use
+  ## @param persistence.existingClaim Name of an existing PVC to use
   # existingClaim: my-pvc
   [%- endif %]
 
-  # PVC access mode
+  ## @param persistence.accessMode PVC access mode
   accessMode: ReadWriteOnce
 
-  # PVC annotations
+  ## @param persistence.annotations PVC annotations
   annotations: {}
 
-  # PVC size
+  ## @param persistence.size PVC size
   size: 1Gi
 
-  # PVC storage class
+  ## @param persistence.storageClass PVC storage class
   # storageClass: -
 [%- endif %]
 [%- if component.extraValues %]
 
 [[ component.extraValues | trim ]]
+[%- endif %]
+
+[%- if component.secret %]
+
+## @param existingSecret Name of existing Secret to use
+existingSecret: ""
 [%- endif %]
 [%- endfor %]
 [%- if application.mariadb %]

@@ -86,6 +86,27 @@ components:
         - name: http
           number: 80
           description: HTTP
+    extraValues: |
+      dolibarr:
+        admin:
+          # Administrator username
+          username: admin
+
+          # Administrator password
+          password: admin
+
+        # External URL
+        externalUrl: http://dolibarr.local
+
+        cron:
+          # Enable cron for scheduled jobs
+          enabled: false
+
+          # Cron username
+          username: admin
+
+          # Cron security key
+          securityKey: ""
 mariadb: true
 tests: |
   import requests
