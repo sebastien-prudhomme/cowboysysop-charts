@@ -39,7 +39,7 @@ spec:
         {{- if .Values.commonLabels }}
         {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 8 }}
         {{- end }}
-      [%- if not component.configmap %]
+      [%- if not component.configmap and not component.secret %]
       {{- if or .Values.podAnnotations .Values.commonAnnotations }}
       [%- endif %]
       annotations:
@@ -55,7 +55,7 @@ spec:
         {{- if .Values.commonAnnotations }}
         {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 8 }}
         {{- end }}
-      [%- if not component.configmap %]
+      [%- if not component.configmap and not component.secret %]
       {{- end }}
       [%- endif %]
     spec:
