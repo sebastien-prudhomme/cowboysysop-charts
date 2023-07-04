@@ -263,7 +263,7 @@ extraEnvVarsSecret:
 [%- if component.deployment.initContainer %]
 
 init:
-  # Init security context
+  ## @param init.securityContext Init security context
   securityContext: {}
     # capabilities:
     #   drop:
@@ -272,7 +272,7 @@ init:
     # runAsNonRoot: true
     # runAsUser: 1000
 
-  # Init CPU/Memory resource requests/limits
+  ## @param init.resources Init CPU/Memory resource requests/limits
   resources: {}
     # limits:
     #   cpu: 100m
@@ -285,7 +285,7 @@ init:
 
 headless:
   service:
-    # Headless service annotations
+    ## @param headless.service.annotations Headless service annotations
     annotations: {}
 
     ports:
@@ -293,7 +293,7 @@ headless:
       [%- if loop.index0 > 0 %]
 [[ "" ]]
       [%- endif %]
-      # Headless service port for [[ port.description ]]
+      ## @param headless.service.ports.[[ port.name ]] Headless service port for [[ port.description ]]
       [[ port.name ]]: [[ port.number ]]
       [%- endfor %]
 [%- endif %]
@@ -305,6 +305,7 @@ persistence:
   [%- if component.deployment.type == "deployment" %]
 
   ## @param persistence.existingClaim Name of an existing PVC to use
+  existingClaim:
   # existingClaim: my-pvc
   [%- endif %]
 
@@ -318,6 +319,7 @@ persistence:
   size: 1Gi
 
   ## @param persistence.storageClass PVC storage class
+  storageClass:
   # storageClass: -
 [%- endif %]
 [%- if component.extraValues %]

@@ -89,23 +89,23 @@ components:
     extraValues: |
       dolibarr:
         admin:
-          # Administrator username
+          ## @param dolibarr.admin.username Administrator username
           username: admin
 
-          # Administrator password
+          ## @param dolibarr.admin.password Administrator password
           password: admin
 
-        # External URL
+        ## @param dolibarr.externalUrl External URL
         externalUrl: http://dolibarr.local
 
         cron:
-          # Enable cron for scheduled jobs
+          ## @param dolibarr.cron.enabled Enable cron for scheduled jobs
           enabled: false
 
-          # Cron username
+          ## @param dolibarr.cron.username Cron username
           username: admin
 
-          # Cron security key
+          ## @param dolibarr.cron.securityKey Cron security key
           securityKey: ""
 mariadb: true
 tests: |
