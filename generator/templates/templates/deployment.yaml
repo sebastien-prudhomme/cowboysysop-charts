@@ -164,6 +164,29 @@ spec:
           volumeMounts:
             [[ component.deployment.container.volumeMounts | indent(12) | trim ]]
           [%- endif %]
+        [%- for container in component.deployment.containers %]
+        [%- if container.optional %]
+        {{- if .Values.[[ application.name ]].[[ container.name ]].enabled }}
+        [%- endif %]
+        - name: [[ container.name ]]
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: {{ include "common.images.image" ( dict "imageRoot" .Values.image "global" .Values.global ) }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          [%- if container.env %]
+          env:
+            [[ container.env | indent(12) | trim ]]
+          [%- endif %]
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          [%- if container.volumeMounts %]
+          volumeMounts:
+            [[ container.volumeMounts | indent(12) | trim ]]
+          [%- endif %]
+        [%- if container.optional %]
+        {{- end }}
+        [%- endif %]
+        [%- endfor %]
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

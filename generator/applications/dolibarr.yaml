@@ -28,7 +28,6 @@ components:
     deployment:
       type: deployment
       initContainer:
-        securityContext:
         command: |
           - /bin/bash
           - -ec
@@ -70,6 +69,35 @@ components:
         volumeMounts: |
           - name: data
             mountPath: /var/www/documents
+      containers:
+        - name: cron
+          optional: true
+          env: |
+            - name: DOLI_CRON
+              value: "1"
+            - name: DOLI_CRON_USER
+              value: {{ .Values.dolibarr.cron.username | quote }}
+            - name: DOLI_CRON_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "dolibarr.secretName" . }}
+                  key: dolibarr-cron-security-key
+            - name: DOLI_DB_HOST
+              value: {{ include "dolibarr.mariadb.host" . | quote }}
+            - name: DOLI_DB_HOST_PORT
+              value: {{ include "dolibarr.mariadb.port" . | quote }}
+            - name: DOLI_DB_USER
+              value: {{ include "dolibarr.mariadb.username" . | quote }}
+            - name: DOLI_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "dolibarr.mariadb.secretName" . }}
+                  key: {{ include "dolibarr.mariadb.secretKeyNamePassword" . }}
+            - name: DOLI_DB_NAME
+              value: {{ include "dolibarr.mariadb.database" . | quote }}
+          volumeMounts: |
+            - name: data
+              mountPath: /var/www/documents
     image:
       registry: docker.io
       repository: tuxgasy/dolibarr
