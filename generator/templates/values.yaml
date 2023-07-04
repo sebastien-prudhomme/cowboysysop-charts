@@ -217,7 +217,7 @@ ingress:
       paths:
         - /
 
-  ## @param ingress.tls
+  ## @param ingress.tls TLS configuration
   tls: []
     # - secretName: [[ application.name ]]-tls
     #   hosts:
