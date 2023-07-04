@@ -61,6 +61,7 @@ components:
           - name: DOLI_URL_ROOT
             value: {{ .Values.dolibarr.externalUrl | quote }}
         livenessProbe:
+          initialDelaySeconds: 180
           httpGet:
             path: /
         readinessProbe:
