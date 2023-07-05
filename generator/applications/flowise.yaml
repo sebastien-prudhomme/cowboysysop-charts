@@ -1,12 +1,12 @@
 name: flowise
 productName: Flowise
-appVersion: 1.2.13
+appVersion: 1.2.14
 descriptionVerb: is a
 description: drag & drop UI to build your customized LLM flow
 home: https://flowiseai.com/
 icon: https://avatars.githubusercontent.com/u/128289781
 source: https://github.com/FlowiseAI/Flowise
-version: 1.0.0
+version: 1.0.1
 prerequisites: |
   - Kubernetes >= 1.19
 components:
@@ -20,6 +20,8 @@ components:
           - |
             flowise start
         env: |
+          - name: APIKEY_PATH
+            value: /data
           - name: DATABASE_PATH
             value: /data
           - name: PORT
@@ -36,7 +38,7 @@ components:
     image:
       registry: docker.io
       repository: flowiseai/flowise
-      tag: 1.2.13
+      tag: 1.2.14
     ingress: true
     persistentvolumeclaim: true
     service:
