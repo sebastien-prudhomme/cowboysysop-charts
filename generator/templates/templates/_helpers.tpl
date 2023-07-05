@@ -174,3 +174,94 @@ MariaDB database
 {{- end -}}
 {{- end -}}
 [%- endif %]
+[%- if application.mariadb %]
+
+{{/*
+PostgreSQL fully qualified app name
+*/}}
+{{- define "[[ application.name ]].postgresql.fullname" -}}
+{{- if .Values.postgresql.fullnameOverride -}}
+{{- .Values.postgresql.fullnameOverride | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- $name := default "postgresql" .Values.postgresql.nameOverride -}}
+{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+PostgreSQL host
+*/}}
+{{- define "[[ application.name ]].postgresql.host" -}}
+{{- if .Values.postgresql.enabled -}}
+{{- if eq .Values.postgresql.architecture "replication" -}}
+    {{- if .Values.postgresql.fullnameOverride -}}
+    {{- printf "%s-%s" .Values.postgresql.fullnameOverride "primary" | trunc 63 | trimSuffix "-" -}}
+    {{- else -}}
+    {{- $name := default "postgresql" .Values.postgresql.nameOverride -}}
+    {{- printf "%s-%s-%s" .Release.Name $name "primary" | trunc 63 | trimSuffix "-" -}}
+    {{- end -}}
+{{- else -}}
+    {{ include "[[ application.name ]].postgresql.fullname" . }}
+{{- end -}}
+{{- else -}}
+    {{ .Values.externalPostgresql.host }}
+{{- end -}}
+{{- end -}}
+
+{{/*
+PostgreSQL port
+*/}}
+{{- define "[[ application.name ]].postgresql.port" -}}
+{{- if .Values.postgresql.enabled -}}
+    {{ .Values.postgresql.primary.service.ports.postgresql }}
+{{- else -}}
+    {{ .Values.externalPostgresql.port }}
+{{- end -}}
+{{- end -}}
+
+{{/*
+PostgreSQL user
+*/}}
+{{- define "[[ application.name ]].postgresql.username" -}}
+{{- if .Values.postgresql.enabled -}}
+    {{ .Values.postgresql.auth.username }}
+{{- else -}}
+    {{ .Values.externalPostgresql.username }}
+{{- end -}}
+{{- end -}}
+
+{{/*
+PostgreSQL secret name
+*/}}
+{{- define "[[ application.name ]].postgresql.secretName" -}}
+{{- if .Values.postgresql.existingSecret -}}
+    {{ .Values.postgresql.existingSecret }}
+{{- else if .Values.externalPostgresql.existingSecret -}}
+    {{ .Values.externalPostgresql.existingSecret }}
+{{- else -}}
+    {{ include "[[ application.name ]].postgresql.fullname" . }}
+{{- end -}}
+{{- end -}}
+
+{{/*
+PostgreSQL password secret key name
+*/}}
+{{- define "[[ application.name ]].postgresql.secretKeyNamePassword" -}}
+{{- if .Values.externalPostgresql.existingSecret -}}
+    {{ .Values.externalPostgresql.existingSecretKeyPassword }}
+{{- else -}}
+    password
+{{- end -}}
+{{- end -}}
+
+{{/*
+PostgreSQL database
+*/}}
+{{- define "[[ application.name ]].postgresql.database" -}}
+{{- if .Values.postgresql.enabled -}}
+    {{ .Values.postgresql.auth.database }}
+{{- else -}}
+    {{ .Values.externalPostgresql.database }}
+{{- end -}}
+{{- end -}}
+[%- endif %]

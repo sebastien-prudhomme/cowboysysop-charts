@@ -66,78 +66,68 @@ components:
         }
     deployment:
       type: deployment
-      initContainer:
-        command: |
-          - /bin/bash
-          - -ec
-          - |
-            rm -f /var/www/documents/install.lock
-        volumeMounts: |
-          - name: data
-            mountPath: /var/www/documents
       container:
         env: |
-          - name: DOLI_ADMIN_LOGIN
-            value: {{ .Values.lighthouse-ci.admin.username | quote }}
-          - name: DOLI_ADMIN_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: {{ include "lighthouse-ci.secretName" . }}
-                key: lighthouse-ci-admin-password
-          - name: DOLI_DB_HOST
-            value: {{ include "lighthouse-ci.mariadb.host" . | quote }}
-          - name: DOLI_DB_HOST_PORT
-            value: {{ include "lighthouse-ci.mariadb.port" . | quote }}
-          - name: DOLI_DB_USER
-            value: {{ include "lighthouse-ci.mariadb.username" . | quote }}
-          - name: DOLI_DB_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: {{ include "lighthouse-ci.mariadb.secretName" . }}
-                key: {{ include "lighthouse-ci.mariadb.secretKeyNamePassword" . }}
-          - name: DOLI_DB_NAME
-            value: {{ include "lighthouse-ci.mariadb.database" . | quote }}
-          - name: DOLI_URL_ROOT
-            value: {{ .Values.lighthouse-ci.externalUrl | quote }}
-        livenessProbe:
-          initialDelaySeconds: 180
-          httpGet:
-            path: /
-        readinessProbe:
-          httpGet:
-            path: /
-        volumeMounts: |
-          - name: data
-            mountPath: /var/www/documents
-      containers:
-        - name: cron
-          optional: true
-          env: |
-            - name: DOLI_CRON
-              value: "1"
-            - name: DOLI_CRON_USER
-              value: {{ .Values.lighthouse-ci.cron.username | quote }}
-            - name: DOLI_CRON_KEY
+            - name: LHCI_LOG_LEVEL
+              value: {{ .Values.logLevel | quote }}
+            {{- if and .Values.basicAuthUsername .Values.basicAuthPassword }}
+            - name: LHCI_BASIC_AUTH__USERNAME
+              value: {{ .Values.basicAuthUsername | quote }}
+            - name: LHCI_BASIC_AUTH__PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ include "lighthouse-ci.secretName" . }}
-                  key: lighthouse-ci-cron-security-key
-            - name: DOLI_DB_HOST
+                  key: {{ include "lighthouse-ci.secretKeyNameBasicAuthPassword" . }}
+            {{- end }}
+            {{- if or .Values.mariadb.enabled .Values.externalMariadb.enabled }}
+            - name: LHCI_STORAGE__SQL_DIALECT
+              value: mysql
+            - name: MARIADB_HOST
               value: {{ include "lighthouse-ci.mariadb.host" . | quote }}
-            - name: DOLI_DB_HOST_PORT
+            - name: MARIADB_PORT
               value: {{ include "lighthouse-ci.mariadb.port" . | quote }}
-            - name: DOLI_DB_USER
+            - name: MARIADB_USERNAME
               value: {{ include "lighthouse-ci.mariadb.username" . | quote }}
-            - name: DOLI_DB_PASSWORD
+            - name: MARIADB_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ include "lighthouse-ci.mariadb.secretName" . }}
                   key: {{ include "lighthouse-ci.mariadb.secretKeyNamePassword" . }}
-            - name: DOLI_DB_NAME
+            - name: MARIADB_DATABASE
               value: {{ include "lighthouse-ci.mariadb.database" . | quote }}
-          volumeMounts: |
-            - name: data
-              mountPath: /var/www/documents
+            - name: LHCI_STORAGE__SQL_CONNECTION_URL
+              value: "mysql://$(MARIADB_USERNAME):$(MARIADB_PASSWORD)@$(MARIADB_HOST):$(MARIADB_PORT)/$(MARIADB_DATABASE)"
+            {{- end }}
+            {{- if or .Values.postgresql.enabled .Values.externalPostgresql.enabled }}
+            - name: LHCI_STORAGE__SQL_DIALECT
+              value: postgres
+            - name: POSTGRESQL_HOST
+              value: {{ include "lighthouse-ci.postgresql.host" . | quote }}
+            - name: POSTGRESQL_PORT
+              value: {{ include "lighthouse-ci.postgresql.port" . | quote }}
+            - name: POSTGRESQL_USERNAME
+              value: {{ include "lighthouse-ci.postgresql.username" . | quote }}
+            - name: POSTGRESQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "lighthouse-ci.postgresql.secretName" . }}
+                  key: {{ include "lighthouse-ci.postgresql.secretKeyNamePassword" . }}
+            - name: POSTGRESQL_DATABASE
+              value: {{ include "lighthouse-ci.postgresql.database" . | quote }}
+            - name: LHCI_STORAGE__SQL_CONNECTION_URL
+              value: "postgres://$(POSTGRESQL_USERNAME):$(POSTGRESQL_PASSWORD)@$(POSTGRESQL_HOST):$(POSTGRESQL_PORT)/$(POSTGRESQL_DATABASE)"
+        livenessProbe:
+          httpGet:
+            path: /healthz
+        readinessProbe:
+          httpGet:
+            path: /healthz
+        volumeMounts: |
+          - name: config
+            mountPath: /usr/src/lhci/lighthouserc.json
+            subPath: lighthouserc.json
+          - name: data
+            mountPath: /data
     image:
       registry: docker.io
       repository: tuxgasy/lighthouse-ci
@@ -145,15 +135,13 @@ components:
     ingress: true
     persistentvolumeclaim: true
     secret: |
-      lighthouse-ci-admin-password: {{ .Values.lighthouse-ci.admin.password | b64enc | quote }}
-      {{- if .Values.lighthouse-ci.cron.enabled }}
-      lighthouse-ci-cron-security-key: {{ .Values.lighthouse-ci.cron.securityKey | b64enc | quote }}
+      {{- if and .Values.basicAuthUsername .Values.basicAuthPassword }}
+      basic-auth-password: {{ .Values.basicAuthPassword | b64enc | quote }}
       {{- end }}
     service:
       ports:
         - name: http
-          number: 80
-          numberForward: 8080
+          number: 9001
           description: HTTP
     extraValues: |
       lighthouse-ci:

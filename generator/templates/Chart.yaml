@@ -23,6 +23,12 @@ dependencies:
     repository: https://charts.bitnami.com/bitnami/
     condition: mariadb.enabled
   [%- endif %]
+  [%- if application.postgresql %]
+  - name: postgresql
+    version: 12.6.0
+    repository: https://charts.bitnami.com/bitnami/
+    condition: postgresql.enabled
+  [%- endif %]
 annotations:
   artifacthub.io/signKey: |
     fingerprint: 9E57D2479D48B84463EF491F66D280CE667AD6C8
