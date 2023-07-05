@@ -1,0 +1,97 @@
+name: kubeview
+productName: KubeView
+appVersion: 0.1.31
+descriptionVerb: is a
+description: Kubernetes cluster visualiser and graphical explorer
+home: https://github.com/benc-uk/kubeview
+icon: https://raw.githubusercontent.com/benc-uk/kubeview/master/web/client/public/favicon.png
+source: https://github.com/benc-uk/kubeview
+version: 4.0.0
+prerequisites: |
+  - Kubernetes >= 1.19
+updates: |
+  ### Upgrading to version 4.0.0
+
+  Some parameters related to port management have been modified:
+
+  - Parameter `service.port` has been renamed `service.ports.http`.
+  - Parameter `service.nodePort` has been renamed `service.nodePorts.http`.
+
+  ### Upgrading to version 3.0.0
+
+  Some parameters related to image management have been modified:
+
+  - Registry prefix in `image.repository` parameters is now configured in `image.registry`.
+  - Parameter `imagePullSecrets` has been renamed `global.imagePullSecrets`.
+
+  ### Upgrading to version 2.0.0
+
+  The chart is no more compatible with Helm 2.
+
+  Refer to the [Helm documentation](https://helm.sh/docs/topics/v2_v3_migration/) for more information.
+components:
+  - name: kubeview
+    clusterrole: |
+      - apiGroups: ["extensions"]
+        resources:
+          - ingresses
+        verbs: ["get", "list"]
+      - apiGroups: ["apps"]
+        resources:
+          - deployments
+          - replicasets
+          - daemonsets
+          - statefulsets
+        verbs: ["get", "list"]
+      - apiGroups: [""]
+        resources:
+          - pods
+          - configmaps
+          - secrets
+          - events
+          - endpoints
+          - namespaces
+          - nodes
+          - persistentvolumes
+          - persistentvolumeclaims
+          - resourcequotas
+          - services
+        verbs: ["get", "list"]
+      - apiGroups: ["networking.k8s.io"]
+        resources:
+          - ingresses
+        verbs: ["get", "list"]
+      - nonResourceURLs: ["*"]
+        verbs: ["get", "list"]
+    deployment:
+      type: deployment
+      container:
+        env: |
+          - name: IN_CLUSTER
+            value: "true"
+        livenessProbe:
+          httpGet:
+            path: /healthz
+        readinessProbe:
+          httpGet:
+            path: /healthz
+    image:
+      registry: ghcr.io
+      repository: benc-uk/kubeview
+      tag: 0.1.31
+    ingress: true
+    service:
+      ports:
+        - name: http
+          number: 8000
+          description: HTTP
+tests: |
+  import requests
+
+
+  def test_service_connection():
+      url = "http://{{ include "kubeview.fullname" . }}:{{ .Values.service.ports.http }}/"
+
+      response = requests.get(url)
+
+      assert response.status_code == 200

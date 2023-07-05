@@ -51,6 +51,7 @@ components:
       ports:
         - name: http
           number: 80
+          numberForward: 8080
           description: HTTP
 tests: |
   import requests
