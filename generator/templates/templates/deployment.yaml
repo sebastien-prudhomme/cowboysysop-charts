@@ -1,7 +1,7 @@
 [%- if component.deployment.type == "deployment" -%]
 apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
 kind: Deployment
-[%- elif component.deployment.type == "statefulset" %]
+[%- elif component.deployment.type == "statefulset" -%]
 apiVersion: {{ include "common.capabilities.statefulset.apiVersion" . }}
 kind: StatefulSet
 [%- endif %]
@@ -94,12 +94,19 @@ spec:
           command:
             [[ component.deployment.container.command | indent(12) | trim ]]
           [%- endif %]
-          {{- with .Values.extraArgs }}
+          [%- if not component.deployment.container.args %]
+          {{- if .Values.extraArgs }}
+          [%- endif %]
           args:
-            {{- range $key, $value := . }}
+            [%- if component.deployment.container.args %]
+            [[ component.deployment.container.args | indent(12) | trim ]]
+            [%- endif %]
+            {{- range $key, $value := .Values.extraArgs }}
             - --{{ $key }}={{ $value }}
             {{- end }}
+          [%- if not component.deployment.container.args %]
           {{- end }}
+          [%- endif %]
           [%- if not component.deployment.container.env %]
           {{- if .Values.extraEnvVars }}
           [%- endif %]
