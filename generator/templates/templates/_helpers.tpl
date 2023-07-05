@@ -174,7 +174,7 @@ MariaDB database
 {{- end -}}
 {{- end -}}
 [%- endif %]
-[%- if application.mariadb %]
+[%- if application.postgresql %]
 
 {{/*
 PostgreSQL fully qualified app name
