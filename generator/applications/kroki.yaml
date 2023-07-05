@@ -23,21 +23,20 @@ updates: |
 
   - Registry prefix in `image.repository` parameters is now configured in `image.registry`.
   - Parameter `imagePullSecrets` has been renamed `global.imagePullSecrets`.
-
 components:
   - name: kroki
     deployment:
       type: deployment
       container:
-        env: |
-          - name: WHOAMI_PORT_NUMBER
-            value: {{ .Values.containerPorts.http | quote }}
         livenessProbe:
           httpGet:
             path: /health
         readinessProbe:
           httpGet:
             path: /health
+      containers:
+        - name: blockdiag
+          optional: true
     image:
       registry: docker.io
       repository: yuzutech/kroki
