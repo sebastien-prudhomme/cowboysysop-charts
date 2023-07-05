@@ -383,6 +383,60 @@ externalMariadb:
   ## @param externalMariadb.database External MariaDB database
   database: [[ application.name ]]
 [%- endif %]
+[%- if application.postgresql %]
+
+## @section PostgreSQL parameters
+postgresql:
+  ## @param postgresql.enabled Whether to use the PostgreSQL chart
+  enabled: [[ "false" if application.postgresql == "optional" else "true" ]]
+
+  auth:
+    ## @param postgresql.auth.username PostgreSQL user
+    username: [[ application.name ]]
+
+    ## @param postgresql.auth.password PostgreSQL password
+    password: [[ application.name ]]
+
+    ## @param postgresql.auth.database PostgreSQL database
+    database: [[ application.name ]]
+
+    ## @param postgresql.auth.existingSecret Name of existing Secret to use
+    existingSecret: ""
+
+  ## @param postgresql.architecture PostgreSQL architecture
+  architecture: standalone
+
+  primary:
+    service:
+      ports:
+        ## @param postgresql.primary.service.ports.postgresql PostgreSQL port
+        postgresql: 5432
+
+externalPostgresql:
+  ## @param externalPostgresql.enabled Whether to use an external PostgreSQL
+  enabled: false
+
+  ## @param externalPostgresql.host External PostgreSQL host
+  host: postgresql
+
+  ## @param externalPostgresql.port External PostgreSQL port
+  port: 5432
+
+  ## @param externalPostgresql.username External PostgreSQL user
+  username: [[ application.name ]]
+
+  ## @param externalPostgresql.password External PostgreSQL password
+  password: [[ application.name ]]
+
+  ## @param externalPostgresql.existingSecret Name of existing Secret to use
+  existingSecret: ""
+
+  ## @param externalPostgresql.existingSecretKeyPassword Name of the key in existing Secret that contains PostgreSQL password
+  existingSecretKeyPassword: password
+
+  ## @param externalPostgresql.database External PostgreSQL database
+  database: [[ application.name ]]
+[%- endif %]
 
 ## @section Tests parameters
 
