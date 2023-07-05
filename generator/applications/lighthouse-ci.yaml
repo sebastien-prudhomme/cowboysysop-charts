@@ -144,26 +144,34 @@ components:
           number: 9001
           description: HTTP
     extraValues: |
-      lighthouse-ci:
-        admin:
-          ## @param lighthouse-ci.admin.username Administrator username
-          username: admin
+      ## @param logLevel Log level
+      logLevel: verbose
 
-          ## @param lighthouse-ci.admin.password Administrator password
-          password: admin
+      ## @param basicAuthUsername The username to protect the server with HTTP Basic Authentication
+      basicAuthUsername: ""
 
-        ## @param lighthouse-ci.externalUrl External URL
-        externalUrl: http://lighthouse-ci.local
+      ## @param basicAuthPassword The password to protect the server with HTTP Basic Authentication
+      basicAuthPassword: ""
 
-        cron:
-          ## @param lighthouse-ci.cron.enabled Enable cron for scheduled jobs
-          enabled: false
+      ## @param existingSecretKeyBasicAuthPassword Name of the key in existing Secret that contains HTTP Basic Authentication password
+      existingSecretKeyBasicAuthPassword: basic-auth-password
 
-          ## @param lighthouse-ci.cron.username Cron username
-          username: admin
+      ## @extra psiCollectCron The configuration to automatically collect results using the PageSpeed Insights API
+      psiCollectCron:
+        ## @param psiCollectCron.psiApiKey The API key to use with the PageSpeed Insights API
+        psiApiKey: ""
 
-          ## @param lighthouse-ci.cron.securityKey Cron security key
-          securityKey: ""
+        ## @param psiCollectCron.sites The array of sites to collect results for
+        sites: []
+          # - urls:
+          #     - http://example.local/
+          #   schedule: 0 * * * *
+          #   projectSlug: example
+
+      ## @param deleteOldBuildsCron The configuration to automatically delete old records
+      deleteOldBuildsCron: []
+        # - schedule: 0 * * * *
+        #   maxAgeInDays: 30
 mariadb: optional
 postgresql: optional
 tests: |
