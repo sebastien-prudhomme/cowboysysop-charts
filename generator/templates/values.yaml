@@ -334,7 +334,7 @@ existingSecret: ""
 
 mariadb:
   ## @param mariadb.enabled Whether to use the MariaDB chart
-  enabled: true
+  enabled: [[ "false" if application.mariadb == "optional" else "true" ]]
 
   ## @param mariadb.architecture MariaDB architecture
   architecture: standalone

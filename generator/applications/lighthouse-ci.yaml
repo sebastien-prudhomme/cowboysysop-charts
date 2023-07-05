@@ -45,6 +45,25 @@ updates: |
   Refer to the [Helm documentation](https://helm.sh/docs/topics/v2_v3_migration/) for more information.
 components:
   - name: lighthouse-ci
+    configmap: |
+      lighthouserc.json: |
+        {
+          "ci": {
+            "server": {
+              "port": 9001,
+              "storage": {
+                "storageMethod": "sql",
+                "sqlDialect": "sqlite",
+                "sqlDatabasePath": "/data/lhci.db"
+              },
+              "psiCollectCron": {
+                "psiApiKey": {{ .Values.psiCollectCron.psiApiKey | quote }},
+                "sites": {{ .Values.psiCollectCron.sites | toJson }}
+              },
+              "deleteOldBuildsCron": {{ .Values.deleteOldBuildsCron | toJson }}
+            }
+          }
+        }
     deployment:
       type: deployment
       initContainer:
@@ -157,8 +176,8 @@ components:
 
           ## @param lighthouse-ci.cron.securityKey Cron security key
           securityKey: ""
-mariadb: true
-postgresql: true
+mariadb: optional
+postgresql: optional
 tests: |
   import requests
 

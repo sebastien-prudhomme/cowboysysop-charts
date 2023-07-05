@@ -86,7 +86,7 @@ with open(sys.argv[1], "r") as stream:
             else:
                 render("templates/component/_helpers.tpl", f"{component_directory}/_helpers.tpl", application=application, component=component)
 
-       # Manage ClusterRole/ClusterRoleBinding
+        # Manage ClusterRole/ClusterRoleBinding
         if component.get("clusterrole"):
             if component_name == name:
                 render("templates/clusterrole.yaml", f"{templates_directory}/clusterrole.yaml", application=application, component=component)
@@ -147,6 +147,20 @@ with open(sys.argv[1], "r") as stream:
             render("templates/serviceaccount.yaml", f"{templates_directory}/serviceaccount.yaml", application=application, component=component)
         else:
             render("templates/component/serviceaccount.yaml", f"{component_directory}/serviceaccount.yaml", application=application, component=component)
+
+    # Manage MariaDB
+    if application.get("mariadb"):
+        if application["mariadb"] == "optional":
+            render("ci/mariadb-values.yaml", f"{ci_directory}/mariadb-values.yaml", application=application)
+
+        render("templates/mariadb-secret.yaml", f"{templates_directory}/mariadb-secret.yaml", application=application)
+
+    # Manage PostgreSQL
+    if application.get("postgresql"):
+        if application["postgresql"] == "optional":
+            render("ci/postgresql-values.yaml", f"{ci_directory}/postgresql-values.yaml", application=application)
+
+        render("templates/postgresql-secret.yaml", f"{templates_directory}/postgresql-secret.yaml", application=application)
 
     tests_directory = f"{templates_directory}/tests"
     os.mkdir(tests_directory)

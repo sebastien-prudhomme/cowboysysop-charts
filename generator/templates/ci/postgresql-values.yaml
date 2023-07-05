@@ -1,0 +1,4 @@
+fullnameOverride: [[ application.name ]]
+postgresql:
+  enabled: true
+  fullnameOverride: postgresql

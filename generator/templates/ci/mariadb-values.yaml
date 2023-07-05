@@ -1,0 +1,4 @@
+fullnameOverride: [[ application.name ]]
+mariadb:
+  enabled: true
+  fullnameOverride: mariadb
