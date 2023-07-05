@@ -1,0 +1,60 @@
+name: kroki
+productName: Kroki
+appVersion: 0.20.0
+descriptionVerb: is a
+description: creates diagrams from textual descriptions
+home: https://kroki.io/
+icon: https://raw.githubusercontent.com/yuzutech/kroki.io/master/assets/favicon-196x196.png
+source: https://github.com/yuzutech/kroki
+version: 3.0.0
+prerequisites: |
+  - Kubernetes >= 1.19
+updates: |
+  ### Upgrading to version 3.0.0
+
+  Some parameters related to port management have been modified:
+
+  - Parameter `service.port` has been renamed `service.ports.http`.
+  - Parameter `service.nodePort` has been renamed `service.nodePorts.http`.
+
+  ### Upgrading to version 2.0.0
+
+  Some parameters related to image management have been modified:
+
+  - Registry prefix in `image.repository` parameters is now configured in `image.registry`.
+  - Parameter `imagePullSecrets` has been renamed `global.imagePullSecrets`.
+
+components:
+  - name: kroki
+    deployment:
+      type: deployment
+      container:
+        env: |
+          - name: WHOAMI_PORT_NUMBER
+            value: {{ .Values.containerPorts.http | quote }}
+        livenessProbe:
+          httpGet:
+            path: /health
+        readinessProbe:
+          httpGet:
+            path: /health
+    image:
+      registry: docker.io
+      repository: yuzutech/kroki
+      tag: 0.20.0
+    ingress: true
+    service:
+      ports:
+        - name: http
+          number: 8000
+          description: HTTP
+tests: |
+  import requests
+
+
+  def test_service_connection():
+      url = "http://{{ include "kroki.fullname" . }}:{{ .Values.service.ports.http }}/"
+
+      response = requests.get(url)
+
+      assert response.status_code == 200
