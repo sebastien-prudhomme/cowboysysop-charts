@@ -1,4 +1,4 @@
-name: flowize
+name: flowise
 productName: Flowise
 appVersion: 1.2.13
 descriptionVerb: is a
@@ -10,12 +10,15 @@ version: 1.0.0
 prerequisites: |
   - Kubernetes >= 1.19
 components:
-  - name: flowize
+  - name: flowise
     deployment:
       type: deployment
       container:
-        args: |
-          - start
+        command: |
+          - /bin/sh
+          - -ec
+          - |
+            flowise start
         env: |
           - name: DATABASE_PATH
             value: /data
@@ -46,7 +49,7 @@ tests: |
 
 
   def test_service_connection():
-      url = "http://{{ include "flowize.fullname" . }}:{{ .Values.service.ports.http }}/"
+      url = "http://{{ include "flowise.fullname" . }}:{{ .Values.service.ports.http }}/"
 
       response = requests.get(url)
 
