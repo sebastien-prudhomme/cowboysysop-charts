@@ -2,9 +2,9 @@
 apiVersion: {{ include "common.capabilities.ingress.apiVersion" . }}
 kind: Ingress
 metadata:
-  name: {{ include "dolibarr.fullname" . }}
+  name: {{ include "flowise.fullname" . }}
   labels:
-    {{- include "dolibarr.labels" . | nindent 4 }}
+    {{- include "flowise.labels" . | nindent 4 }}
     {{- if .Values.commonLabels }}
     {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
     {{- end }}
@@ -42,7 +42,7 @@ spec:
             pathType: {{ $.Values.ingress.pathType }}
             {{- end }}
             backend:
-              {{- include "common.ingress.backend" (dict "serviceName" (include "dolibarr.fullname" $) "servicePort" $.Values.service.ports.http "context" $) | nindent 14 }}
+              {{- include "common.ingress.backend" (dict "serviceName" (include "flowise.fullname" $) "servicePort" $.Values.service.ports.http "context" $) | nindent 14 }}
           {{- end }}
     {{- end }}
 {{- end }}

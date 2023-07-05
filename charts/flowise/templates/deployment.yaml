@@ -1,9 +1,9 @@
 apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
 kind: Deployment
 metadata:
-  name: {{ include "dolibarr.fullname" . }}
+  name: {{ include "flowise.fullname" . }}
   labels:
-    {{- include "dolibarr.labels" . | nindent 4 }}
+    {{- include "flowise.labels" . | nindent 4 }}
     {{- if .Values.commonLabels }}
     {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
     {{- end }}
@@ -15,87 +15,59 @@ spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "dolibarr.selectorLabels" . | nindent 6 }}
+      {{- include "flowise.selectorLabels" . | nindent 6 }}
   {{- if .Values.updateStrategy }}
   strategy: {{- toYaml .Values.updateStrategy | nindent 4 }}
   {{- end }}
   template:
     metadata:
       labels:
-        {{- include "dolibarr.selectorLabels" . | nindent 8 }}
+        {{- include "flowise.selectorLabels" . | nindent 8 }}
         {{- if .Values.podLabels }}
         {{- include "common.tplvalues.render" ( dict "value" .Values.podLabels "context" $ ) | nindent 8 }}
         {{- end }}
         {{- if .Values.commonLabels }}
         {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 8 }}
         {{- end }}
+      {{- if or .Values.podAnnotations .Values.commonAnnotations }}
       annotations:
-        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
         {{- if .Values.podAnnotations }}
         {{- include "common.tplvalues.render" ( dict "value" .Values.podAnnotations "context" $ ) | nindent 8 }}
         {{- end }}
         {{- if .Values.commonAnnotations }}
         {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 8 }}
         {{- end }}
+      {{- end }}
     spec:
       {{- include "common.images.pullSecrets" ( dict "images" ( list .Values.image ) "global" .Values.global ) | nindent 6 }}
       {{- if .Values.priorityClassName }}
       priorityClassName: {{ .Values.priorityClassName | quote }}
       {{- end }}
-      serviceAccountName: {{ include "dolibarr.serviceAccountName" . }}
+      serviceAccountName: {{ include "flowise.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
-      initContainers:
-        - name: init
-          securityContext:
-            {{- toYaml .Values.init.securityContext | nindent 12 }}
-          image: {{ include "common.images.image" ( dict "imageRoot" .Values.image "global" .Values.global ) }}
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command:
-            - /bin/bash
-            - -ec
-            - |
-              rm -f /var/www/documents/install.lock
-          resources:
-            {{- toYaml .Values.init.resources | nindent 12 }}
-          volumeMounts:
-            - name: data
-              mountPath: /var/www/documents
       containers:
-        - name: dolibarr
+        - name: flowise
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: {{ include "common.images.image" ( dict "imageRoot" .Values.image "global" .Values.global ) }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          {{- with .Values.extraArgs }}
+          command:
+            - /bin/sh
+            - -ec
+            - |
+              flowise start
+          {{- if .Values.extraArgs }}
           args:
-            {{- range $key, $value := . }}
+            {{- range $key, $value := .Values.extraArgs }}
             - --{{ $key }}={{ $value }}
             {{- end }}
           {{- end }}
           env:
-            - name: DOLI_ADMIN_LOGIN
-              value: {{ .Values.dolibarr.admin.username | quote }}
-            - name: DOLI_ADMIN_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "dolibarr.secretName" . }}
-                  key: dolibarr-admin-password
-            - name: DOLI_DB_HOST
-              value: {{ include "dolibarr.mariadb.host" . | quote }}
-            - name: DOLI_DB_HOST_PORT
-              value: {{ include "dolibarr.mariadb.port" . | quote }}
-            - name: DOLI_DB_USER
-              value: {{ include "dolibarr.mariadb.username" . | quote }}
-            - name: DOLI_DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "dolibarr.mariadb.secretName" . }}
-                  key: {{ include "dolibarr.mariadb.secretKeyNamePassword" . }}
-            - name: DOLI_DB_NAME
-              value: {{ include "dolibarr.mariadb.database" . | quote }}
-            - name: DOLI_URL_ROOT
-              value: {{ .Values.dolibarr.externalUrl | quote }}
+            - name: DATABASE_PATH
+              value: /data
+            - name: PORT
+              value: {{ .Values.containerPorts.http | quote }}
             {{- if .Values.extraEnvVars }}
             {{- include "common.tplvalues.render" (dict "value" .Values.extraEnvVars "context" $) | nindent 12 }}
             {{- end }}
@@ -140,42 +112,7 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
             - name: data
-              mountPath: /var/www/documents
-        {{- if .Values.dolibarr.cron.enabled }}
-        - name: cron
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: {{ include "common.images.image" ( dict "imageRoot" .Values.image "global" .Values.global ) }}
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          env:
-            - name: DOLI_CRON
-              value: "1"
-            - name: DOLI_CRON_USER
-              value: {{ .Values.dolibarr.cron.username | quote }}
-            - name: DOLI_CRON_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "dolibarr.secretName" . }}
-                  key: dolibarr-cron-security-key
-            - name: DOLI_DB_HOST
-              value: {{ include "dolibarr.mariadb.host" . | quote }}
-            - name: DOLI_DB_HOST_PORT
-              value: {{ include "dolibarr.mariadb.port" . | quote }}
-            - name: DOLI_DB_USER
-              value: {{ include "dolibarr.mariadb.username" . | quote }}
-            - name: DOLI_DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "dolibarr.mariadb.secretName" . }}
-                  key: {{ include "dolibarr.mariadb.secretKeyNamePassword" . }}
-            - name: DOLI_DB_NAME
-              value: {{ include "dolibarr.mariadb.database" . | quote }}
-          resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-          volumeMounts:
-            - name: data
-              mountPath: /var/www/documents
-        {{- end }}
+              mountPath: /data
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -192,7 +129,7 @@ spec:
         - name: data
           {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:
-            claimName: {{ default (include "dolibarr.fullname" .) .Values.persistence.existingClaim }}
+            claimName: {{ default (include "flowise.fullname" .) .Values.persistence.existingClaim }}
           {{- else }}
           emptyDir: {}
           {{- end }}

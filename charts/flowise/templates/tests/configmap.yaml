@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "dolibarr.tests.fullname" . }}
+  name: {{ include "flowise.tests.fullname" . }}
   labels:
-    {{- include "dolibarr.tests.labels" . | nindent 4 }}
+    {{- include "flowise.tests.labels" . | nindent 4 }}
     {{- if .Values.commonLabels }}
     {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
     {{- end }}
@@ -18,7 +18,7 @@ data:
 
 
     def test_service_connection():
-        url = "http://{{ include "dolibarr.fullname" . }}:{{ .Values.service.ports.http }}/"
+        url = "http://{{ include "flowise.fullname" . }}:{{ .Values.service.ports.http }}/"
 
         response = requests.get(url)
 
