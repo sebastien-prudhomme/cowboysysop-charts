@@ -49,7 +49,7 @@ components:
         {
           "ci": {
             "server": {
-              "port": 9001,
+              "port": {{ .Values.containerPorts.http }},
               "storage": {
                 "storageMethod": "sql",
                 "sqlDialect": "sqlite",
@@ -115,6 +115,7 @@ components:
               value: {{ include "lighthouse-ci.postgresql.database" . | quote }}
             - name: LHCI_STORAGE__SQL_CONNECTION_URL
               value: "postgres://$(POSTGRESQL_USERNAME):$(POSTGRESQL_PASSWORD)@$(POSTGRESQL_HOST):$(POSTGRESQL_PORT)/$(POSTGRESQL_DATABASE)"
+            {{- end }}
         livenessProbe:
           httpGet:
             path: /healthz
@@ -129,8 +130,8 @@ components:
             mountPath: /data
     image:
       registry: docker.io
-      repository: tuxgasy/lighthouse-ci
-      tag: 15.0.3
+      repository: patrickhulce/lhci-server
+      tag: 0.8.1
     ingress: true
     persistentvolumeclaim: true
     secret: |
