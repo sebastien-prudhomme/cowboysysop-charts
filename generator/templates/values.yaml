@@ -386,6 +386,7 @@ externalMariadb:
 [%- if application.postgresql %]
 
 ## @section PostgreSQL parameters
+
 postgresql:
   ## @param postgresql.enabled Whether to use the PostgreSQL chart
   enabled: [[ "false" if application.postgresql == "optional" else "true" ]]
