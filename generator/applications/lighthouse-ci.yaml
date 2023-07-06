@@ -138,6 +138,20 @@ components:
       {{- if and .Values.basicAuthUsername .Values.basicAuthPassword }}
       basic-auth-password: {{ .Values.basicAuthPassword | b64enc | quote }}
       {{- end }}
+    secretKeyHelpers: |
+      {{/*
+      HTTP Basic Authentication password secret key name
+      */}}
+      {{- define "lighthouse-ci.secretKeyNameBasicAuthPassword" -}}
+      {{- if .Values.existingSecret -}}
+          {{ .Values.existingSecretKeyBasicAuthPassword }}
+      {{- else -}}
+          basic-auth-password
+      {{- end -}}
+      {{- end -}}
+    secretKeyValues: |
+      ## @param existingSecretKeyBasicAuthPassword Name of the key in existing Secret that contains HTTP Basic Authentication password
+      existingSecretKeyBasicAuthPassword: basic-auth-password
     service:
       ports:
         - name: http
@@ -152,9 +166,6 @@ components:
 
       ## @param basicAuthPassword The password to protect the server with HTTP Basic Authentication
       basicAuthPassword: ""
-
-      ## @param existingSecretKeyBasicAuthPassword Name of the key in existing Secret that contains HTTP Basic Authentication password
-      existingSecretKeyBasicAuthPassword: basic-auth-password
 
       ## @extra psiCollectCron The configuration to automatically collect results using the PageSpeed Insights API
       psiCollectCron:

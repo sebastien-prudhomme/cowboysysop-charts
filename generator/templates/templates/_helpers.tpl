@@ -82,6 +82,8 @@ Create the name of the secret to use
     {{ include "[[ application.name ]].fullname" . }}
 {{- end -}}
 {{- end -}}
+
+[[ component.secretKeyHelpers | trim ]]
 [%- endif %]
 [%- if application.mariadb %]
 

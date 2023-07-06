@@ -326,6 +326,8 @@ persistence:
 
 ## @param existingSecret Name of existing Secret to use
 existingSecret: ""
+
+[[ component.secretKeyValues | trim ]]
 [%- endif %]
 [%- endfor %]
 [%- if application.mariadb %]

@@ -43,7 +43,7 @@ components:
             valueFrom:
               secretKeyRef:
                 name: {{ include "dolibarr.secretName" . }}
-                key: dolibarr-admin-password
+                key: {{ include "dolibarr.secretKeyAdminPassword" . }}
           - name: DOLI_DB_HOST
             value: {{ include "dolibarr.mariadb.host" . | quote }}
           - name: DOLI_DB_HOST_PORT
@@ -81,7 +81,7 @@ components:
               valueFrom:
                 secretKeyRef:
                   name: {{ include "dolibarr.secretName" . }}
-                  key: dolibarr-cron-security-key
+                  key: {{ include "dolibarr.secretKeyCronSecurityKey" . }}
             - name: DOLI_DB_HOST
               value: {{ include "dolibarr.mariadb.host" . | quote }}
             - name: DOLI_DB_HOST_PORT
@@ -109,6 +109,34 @@ components:
       {{- if .Values.dolibarr.cron.enabled }}
       dolibarr-cron-security-key: {{ .Values.dolibarr.cron.securityKey | b64enc | quote }}
       {{- end }}
+    secretKeyHelpers: |
+      {{/*
+      Administrator password secret key name
+      */}}
+      {{- define "dolibarr.secretKeyAdminPassword" -}}
+      {{- if .Values.existingSecret -}}
+          {{ .Values.existingSecretKeyAdminPassword }}
+      {{- else -}}
+          dolibarr-admin-password
+      {{- end -}}
+      {{- end -}}
+
+      {{/*
+      Cron security key secret key name
+      */}}
+      {{- define "dolibarr.secretKeyCronSecurityKey" -}}
+      {{- if .Values.existingSecret -}}
+          {{ .Values.existingSecretKeyCronSecurityKey }}
+      {{- else -}}
+          dolibarr-cron-security-key
+      {{- end -}}
+      {{- end -}}
+    secretKeyValues: |
+      ## @param existingSecretKeyAdminPassword Name of the key in existing Secret that contains administrator password
+      existingSecretKeyAdminPassword: dolibarr-admin-password
+
+      ## @param existingSecretKeyCronSecurityKey Name of the key in existing Secret that contains cron security key
+      existingSecretKeyCronSecurityKey: dolibarr-cron-security-key
     service:
       ports:
         - name: http
