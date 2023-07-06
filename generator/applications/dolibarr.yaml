@@ -1,8 +1,7 @@
 name: dolibarr
 productName: Dolibarr
 appVersion: 15.0.3
-descriptionVerb: is
-description: a modern software package to manage your company or foundation's activity
+description: is <<a modern software package to manage your company or foundation's activity>>
 home: https://www.dolibarr.org/
 icon: https://raw.githubusercontent.com/Dolibarr/dolibarr/develop/doc/images/dolibarr_256x256_color.svg
 source: https://github.com/Dolibarr/dolibarr

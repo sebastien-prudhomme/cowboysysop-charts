@@ -1,8 +1,7 @@
 name: kroki
 productName: Kroki
 appVersion: 0.20.0
-descriptionVerb: is a
-description: creates diagrams from textual descriptions
+description: <<creates diagrams from textual descriptions>>
 home: https://kroki.io/
 icon: https://raw.githubusercontent.com/yuzutech/kroki.io/master/assets/favicon-196x196.png
 source: https://github.com/yuzutech/kroki

@@ -1,8 +1,7 @@
 name: flowise
 productName: Flowise
 appVersion: 1.2.14
-descriptionVerb: is a
-description: drag & drop UI to build your customized LLM flow
+description: is a <<drag & drop UI to build your customized LLM flow>>
 home: https://flowiseai.com/
 icon: https://avatars.githubusercontent.com/u/128289781
 source: https://github.com/FlowiseAI/Flowise

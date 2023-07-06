@@ -1,6 +1,7 @@
 apiVersion: v2
 appVersion: [[ application.appVersion ]]
-description: [[ application.description[0] | upper ]][[ application.description[1:] ]]
+[%- set description = application.description | regex_replace(".*<<", "") | regex_replace(">>.*", "") %]
+description: [[ description[0] | upper ]][[ description[1:] ]]
 home: [[ application.home ]]
 [%- if application.icon %]
 icon: [[ application.icon ]]

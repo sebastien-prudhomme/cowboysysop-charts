@@ -1,8 +1,7 @@
 name: kubebox
 productName: Kubebox
 appVersion: 0.9.0
-descriptionVerb: is a
-description: Terminal and Web console for Kubernetes
+description: is a <<Terminal and Web console for Kubernetes>>
 home: https://github.com/astefanutti/kubebox
 source: https://github.com/astefanutti/kubebox
 version: 4.0.0

@@ -1,6 +1,6 @@
 # [[ application.productName ]]
 
-[["["]][[ application.productName ]][["]"]]([[ application.home ]]) [[ application.descriptionVerb ]] [[ application.description ]].
+[["["]][[ application.productName ]][["]"]]([[ application.home ]]) [[ application.description | replace("<<", "") | replace(">>", "") ]].
 
 **DISCLAIMER**: This is an unofficial chart not supported by [[ application.productName ]] authors.
 

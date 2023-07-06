@@ -1,8 +1,7 @@
 name: qdrant
 producName: Kubebox
 appVersion: 1.3.0
-descriptionVerb: is a
-description: vector similarity search engine and vector database
+description: is a <<vector similarity search engine and vector database>>
 home: https://qdrant.tech/
 icon: https://raw.githubusercontent.com/cowboysysop/charts/master/charts/qdrant/icon.png
 source: https://github.com/qdrant/qdrant
