@@ -1,5 +1,5 @@
 name: quickchart
-producName: Kubebox
+productName: Kubebox
 appVersion: 1.7.1
 description: is a <<chart image and QR code web API>>
 home: https://quickchart.io/
