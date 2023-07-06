@@ -24,6 +24,12 @@ dependencies:
     repository: https://charts.bitnami.com/bitnami/
     condition: mariadb.enabled
   [%- endif %]
+  [%- if application.mongodb %]
+  - name: mongodb
+    version: 13.15.4
+    repository: https://charts.bitnami.com/bitnami/
+    condition: mongodb.enabled
+  [%- endif %]
   [%- if application.postgresql %]
   - name: postgresql
     version: 12.6.0

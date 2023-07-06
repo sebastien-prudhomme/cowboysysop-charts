@@ -1,1 +1,16 @@
 fullnameOverride: [[ application.name ]]
+[%- if application.mariadb == "test" %]
+mariadb:
+  enabled: true
+  fullnameOverride: mariadb
+[%- endif %]
+[%- if application.mongodb == "test" %]
+mongodb:
+  enabled: true
+  fullnameOverride: mongodb
+[%- endif %]
+[%- if application.postgresql == "test" %]
+postgresql:
+  enabled: true
+  fullnameOverride: postgresql
+[%- endif %]

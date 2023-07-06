@@ -1,0 +1,163 @@
+name: mongo-express
+productName: Mongo Express
+appVersion: 0.54.0
+description: is a <<web-based MongoDB admin interface, written with Node.js and express>>
+home: https://github.com/mongo-express/mongo-express
+icon: https://raw.githubusercontent.com/mongo-express/mongo-express/master/public/images/mongo-express-logo.png
+source: https://github.com/mongo-express/mongo-express
+version: 4.0.0
+prerequisites: |
+  - Kubernetes >= 1.19
+updates: |
+  ### Upgrading to version 4.0.0
+
+  Some parameters related to port management have been modified:
+
+  - Parameter `service.port` has been renamed `service.ports.http`.
+  - Parameter `service.nodePort` has been renamed `service.nodePorts.http`.
+
+  ### Upgrading to version 3.0.0
+
+  Some parameters related to image management have been modified:
+
+  - Registry prefix in `image.repository` parameters is now configured in `image.registry`.
+  - Parameter `imagePullSecrets` has been renamed `global.imagePullSecrets`.
+
+  ### Upgrading to version 2.0.0
+
+  The chart is no more compatible with Helm 2.
+
+  Refer to the [Helm documentation](https://helm.sh/docs/topics/v2_v3_migration/) for more information.
+components:
+  - name: mongo-express
+    deployment:
+      type: deployment
+      container:
+        env: |
+          - name: ME_CONFIG_MONGODB_SERVER
+            value: {{ .Values.mongodbServer | quote }}
+          - name: ME_CONFIG_MONGODB_PORT
+            value: {{ .Values.mongodbPort | quote }}
+          - name: ME_CONFIG_MONGODB_ENABLE_ADMIN
+            value: {{ .Values.mongodbEnableAdmin | quote }}
+          {{- if .Values.mongodbEnableAdmin }}
+          - name: ME_CONFIG_MONGODB_ADMINUSERNAME
+            value: {{ .Values.mongodbAdminUsername | quote }}
+          - name: ME_CONFIG_MONGODB_ADMINPASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "mongo-express.secretName" . }}
+                key: mongodb-admin-password
+          {{- else }}
+          - name: ME_CONFIG_MONGODB_AUTH_DATABASE
+            value: {{ .Values.mongodbAuthDatabase | quote }}
+          - name: ME_CONFIG_MONGODB_AUTH_USERNAME
+            value: {{ .Values.mongodbAuthUsername | quote }}
+          - name: ME_CONFIG_MONGODB_AUTH_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "mongo-express.secretName" . }}
+                key: mongodb-auth-password
+          {{- end }}
+          - name: ME_CONFIG_SITE_BASEURL
+            value: {{ .Values.siteBaseUrl | quote }}
+          - name: ME_CONFIG_SITE_COOKIESECRET
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "mongo-express.secretName" . }}
+                key: site-cookie-secret
+          - name: ME_CONFIG_SITE_SESSIONSECRET
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "mongo-express.secretName" . }}
+                key: site-session-secret
+          {{- if and .Values.basicAuthUsername .Values.basicAuthPassword }}
+          - name: ME_CONFIG_BASICAUTH_USERNAME
+            value: {{ .Values.basicAuthUsername | quote }}
+          - name: ME_CONFIG_BASICAUTH_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "mongo-express.secretName" . }}
+                key: basic-auth-password
+          {{- end }}
+        livenessProbe:
+          httpGet:
+            path: /
+        readinessProbe:
+          httpGet:
+            path: /
+    image:
+      registry: docker.io
+      repository: mongo-express
+      tag: 0.54.0
+    ingress: true
+    secret: |
+      {{- if .Values.mongodbEnableAdmin }}
+      mongodb-admin-password: {{ .Values.mongodbAdminPassword | b64enc | quote }}
+      {{- else }}
+      mongodb-auth-password: {{ .Values.mongodbAuthPassword | b64enc | quote }}
+      {{- end }}
+      site-cookie-secret: {{ default (randAlphaNum 32) .Values.siteCookieSecret | b64enc | quote }}
+      site-session-secret: {{ default (randAlphaNum 32) .Values.siteSessionSecret | b64enc | quote }}
+      {{- if and .Values.basicAuthUsername .Values.basicAuthPassword }}
+      basic-auth-password: {{ .Values.basicAuthPassword | b64enc | quote }}
+      {{- end }}
+    secretKeyHelpers: |
+      {{/*
+      Administrator password secret key name
+      */}}
+      {{- define "dolibarr.secretKeyAdminPassword" -}}
+      {{- if .Values.existingSecret -}}
+          {{ .Values.existingSecretKeyAdminPassword }}
+      {{- else -}}
+          dolibarr-admin-password
+      {{- end -}}
+      {{- end -}}
+
+      {{/*
+      Cron security key secret key name
+      */}}
+      {{- define "dolibarr.secretKeyCronSecurityKey" -}}
+      {{- if .Values.existingSecret -}}
+          {{ .Values.existingSecretKeyCronSecurityKey }}
+      {{- else -}}
+          dolibarr-cron-security-key
+      {{- end -}}
+      {{- end -}}
+    secretKeyValues: |
+      ## @param existingSecretKeyAdminPassword Name of the key in existing Secret that contains administrator password
+      existingSecretKeyAdminPassword: dolibarr-admin-password
+
+      ## @param existingSecretKeyCronSecurityKey Name of the key in existing Secret that contains cron security key
+      existingSecretKeyCronSecurityKey: dolibarr-cron-security-key
+    service:
+      ports:
+        - name: http
+          number: 8081
+          description: HTTP
+    extraValues: |
+      ## @param siteBaseUrl Set the express baseUrl to ease mounting at a subdirectory
+      siteBaseUrl: /
+
+      ## @param siteCookieSecret String used by cookie-parser middleware to sign cookies
+      siteCookieSecret: ""
+
+      ## @param siteSessionSecret String used to sign the session ID cookie by express-session middleware
+      siteSessionSecret: ""
+
+      ## @param basicAuthUsername Mongo Express web login name
+      basicAuthUsername: ""
+
+      ## @param basicAuthPassword Mongo Express Web login password
+      basicAuthPassword: ""
+mongodb: test
+tests: |
+  import requests
+
+
+  def test_service_connection():
+      url = "http://{{ include "mongo-express.fullname" . }}:{{ .Values.service.ports.http }}/"
+
+      response = requests.get(url)
+
+      assert response.status_code == 200

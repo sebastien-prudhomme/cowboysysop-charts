@@ -155,6 +155,13 @@ with open(sys.argv[1], "r") as stream:
 
         render("templates/mariadb-secret.yaml", f"{templates_directory}/mariadb-secret.yaml", application=application)
 
+   # Manage MongoDB
+    if application.get("mongodb"):
+        if application["mongodb"] == "optional":
+            render("ci/mongodb-values.yaml", f"{ci_directory}/mongodb-values.yaml", application=application)
+
+        render("templates/mongodb-secret.yaml", f"{templates_directory}/mongodb-secret.yaml", application=application)
+
     # Manage PostgreSQL
     if application.get("postgresql"):
         if application["postgresql"] == "optional":
