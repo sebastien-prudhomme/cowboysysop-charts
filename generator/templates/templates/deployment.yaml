@@ -141,7 +141,7 @@ spec:
             [%- set ports = ports + component.headless.ports %]
             [%- endif %]
             [%- for port in ports %]
-            - name: [[ port.name ]]
+            - name: [[ port.nameIstio or port.name ]]
               containerPort: {{ .Values.containerPorts.[[ port.name ]] }}
               protocol: TCP
             [%- endfor %]
