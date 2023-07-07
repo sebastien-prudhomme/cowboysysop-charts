@@ -146,6 +146,13 @@ with open(sys.argv[1], "r") as stream:
         else:
             render("templates/component/service.yaml", f"{component_directory}/service.yaml", application=application, component=component)
 
+        # Manage Headless Service
+        if component.get("headless"):
+            if component_name == name:
+                render("templates/headless-service.yaml", f"{templates_directory}/headless-service.yaml", application=application, component=component)
+            else:
+                render("templates/component/headless-service.yaml", f"{component_directory}/headless-service.yaml", application=application, component=component)
+
         # Manage ServiceAccount
         if component_name == name:
             render("templates/serviceaccount.yaml", f"{templates_directory}/serviceaccount.yaml", application=application, component=component)
