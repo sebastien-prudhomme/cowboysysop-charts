@@ -3,6 +3,7 @@ productName: Kubebox
 appVersion: 0.9.0
 description: is a <<Terminal and Web console for Kubernetes>>
 home: https://github.com/astefanutti/kubebox
+license: 2020
 source: https://github.com/astefanutti/kubebox
 version: 4.0.0
 prerequisites: |

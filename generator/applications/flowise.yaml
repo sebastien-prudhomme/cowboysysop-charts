@@ -4,6 +4,7 @@ appVersion: 1.2.14
 description: is a <<drag & drop UI to build your customized LLM flow>>
 home: https://flowiseai.com/
 icon: https://avatars.githubusercontent.com/u/128289781
+license: 2023
 source: https://github.com/FlowiseAI/Flowise
 version: 1.0.1
 prerequisites: |

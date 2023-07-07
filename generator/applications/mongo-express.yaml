@@ -4,6 +4,7 @@ appVersion: 0.54.0
 description: is a <<web-based MongoDB admin interface, written with Node.js and express>>
 home: https://github.com/mongo-express/mongo-express
 icon: https://raw.githubusercontent.com/mongo-express/mongo-express/master/public/images/mongo-express-logo.png
+license: 2020
 source: https://github.com/mongo-express/mongo-express
 version: 4.0.0
 prerequisites: |

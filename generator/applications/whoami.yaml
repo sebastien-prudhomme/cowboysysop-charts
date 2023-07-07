@@ -3,6 +3,7 @@ productName: Whoami
 appVersion: 1.9.0
 description: is a <<tiny Go webserver that prints os information and HTTP request to output>>
 home: https://github.com/traefik/whoami
+license: 2020
 source: https://github.com/traefik/whoami
 version: 4.1.1
 prerequisites: |

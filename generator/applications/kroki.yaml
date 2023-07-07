@@ -4,6 +4,7 @@ appVersion: 0.20.0
 description: <<creates diagrams from textual descriptions>>
 home: https://kroki.io/
 icon: https://raw.githubusercontent.com/yuzutech/kroki.io/master/assets/favicon-196x196.png
+license: 2021
 source: https://github.com/yuzutech/kroki
 version: 3.0.0
 prerequisites: |
