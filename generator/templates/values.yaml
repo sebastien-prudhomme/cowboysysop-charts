@@ -34,7 +34,7 @@ extraDeploy: []
 [[ "" ]]
 ## @section Parameters
 
-## @param replicaCount Number of replicas[%- if component.persistentvolumeclaim%] (do not change it)[%- endif %]
+## @param replicaCount Number of replicas[%- if component.deployment.type == "deployment" and component.persistentvolumeclaim%] (do not change it)[%- endif %]
 replicaCount: 1
 [%- if component.deployment.type == "deployment" and component.persistentvolumeclaim %]
 
