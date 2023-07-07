@@ -38,12 +38,16 @@ with open(sys.argv[1], "r") as stream:
     chart_directory = f"{charts_directory}/{name}"
 
     if os.path.exists(chart_directory):
-      shutil.rmtree(chart_directory)
+        shutil.rmtree(chart_directory)
 
     os.mkdir(chart_directory)
 
     render(".helmignore", f"{chart_directory}/.helmignore", application=application)
     render("Chart.yaml", f"{chart_directory}/Chart.yaml", application=application)
+
+    if os.path.exists(f"applications/{name}.png"):
+        shutil.copyfile(f"applications/{name}.png", f"{chart_directory}/icon.png")
+
     render("LICENSE", f"{chart_directory}/LICENSE", application=application)
     render("README.md", f"{chart_directory}/README.md", application=application)
     render("values.yaml", f"{chart_directory}/values.yaml", application=application)
