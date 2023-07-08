@@ -295,6 +295,39 @@ init:
 
     ## @param [[ container.name ]].image.pullPolicy Image pull policy
     pullPolicy: IfNotPresent
+
+  ## @param [[ container.name ]].securityContext Container security context
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+
+  ## @param [[ container.name ]].resources CPU/Memory resource requests/limits
+  resources: {}
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+
+  ## @param [[ container.name ]].extraArgs Additional container arguments
+  extraArgs: {}
+    # name: ""
+
+  ## @param [[ container.name ]].extraEnvVars Additional container environment variables
+  extraEnvVars: []
+    # - name: MY-NAME
+    #   value: "MY-VALUE"
+
+  ## @param [[ container.name ]].extraEnvVarsCM Name of existing ConfigMap containing additional container environment variables
+  extraEnvVarsCM:
+
+  ## @param [[ container.name ]].extraEnvVarsSecret Name of existing Secret containing additional container environment variables
+  extraEnvVarsSecret:
 [%- endif %]
 [%- endfor %]
 [%- if component.headless %]
