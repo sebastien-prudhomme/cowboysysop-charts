@@ -37,31 +37,37 @@ components:
       containers:
         - name: blockdiag
           asComponent: true
+          description: BlockDiag
           optional: true
           image:
             repository: yuzutech/kroki-blockdiag
         - name: bpmn
           asComponent: true
+          description: BPMN
           optional: true
           image:
             repository: yuzutech/kroki-bpmn
         - name: diagramsnet
           asComponent: true
+          description: Diagrams.net
           optional: true
           image:
             repository: yuzutech/kroki-diagramsnet
         - name: excalidraw
           asComponent: true
+          description: Excalidraw
           optional: true
           image:
             repository: yuzutech/kroki-excalidraw
         - name: mermaid
           asComponent: true
+          description: Mermaid
           optional: true
           image:
             repository: yuzutech/kroki-mermaid
         - name: wireviz
           asComponent: true
+          description: WireViz
           optional: true
           image:
             repository: yuzutech/kroki-wireviz

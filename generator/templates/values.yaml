@@ -279,7 +279,14 @@ init:
 [%- for container in component.deployment.containers %]
 [%- if container.asComponent %]
 
+## @section [[ container.description ]] parameters
+
 [[ container.name ]]:
+  [%- if container.optional %]
+  ## @param [[ container.name ]].enabled Enable [[ container.description ]]
+  enabled: true
+
+  [% endif -%]
   image:
     ## @param [[ container.name ]].image.registry Image registry
     registry: [[ container.image.registry or component.image.registry ]]
