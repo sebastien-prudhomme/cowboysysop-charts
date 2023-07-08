@@ -174,20 +174,36 @@ spec:
             [[ component.deployment.container.volumeMounts | indent(12) | trim ]]
           [%- endif %]
         [%- for container in component.deployment.containers %]
+        [%- if container.asComponent %]
+        [%- set values_path = container.name + "." %]
+        [%- else %]
+        [%- set values_path = "" %]
+        [%- endif %]
         [%- if container.optional %]
         {{- if .Values.[[ application.name ]].[[ container.name ]].enabled }}
         [%- endif %]
         - name: [[ container.name ]]
           securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: {{ include "common.images.image" ( dict "imageRoot" .Values.image "global" .Values.global ) }}
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+            {{- toYaml .Values.[[ values_path ]]securityContext | nindent 12 }}
+          image: {{ include "common.images.image" ( dict "imageRoot" .Values.[[ values_path ]]image "global" .Values.global ) }}
+          imagePullPolicy: {{ .Values.[[ values_path ]]image.pullPolicy }}
           [%- if container.env %]
           env:
             [[ container.env | indent(12) | trim ]]
           [%- endif %]
+          {{- if or .Values.[[ values_path ]]extraEnvVarsCM .Values.[[ values_path ]]extraEnvVarsSecret }}
+          envFrom:
+            {{- if .Values.[[ values_path ]]extraEnvVarsCM }}
+            - configMapRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.[[ values_path ]]extraEnvVarsCM "context" $) }}
+            {{- end }}
+            {{- if .Values.[[ values_path ]]extraEnvVarsSecret }}
+            - secretRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.[[ values_path ]]extraEnvVarsSecret "context" $) }}
+            {{- end }}
+          {{- end }}
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
+            {{- toYaml .Values.[[ values_path ]]resources | nindent 12 }}
           [%- if container.volumeMounts %]
           volumeMounts:
             [[ container.volumeMounts | indent(12) | trim ]]

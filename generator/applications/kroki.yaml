@@ -36,7 +36,35 @@ components:
             path: /health
       containers:
         - name: blockdiag
+          asComponent: true
           optional: true
+          image:
+            repository: yuzutech/kroki-blockdiag
+        - name: bpmn
+          asComponent: true
+          optional: true
+          image:
+            repository: yuzutech/kroki-bpmn
+        - name: diagramsnet
+          asComponent: true
+          optional: true
+          image:
+            repository: yuzutech/kroki-diagramsnet
+        - name: excalidraw
+          asComponent: true
+          optional: true
+          image:
+            repository: yuzutech/kroki-excalidraw
+        - name: mermaid
+          asComponent: true
+          optional: true
+          image:
+            repository: yuzutech/kroki-mermaid
+        - name: wireviz
+          asComponent: true
+          optional: true
+          image:
+            repository: yuzutech/kroki-wireviz
     image:
       registry: docker.io
       repository: yuzutech/kroki
