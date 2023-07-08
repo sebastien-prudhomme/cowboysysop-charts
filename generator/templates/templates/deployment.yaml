@@ -187,6 +187,19 @@ spec:
             {{- toYaml .Values.[[ values_path ]]securityContext | nindent 12 }}
           image: {{ include "common.images.image" ( dict "imageRoot" .Values.[[ values_path ]]image "global" .Values.global ) }}
           imagePullPolicy: {{ .Values.[[ values_path ]]image.pullPolicy }}
+          [%- if not container.args %]
+          {{- if .Values.[[ values_path ]]extraArgs }}
+          [%- endif %]
+          args:
+            [%- if container.args %]
+            [[ container.args | indent(12) | trim ]]
+            [%- endif %]
+            {{- range $key, $value := .Values.[[ values_path ]]extraArgs }}
+            - --{{ $key }}={{ $value }}
+            {{- end }}
+          [%- if not container.args %]
+          {{- end }}
+          [%- endif %]
           [%- if container.env %]
           env:
             [[ container.env | indent(12) | trim ]]
