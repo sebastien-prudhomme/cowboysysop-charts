@@ -1,11 +1,27 @@
 name: quickchart
-productName: Kubebox
+productName: QuickChart
 appVersion: 1.7.1
 description: is a <<chart image and QR code web API>>
 home: https://quickchart.io/
 license: 2021
 source: https://github.com/typpo/quickchart
-version: 2.1.0
+version: 3.0.0
+prerequisites: |
+  - Kubernetes >= 1.19
+updates: |
+  ### Upgrading to version 3.0.0
+
+  Some parameters related to port management have been modified:
+
+  - Parameter `service.port` has been renamed `service.ports.http`.
+  - Parameter `service.nodePort` has been renamed `service.nodePorts.http`.
+
+  ### Upgrading to version 2.0.0
+
+  Some parameters related to image management have been modified:
+
+  - Registry prefix in `image.repository` parameters is now configured in `image.registry`.
+  - Parameter `imagePullSecrets` has been renamed `global.imagePullSecrets`.
 components:
   - name: quickchart
     deployment:
