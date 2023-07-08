@@ -41,36 +41,60 @@ components:
           optional: true
           image:
             repository: yuzutech/kroki-blockdiag
+          ports:
+            - name: http
+              number: 8001
+              description: HTTP
         - name: bpmn
           asComponent: true
           description: BPMN
           optional: true
           image:
             repository: yuzutech/kroki-bpmn
+          ports:
+            - name: http
+              number: 8003
+              description: HTTP
         - name: diagramsnet
           asComponent: true
           description: Diagrams.net
           optional: true
           image:
             repository: yuzutech/kroki-diagramsnet
+          ports:
+            - name: http
+              number: 8005
+              description: HTTP
         - name: excalidraw
           asComponent: true
           description: Excalidraw
           optional: true
           image:
             repository: yuzutech/kroki-excalidraw
+          ports:
+            - name: http
+              number: 8004
+              description: HTTP
         - name: mermaid
           asComponent: true
           description: Mermaid
           optional: true
           image:
             repository: yuzutech/kroki-mermaid
+          ports:
+            - name: http
+              number: 8002
+              description: HTTP
         - name: wireviz
           asComponent: true
           description: WireViz
           optional: true
           image:
             repository: yuzutech/kroki-wireviz
+          ports:
+            - name: http
+              number: 8006
+              description: HTTP
     image:
       registry: docker.io
       repository: yuzutech/kroki

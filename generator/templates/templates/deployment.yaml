@@ -226,6 +226,14 @@ spec:
                 name: {{ include "common.tplvalues.render" (dict "value" .Values.[[ values_path ]]extraEnvVarsSecret "context" $) }}
             {{- end }}
           {{- end }}
+          [%- if container.ports %]
+          ports:
+            [%- for port in container.ports %]
+            - name: [[ port.nameIstio or port.name ]]
+              containerPort: {{ .Values.[[ values_path ]]containerPorts.[[ port.name ]] }}
+              protocol: TCP
+            [%- endfor %]
+          [%- endif %]
           resources:
             {{- toYaml .Values.[[ values_path ]]resources | nindent 12 }}
           [%- if container.volumeMounts %]

@@ -311,6 +311,17 @@ init:
     # readOnlyRootFilesystem: true
     # runAsNonRoot: true
     # runAsUser: 1000
+  [%- if container.ports %]
+
+  containerPorts:
+    [%- for port in container.ports %]
+    [%- if loop.index0 > 0 %]
+  [[ "" ]]
+    [%- endif %]
+    ## @param [[ container.name ]].containerPorts.[[ port.name ]] Container port for [[ port.description ]]
+    [[ port.name ]]: [[ port.number ]]
+    [%- endfor %]
+  [%- endif %]
 
   ## @param [[ container.name ]].resources CPU/Memory resource requests/limits
   resources: {}
