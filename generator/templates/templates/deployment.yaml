@@ -200,9 +200,20 @@ spec:
           [%- if not container.args %]
           {{- end }}
           [%- endif %]
-          [%- if container.env %]
+          [%- if not container.env %]
+          {{- if .Values.[[ values_path ]]extraEnvVars }}
+          [%- endif %]
           env:
+            [%- if container.env %]
             [[ container.env | indent(12) | trim ]]
+            {{- if .Values.[[ values_path ]]extraEnvVars }}
+            [%- endif %]
+            {{- include "common.tplvalues.render" (dict "value" .Values.[[ values_path ]]extraEnvVars "context" $) | nindent 12 }}
+            [%- if container.env %]
+            {{- end }}
+            [%- endif %]
+          [%- if not container.env %]
+          {{- end }}
           [%- endif %]
           {{- if or .Values.[[ values_path ]]extraEnvVarsCM .Values.[[ values_path ]]extraEnvVarsSecret }}
           envFrom:
