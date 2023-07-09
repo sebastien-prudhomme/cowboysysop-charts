@@ -201,7 +201,7 @@ tests: |
 
 
   def test_service_connection():
-      url = "http://{{ include "mongo-express.fullname" . }}:{{ .Values.service.ports.http }}/"
+      url = "http://{{ include "mongo-express.fullname" . }}:{{ .Values.service.ports.http }}{{ .Values.siteBaseUrl }}"
 
       response = requests.get(url)
 
