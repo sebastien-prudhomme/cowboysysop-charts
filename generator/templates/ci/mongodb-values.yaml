@@ -1,4 +1,0 @@
-fullnameOverride: [[ application.name ]]
-mongodb:
-  enabled: true
-  fullnameOverride: mongodb

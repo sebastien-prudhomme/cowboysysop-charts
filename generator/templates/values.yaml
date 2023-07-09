@@ -457,6 +457,14 @@ externalMariadb:
   ## @param externalMariadb.database External MariaDB database
   database: [[ application.name ]]
 [%- endif %]
+[%- if application.mongodb %]
+
+## @section MongoDB parameters
+
+mongodb:
+  ## @param mongodb.enabled Whether to use the MongoDB chart (for testing purposes only)
+  enabled: false
+[%- endif %]
 [%- if application.postgresql %]
 
 ## @section PostgreSQL parameters
