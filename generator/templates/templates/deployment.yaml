@@ -150,6 +150,9 @@ spec:
             httpGet:
               path: [[ component.deployment.container.livenessProbe.httpGet.path ]]
               port: http
+              [%- if component.deployment.container.livenessProbe.httpGet.extra %]
+              [[ component.deployment.container.livenessProbe.httpGet.extra | indent(14) | trim ]]
+              [%- endif %]
             initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
             timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
@@ -161,6 +164,9 @@ spec:
             httpGet:
               path: [[ component.deployment.container.readinessProbe.httpGet.path ]]
               port: http
+              [%- if component.deployment.container.readinessProbe.httpGet.extra %]
+              [[ component.deployment.container.readinessProbe.httpGet.extra | indent(14) | trim ]]
+              [%- endif %]
             initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
             timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}

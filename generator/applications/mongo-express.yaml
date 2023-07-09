@@ -84,9 +84,21 @@ components:
         livenessProbe:
           httpGet:
             path: "{{ .Values.siteBaseUrl }}"
+            extra: |
+              {{- if and .Values.basicAuthUsername .Values.basicAuthPassword }}
+              httpHeaders:
+                - name: Authorization
+                  value: {{ include "mongo-express.basicAuthHttpHeader" . }}
+              {{- end }}
         readinessProbe:
           httpGet:
             path: "{{ .Values.siteBaseUrl }}"
+            extra: |
+              {{- if and .Values.basicAuthUsername .Values.basicAuthPassword }}
+              httpHeaders:
+                - name: Authorization
+                  value: {{ include "mongo-express.basicAuthHttpHeader" . }}
+              {{- end }}
     image:
       registry: docker.io
       repository: mongo-express
