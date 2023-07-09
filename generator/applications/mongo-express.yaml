@@ -104,6 +104,7 @@ components:
       repository: mongo-express
       tag: 0.54.0
     ingress: true
+    ingressPath: "{{ .Values.siteBaseUrl }}"
     secret: |
       {{- if .Values.mongodbEnableAdmin }}
       mongodb-admin-password: {{ .Values.mongodbAdminPassword | b64enc | quote }}

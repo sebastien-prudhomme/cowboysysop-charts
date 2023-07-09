@@ -8,14 +8,14 @@
 {{- else if contains "NodePort" .Values.service.type }}
   export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "[[ application.name ]].fullname" . }})
   export NODE_IP=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath="{.items[0].status.addresses[0].address}")
-  echo http://$NODE_IP:$NODE_PORT/
+  echo http://$NODE_IP:$NODE_PORT[[ application.components[0].ingressPath or "/" ]]
 {{- else if contains "LoadBalancer" .Values.service.type }}
      NOTE: It may take a few minutes for the LoadBalancer IP to be available.
            You can watch the status of by running 'kubectl get --namespace {{ .Release.Namespace }} svc -w {{ include "[[ application.name ]].fullname" . }}'
   export SERVICE_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ include "[[ application.name ]].fullname" . }} --template "{{"{{ range (index .status.loadBalancer.ingress 0) }}{{.}}{{ end }}"}}")
-  echo http://$SERVICE_IP:{{ .Values.service.ports.http }}/
+  echo http://$SERVICE_IP:{{ .Values.service.ports.http }}[[ application.components[0].ingressPath or "/" ]]
 {{- else if contains "ClusterIP" .Values.service.type }}
   export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ include "[[ application.name ]].name" . }},app.kubernetes.io/instance={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
-  echo "Visit http://127.0.0.1:[[ application.components[0].service.ports[0].numberForward or application.components[0].service.ports[0].number ]]/ to use your application"
+  echo "Visit http://127.0.0.1:[[ application.components[0].service.ports[0].numberForward or application.components[0].service.ports[0].number ]][[ application.components[0].ingressPath or "/" ]] to use your application"
   kubectl --namespace {{ .Release.Namespace }} port-forward $POD_NAME [[ application.components[0].service.ports[0].numberForward or application.components[0].service.ports[0].number ]]:{{ .Values.containerPorts.http }}
 {{- end }}
