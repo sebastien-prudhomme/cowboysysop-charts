@@ -175,67 +175,69 @@ spec:
           [%- endif %]
         [%- for container in component.deployment.containers %]
         [%- if container.asComponent %]
-        [%- set values_path = container.name + "." %]
+        [%- set standard_values_path = container.name + "." %]
+        [%- set custom_values_path = container.name + "." %]
         [%- else %]
-        [%- set values_path = "" %]
+        [%- set standard_values_path = "" %]
+        [%- set custom_values_path = application.name + "." + container.name + "." %]
         [%- endif %]
         [%- if container.optional %]
-        {{- if .Values.[[ application.name ]].[[ container.name ]].enabled }}
+        {{- if .Values.[[ custom_values_path ]]enabled }}
         [%- endif %]
         - name: [[ container.name ]]
           securityContext:
-            {{- toYaml .Values.[[ values_path ]]securityContext | nindent 12 }}
-          image: {{ include "common.images.image" ( dict "imageRoot" .Values.[[ values_path ]]image "global" .Values.global ) }}
-          imagePullPolicy: {{ .Values.[[ values_path ]]image.pullPolicy }}
+            {{- toYaml .Values.[[ standard_values_path ]]securityContext | nindent 12 }}
+          image: {{ include "common.images.image" ( dict "imageRoot" .Values.[[ standard_values_path ]]image "global" .Values.global ) }}
+          imagePullPolicy: {{ .Values.[[ standard_values_path ]]image.pullPolicy }}
           [%- if not container.args %]
-          {{- if .Values.[[ values_path ]]extraArgs }}
+          {{- if .Values.[[ standard_values_path ]]extraArgs }}
           [%- endif %]
           args:
             [%- if container.args %]
             [[ container.args | indent(12) | trim ]]
             [%- endif %]
-            {{- range $key, $value := .Values.[[ values_path ]]extraArgs }}
+            {{- range $key, $value := .Values.[[ standard_values_path ]]extraArgs }}
             - --{{ $key }}={{ $value }}
             {{- end }}
           [%- if not container.args %]
           {{- end }}
           [%- endif %]
           [%- if not container.env %]
-          {{- if .Values.[[ values_path ]]extraEnvVars }}
+          {{- if .Values.[[ standard_values_path ]]extraEnvVars }}
           [%- endif %]
           env:
             [%- if container.env %]
             [[ container.env | indent(12) | trim ]]
-            {{- if .Values.[[ values_path ]]extraEnvVars }}
+            {{- if .Values.[[ standard_values_path ]]extraEnvVars }}
             [%- endif %]
-            {{- include "common.tplvalues.render" (dict "value" .Values.[[ values_path ]]extraEnvVars "context" $) | nindent 12 }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.[[ standard_values_path ]]extraEnvVars "context" $) | nindent 12 }}
             [%- if container.env %]
             {{- end }}
             [%- endif %]
           [%- if not container.env %]
           {{- end }}
           [%- endif %]
-          {{- if or .Values.[[ values_path ]]extraEnvVarsCM .Values.[[ values_path ]]extraEnvVarsSecret }}
+          {{- if or .Values.[[ standard_values_path ]]extraEnvVarsCM .Values.[[ standard_values_path ]]extraEnvVarsSecret }}
           envFrom:
-            {{- if .Values.[[ values_path ]]extraEnvVarsCM }}
+            {{- if .Values.[[ standard_values_path ]]extraEnvVarsCM }}
             - configMapRef:
-                name: {{ include "common.tplvalues.render" (dict "value" .Values.[[ values_path ]]extraEnvVarsCM "context" $) }}
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.[[ standard_values_path ]]extraEnvVarsCM "context" $) }}
             {{- end }}
-            {{- if .Values.[[ values_path ]]extraEnvVarsSecret }}
+            {{- if .Values.[[ standard_values_path ]]extraEnvVarsSecret }}
             - secretRef:
-                name: {{ include "common.tplvalues.render" (dict "value" .Values.[[ values_path ]]extraEnvVarsSecret "context" $) }}
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.[[ standard_values_path ]]extraEnvVarsSecret "context" $) }}
             {{- end }}
           {{- end }}
           [%- if container.ports %]
           ports:
             [%- for port in container.ports %]
             - name: [[ port.nameIstio or port.name ]]
-              containerPort: {{ .Values.[[ values_path ]]containerPorts.[[ port.name ]] }}
+              containerPort: {{ .Values.[[ standard_values_path ]]containerPorts.[[ port.name ]] }}
               protocol: TCP
             [%- endfor %]
           [%- endif %]
           resources:
-            {{- toYaml .Values.[[ values_path ]]resources | nindent 12 }}
+            {{- toYaml .Values.[[ standard_values_path ]]resources | nindent 12 }}
           [%- if container.volumeMounts %]
           volumeMounts:
             [[ container.volumeMounts | indent(12) | trim ]]
