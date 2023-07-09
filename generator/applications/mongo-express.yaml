@@ -136,6 +136,13 @@ components:
         - name: http
           number: 8081
           description: HTTP
+    extraHelpers: |
+      {{/*
+      Create the basic authentification HTTP header
+      */}}
+      {{- define "mongo-express.basicAuthHttpHeader" -}}
+      Basic {{ printf "%s:%s" .Values.basicAuthUsername .Values.basicAuthPassword | b64enc }}
+      {{- end -}}
     extraValues: |
       ## @param siteBaseUrl Set the express baseUrl to ease mounting at a subdirectory
       siteBaseUrl: /

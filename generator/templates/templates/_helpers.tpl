@@ -85,6 +85,10 @@ Create the name of the secret to use
 
 [[ component.secretKeyHelpers | trim ]]
 [%- endif %]
+[%- if component.extraHelpers %]
+
+[[ component.extraHelpers | trim ]]
+[%- endif %]
 [%- if application.mariadb %]
 
 {{/*
