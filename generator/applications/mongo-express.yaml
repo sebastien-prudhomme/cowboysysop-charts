@@ -83,10 +83,10 @@ components:
           {{- end }}
         livenessProbe:
           httpGet:
-            path: /
+            path: "{{ .Values.siteBaseUrl }}"
         readinessProbe:
           httpGet:
-            path: /
+            path: "{{ .Values.siteBaseUrl }}"
     image:
       registry: docker.io
       repository: mongo-express
