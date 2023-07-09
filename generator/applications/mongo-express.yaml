@@ -144,6 +144,30 @@ components:
       Basic {{ printf "%s:%s" .Values.basicAuthUsername .Values.basicAuthPassword | b64enc }}
       {{- end -}}
     extraValues: |
+      ## @param mongodbServer MongoDB host name or IP address
+      mongodbServer: mongodb
+
+      ## @param mongodbPort MongoDB port
+      mongodbPort: 27017
+
+      ## @param mongodbEnableAdmin Enable administrator access
+      mongodbEnableAdmin: false
+
+      ## @param mongodbAdminUsername Administrator username
+      mongodbAdminUsername: root
+
+      ## @param mongodbAdminPassword Administrator password
+      mongodbAdminPassword: ""
+
+      ## @param mongodbAuthDatabase Database name (only needed if `mongodbEnableAdmin` is `false`)
+      mongodbAuthDatabase: ""
+
+      ## @param mongodbAuthUsername Database username (only needed if `mongodbEnableAdmin` is `false`)
+      mongodbAuthUsername: ""
+
+      ## @param mongodbAuthPassword Database password (only needed if `mongodbEnableAdmin` is `false`)
+      mongodbAuthPassword: ""
+
       ## @param siteBaseUrl Set the express baseUrl to ease mounting at a subdirectory
       siteBaseUrl: /
 
