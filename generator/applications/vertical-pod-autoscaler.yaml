@@ -67,3 +67,39 @@ components:
       registry: registry.k8s.io
       repository: autoscaling/vpa-updater
       tag: 0.14.0
+tests: |
+  import requests
+
+
+  def test_admission_controller_service_connection():
+      # url = "https://{{ include "vertical-pod-autoscaler.admissionController.fullname" . }}.{{ .Release.Namespace }}.svc:{{ .Values.admissionController.service.port }}/"
+      url = "https://vpa-webhook.{{ .Release.Namespace }}.svc:443/"
+      verify = "/admission-controller-tls-secret/ca.crt"
+
+      response = requests.get(url, verify=verify)
+
+      assert response.status_code == 200
+
+
+  def test_admission_controller_metrics_service_connection():
+      url = "http://{{ include "vertical-pod-autoscaler.admissionController.metrics.fullname" . }}:{{ .Values.admissionController.metrics.service.port }}/metrics"
+
+      response = requests.get(url)
+
+      assert response.status_code == 200
+
+
+  def test_recommender_metrics_service_connection():
+      url = "http://{{ include "vertical-pod-autoscaler.recommender.metrics.fullname" . }}:{{ .Values.recommender.metrics.service.port }}/metrics"
+
+      response = requests.get(url)
+
+      assert response.status_code == 200
+
+
+  def test_updater_metrics_service_connection():
+      url = "http://{{ include "vertical-pod-autoscaler.updater.metrics.fullname" . }}:{{ .Values.updater.metrics.service.port }}/metrics"
+
+      response = requests.get(url)
+
+      assert response.status_code == 200
