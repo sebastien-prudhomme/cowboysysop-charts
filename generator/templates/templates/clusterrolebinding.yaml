@@ -1,9 +1,18 @@
+[%- if component.name == application.name -%]
+[%- set component_values_path = "." %]
+[%- else -%]
+[%- set component_values_path = component.name | to_lower_camel %]
+[%- set component_values_path = "." + component_values_path + "." %]
+[%- endif -%]
+[%- if component.optional -%]
+{{- if .Values[[ component_values_path ]]enabled }}
+[%- endif %]
 apiVersion: {{ include "common.capabilities.rbac.apiVersion" . }}
 kind: ClusterRoleBinding
 metadata:
-  name: {{ include "[[ application.name ]].fullname" . }}
+  name: {{ include "[[ application.name ]][[ component_values_path ]]fullname" . }}
   labels:
-    {{- include "[[ application.name ]].labels" . | nindent 4 }}
+    {{- include "[[ application.name ]][[ component_values_path ]]labels" . | nindent 4 }}
     {{- if .Values.commonLabels }}
     {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
     {{- end }}
@@ -14,8 +23,11 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: {{ include "[[ application.name ]].fullname" . }}
+  name: {{ include "[[ application.name ]][[ component_values_path ]]fullname" . }}
 subjects:
   - kind: ServiceAccount
-    name: {{ include "[[ application.name ]].serviceAccountName" . }}
+    name: {{ include "[[ application.name ]][[ component_values_path ]]serviceAccountName" . }}
     namespace: {{ .Release.Namespace }}
+[%- if component.optional %]
+{{- end }}
+[%- endif %]

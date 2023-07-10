@@ -53,23 +53,121 @@ updates: |
 
   The port names have been changed to be compatible with Istio service mesh.
 components:
-  - name: admission-controller
-    optional: true
-    deployment:
-      type: deployment
-      container:
-        livenessProbe:
-          httpGet:
-            path: /health-check
-        readinessProbe:
-          httpGet:
-            path: /health-check
-    image:
-      registry: registry.k8s.io
-      repository: autoscaling/vpa-admission-controller
-      tag: 0.14.0
+  # - name: admission-controller
+  #   optional: true
+  #   deployment:
+  #     type: deployment
+  #     container:
+  #       livenessProbe:
+  #         httpGet:
+  #           path: /health-check
+  #       readinessProbe:
+  #         httpGet:
+  #           path: /health-check
+  #   image:
+  #     registry: registry.k8s.io
+  #     repository: autoscaling/vpa-admission-controller
+  #     tag: 0.14.0
   - name: updater
     optional: true
+    clusterrole: |
+      # system:vpa-actor
+      - apiGroups:
+          - ""
+        resources:
+          - pods
+          - nodes
+          - limitranges
+        verbs:
+          - get
+          - list
+          - watch
+      - apiGroups:
+          - ""
+        resources:
+          - events
+        verbs:
+          - get
+          - list
+          - watch
+          - create
+      - apiGroups:
+          - "poc.autoscaling.k8s.io"
+        resources:
+          - verticalpodautoscalers
+        verbs:
+          - get
+          - list
+          - watch
+          - patch
+      - apiGroups:
+          - "autoscaling.k8s.io"
+        resources:
+          - verticalpodautoscalers
+        verbs:
+          - get
+          - list
+          - watch
+          - patch
+      # system:vpa-target-reader
+      - apiGroups:
+          - "*"
+        resources:
+          - "*/scale"
+        verbs:
+          - get
+          - watch
+      - apiGroups:
+          - ""
+        resources:
+          - replicationcontrollers
+        verbs:
+          - get
+          - list
+          - watch
+      - apiGroups:
+          - apps
+        resources:
+          - daemonsets
+          - deployments
+          - replicasets
+          - statefulsets
+        verbs:
+          - get
+          - list
+          - watch
+      - apiGroups:
+          - batch
+        resources:
+          - jobs
+          - cronjobs
+        verbs:
+          - get
+          - list
+          - watch
+      # system:evictioner
+      - apiGroups:
+          - "apps"
+          - "extensions"
+        resources:
+          - replicasets
+        verbs:
+          - get
+      - apiGroups:
+          - ""
+        resources:
+          - pods/eviction
+        verbs:
+          - create
+      # system:vpa-status-reader
+      - apiGroups:
+          - "coordination.k8s.io"
+        resources:
+          - leases
+        verbs:
+          - get
+          - list
+          - watch
     deployment:
       type: deployment
       container:

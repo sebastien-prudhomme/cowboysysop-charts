@@ -96,8 +96,8 @@ with open(sys.argv[1], "r") as stream:
                 render("templates/clusterrole.yaml", f"{templates_directory}/clusterrole.yaml", application=application, component=component)
                 render("templates/clusterrolebinding.yaml", f"{templates_directory}/clusterrolebinding.yaml", application=application, component=component)
             else:
-                render("templates/component/clusterrole.yaml", f"{component_directory}/clusterrole.yaml", application=application, component=component)
-                render("templates/component/clusterrolebinding.yaml", f"{component_directory}/clusterrolebinding.yaml", application=application, component=component)
+                render("templates/clusterrole.yaml", f"{component_directory}/clusterrole.yaml", application=application, component=component)
+                render("templates/clusterrolebinding.yaml", f"{component_directory}/clusterrolebinding.yaml", application=application, component=component)
 
         # Manage ConfigMap
         if component.get("configmap"):
