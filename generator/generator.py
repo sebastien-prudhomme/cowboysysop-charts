@@ -45,8 +45,8 @@ with open(sys.argv[1], "r") as stream:
     render(".helmignore", f"{chart_directory}/.helmignore", application=application)
     render("Chart.yaml", f"{chart_directory}/Chart.yaml", application=application)
 
-    if os.path.exists(f"applications/{name}.png"):
-        shutil.copyfile(f"applications/{name}.png", f"{chart_directory}/icon.png")
+    if os.path.exists(f"applications/{name}/icon.png"):
+        shutil.copyfile(f"applications/{name}/icon.png", f"{chart_directory}/icon.png")
 
     render("LICENSE", f"{chart_directory}/LICENSE", application=application)
     render("README.md", f"{chart_directory}/README.md", application=application)
