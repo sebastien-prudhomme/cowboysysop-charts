@@ -102,6 +102,7 @@ securityContext: {}
   # readOnlyRootFilesystem: true
   # runAsNonRoot: true
   # runAsUser: 1000
+[%- if component.service or component.headless %]
 
 containerPorts:
   [%- set ports = component.service.ports %]
@@ -115,6 +116,7 @@ containerPorts:
   ## @param containerPorts.[[ port.name ]] Container port for [[ port.description ]]
   [[ port.name ]]: [[ port.number ]]
   [%- endfor %]
+[%- endif %]
 
 livenessProbe:
   ## @param livenessProbe.enabled Enable liveness probe
@@ -153,6 +155,7 @@ readinessProbe:
 
   ## @param readinessProbe.successThreshold Minimum consecutive successes for the readiness probe to be considered successful after having failed
   successThreshold: 1
+[%- if component.service %]
 
 service:
   ## @param service.annotations Service annotations
@@ -194,6 +197,7 @@ service:
     [[ port.name ]]:
     # [[ port.name ]]: [[ 30000 + loop.index0 ]]
     [%- endfor %]
+[%- endif %]
 
 ingress:
   ## @param ingress.enabled Enable ingress controller resource

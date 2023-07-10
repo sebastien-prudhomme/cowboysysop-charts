@@ -53,4 +53,17 @@ updates: |
 
   The port names have been changed to be compatible with Istio service mesh.
 components:
-  - name: admission-controller
+  - name: updater
+    deployment:
+      type: deployment
+      container:
+        livenessProbe:
+          httpGet:
+            path: /health-check
+        readinessProbe:
+          httpGet:
+            path: /health-check
+    image:
+      registry: registry.k8s.io
+      repository: autoscaling/vpa-updater
+      tag: 0.14.0
