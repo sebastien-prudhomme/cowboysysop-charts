@@ -184,10 +184,10 @@ components:
       ## @param siteBaseUrl Set the express baseUrl to ease mounting at a subdirectory
       siteBaseUrl: /
 
-      ## @param siteCookieSecret String used by cookie-parser middleware to sign cookies
+      ## @param siteCookieSecret String used by cookie-parser middleware to sign cookies (Random 32 character long alphanumeric string if not set)
       siteCookieSecret: ""
 
-      ## @param siteSessionSecret String used to sign the session ID cookie by express-session middleware
+      ## @param siteSessionSecret String used to sign the session ID cookie by express-session middleware (Random 32 character long alphanumeric string if not set)
       siteSessionSecret: ""
 
       ## @param basicAuthUsername Mongo Express web login name

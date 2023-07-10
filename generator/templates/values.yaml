@@ -77,7 +77,7 @@ serviceAccount:
   ## @param serviceAccount.annotations Service account annotations
   annotations: {}
 
-  ## @param serviceAccount.name The name of the service account to use (default value generated using the `[[ application.name ]].fullname` template)
+  ## @param serviceAccount.name The name of the service account to use (Generated using the `[[ application.name ]].fullname` template if not set)
   name:
 
 ## @param podAnnotations Additional pod annotations
