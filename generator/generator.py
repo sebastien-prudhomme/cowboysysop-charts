@@ -85,10 +85,9 @@ with open(sys.argv[1], "r") as stream:
 
         # Manage helper
         if component_name == name:
-            if component_name == name:
-                render("templates/_helpers.tpl", f"{templates_directory}/_helpers.tpl", application=application, component=component)
-            else:
-                render("templates/component/_helpers.tpl", f"{component_directory}/_helpers.tpl", application=application, component=component)
+            render("templates/_helpers.tpl", f"{templates_directory}/_helpers.tpl", application=application, component=component)
+        else:
+            render("templates/_helpers.tpl", f"{component_directory}/_helpers.tpl", application=application, component=component)
 
         # Manage ClusterRole/ClusterRoleBinding
         if component.get("clusterrole"):
