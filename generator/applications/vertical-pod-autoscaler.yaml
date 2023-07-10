@@ -181,6 +181,11 @@ components:
       registry: registry.k8s.io
       repository: autoscaling/vpa-updater
       tag: 0.14.0
+    metrics:
+      ports:
+        - name: http-metrics
+          number: 8943
+          description: HTTP
 tests: |
   import requests
 

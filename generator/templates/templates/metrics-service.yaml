@@ -10,32 +10,33 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "[[ application.name ]][[ component_values_path ]]headless.fullname" . }}
+  name: {{ include "[[ application.name ]][[ component_values_path ]]metrics.fullname" . }}
   labels:
     {{- include "[[ application.name ]][[ component_values_path ]]labels" . | nindent 4 }}
     {{- if .Values.commonLabels }}
     {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
     {{- end }}
-  {{- if or .Values[[ component_values_path ]]headless.service.annotations .Values.commonAnnotations }}
+  {{- if or .Values[[ component_values_path ]]metrics.service.annotations .Values.commonAnnotations }}
   annotations:
-    {{- if .Values[[ component_values_path ]]headless.service.annotations }}
-    {{- include "common.tplvalues.render" ( dict "value" .Values[[ component_values_path ]]headless.service.annotations "context" $ ) | nindent 4 }}
+    {{- if .Values[[ component_values_path ]]metrics.service.annotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values[[ component_values_path ]]metrics.service.annotations "context" $ ) | nindent 4 }}
     {{- end }}
     {{- if .Values.commonAnnotations }}
     {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
     {{- end }}
   {{- end }}
 spec:
-  type: ClusterIP
-  clusterIP: None
+  type: {{ .Values[[ component_values_path ]]metrics.service.type }}
+  {{- if and (eq .Values[[ component_values_path ]]metrics.service.type "ClusterIP") .Values[[ component_values_path ]]metrics.service.clusterIP }}
+  clusterIP: {{ .Values[[ component_values_path ]]metrics.service.clusterIP }}
+  {{- end }}
   ports:
-    [%- for port in component.headless.ports %]
-    - port: {{ .Values[[ component_values_path ]]headless.service.ports.[[ port.name ]] }}
+    [%- for port in component.metrics.ports %]
+    - port: {{ .Values[[ component_values_path ]]metrics.service.ports.[[ port.name ]] }}
       targetPort: [[ port.nameIstio or port.name ]]
       protocol: TCP
       name: [[ port.nameIstio or port.name ]]
     [%- endfor %]
-  publishNotReadyAddresses: true
   selector:
     {{- include "[[ application.name ]][[ component_values_path ]]selectorLabels" . | nindent 4 }}
 [%- if component.optional %]

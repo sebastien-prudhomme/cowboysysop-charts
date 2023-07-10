@@ -107,11 +107,11 @@ with open(sys.argv[1], "r") as stream:
                 render("templates/component/configmap.yaml", f"{component_directory}/configmap.yaml", application=application, component=component)
 
         # Manage Deployment/Statefulset
-        if component.get("deployment"):
-            if component_name == name:
-                render(f"templates/deployment.yaml", f"{templates_directory}/{component['deployment']['type']}.yaml", application=application, component=component)
-            else:
-                render(f"templates/component/deployment.yaml", f"{component_directory}/{component['deployment']['type']}.yaml", application=application, component=component)
+        # if component.get("deployment"):
+        #     if component_name == name:
+        #         render(f"templates/deployment.yaml", f"{templates_directory}/{component['deployment']['type']}.yaml", application=application, component=component)
+        #     else:
+        #         render(f"templates/component/deployment.yaml", f"{component_directory}/{component['deployment']['type']}.yaml", application=application, component=component)
 
         # Manage Ingress
         if component.get("ingress"):
@@ -152,7 +152,14 @@ with open(sys.argv[1], "r") as stream:
             if component_name == name:
                 render("templates/headless-service.yaml", f"{templates_directory}/headless-service.yaml", application=application, component=component)
             else:
-                render("templates/component/headless-service.yaml", f"{component_directory}/headless-service.yaml", application=application, component=component)
+                render("templates/headless-service.yaml", f"{component_directory}/headless-service.yaml", application=application, component=component)
+
+        # Manage Metrics Service
+        if component.get("metrics"):
+            if component_name == name:
+                render("templates/metrics-service.yaml", f"{templates_directory}/metrics-service.yaml", application=application, component=component)
+            else:
+                render("templates/metrics-service.yaml", f"{component_directory}/metrics-service.yaml", application=application, component=component)
 
         # Manage ServiceAccount
         if component_name == name:
