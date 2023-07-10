@@ -158,7 +158,7 @@ with open(sys.argv[1], "r") as stream:
         if component_name == name:
             render("templates/serviceaccount.yaml", f"{templates_directory}/serviceaccount.yaml", application=application, component=component)
         else:
-            render("templates/component/serviceaccount.yaml", f"{component_directory}/serviceaccount.yaml", application=application, component=component)
+            render("templates/serviceaccount.yaml", f"{component_directory}/serviceaccount.yaml", application=application, component=component)
 
     # Manage MariaDB
     if application.get("mariadb"):
