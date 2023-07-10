@@ -1,10 +1,19 @@
-{{- if .Values.pdb.create }}
+[%- if component.name == application.name -%]
+[%- set component_values_path = "." %]
+[%- else -%]
+[%- set component_values_path = component.name | to_lower_camel %]
+[%- set component_values_path = "." + component_values_path + "." %]
+[%- endif -%]
+[%- if component.optional -%]
+{{- if .Values[[ component_values_path ]]enabled }}
+[%- endif %]
+{{- if .Values[[ component_values_path ]]pdb.create }}
 apiVersion: {{ include "common.capabilities.policy.apiVersion" . }}
 kind: PodDisruptionBudget
 metadata:
-  name: {{ include "[[ application.name ]].fullname" . }}
+  name: {{ include "[[ application.name ]][[ component_values_path ]]fullname" . }}
   labels:
-    {{- include "[[ application.name ]].labels" . | nindent 4 }}
+    {{- include "[[ application.name ]][[ component_values_path ]]labels" . | nindent 4 }}
     {{- if .Values.commonLabels }}
     {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
     {{- end }}
@@ -13,13 +22,16 @@ metadata:
     {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
   {{- end }}
 spec:
-  {{- if .Values.pdb.minAvailable }}
-  minAvailable: {{ .Values.pdb.minAvailable }}
+  {{- if .Values[[ component_values_path ]]pdb.minAvailable }}
+  minAvailable: {{ .Values[[ component_values_path ]]pdb.minAvailable }}
   {{- end }}
-  {{- if .Values.pdb.maxUnavailable }}
-  maxUnavailable: {{ .Values.pdb.maxUnavailable }}
+  {{- if .Values[[ component_values_path ]]pdb.maxUnavailable }}
+  maxUnavailable: {{ .Values[[ component_values_path ]]pdb.maxUnavailable }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "[[ application.name ]].selectorLabels" . | nindent 6 }}
+      {{- include "[[ application.name ]][[ component_values_path ]]selectorLabels" . | nindent 6 }}
 {{- end }}
+[%- if component.optional %]
+{{- end }}
+[%- endif %]

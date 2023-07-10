@@ -131,7 +131,7 @@ with open(sys.argv[1], "r") as stream:
         if component_name == name:
             render("templates/pdb.yaml", f"{templates_directory}/pdb.yaml", application=application, component=component)
         else:
-            render("templates/component/pdb.yaml", f"{component_directory}/pdb.yaml", application=application, component=component)
+            render("templates/pdb.yaml", f"{component_directory}/pdb.yaml", application=application, component=component)
 
         # Manage Secret
         if component.get("secret"):
@@ -141,10 +141,11 @@ with open(sys.argv[1], "r") as stream:
                 render("templates/component/secret.yaml", f"{component_directory}/secret.yaml", application=application, component=component)
 
         # Manage Service
-        if component_name == name:
-            render("templates/service.yaml", f"{templates_directory}/service.yaml", application=application, component=component)
-        else:
-            render("templates/component/service.yaml", f"{component_directory}/service.yaml", application=application, component=component)
+        if component.get("service"):
+            if component_name == name:
+                render("templates/service.yaml", f"{templates_directory}/service.yaml", application=application, component=component)
+            else:
+                render("templates/component/service.yaml", f"{component_directory}/service.yaml", application=application, component=component)
 
         # Manage Headless Service
         if component.get("headless"):

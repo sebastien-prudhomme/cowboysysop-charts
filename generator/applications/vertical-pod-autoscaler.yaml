@@ -54,6 +54,7 @@ updates: |
   The port names have been changed to be compatible with Istio service mesh.
 components:
   - name: updater
+    optional: true
     deployment:
       type: deployment
       container:
