@@ -53,21 +53,242 @@ updates: |
 
   The port names have been changed to be compatible with Istio service mesh.
 components:
-  # - name: admission-controller
-  #   optional: true
-  #   deployment:
-  #     type: deployment
-  #     container:
-  #       livenessProbe:
-  #         httpGet:
-  #           path: /health-check
-  #       readinessProbe:
-  #         httpGet:
-  #           path: /health-check
-  #   image:
-  #     registry: registry.k8s.io
-  #     repository: autoscaling/vpa-admission-controller
-  #     tag: 0.14.0
+  - name: admission-controller
+    optional: true
+    clusterrole: |
+      # system:vpa-target-reader
+      - apiGroups:
+          - "*"
+        resources:
+          - "*/scale"
+        verbs:
+          - get
+          - watch
+      - apiGroups:
+          - ""
+        resources:
+          - replicationcontrollers
+        verbs:
+          - get
+          - list
+          - watch
+      - apiGroups:
+          - apps
+        resources:
+          - daemonsets
+          - deployments
+          - replicasets
+          - statefulsets
+        verbs:
+          - get
+          - list
+          - watch
+      - apiGroups:
+          - batch
+        resources:
+          - jobs
+          - cronjobs
+        verbs:
+          - get
+          - list
+          - watch
+      # system:vpa-admission-controller
+      - apiGroups:
+          - ""
+        resources:
+          - pods
+          - configmaps
+          - nodes
+          - limitranges
+        verbs:
+          - get
+          - list
+          - watch
+      - apiGroups:
+          - "admissionregistration.k8s.io"
+        resources:
+          - mutatingwebhookconfigurations
+        verbs:
+          - create
+          - delete
+          - get
+          - list
+      - apiGroups:
+          - "poc.autoscaling.k8s.io"
+        resources:
+          - verticalpodautoscalers
+        verbs:
+          - get
+          - list
+          - watch
+      - apiGroups:
+          - "autoscaling.k8s.io"
+        resources:
+          - verticalpodautoscalers
+        verbs:
+          - get
+          - list
+          - watch
+      - apiGroups:
+          - "coordination.k8s.io"
+        resources:
+          - leases
+        verbs:
+          - create
+          - update
+          - get
+          - list
+          - watch
+    deployment:
+      type: deployment
+      container:
+        livenessProbe:
+          httpGet:
+            path: /health-check
+        readinessProbe:
+          httpGet:
+            path: /health-check
+    image:
+      registry: registry.k8s.io
+      repository: autoscaling/vpa-admission-controller
+      tag: 0.14.0
+    metrics:
+      ports:
+        - name: http-metrics
+          number: 8944
+          description: HTTP
+  - name: recommender
+    clusterrole: |
+      # system:metrics-reader
+      - apiGroups:
+          - "metrics.k8s.io"
+        resources:
+          - pods
+        verbs:
+          - get
+          - list
+      # system:vpa-actor
+      - apiGroups:
+          - ""
+        resources:
+          - pods
+          - nodes
+          - limitranges
+        verbs:
+          - get
+          - list
+          - watch
+      - apiGroups:
+          - ""
+        resources:
+          - events
+        verbs:
+          - get
+          - list
+          - watch
+          - create
+      - apiGroups:
+          - "poc.autoscaling.k8s.io"
+        resources:
+          - verticalpodautoscalers
+        verbs:
+          - get
+          - list
+          - watch
+          - patch
+      - apiGroups:
+          - "autoscaling.k8s.io"
+        resources:
+          - verticalpodautoscalers
+        verbs:
+          - get
+          - list
+          - watch
+          - patch
+      # system:vpa-checkpoint-actor
+      - apiGroups:
+          - "poc.autoscaling.k8s.io"
+        resources:
+          - verticalpodautoscalercheckpoints
+        verbs:
+          - get
+          - list
+          - watch
+          - create
+          - patch
+          - delete
+      - apiGroups:
+          - "autoscaling.k8s.io"
+        resources:
+          - verticalpodautoscalercheckpoints
+        verbs:
+          - get
+          - list
+          - watch
+          - create
+          - patch
+          - delete
+      - apiGroups:
+          - ""
+        resources:
+          - namespaces
+        verbs:
+          - get
+          - list
+      # system:vpa-target-reader
+      - apiGroups:
+          - "*"
+        resources:
+          - "*/scale"
+        verbs:
+          - get
+          - watch
+      - apiGroups:
+          - ""
+        resources:
+          - replicationcontrollers
+        verbs:
+          - get
+          - list
+          - watch
+      - apiGroups:
+          - apps
+        resources:
+          - daemonsets
+          - deployments
+          - replicasets
+          - statefulsets
+        verbs:
+          - get
+          - list
+          - watch
+      - apiGroups:
+          - batch
+        resources:
+          - jobs
+          - cronjobs
+        verbs:
+          - get
+          - list
+          - watch
+    deployment:
+      type: deployment
+      container:
+        livenessProbe:
+          httpGet:
+            path: /health-check
+        readinessProbe:
+          httpGet:
+            path: /health-check
+    image:
+      registry: registry.k8s.io
+      repository: autoscaling/vpa-recommender
+      tag: 0.14.0
+    metrics:
+      ports:
+        - name: http-metrics
+          number: 8942
+          description: HTTP
   - name: updater
     optional: true
     clusterrole: |
