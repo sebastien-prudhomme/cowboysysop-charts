@@ -50,7 +50,7 @@ spec:
         {{- if .Values.commonLabels }}
         {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 8 }}
         {{- end }}
-      [%- if not component.configmap and not component.secret %]
+      [%- if not component.configmap and not component.secret and not component.tls %]
       {{- if or .Values[[ component_values_path ]]podAnnotations .Values.commonAnnotations }}
       [%- endif %]
       annotations:
@@ -62,13 +62,18 @@ spec:
         checksum/secret: {{ include (print $.Template.BasePath "[[ component_file_path ]]secret.yaml") . | sha256sum }}
         {{- end }}
         [%- endif %]
+        [%- if component.tls %]
+        {{- if (not .Values[[ component_values_path ]]tls.existingSecret) }}
+        checksum/tls-secret: {{ include (print $.Template.BasePath "[[ component_file_path ]]tls-secret.yaml") . | sha256sum }}
+        {{- end }}
+        [%- endif %]
         {{- if .Values[[ component_values_path ]]podAnnotations }}
         {{- include "common.tplvalues.render" ( dict "value" .Values[[ component_values_path ]]podAnnotations "context" $ ) | nindent 8 }}
         {{- end }}
         {{- if .Values.commonAnnotations }}
         {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 8 }}
         {{- end }}
-      [%- if not component.configmap and not component.secret %]
+      [%- if not component.configmap and not component.secret and not component.tls %]
       {{- end }}
       [%- endif %]
     spec:

@@ -139,6 +139,13 @@ with open(sys.argv[1], "r") as stream:
             else:
                 render("templates/component/secret.yaml", f"{component_directory}/secret.yaml", application=application, component=component)
 
+        # Manage TLS Secret
+        if component.get("tls"):
+            if component_name == name:
+                render("templates/tls-secret.yaml", f"{templates_directory}/tls-secret.yaml", application=application, component=component)
+            else:
+                render("templates/tls-secret.yaml", f"{component_directory}/tls-secret.yaml", application=application, component=component)
+
         # Manage Service
         if component.get("service"):
             if component_name == name:

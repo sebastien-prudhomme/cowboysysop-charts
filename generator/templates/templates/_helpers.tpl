@@ -35,7 +35,7 @@ If release name contains chart name it will be used as a full name.
 Create a default fully qualified app name.
 */}}
 {{- define "[[ application.name ]].[[ component.name | to_lower_camel ]].fullname" -}}
-{{- printf "%s-%s" (include "[[ application.name ]].fullname" .) "[[ component.name | to_lower_camel ]]" | trunc 63 | trimSuffix "-" -}}
+{{- printf "%s-%s" (include "[[ application.name ]].fullname" .) "[[ component.name ]]" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 [%- endif %]
 [%- if component.headless %]
