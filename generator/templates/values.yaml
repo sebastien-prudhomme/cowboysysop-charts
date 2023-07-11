@@ -391,6 +391,22 @@ headless:
       [[ port.name ]]: [[ port.number ]]
       [%- endfor %]
 [%- endif %]
+[%- if component.metrics %]
+
+metrics:
+  service:
+    ## @param [[ component_yaml_path ]]metrics.service.annotations Metrics service annotations
+    annotations: {}
+
+    ports:
+      [%- for port in component.metrics.ports %]
+      [%- if loop.index0 > 0 %]
+[[ "" ]]
+      [%- endif %]
+      ## @param [[ component_yaml_path ]]metrics.service.ports.[[ port.name ]] Metrics service port for [[ port.description ]]
+      [[ port.name ]]: [[ port.number ]]
+      [%- endfor %]
+[%- endif %]
 [%- if component.persistentvolumeclaim %]
 
 persistence:
