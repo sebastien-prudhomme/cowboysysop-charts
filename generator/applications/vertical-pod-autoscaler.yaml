@@ -16,8 +16,8 @@ updates: |
 
   Some parameters related to port management have been modified:
 
-  - Parameter `service.port` has been renamed `service.ports.http`.
-  - Parameter `service.nodePort` has been renamed `service.nodePorts.http`.
+  - Parameter `updater.metrics.service.port` has been renamed `updater.metrics.service.ports.http-metrics`.
+  - Parameter `updater.metrics.service.nodePort` has been renamed `updater.metrics.service.nodePorts.http-metrics`.
 
   ### Upgrading to version 7.0.0
 
