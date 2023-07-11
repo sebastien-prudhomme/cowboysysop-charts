@@ -1,8 +1,10 @@
 [%- if component.name == application.name -%]
 [%- set component_values_path = "." %]
+[%- set component_file_path = "/" %]
 [%- else -%]
 [%- set component_values_path = component.name | to_lower_camel %]
 [%- set component_values_path = "." + component_values_path + "." %]
+[%- set component_file_path = "/" + component.name + "/" %]
 [%- endif -%]
 [%- if component.optional -%]
 {{- if .Values[[ component_values_path ]]enabled }}
@@ -15,9 +17,9 @@ apiVersion: {{ include "common.capabilities.statefulset.apiVersion" . }}
 kind: StatefulSet
 [%- endif %]
 metadata:
-  name: {{ include "[[ application.name ]].fullname" . }}
+  name: {{ include "[[ application.name ]][[ component_values_path ]]fullname" . }}
   labels:
-    {{- include "[[ application.name ]].labels" . | nindent 4 }}
+    {{- include "[[ application.name ]][[ component_values_path ]]labels" . | nindent 4 }}
     {{- if .Values.commonLabels }}
     {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
     {{- end }}
@@ -26,42 +28,42 @@ metadata:
     {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
   {{- end }}
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .Values[[ component_values_path ]]replicaCount }}
   selector:
     matchLabels:
-      {{- include "[[ application.name ]].selectorLabels" . | nindent 6 }}
+      {{- include "[[ application.name ]][[ component_values_path ]]selectorLabels" . | nindent 6 }}
   [%- if component.deployment.type == "statefulset" %]
-  serviceName: {{ include "[[ application.name ]].headless.fullname" . }}
+  serviceName: {{ include "[[ application.name ]][[ component_values_path ]]headless.fullname" . }}
   [%- endif %]
   [%- if component.deployment.type == "deployment" and component.persistentvolumeclaim %]
-  {{- if .Values.updateStrategy }}
-  strategy: {{- toYaml .Values.updateStrategy | nindent 4 }}
+  {{- if .Values[[ component_values_path ]]updateStrategy }}
+  strategy: {{- toYaml .Values[[ component_values_path ]]updateStrategy | nindent 4 }}
   {{- end }}
   [%- endif %]
   template:
     metadata:
       labels:
-        {{- include "[[ application.name ]].selectorLabels" . | nindent 8 }}
-        {{- if .Values.podLabels }}
-        {{- include "common.tplvalues.render" ( dict "value" .Values.podLabels "context" $ ) | nindent 8 }}
+        {{- include "[[ application.name ]][[ component_values_path ]]selectorLabels" . | nindent 8 }}
+        {{- if .Values[[ component_values_path ]]podLabels }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values[[ component_values_path ]]podLabels "context" $ ) | nindent 8 }}
         {{- end }}
         {{- if .Values.commonLabels }}
         {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 8 }}
         {{- end }}
       [%- if not component.configmap and not component.secret %]
-      {{- if or .Values.podAnnotations .Values.commonAnnotations }}
+      {{- if or .Values[[ component_values_path ]]podAnnotations .Values.commonAnnotations }}
       [%- endif %]
       annotations:
         [%- if component.configmap %]
-        checksum/configmap: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        checksum/configmap: {{ include (print $.Template.BasePath "[[ component_file_path ]]configmap.yaml") . | sha256sum }}
         [%- endif %]
         [%- if component.secret %]
-        {{- if (not .Values.existingSecret) }}
-        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+        {{- if (not .Values[[ component_values_path ]]existingSecret) }}
+        checksum/secret: {{ include (print $.Template.BasePath "[[ component_file_path ]]secret.yaml") . | sha256sum }}
         {{- end }}
         [%- endif %]
-        {{- if .Values.podAnnotations }}
-        {{- include "common.tplvalues.render" ( dict "value" .Values.podAnnotations "context" $ ) | nindent 8 }}
+        {{- if .Values[[ component_values_path ]]podAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values[[ component_values_path ]]podAnnotations "context" $ ) | nindent 8 }}
         {{- end }}
         {{- if .Values.commonAnnotations }}
         {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 8 }}
@@ -70,78 +72,78 @@ spec:
       {{- end }}
       [%- endif %]
     spec:
-      {{- include "common.images.pullSecrets" ( dict "images" ( list .Values.image ) "global" .Values.global ) | nindent 6 }}
-      {{- if .Values.priorityClassName }}
-      priorityClassName: {{ .Values.priorityClassName | quote }}
+      {{- include "common.images.pullSecrets" ( dict "images" ( list .Values[[ component_values_path ]]image ) "global" .Values.global ) | nindent 6 }}
+      {{- if .Values[[ component_values_path ]]priorityClassName }}
+      priorityClassName: {{ .Values[[ component_values_path ]]priorityClassName | quote }}
       {{- end }}
-      serviceAccountName: {{ include "[[ application.name ]].serviceAccountName" . }}
+      serviceAccountName: {{ include "[[ application.name ]][[ component_values_path ]]serviceAccountName" . }}
       securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+        {{- toYaml .Values[[ component_values_path ]]podSecurityContext | nindent 8 }}
       [%- if component.deployment.initContainer %]
       initContainers:
         - name: init
           securityContext:
-            {{- toYaml .Values.init.securityContext | nindent 12 }}
-          image: {{ include "common.images.image" ( dict "imageRoot" .Values.image "global" .Values.global ) }}
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+            {{- toYaml .Values[[ component_values_path ]]init.securityContext | nindent 12 }}
+          image: {{ include "common.images.image" ( dict "imageRoot" .Values[[ component_values_path ]]image "global" .Values.global ) }}
+          imagePullPolicy: {{ .Values[[ component_values_path ]]image.pullPolicy }}
           [%- if component.deployment.initContainer.command %]
           command:
             [[ component.deployment.initContainer.command | indent(12) | trim ]]
           [%- endif %]
           resources:
-            {{- toYaml .Values.init.resources | nindent 12 }}
+            {{- toYaml .Values[[ component_values_path ]]init.resources | nindent 12 }}
           [%- if component.deployment.initContainer.volumeMounts %]
           volumeMounts:
             [[ component.deployment.initContainer.volumeMounts | indent(12) | trim ]]
           [%- endif %]
       [%- endif %]
       containers:
-        - name: [[ application.name ]]
+        - name: [[ component.name ]]
           securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: {{ include "common.images.image" ( dict "imageRoot" .Values.image "global" .Values.global ) }}
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+            {{- toYaml .Values[[ component_values_path ]]securityContext | nindent 12 }}
+          image: {{ include "common.images.image" ( dict "imageRoot" .Values[[ component_values_path ]]image "global" .Values.global ) }}
+          imagePullPolicy: {{ .Values[[ component_values_path ]]image.pullPolicy }}
           [%- if component.deployment.container.command %]
           command:
             [[ component.deployment.container.command | indent(12) | trim ]]
           [%- endif %]
           [%- if not component.deployment.container.args %]
-          {{- if .Values.extraArgs }}
+          {{- if .Values[[ component_values_path ]]extraArgs }}
           [%- endif %]
           args:
             [%- if component.deployment.container.args %]
             [[ component.deployment.container.args | indent(12) | trim ]]
             [%- endif %]
-            {{- range $key, $value := .Values.extraArgs }}
+            {{- range $key, $value := .Values[[ component_values_path ]]extraArgs }}
             - --{{ $key }}={{ $value }}
             {{- end }}
           [%- if not component.deployment.container.args %]
           {{- end }}
           [%- endif %]
           [%- if not component.deployment.container.env %]
-          {{- if .Values.extraEnvVars }}
+          {{- if .Values[[ component_values_path ]]extraEnvVars }}
           [%- endif %]
           env:
             [%- if component.deployment.container.env %]
             [[ component.deployment.container.env | indent(12) | trim ]]
-            {{- if .Values.extraEnvVars }}
+            {{- if .Values[[ component_values_path ]]extraEnvVars }}
             [%- endif %]
-            {{- include "common.tplvalues.render" (dict "value" .Values.extraEnvVars "context" $) | nindent 12 }}
+            {{- include "common.tplvalues.render" (dict "value" .Values[[ component_values_path ]]extraEnvVars "context" $) | nindent 12 }}
             [%- if component.deployment.container.env %]
             {{- end }}
             [%- endif %]
           [%- if not component.deployment.container.env %]
           {{- end }}
           [%- endif %]
-          {{- if or .Values.extraEnvVarsCM .Values.extraEnvVarsSecret }}
+          {{- if or .Values[[ component_values_path ]]extraEnvVarsCM .Values[[ component_values_path ]]extraEnvVarsSecret }}
           envFrom:
-            {{- if .Values.extraEnvVarsCM }}
+            {{- if .Values[[ component_values_path ]]extraEnvVarsCM }}
             - configMapRef:
-                name: {{ include "common.tplvalues.render" (dict "value" .Values.extraEnvVarsCM "context" $) }}
+                name: {{ include "common.tplvalues.render" (dict "value" .Values[[ component_values_path ]]extraEnvVarsCM "context" $) }}
             {{- end }}
-            {{- if .Values.extraEnvVarsSecret }}
+            {{- if .Values[[ component_values_path ]]extraEnvVarsSecret }}
             - secretRef:
-                name: {{ include "common.tplvalues.render" (dict "value" .Values.extraEnvVarsSecret "context" $) }}
+                name: {{ include "common.tplvalues.render" (dict "value" .Values[[ component_values_path ]]extraEnvVarsSecret "context" $) }}
             {{- end }}
           {{- end }}
           [%- if component.service or component.headless or component.metrics %]
@@ -158,11 +160,11 @@ spec:
             [%- endif %]
             [%- for port in ports %]
             - name: [[ port.nameIstio or port.name ]]
-              containerPort: {{ .Values.containerPorts.[[ port.name ]] }}
+              containerPort: {{ .Values[[ component_values_path ]]containerPorts.[[ port.name ]] }}
               protocol: TCP
             [%- endfor %]
           [%- endif %]
-          {{- if .Values.livenessProbe.enabled }}
+          {{- if .Values[[ component_values_path ]]livenessProbe.enabled }}
           livenessProbe:
             httpGet:
               path: [[ component.deployment.container.livenessProbe.httpGet.path ]]
@@ -170,13 +172,13 @@ spec:
               [%- if component.deployment.container.livenessProbe.httpGet.extra %]
               [[ component.deployment.container.livenessProbe.httpGet.extra | indent(14) | trim ]]
               [%- endif %]
-            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
-            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
-            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
-            failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
-            successThreshold: {{ .Values.livenessProbe.successThreshold }}
+            initialDelaySeconds: {{ .Values[[ component_values_path ]]livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values[[ component_values_path ]]livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values[[ component_values_path ]]livenessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values[[ component_values_path ]]livenessProbe.failureThreshold }}
+            successThreshold: {{ .Values[[ component_values_path ]]livenessProbe.successThreshold }}
           {{- end }}
-          {{- if .Values.readinessProbe.enabled }}
+          {{- if .Values[[ component_values_path ]]readinessProbe.enabled }}
           readinessProbe:
             httpGet:
               path: [[ component.deployment.container.readinessProbe.httpGet.path ]]
@@ -184,83 +186,83 @@ spec:
               [%- if component.deployment.container.readinessProbe.httpGet.extra %]
               [[ component.deployment.container.readinessProbe.httpGet.extra | indent(14) | trim ]]
               [%- endif %]
-            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
-            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
-            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
-            failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
-            successThreshold: {{ .Values.readinessProbe.successThreshold }}
+            initialDelaySeconds: {{ .Values[[ component_values_path ]]readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values[[ component_values_path ]]readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values[[ component_values_path ]]readinessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values[[ component_values_path ]]readinessProbe.failureThreshold }}
+            successThreshold: {{ .Values[[ component_values_path ]]readinessProbe.successThreshold }}
           {{- end }}
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
+            {{- toYaml .Values[[ component_values_path ]]resources | nindent 12 }}
           [%- if component.deployment.container.volumeMounts %]
           volumeMounts:
             [[ component.deployment.container.volumeMounts | indent(12) | trim ]]
           [%- endif %]
         [%- for container in component.deployment.containers %]
         [%- if container.asComponent %]
-        [%- set standard_values_path = container.name + "." %]
-        [%- set custom_values_path = container.name + "." %]
+        [%- set standard_values_path = "." + container.name + "." %]
+        [%- set custom_values_path = "." + container.name + "." %]
         [%- else %]
-        [%- set standard_values_path = "" %]
-        [%- set custom_values_path = application.name + "." + container.name + "." %]
+        [%- set standard_values_path = "." %]
+        [%- set custom_values_path = "." + application.name + "." + container.name + "." %]
         [%- endif %]
         [%- if container.optional %]
-        {{- if .Values.[[ custom_values_path ]]enabled }}
+        {{- if .Values[[ custom_values_path ]]enabled }}
         [%- endif %]
         - name: [[ container.name ]]
           securityContext:
-            {{- toYaml .Values.[[ standard_values_path ]]securityContext | nindent 12 }}
-          image: {{ include "common.images.image" ( dict "imageRoot" .Values.[[ standard_values_path ]]image "global" .Values.global ) }}
-          imagePullPolicy: {{ .Values.[[ standard_values_path ]]image.pullPolicy }}
+            {{- toYaml .Values[[ standard_values_path ]]securityContext | nindent 12 }}
+          image: {{ include "common.images.image" ( dict "imageRoot" .Values[[ standard_values_path ]]image "global" .Values.global ) }}
+          imagePullPolicy: {{ .Values[[ standard_values_path ]]image.pullPolicy }}
           [%- if not container.args %]
-          {{- if .Values.[[ standard_values_path ]]extraArgs }}
+          {{- if .Values[[ standard_values_path ]]extraArgs }}
           [%- endif %]
           args:
             [%- if container.args %]
             [[ container.args | indent(12) | trim ]]
             [%- endif %]
-            {{- range $key, $value := .Values.[[ standard_values_path ]]extraArgs }}
+            {{- range $key, $value := .Values[[ standard_values_path ]]extraArgs }}
             - --{{ $key }}={{ $value }}
             {{- end }}
           [%- if not container.args %]
           {{- end }}
           [%- endif %]
           [%- if not container.env %]
-          {{- if .Values.[[ standard_values_path ]]extraEnvVars }}
+          {{- if .Values[[ standard_values_path ]]extraEnvVars }}
           [%- endif %]
           env:
             [%- if container.env %]
             [[ container.env | indent(12) | trim ]]
-            {{- if .Values.[[ standard_values_path ]]extraEnvVars }}
+            {{- if .Values[[ standard_values_path ]]extraEnvVars }}
             [%- endif %]
-            {{- include "common.tplvalues.render" (dict "value" .Values.[[ standard_values_path ]]extraEnvVars "context" $) | nindent 12 }}
+            {{- include "common.tplvalues.render" (dict "value" .Values[[ standard_values_path ]]extraEnvVars "context" $) | nindent 12 }}
             [%- if container.env %]
             {{- end }}
             [%- endif %]
           [%- if not container.env %]
           {{- end }}
           [%- endif %]
-          {{- if or .Values.[[ standard_values_path ]]extraEnvVarsCM .Values.[[ standard_values_path ]]extraEnvVarsSecret }}
+          {{- if or .Values[[ standard_values_path ]]extraEnvVarsCM .Values[[ standard_values_path ]]extraEnvVarsSecret }}
           envFrom:
-            {{- if .Values.[[ standard_values_path ]]extraEnvVarsCM }}
+            {{- if .Values[[ standard_values_path ]]extraEnvVarsCM }}
             - configMapRef:
-                name: {{ include "common.tplvalues.render" (dict "value" .Values.[[ standard_values_path ]]extraEnvVarsCM "context" $) }}
+                name: {{ include "common.tplvalues.render" (dict "value" .Values[[ standard_values_path ]]extraEnvVarsCM "context" $) }}
             {{- end }}
-            {{- if .Values.[[ standard_values_path ]]extraEnvVarsSecret }}
+            {{- if .Values[[ standard_values_path ]]extraEnvVarsSecret }}
             - secretRef:
-                name: {{ include "common.tplvalues.render" (dict "value" .Values.[[ standard_values_path ]]extraEnvVarsSecret "context" $) }}
+                name: {{ include "common.tplvalues.render" (dict "value" .Values[[ standard_values_path ]]extraEnvVarsSecret "context" $) }}
             {{- end }}
           {{- end }}
           [%- if container.ports %]
           ports:
             [%- for port in container.ports %]
             - name: [[ port.nameIstio or port.name ]]
-              containerPort: {{ .Values.[[ standard_values_path ]]containerPorts.[[ port.name ]] }}
+              containerPort: {{ .Values[[ standard_values_path ]]containerPorts.[[ port.name ]] }}
               protocol: TCP
             [%- endfor %]
           [%- endif %]
           resources:
-            {{- toYaml .Values.[[ standard_values_path ]]resources | nindent 12 }}
+            {{- toYaml .Values[[ standard_values_path ]]resources | nindent 12 }}
           [%- if container.volumeMounts %]
           volumeMounts:
             [[ container.volumeMounts | indent(12) | trim ]]
@@ -269,15 +271,15 @@ spec:
         {{- end }}
         [%- endif %]
         [%- endfor %]
-      {{- with .Values.nodeSelector }}
+      {{- with .Values[[ component_values_path ]]nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- with .Values.affinity }}
+    {{- with .Values[[ component_values_path ]]affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- with .Values.tolerations }}
+    {{- with .Values[[ component_values_path ]]tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
@@ -286,19 +288,19 @@ spec:
         [%- if component.configmap %]
         - name: config
           configMap:
-            name: {{ include "[[ application.name ]].fullname" . }}
+            name: {{ include "[[ application.name ]][[ component_values_path ]]fullname" . }}
         [%- endif %]
         [%- if component.persistentvolumeclaim %]
         [%- if component.deployment.type == "deployment" %]
         - name: data
-          {{- if .Values.persistence.enabled }}
+          {{- if .Values[[ component_values_path ]]persistence.enabled }}
           persistentVolumeClaim:
-            claimName: {{ default (include "[[ application.name ]].fullname" .) .Values.persistence.existingClaim }}
+            claimName: {{ default (include "[[ application.name ]][[ component_values_path ]]fullname" .) .Values[[ component_values_path ]]persistence.existingClaim }}
           {{- else }}
           emptyDir: {}
           {{- end }}
         [%- elif component.deployment.type == "statefulset" %]
-        {{- if not .Values.persistence.enabled }}
+        {{- if not .Values[[ component_values_path ]]persistence.enabled }}
         - name: data
           emptyDir: {}
         {{- end }}
@@ -306,19 +308,19 @@ spec:
         [%- endif %]
       [%- endif %]
   [%- if component.deployment.type == "statefulset" and component.persistentvolumeclaim %]
-  {{- if .Values.persistence.enabled }}
+  {{- if .Values[[ component_values_path ]]persistence.enabled }}
   volumeClaimTemplates:
     - metadata:
         name: data
         labels:
-          {{- include "[[ application.name ]].labels" . | nindent 10 }}
+          {{- include "[[ application.name ]][[ component_values_path ]]labels" . | nindent 10 }}
           {{- if .Values.commonLabels }}
           {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 10 }}
           {{- end }}
-        {{- if or .Values.persistence.annotations .Values.commonAnnotations }}
+        {{- if or .Values[[ component_values_path ]]persistence.annotations .Values.commonAnnotations }}
         annotations:
-          {{- if .Values.persistence.annotations }}
-          {{- include "common.tplvalues.render" ( dict "value" .Values.persistence.annotations "context" $ ) | nindent 10 }}
+          {{- if .Values[[ component_values_path ]]persistence.annotations }}
+          {{- include "common.tplvalues.render" ( dict "value" .Values[[ component_values_path ]]persistence.annotations "context" $ ) | nindent 10 }}
           {{- end }}
           {{- if .Values.commonAnnotations }}
           {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 10 }}
@@ -326,19 +328,19 @@ spec:
         {{- end }}
       spec:
         accessModes:
-          - {{ .Values.persistence.accessMode | quote }}
+          - {{ .Values[[ component_values_path ]]persistence.accessMode | quote }}
         resources:
           requests:
-            storage: {{ .Values.persistence.size | quote }}
-        {{- if .Values.persistence.storageClass }}
-        {{- if (eq "-" .Values.persistence.storageClass) }}
+            storage: {{ .Values[[ component_values_path ]]persistence.size | quote }}
+        {{- if .Values[[ component_values_path ]]persistence.storageClass }}
+        {{- if (eq "-" .Values[[ component_values_path ]]persistence.storageClass) }}
         storageClassName: ""
         {{- else }}
-        storageClassName: {{ .Values.persistence.storageClass | quote }}
+        storageClassName: {{ .Values[[ component_values_path ]]persistence.storageClass | quote }}
         {{- end }}
         {{- end }}
   {{- end }}
   [%- endif %]
 [%- if component.optional %]
-{{- end -}}
+{{- end }}
 [%- endif %]

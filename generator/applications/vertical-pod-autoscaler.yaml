@@ -171,6 +171,9 @@ components:
     deployment:
       type: deployment
       container:
+        env: |
+          - name: NAMESPACE
+            value: {{ .Release.Namespace }}
         livenessProbe:
           httpGet:
             path: /health-check
