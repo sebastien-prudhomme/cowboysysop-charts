@@ -151,7 +151,7 @@ with open(sys.argv[1], "r") as stream:
             if component_name == name:
                 render("templates/service.yaml", f"{templates_directory}/service.yaml", application=application, component=component)
             else:
-                render("templates/component/service.yaml", f"{component_directory}/service.yaml", application=application, component=component)
+                render("templates/service.yaml", f"{component_directory}/service.yaml", application=application, component=component)
 
         # Manage Headless Service
         if component.get("headless"):

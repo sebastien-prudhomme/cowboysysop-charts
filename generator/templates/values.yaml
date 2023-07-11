@@ -219,6 +219,7 @@ service:
     # [[ port.name ]]: [[ 30000 + loop.index0 ]]
     [%- endfor %]
 [%- endif %]
+[%- if component.ingress %]
 
 ingress:
   ## @param [[ component_yaml_path ]]ingress.enabled Enable ingress controller resource
@@ -247,6 +248,7 @@ ingress:
     # - secretName: [[ application.name ]]-tls
     #   hosts:
     #     - [[ application.name ]].local
+[%- endif %]
 
 ## @param [[ component_yaml_path ]]resources CPU/Memory resource requests/limits
 resources: {}

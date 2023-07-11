@@ -1,45 +1,57 @@
+[%- if component.name == application.name -%]
+[%- set component_values_path = "." %]
+[%- else -%]
+[%- set component_values_path = component.name | to_lower_camel %]
+[%- set component_values_path = "." + component_values_path + "." %]
+[%- endif -%]
+[%- if component.optional -%]
+{{- if .Values[[ component_values_path ]]enabled }}
+[%- endif %]
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "[[ application.name ]].fullname" . }}
+  name: {{ include "[[ application.name ]][[ component_values_path ]]fullname" . }}
   labels:
-    {{- include "[[ application.name ]].labels" . | nindent 4 }}
+    {{- include "[[ application.name ]][[ component_values_path ]]labels" . | nindent 4 }}
     {{- if .Values.commonLabels }}
     {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
     {{- end }}
-  {{- if or .Values.service.annotations .Values.commonAnnotations }}
+  {{- if or .Values[[ component_values_path ]]service.annotations .Values.commonAnnotations }}
   annotations:
-    {{- if .Values.service.annotations }}
-    {{- include "common.tplvalues.render" ( dict "value" .Values.service.annotations "context" $ ) | nindent 4 }}
+    {{- if .Values[[ component_values_path ]]service.annotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values[[ component_values_path ]]service.annotations "context" $ ) | nindent 4 }}
     {{- end }}
     {{- if .Values.commonAnnotations }}
     {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
     {{- end }}
   {{- end }}
 spec:
-  type: {{ .Values.service.type }}
-  {{- if and (eq .Values.service.type "ClusterIP") .Values.service.clusterIP }}
-  clusterIP: {{ .Values.service.clusterIP }}
+  type: {{ .Values[[ component_values_path ]]service.type }}
+  {{- if and (eq .Values[[ component_values_path ]]service.type "ClusterIP") .Values[[ component_values_path ]]service.clusterIP }}
+  clusterIP: {{ .Values[[ component_values_path ]]service.clusterIP }}
   {{- end }}
-  {{- if and (eq .Values.service.type "LoadBalancer") .Values.service.loadBalancerIP }}
-  loadBalancerIP: {{ .Values.service.loadBalancerIP }}
+  {{- if and (eq .Values[[ component_values_path ]]service.type "LoadBalancer") .Values[[ component_values_path ]]service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values[[ component_values_path ]]service.loadBalancerIP }}
   {{- end }}
-  {{- if and (eq .Values.service.type "LoadBalancer") .Values.service.loadBalancerSourceRanges }}
+  {{- if and (eq .Values[[ component_values_path ]]service.type "LoadBalancer") .Values[[ component_values_path ]]service.loadBalancerSourceRanges }}
   loadBalancerSourceRanges:
-    {{- toYaml .Values.service.loadBalancerSourceRanges | nindent 4 }}
+    {{- toYaml .Values[[ component_values_path ]]service.loadBalancerSourceRanges | nindent 4 }}
   {{- end }}
-  {{- if or (eq .Values.service.type "LoadBalancer") (eq .Values.service.type "NodePort") }}
-  externalTrafficPolicy: {{ .Values.service.externalTrafficPolicy }}
+  {{- if or (eq .Values[[ component_values_path ]]service.type "LoadBalancer") (eq .Values[[ component_values_path ]]service.type "NodePort") }}
+  externalTrafficPolicy: {{ .Values[[ component_values_path ]]service.externalTrafficPolicy }}
   {{- end }}
   ports:
     [%- for port in component.service.ports %]
-    - port: {{ .Values.service.ports.[[ port.name ]] }}
+    - port: {{ .Values[[ component_values_path ]]service.ports.[[ port.name ]] }}
       targetPort: [[ port.nameIstio or port.name ]]
       protocol: TCP
       name: [[ port.nameIstio or port.name ]]
-      {{- if and (or (eq .Values.service.type "LoadBalancer") (eq .Values.service.type "NodePort")) .Values.service.nodePorts.[[ port.name ]] }}
-      nodePort: {{ .Values.service.nodePorts.[[ port.name ]] }}
+      {{- if and (or (eq .Values[[ component_values_path ]]service.type "LoadBalancer") (eq .Values[[ component_values_path ]]service.type "NodePort")) .Values[[ component_values_path ]]service.nodePorts.[[ port.name ]] }}
+      nodePort: {{ .Values[[ component_values_path ]]service.nodePorts.[[ port.name ]] }}
       {{- end }}
     [%- endfor %]
   selector:
-    {{- include "[[ application.name ]].selectorLabels" . | nindent 4 }}
+    {{- include "[[ application.name ]][[ component_values_path ]]selectorLabels" . | nindent 4 }}
+[%- if component.optional %]
+{{- end -}}
+[%- endif %]
