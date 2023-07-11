@@ -1,4 +1,10 @@
 {{/* vim: set filetype=mustache: */}}
+[%- if component.name == application.name -%]
+[%- set component_values_path = "." %]
+[%- else -%]
+[%- set component_values_path = component.name | to_lower_camel %]
+[%- set component_values_path = "." + component_values_path + "." %]
+[%- endif -%]
 [%- if component.name == application.name %]
 {{/*
 Expand the name of the chart.
@@ -37,11 +43,21 @@ Create a default fully qualified app name.
 {{/*
 Create a default fully qualified headless name.
 */}}
-{{- define "[[ application.name ]].headless.fullname" -}}
-{{- printf "%s-%s" (include "[[ application.name ]].fullname" .) "headless" | trunc 63 | trimSuffix "-" -}}
+{{- define "[[ application.name ]][[ component_values_path ]]headless.fullname" -}}
+{{- printf "%s-%s" (include "[[ application.name ]][[ component_values_path ]]fullname" .) "headless" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+[%- endif %]
+[%- if component.metrics %]
+
+{{/*
+Create a default fully qualified metrics name.
+*/}}
+{{- define "[[ application.name ]][[ component_values_path ]]metrics.fullname" -}}
+{{- printf "%s-%s" (include "[[ application.name ]][[ component_values_path ]]fullname" .) "metrics" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 [%- endif %]
 
+[%- if component.name == application.name %]
 {{/*
 Create chart name and version as used by the chart label.
 */}}
@@ -68,15 +84,39 @@ Selector labels
 app.kubernetes.io/name: {{ include "[[ application.name ]].name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
+[%- else %]
+{{/*
+Component labels
+*/}}
+{{- define "[[ application.name ]][[ component_values_path ]]componentLabels" -}}
+app.kubernetes.io/component: [[component.name]]
+{{- end -}}
+
+{{/*
+Common labels
+*/}}
+{{- define "[[ application.name ]][[ component_values_path ]]labels" -}}
+{{ include "[[ application.name ]].labels" . }}
+{{ include "[[ application.name ]][[ component_values_path ]]componentLabels" . }}
+{{- end -}}
+
+{{/*
+Selector labels
+*/}}
+{{- define "[[ application.name ]][[ component_values_path ]]selectorLabels" -}}
+{{ include "[[ application.name ]].selectorLabels" . }}
+{{ include "[[ application.name ]][[ component_values_path ]]componentLabels" . }}
+{{- end -}}
+[%- endif %]
 
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "[[ application.name ]].serviceAccountName" -}}
-{{- if .Values.serviceAccount.create -}}
-    {{ default (include "[[ application.name ]].fullname" .) .Values.serviceAccount.name }}
+{{- define "[[ application.name ]][[ component_values_path ]]serviceAccountName" -}}
+{{- if .Values[[ component_values_path ]]serviceAccount.create -}}
+    {{ default (include "[[ application.name ]][[ component_values_path ]]fullname" .) .Values[[ component_values_path ]]serviceAccount.name }}
 {{- else -}}
-    {{ default "default" .Values.serviceAccount.name }}
+    {{ default "default" .Values[[ component_values_path ]]serviceAccount.name }}
 {{- end -}}
 {{- end -}}
 [%- if component.secret %]
