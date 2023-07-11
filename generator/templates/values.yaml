@@ -102,12 +102,18 @@ securityContext: {}
   # readOnlyRootFilesystem: true
   # runAsNonRoot: true
   # runAsUser: 1000
-[%- if component.service or component.headless %]
+[%- if component.service or component.headless or component.metrics %]
 
 containerPorts:
-  [%- set ports = component.service.ports %]
+  [%- set ports = [] %]
+  [%- if component.service %]
+  [%- set ports = ports + component.service.ports %]
+  [%- endif %]
   [%- if component.headless %]
   [%- set ports = ports + component.headless.ports %]
+  [%- endif %]
+  [%- if component.metrics %]
+  [%- set ports = ports + component.metrics.ports %]
   [%- endif %]
   [%- for port in ports %]
   [%- if loop.index0 > 0 %]

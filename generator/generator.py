@@ -106,11 +106,11 @@ with open(sys.argv[1], "r") as stream:
                 render("templates/component/configmap.yaml", f"{component_directory}/configmap.yaml", application=application, component=component)
 
         # Manage Deployment/Statefulset
-        # if component.get("deployment"):
-        #     if component_name == name:
-        #         render(f"templates/deployment.yaml", f"{templates_directory}/{component['deployment']['type']}.yaml", application=application, component=component)
-        #     else:
-        #         render(f"templates/component/deployment.yaml", f"{component_directory}/{component['deployment']['type']}.yaml", application=application, component=component)
+        if component.get("deployment"):
+            if component_name == name:
+                render(f"templates/deployment.yaml", f"{templates_directory}/{component['deployment']['type']}.yaml", application=application, component=component)
+            else:
+                render(f"templates/deployment.yaml", f"{component_directory}/{component['deployment']['type']}.yaml", application=application, component=component)
 
         # Manage Ingress
         if component.get("ingress"):

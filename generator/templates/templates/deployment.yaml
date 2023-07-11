@@ -1,3 +1,12 @@
+[%- if component.name == application.name -%]
+[%- set component_values_path = "." %]
+[%- else -%]
+[%- set component_values_path = component.name | to_lower_camel %]
+[%- set component_values_path = "." + component_values_path + "." %]
+[%- endif -%]
+[%- if component.optional -%]
+{{- if .Values[[ component_values_path ]]enabled }}
+[%- endif %]
 [%- if component.deployment.type == "deployment" -%]
 apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
 kind: Deployment
@@ -135,16 +144,24 @@ spec:
                 name: {{ include "common.tplvalues.render" (dict "value" .Values.extraEnvVarsSecret "context" $) }}
             {{- end }}
           {{- end }}
+          [%- if component.service or component.headless or component.metrics %]
           ports:
-            [%- set ports = component.service.ports %]
+            [%- set ports = [] %]
+            [%- if component.service %]
+            [%- set ports = ports + component.service.ports %]
+            [%- endif %]
             [%- if component.headless %]
             [%- set ports = ports + component.headless.ports %]
+            [%- endif %]
+            [%- if component.metrics %]
+            [%- set ports = ports + component.metrics.ports %]
             [%- endif %]
             [%- for port in ports %]
             - name: [[ port.nameIstio or port.name ]]
               containerPort: {{ .Values.containerPorts.[[ port.name ]] }}
               protocol: TCP
             [%- endfor %]
+          [%- endif %]
           {{- if .Values.livenessProbe.enabled }}
           livenessProbe:
             httpGet:
@@ -322,3 +339,6 @@ spec:
         {{- end }}
   {{- end }}
   [%- endif %]
+[%- if component.optional %]
+{{- end -}}
+[%- endif %]
