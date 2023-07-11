@@ -33,7 +33,19 @@ extraDeploy: []
 [%- for component in application.components %]
 [[ "" ]]
 ## @section Parameters
+[[ "" ]]
+[%- if component.name == application.name %]
+[%- set indent_width = 0 %]
+[%- else -%]
+[%- set indent_width = 2 %]
+[[ component.name ]]:
+[%- endif %]
+[%- filter indent(width=indent_width) %]
+[%- if component.optional %]
+## @param enabled Enable the component
+enabled: true
 
+[%- endif %]
 ## @param replicaCount Number of replicas[%- if component.deployment.type == "deployment" and component.persistentvolumeclaim%] (do not change it)[%- endif %]
 replicaCount: 1
 [%- if component.deployment.type == "deployment" and component.persistentvolumeclaim %]
@@ -411,6 +423,7 @@ existingSecret: ""
 
 [[ component.secretKeyValues | trim ]]
 [%- endif %]
+[%- endfilter %]
 [%- endfor %]
 [%- if application.mariadb %]
 
