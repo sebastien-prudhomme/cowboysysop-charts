@@ -288,7 +288,7 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-      [%- if component.configmap or component.persistentvolumeclaim %]
+      [%- if component.configmap or component.persistentvolumeclaim or component.tls %]
       volumes:
         [%- if component.configmap %]
         - name: config
@@ -310,6 +310,11 @@ spec:
           emptyDir: {}
         {{- end }}
         [%- endif %]
+        [%- endif %]
+        [%- if component.tls %]
+        - name: tls-secret
+          secret:
+            secretName: {{ include "[[ application.name ]][[ component_values_path ]]tls.secretName" . }}
         [%- endif %]
       [%- endif %]
   [%- if component.deployment.type == "statefulset" and component.persistentvolumeclaim %]

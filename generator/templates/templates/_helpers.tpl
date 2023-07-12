@@ -124,15 +124,28 @@ Create the name of the service account to use
 {{/*
 Create the name of the secret to use
 */}}
-{{- define "[[ application.name ]].secretName" -}}
-{{- if .Values.existingSecret -}}
-    {{ .Values.existingSecret }}
+{{- define "[[ application.name ]][[ component_values_path ]]secretName" -}}
+{{- if .Values[[ component_values_path ]][[ component_values_path ]]existingSecret -}}
+    {{ .Values[[ component_values_path ]][[ component_values_path ]]existingSecret }}
 {{- else -}}
-    {{ include "[[ application.name ]].fullname" . }}
+    {{ include "[[ application.name ]][[ component_values_path ]]fullname" . }}
 {{- end -}}
 {{- end -}}
 
 [[ component.secretKeyHelpers | trim ]]
+[%- endif %]
+[%- if component.tls %]
+
+{{/*
+Create the name of the tls secret to use
+*/}}
+{{- define "[[ application.name ]][[ component_values_path ]]tls.secretName" -}}
+{{- if .Values[[ component_values_path ]]tls.existingSecret -}}
+    {{ .Values[[ component_values_path ]]tls.existingSecret }}
+{{- else -}}
+    {{- printf "%s-%s" (include "[[ application.name ]][[ component_values_path ]]fullname" .) "tls" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+{{- end -}}
 [%- endif %]
 [%- if component.extraHelpers %]
 

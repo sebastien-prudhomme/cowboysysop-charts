@@ -444,6 +444,21 @@ existingSecret: ""
 
 [[ component.secretKeyValues | trim ]]
 [%- endif %]
+[%- if component.tls %]
+
+tls:
+  ## @param [[ component_yaml_path ]]tls.caCert TLS CA certificate (Generated using the `genCA` function if not set)
+  caCert: ""
+
+  ## @param [[ component_yaml_path ]]tls.cert TLS certificate (Generated using the `genSignedCert` function if not set)
+  cert: ""
+
+  ## @param [[ component_yaml_path ]]tls.key TLS private key (Generated using the `genSignedCert` function if not set)
+  key: ""
+
+  ## @param [[ component_yaml_path ]]tls.existingSecret Name of existing TLS Secret to use
+  existingSecret: ""
+[%- endif %]
 [%- endfilter %]
 [%- endfor %]
 [%- if application.mariadb %]

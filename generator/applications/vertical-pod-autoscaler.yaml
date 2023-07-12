@@ -155,6 +155,10 @@ components:
         readinessProbe:
           httpGet:
             path: /health-check
+        volumeMounts: |
+          - name: tls-secret
+            mountPath: /tls-secret
+            readOnly: true
     image:
       registry: registry.k8s.io
       repository: autoscaling/vpa-admission-controller
