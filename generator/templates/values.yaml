@@ -579,6 +579,39 @@ externalPostgresql:
   ## @param externalPostgresql.database External PostgreSQL database
   database: [[ application.name ]]
 [%- endif %]
+[%- if application.crds %]
+
+## @section CRDs parameters
+
+crds:
+  image:
+    ## @param crds.image.registry Image registry
+    registry: docker.io
+
+    ## @param crds.image.repository Image repository
+    repository: bitnami/kubectl
+
+    ## @param crds.image.tag Image tag
+    tag: 1.26.3
+
+    ## @param crds.image.digest Image digest
+    digest: ""
+
+    ## @param crds.image.pullPolicy Image pull policy
+    pullPolicy: IfNotPresent
+
+  ## @param crds.podAnnotations Additional pod annotations
+  podAnnotations: {}
+
+  ## @param crds.nodeSelector Node labels for pod assignment
+  nodeSelector: {}
+
+  ## @param crds.tolerations Tolerations for pod assignment
+  tolerations: []
+
+  ## @param crds.affinity Map of node/pod affinities
+  affinity: {}
+[%- endif %]
 
 ## @section Tests parameters
 
