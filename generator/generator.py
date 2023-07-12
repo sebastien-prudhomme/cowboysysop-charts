@@ -45,6 +45,14 @@ with open(sys.argv[1], "r") as stream:
     render(".helmignore", f"{chart_directory}/.helmignore", application=application)
     render("Chart.yaml", f"{chart_directory}/Chart.yaml", application=application)
 
+    if os.path.exists(f"applications/{name}/files"):
+        files_directory = f"{chart_directory}/files"
+        os.mkdir(files_directory)
+
+        if os.path.exists(f"applications/{name}/files/crds"):
+            crds_directory = f"{files_directory}/crds"
+            shutil.copytree(f"applications/{name}/files/crds", crds_directory)
+
     if os.path.exists(f"applications/{name}/icon.png"):
         shutil.copyfile(f"applications/{name}/icon.png", f"{chart_directory}/icon.png")
 
