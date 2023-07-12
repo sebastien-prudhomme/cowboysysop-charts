@@ -45,14 +45,6 @@ with open(sys.argv[1], "r") as stream:
     render(".helmignore", f"{chart_directory}/.helmignore", application=application)
     render("Chart.yaml", f"{chart_directory}/Chart.yaml", application=application)
 
-    if os.path.exists(f"applications/{name}/files"):
-        files_directory = f"{chart_directory}/files"
-        os.mkdir(files_directory)
-
-        if os.path.exists(f"applications/{name}/files/crds"):
-            crds_directory = f"{files_directory}/crds"
-            shutil.copytree(f"applications/{name}/files/crds", crds_directory)
-
     if os.path.exists(f"applications/{name}/icon.png"):
         shutil.copyfile(f"applications/{name}/icon.png", f"{chart_directory}/icon.png")
 
@@ -180,6 +172,24 @@ with open(sys.argv[1], "r") as stream:
             render("templates/serviceaccount.yaml", f"{templates_directory}/serviceaccount.yaml", application=application, component=component)
         else:
             render("templates/serviceaccount.yaml", f"{component_directory}/serviceaccount.yaml", application=application, component=component)
+
+    # Manage CRDs
+    if application.get("crds"):
+        files_directory = f"{chart_directory}/files"
+        os.mkdir(files_directory)
+
+        files_crds_directory = f"{files_directory}/crds"
+        shutil.copytree(f"applications/{name}/files/crds", files_crds_directory)
+
+        crds_directory = f"{templates_directory}/crds"
+        os.mkdir(crds_directory)
+
+        render("templates/crds/_helpers.tpl", f"{crds_directory}/_helpers.tpl", application=application)
+        render("templates/crds/clusterrolebinding.yaml", f"{crds_directory}/clusterrolebinding.yaml", application=application)
+        render("templates/crds/clusterrole.yaml", f"{crds_directory}/clusterrole.yaml", application=application)
+        render("templates/crds/configmap.yaml", f"{crds_directory}/configmap.yaml", application=application)
+        render("templates/crds/job.yaml", f"{crds_directory}/job.yaml", application=application)
+        render("templates/crds/serviceaccount.yaml", f"{crds_directory}/serviceaccount.yaml", application=application)
 
     # Manage MariaDB
     if application.get("mariadb"):

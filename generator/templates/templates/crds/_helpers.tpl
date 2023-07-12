@@ -2,21 +2,21 @@
 {{/*
 Create a default fully qualified app name.
 */}}
-{{- define "vertical-pod-autoscaler.crds.fullname" -}}
-{{- printf "%s-%s" (include "vertical-pod-autoscaler.fullname" .) "crds" | trunc 63 | trimSuffix "-" -}}
+{{- define "[[ application.name ]].crds.fullname" -}}
+{{- printf "%s-%s" (include "[[ application.name ]].fullname" .) "crds" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
 Component labels
 */}}
-{{- define "vertical-pod-autoscaler.crds.componentLabels" -}}
+{{- define "[[ application.name ]].crds.componentLabels" -}}
 app.kubernetes.io/component: crds
 {{- end -}}
 
 {{/*
 Common labels
 */}}
-{{- define "vertical-pod-autoscaler.crds.labels" -}}
-{{ include "vertical-pod-autoscaler.labels" . }}
-{{ include "vertical-pod-autoscaler.crds.componentLabels" . }}
+{{- define "[[ application.name ]].crds.labels" -}}
+{{ include "[[ application.name ]].labels" . }}
+{{ include "[[ application.name ]].crds.componentLabels" . }}
 {{- end -}}

@@ -428,6 +428,7 @@ components:
         - name: http-metrics
           number: 8943
           description: HTTP
+crds: true
 tests: |
   import requests
 

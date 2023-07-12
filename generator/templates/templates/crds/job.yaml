@@ -1,9 +1,9 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ include "vertical-pod-autoscaler.crds.fullname" . }}
+  name: {{ include "[[ application.name ]].crds.fullname" . }}
   labels:
-    {{- include "vertical-pod-autoscaler.crds.labels" . | nindent 4 }}
+    {{- include "[[ application.name ]].crds.labels" . | nindent 4 }}
     {{- if .Values.commonLabels }}
     {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
     {{- end }}
@@ -27,7 +27,7 @@ spec:
       {{- end }}
     spec:
       {{- include "common.images.pullSecrets" ( dict "images" ( list .Values.crds.image ) "global" .Values.global ) | nindent 6 }}
-      serviceAccountName: {{ include "vertical-pod-autoscaler.crds.fullname" . }}
+      serviceAccountName: {{ include "[[ application.name ]].crds.fullname" . }}
       containers:
         - name: kubectl
           image: {{ include "common.images.image" ( dict "imageRoot" .Values.crds.image "global" .Values.global ) }}
@@ -57,4 +57,4 @@ spec:
       volumes:
         - name: config
           configMap:
-            name: {{ include "vertical-pod-autoscaler.crds.fullname" . }}
+            name: {{ include "[[ application.name ]].crds.fullname" . }}
