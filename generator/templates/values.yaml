@@ -398,6 +398,13 @@ metrics:
     ## @param [[ component_yaml_path ]]metrics.service.annotations Metrics service annotations
     annotations: {}
 
+    ## @param [[ component_yaml_path ]]metrics.service.type Metrics service type
+    type: ClusterIP
+
+    ## @param [[ component_yaml_path ]]metrics.service.clusterIP Metrics static cluster IP address or None for headless service when service type is ClusterIP
+    clusterIP:
+    # clusterIP: 10.43.0.100
+
     ports:
       [%- for port in component.metrics.ports %]
       [%- if loop.index0 > 0 %]
