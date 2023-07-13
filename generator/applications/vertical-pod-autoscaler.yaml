@@ -412,6 +412,22 @@ components:
     deployment:
       type: deployment
       container:
+        extraArgs: |
+          # evict-after-oom-threshold: 10m0s
+          # eviction-rate-burst: 1
+          # eviction-rate-limit: -1
+          # eviction-tolerance: 0.5
+          # in-recommendation-bounds-eviction-lifetime-threshold: 12h0m0s
+          # kube-api-burst: 10
+          # kube-api-qps: 5
+          # min-replicas: 2
+          # pod-update-threshold: 0.1
+          # updater-interval: 1m0s
+          # use-admission-controller-status: true
+          v: 2
+          # vpa-object-namespace: ""
+        extraArgsDoc: |
+          ## @skip updater.extraArgs.v
         env: |
           - name: NAMESPACE
             value: {{ .Release.Namespace }}

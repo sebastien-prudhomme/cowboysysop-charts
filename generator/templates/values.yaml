@@ -273,9 +273,16 @@ tolerations: []
 ## @param [[ component_yaml_path ]]affinity Map of node/pod affinities
 affinity: {}
 
+[% if component.deployment.container.extraArgs %]
+## @extra [[ component_yaml_path ]]extraArgs [object] Additional container arguments
+[[ component.deployment.container.extraArgsDoc | trim ]]
+extraArgs:
+  [[ component.deployment.container.extraArgs | indent(2) | trim ]]
+[% else %]
 ## @param [[ component_yaml_path ]]extraArgs Additional container arguments
 extraArgs: {}
   # name: ""
+[% endif %]
 
 ## @param [[ component_yaml_path ]]extraEnvVars Additional container environment variables
 extraEnvVars: []
@@ -364,9 +371,16 @@ init:
     #   cpu: 100m
     #   memory: 128Mi
 
+  [% if container.extraArgs %]
+  ## @extra [[ container.name ]].extraArgs [object] Additional container arguments
+  [[ container.extraArgsDoc | indent(2) | trim ]]
+  extraArgs:
+    [[ container.extraArgs | indent(4) | trim ]]
+  [% else %]
   ## @param [[ container.name ]].extraArgs Additional container arguments
   extraArgs: {}
     # name: ""
+  [% endif %]
 
   ## @param [[ container.name ]].extraEnvVars Additional container environment variables
   extraEnvVars: []
