@@ -31,9 +31,9 @@ commonLabels: {}
 ## @param extraDeploy Array of extra objects to deploy with the release
 extraDeploy: []
 [% for component in application.components %]
-[[ "" ]]
+
 ## @section Parameters
-[[ "" ]]
+
 [% if component.name == application.name %]
 [% set component_yaml_path = "" %]
 [% set indent_width = 0 %]
@@ -137,7 +137,7 @@ containerPorts:
   [% endif %]
   [% for port in ports %]
   [% if loop.index0 > 0 %]
-[[ "" ]]
+
   [% endif %]
   ## @param [[ component_yaml_path ]]containerPorts.[[ port.name ]] Container port for [[ port.description ]]
   [[ port.name ]]: [[ port.number ]]
@@ -208,7 +208,7 @@ service:
   ports:
     [% for port in component.service.ports %]
     [% if loop.index0 > 0 %]
-[[ "" ]]
+
     [% endif %]
     ## @param [[ component_yaml_path ]]service.ports.[[ port.name ]] Service port for [[ port.description ]]
     [[ port.name ]]: [[ port.number ]]
@@ -217,7 +217,7 @@ service:
   nodePorts:
     [% for port in component.service.ports %]
     [% if loop.index0 > 0 %]
-[[ "" ]]
+
     [% endif %]
     ## @param [[ component_yaml_path ]]service.nodePorts.[[ port.name ]] Service node port for [[ port.description ]] when service type is LoadBalancer or NodePort
     [[ port.name ]]:
@@ -348,7 +348,7 @@ init:
   containerPorts:
     [% for port in container.ports %]
     [% if loop.index0 > 0 %]
-  [[ "" ]]
+
     [% endif %]
     ## @param [[ container.name ]].containerPorts.[[ port.name ]] Container port for [[ port.description ]]
     [[ port.name ]]: [[ port.number ]]
@@ -390,7 +390,7 @@ headless:
     ports:
       [% for port in component.headless.ports %]
       [% if loop.index0 > 0 %]
-[[ "" ]]
+
       [% endif %]
       ## @param [[ component_yaml_path ]]headless.service.ports.[[ port.name ]] Headless service port for [[ port.description ]]
       [[ port.name ]]: [[ port.number ]]
@@ -413,7 +413,7 @@ metrics:
     ports:
       [% for port in component.metrics.ports %]
       [% if loop.index0 > 0 %]
-[[ "" ]]
+
       [% endif %]
       ## @param [[ component_yaml_path ]]metrics.service.ports.[[ port.name ]] Metrics service port for [[ port.description ]]
       [[ port.name ]]: [[ port.number ]]
