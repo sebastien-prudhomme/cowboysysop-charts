@@ -30,33 +30,38 @@ commonLabels: {}
 
 ## @param extraDeploy Array of extra objects to deploy with the release
 extraDeploy: []
-[%- for component in application.components %]
+[% for component in application.components %]
 [[ "" ]]
 ## @section Parameters
 [[ "" ]]
-[%- if component.name == application.name %]
-[%- set component_yaml_path = "" %]
-[%- set indent_width = 0 %]
-[%- else -%]
-[%- set component_yaml_path = component.name | to_lower_camel %]
-[%- set component_yaml_path = component_yaml_path + "." %]
-[%- set indent_width = 2 %]
+[% if component.name == application.name %]
+[% set component_yaml_path = "" %]
+[% set indent_width = 0 %]
+[% else %]
+[% set component_yaml_path = component.name | to_lower_camel %]
+[% set component_yaml_path = component_yaml_path + "." %]
+[% set indent_width = 2 %]
 [[ component.name | to_lower_camel ]]:
-[%- endif %]
-[%- filter indent(width=indent_width) %]
-[%- if component.optional %]
+[% endif %]
+[% filter indent(width=indent_width) %]
+[% if component.optional %]
 ## @param [[ component_yaml_path ]]enabled Enable the component
 enabled: true
 
-[%- endif %]
-## @param [[ component_yaml_path ]]replicaCount Number of replicas[%- if component.deployment.type == "deployment" and component.persistentvolumeclaim%] (do not change it)[%- endif %]
+[% endif %]
+[% if component.deployment.type == "deployment" and component.persistentvolumeclaim %]
+[% set extra_comment = " (do not change it)" %]
+[% else %]
+[% set extra_comment = "" %]
+[% endif %]
+## @param [[ component_yaml_path ]]replicaCount Number of replicas[[ extra_comment ]]
 replicaCount: 1
-[%- if component.deployment.type == "deployment" and component.persistentvolumeclaim %]
+[% if component.deployment.type == "deployment" and component.persistentvolumeclaim %]
 
 updateStrategy:
   ## @param [[ component_yaml_path ]]updateStrategy.type Update strategy type (do not change it)
   type: Recreate
-[%- endif %]
+[% endif %]
 
 image:
   ## @param [[ component_yaml_path ]]image.registry Image registry
@@ -117,27 +122,27 @@ securityContext: {}
   # readOnlyRootFilesystem: true
   # runAsNonRoot: true
   # runAsUser: 1000
-[%- if component.service or component.headless or component.metrics %]
+[% if component.service or component.headless or component.metrics %]
 
 containerPorts:
-  [%- set ports = [] %]
-  [%- if component.service %]
-  [%- set ports = ports + component.service.ports %]
-  [%- endif %]
-  [%- if component.headless %]
-  [%- set ports = ports + component.headless.ports %]
-  [%- endif %]
-  [%- if component.metrics %]
-  [%- set ports = ports + component.metrics.ports %]
-  [%- endif %]
-  [%- for port in ports %]
-  [%- if loop.index0 > 0 %]
+  [% set ports = [] %]
+  [% if component.service %]
+  [% set ports = ports + component.service.ports %]
+  [% endif %]
+  [% if component.headless %]
+  [% set ports = ports + component.headless.ports %]
+  [% endif %]
+  [% if component.metrics %]
+  [% set ports = ports + component.metrics.ports %]
+  [% endif %]
+  [% for port in ports %]
+  [% if loop.index0 > 0 %]
 [[ "" ]]
-  [%- endif %]
+  [% endif %]
   ## @param [[ component_yaml_path ]]containerPorts.[[ port.name ]] Container port for [[ port.description ]]
   [[ port.name ]]: [[ port.number ]]
-  [%- endfor %]
-[%- endif %]
+  [% endfor %]
+[% endif %]
 
 livenessProbe:
   ## @param [[ component_yaml_path ]]livenessProbe.enabled Enable liveness probe
@@ -176,7 +181,7 @@ readinessProbe:
 
   ## @param [[ component_yaml_path ]]readinessProbe.successThreshold Minimum consecutive successes for the readiness probe to be considered successful after having failed
   successThreshold: 1
-[%- if component.service %]
+[% if component.service %]
 
 service:
   ## @param [[ component_yaml_path ]]service.annotations Service annotations
@@ -201,25 +206,25 @@ service:
   externalTrafficPolicy: Cluster
 
   ports:
-    [%- for port in component.service.ports %]
-    [%- if loop.index0 > 0 %]
+    [% for port in component.service.ports %]
+    [% if loop.index0 > 0 %]
 [[ "" ]]
-    [%- endif %]
+    [% endif %]
     ## @param [[ component_yaml_path ]]service.ports.[[ port.name ]] Service port for [[ port.description ]]
     [[ port.name ]]: [[ port.number ]]
-    [%- endfor %]
+    [% endfor %]
 
   nodePorts:
-    [%- for port in component.service.ports %]
-    [%- if loop.index0 > 0 %]
+    [% for port in component.service.ports %]
+    [% if loop.index0 > 0 %]
 [[ "" ]]
-    [%- endif %]
+    [% endif %]
     ## @param [[ component_yaml_path ]]service.nodePorts.[[ port.name ]] Service node port for [[ port.description ]] when service type is LoadBalancer or NodePort
     [[ port.name ]]:
     # [[ port.name ]]: [[ 30000 + loop.index0 ]]
-    [%- endfor %]
-[%- endif %]
-[%- if component.ingress %]
+    [% endfor %]
+[% endif %]
+[% if component.ingress %]
 
 ingress:
   ## @param [[ component_yaml_path ]]ingress.enabled Enable ingress controller resource
@@ -248,7 +253,7 @@ ingress:
     # - secretName: [[ application.name ]]-tls
     #   hosts:
     #     - [[ application.name ]].local
-[%- endif %]
+[% endif %]
 
 ## @param [[ component_yaml_path ]]resources CPU/Memory resource requests/limits
 resources: {}
@@ -282,7 +287,7 @@ extraEnvVarsCM:
 
 ## @param [[ component_yaml_path ]]extraEnvVarsSecret Name of existing Secret containing additional container environment variables
 extraEnvVarsSecret:
-[%- if component.deployment.initContainer %]
+[% if component.deployment.initContainer %]
 
 init:
   ## @param [[ component_yaml_path ]]init.securityContext Init security context
@@ -302,18 +307,18 @@ init:
     # requests:
     #   cpu: 100m
     #   memory: 128Mi
-[%- endif %]
-[%- for container in component.deployment.containers %]
-[%- if container.asComponent %]
+[% endif %]
+[% for container in component.deployment.containers %]
+[% if container.asComponent %]
 
 ## @section [[ container.description ]] parameters
 
 [[ container.name ]]:
-  [%- if container.optional %]
+  [% if container.optional %]
   ## @param [[ container.name ]].enabled Enable [[ container.description ]]
   enabled: true
 
-  [% endif -%]
+  [% endif %]
   image:
     ## @param [[ container.name ]].image.registry Image registry
     registry: [[ container.image.registry or component.image.registry ]]
@@ -338,17 +343,17 @@ init:
     # readOnlyRootFilesystem: true
     # runAsNonRoot: true
     # runAsUser: 1000
-  [%- if container.ports %]
+  [% if container.ports %]
 
   containerPorts:
-    [%- for port in container.ports %]
-    [%- if loop.index0 > 0 %]
+    [% for port in container.ports %]
+    [% if loop.index0 > 0 %]
   [[ "" ]]
-    [%- endif %]
+    [% endif %]
     ## @param [[ container.name ]].containerPorts.[[ port.name ]] Container port for [[ port.description ]]
     [[ port.name ]]: [[ port.number ]]
-    [%- endfor %]
-  [%- endif %]
+    [% endfor %]
+  [% endif %]
 
   ## @param [[ container.name ]].resources CPU/Memory resource requests/limits
   resources: {}
@@ -373,9 +378,9 @@ init:
 
   ## @param [[ container.name ]].extraEnvVarsSecret Name of existing Secret containing additional container environment variables
   extraEnvVarsSecret:
-[%- endif %]
-[%- endfor %]
-[%- if component.headless %]
+[% endif %]
+[% endfor %]
+[% if component.headless %]
 
 headless:
   service:
@@ -383,15 +388,15 @@ headless:
     annotations: {}
 
     ports:
-      [%- for port in component.headless.ports %]
-      [%- if loop.index0 > 0 %]
+      [% for port in component.headless.ports %]
+      [% if loop.index0 > 0 %]
 [[ "" ]]
-      [%- endif %]
+      [% endif %]
       ## @param [[ component_yaml_path ]]headless.service.ports.[[ port.name ]] Headless service port for [[ port.description ]]
       [[ port.name ]]: [[ port.number ]]
-      [%- endfor %]
-[%- endif %]
-[%- if component.metrics %]
+      [% endfor %]
+[% endif %]
+[% if component.metrics %]
 
 metrics:
   service:
@@ -406,25 +411,25 @@ metrics:
     # clusterIP: 10.43.0.100
 
     ports:
-      [%- for port in component.metrics.ports %]
-      [%- if loop.index0 > 0 %]
+      [% for port in component.metrics.ports %]
+      [% if loop.index0 > 0 %]
 [[ "" ]]
-      [%- endif %]
+      [% endif %]
       ## @param [[ component_yaml_path ]]metrics.service.ports.[[ port.name ]] Metrics service port for [[ port.description ]]
       [[ port.name ]]: [[ port.number ]]
-      [%- endfor %]
-[%- endif %]
-[%- if component.persistentvolumeclaim %]
+      [% endfor %]
+[% endif %]
+[% if component.persistentvolumeclaim %]
 
 persistence:
   ## @param [[ component_yaml_path ]]persistence.enabled Enable persistence using PVC
   enabled: false
-  [%- if component.deployment.type == "deployment" %]
+  [% if component.deployment.type == "deployment" %]
 
   ## @param [[ component_yaml_path ]]persistence.existingClaim Name of an existing PVC to use
   existingClaim:
   # existingClaim: my-pvc
-  [%- endif %]
+  [% endif %]
 
   ## @param [[ component_yaml_path ]]persistence.accessMode PVC access mode
   accessMode: ReadWriteOnce
@@ -438,20 +443,19 @@ persistence:
   ## @param [[ component_yaml_path ]]persistence.storageClass PVC storage class
   storageClass:
   # storageClass: -
-[%- endif %]
-[%- if component.extraValues %]
+[% endif %]
+[% if component.extraValues %]
 
 [[ component.extraValues | trim ]]
-[%- endif %]
-
-[%- if component.secret %]
+[% endif %]
+[% if component.secret %]
 
 ## @param [[ component_yaml_path ]]existingSecret Name of existing Secret to use
 existingSecret: ""
 
 [[ component.secretKeyValues | trim ]]
-[%- endif %]
-[%- if component.tls %]
+[% endif %]
+[% if component.tls %]
 
 tls:
   ## @param [[ component_yaml_path ]]tls.caCert TLS CA certificate (Generated using the `genCA` function if not set)
@@ -465,10 +469,10 @@ tls:
 
   ## @param [[ component_yaml_path ]]tls.existingSecret Name of existing TLS Secret to use
   existingSecret: ""
-[%- endif %]
-[%- endfilter %]
-[%- endfor %]
-[%- if application.mariadb %]
+[% endif %]
+[% endfilter %]
+[% endfor %]
+[% if application.mariadb %]
 
 ## @section MariaDB parameters
 
@@ -522,16 +526,16 @@ externalMariadb:
 
   ## @param externalMariadb.database External MariaDB database
   database: [[ application.name ]]
-[%- endif %]
-[%- if application.mongodb %]
+[% endif %]
+[% if application.mongodb %]
 
 ## @section MongoDB parameters
 
 mongodb:
   ## @param mongodb.enabled Whether to use the MongoDB chart (for testing purposes only)
   enabled: false
-[%- endif %]
-[%- if application.postgresql %]
+[% endif %]
+[% if application.postgresql %]
 
 ## @section PostgreSQL parameters
 
@@ -585,8 +589,8 @@ externalPostgresql:
 
   ## @param externalPostgresql.database External PostgreSQL database
   database: [[ application.name ]]
-[%- endif %]
-[%- if application.crds %]
+[% endif %]
+[% if application.crds %]
 
 ## @section CRDs parameters
 
@@ -618,7 +622,7 @@ crds:
 
   ## @param crds.affinity Map of node/pod affinities
   affinity: {}
-[%- endif %]
+[% endif %]
 
 ## @section Tests parameters
 

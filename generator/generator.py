@@ -14,6 +14,8 @@ jinja2_environment = jinja2.Environment(
     block_end_string="%]",
     variable_start_string="[[",
     variable_end_string="]]",
+    trim_blocks=True,
+    lstrip_blocks=True,
     keep_trailing_newline=True,
     extensions=[
         "jinja2_ansible_filters.AnsibleCoreFiltersExtension",

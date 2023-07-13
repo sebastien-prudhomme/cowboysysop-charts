@@ -1,12 +1,12 @@
-[%- if component.name == application.name -%]
-[%- set component_values_path = "." %]
-[%- else -%]
-[%- set component_values_path = component.name | to_lower_camel %]
-[%- set component_values_path = "." + component_values_path + "." %]
-[%- endif -%]
-[%- if component.optional -%]
+[% if component.name == application.name %]
+[% set component_values_path = "." %]
+[% else %]
+[% set component_values_path = component.name | to_lower_camel %]
+[% set component_values_path = "." + component_values_path + "." %]
+[% endif %]
+[% if component.optional %]
 {{- if .Values[[ component_values_path ]]enabled }}
-[%- endif %]
+[% endif %]
 {{- if .Values[[ component_values_path ]]metrics.serviceMonitor.enabled -}}
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
@@ -52,6 +52,6 @@ spec:
     matchLabels:
       {{- include "[[ application.name ]][[ component_values_path ]]selectorLabels" . | nindent 6 }}
 {{- end -}}
-[%- if component.optional %]
+[% if component.optional %]
 {{- end -}}
-[%- endif %]
+[% endif %]

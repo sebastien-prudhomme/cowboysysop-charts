@@ -1,12 +1,12 @@
-[%- if component.name == application.name -%]
-[%- set component_values_path = "." %]
-[%- else -%]
-[%- set component_values_path = component.name | to_lower_camel %]
-[%- set component_values_path = "." + component_values_path + "." %]
-[%- endif -%]
-[%- if component.optional -%]
+[% if component.name == application.name %]
+[% set component_values_path = "." %]
+[% else %]
+[% set component_values_path = component.name | to_lower_camel %]
+[% set component_values_path = "." + component_values_path + "." %]
+[% endif %]
+[% if component.optional %]
 {{- if .Values[[ component_values_path ]]enabled }}
-[%- endif %]
+[% endif %]
 apiVersion: {{ include "common.capabilities.rbac.apiVersion" . }}
 kind: ClusterRole
 metadata:
@@ -22,6 +22,6 @@ metadata:
   {{- end }}
 rules:
   [[ component.clusterrole | indent(2) | trim ]]
-[%- if component.optional %]
+[% if component.optional %]
 {{- end }}
-[%- endif %]
+[% endif %]

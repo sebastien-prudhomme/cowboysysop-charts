@@ -42,10 +42,10 @@ $ helm upgrade my-release cowboysysop/[[ application.name ]]
 The command upgrades the existing `my-release` deployment with the most latest release of the chart.
 
 **TIP**: Use `helm repo update` to update information on available charts in the chart repositories.
-[%- if application.updates %]
+[% if application.updates %]
 
 [[ application.updates | trim ]]
-[%- endif %]
+[% endif %]
 
 ## Uninstalling
 

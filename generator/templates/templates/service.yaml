@@ -1,12 +1,12 @@
-[%- if component.name == application.name -%]
-[%- set component_values_path = "." %]
-[%- else -%]
-[%- set component_values_path = component.name | to_lower_camel %]
-[%- set component_values_path = "." + component_values_path + "." %]
-[%- endif -%]
-[%- if component.optional -%]
+[% if component.name == application.name %]
+[% set component_values_path = "." %]
+[% else %]
+[% set component_values_path = component.name | to_lower_camel %]
+[% set component_values_path = "." + component_values_path + "." %]
+[% endif %]
+[% if component.optional %]
 {{- if .Values[[ component_values_path ]]enabled }}
-[%- endif %]
+[% endif %]
 apiVersion: v1
 kind: Service
 metadata:
@@ -41,7 +41,7 @@ spec:
   externalTrafficPolicy: {{ .Values[[ component_values_path ]]service.externalTrafficPolicy }}
   {{- end }}
   ports:
-    [%- for port in component.service.ports %]
+    [% for port in component.service.ports %]
     - port: {{ .Values[[ component_values_path ]]service.ports.[[ port.name ]] }}
       targetPort: [[ port.nameIstio or port.name ]]
       protocol: TCP
@@ -49,9 +49,9 @@ spec:
       {{- if and (or (eq .Values[[ component_values_path ]]service.type "LoadBalancer") (eq .Values[[ component_values_path ]]service.type "NodePort")) .Values[[ component_values_path ]]service.nodePorts.[[ port.name ]] }}
       nodePort: {{ .Values[[ component_values_path ]]service.nodePorts.[[ port.name ]] }}
       {{- end }}
-    [%- endfor %]
+    [% endfor %]
   selector:
     {{- include "[[ application.name ]][[ component_values_path ]]selectorLabels" . | nindent 4 }}
-[%- if component.optional %]
+[% if component.optional %]
 {{- end -}}
-[%- endif %]
+[% endif %]

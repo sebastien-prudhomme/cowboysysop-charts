@@ -1,4 +1,4 @@
-[%- if application.components[0].service %]
+[% if application.components[0].service %]
 1. Get the application URL by running these commands:
 {{- if .Values.ingress.enabled }}
 {{- range $host := .Values.ingress.hosts }}
@@ -20,10 +20,10 @@
   echo "Visit http://127.0.0.1:[[ application.components[0].service.ports[0].numberForward or application.components[0].service.ports[0].number ]][[ application.components[0].ingressPath or "/" ]] to use your application"
   kubectl --namespace {{ .Release.Namespace }} port-forward $POD_NAME [[ application.components[0].service.ports[0].numberForward or application.components[0].service.ports[0].number ]]:{{ .Values.containerPorts.http }}
 {{- end }}
-[%- else %]
+[% else %]
 ** Please be patient while the chart is being deployed **
 
 1. Get the application status by running the command:
 
 $ helm status {{ .Release.Name }} --namespace {{ .Release.Namespace }}
-[%- endif %]
+[% endif %]

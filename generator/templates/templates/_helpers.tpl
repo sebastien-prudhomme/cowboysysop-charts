@@ -1,11 +1,11 @@
 {{/* vim: set filetype=mustache: */}}
-[%- if not component or component.name == application.name -%]
-[%- set component_values_path = "." %]
-[%- else -%]
-[%- set component_values_path = component.name | to_lower_camel %]
-[%- set component_values_path = "." + component_values_path + "." %]
-[%- endif -%]
-[%- if not component or component.name == application.name %]
+[% if not component or component.name == application.name %]
+[% set component_values_path = "." %]
+[% else %]
+[% set component_values_path = component.name | to_lower_camel %]
+[% set component_values_path = "." + component_values_path + "." %]
+[% endif %]
+[% if not component or component.name == application.name %]
 {{/*
 Expand the name of the chart.
 */}}
@@ -30,15 +30,15 @@ If release name contains chart name it will be used as a full name.
 {{- end -}}
 {{- end -}}
 {{- end -}}
-[%- else %]
+[% else %]
 {{/*
 Create a default fully qualified app name.
 */}}
 {{- define "[[ application.name ]].[[ component.name | to_lower_camel ]].fullname" -}}
 {{- printf "%s-%s" (include "[[ application.name ]].fullname" .) "[[ component.name ]]" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
-[%- endif %]
-[%- if component and component.headless %]
+[% endif %]
+[% if component and component.headless %]
 
 {{/*
 Create a default fully qualified headless name.
@@ -46,8 +46,8 @@ Create a default fully qualified headless name.
 {{- define "[[ application.name ]][[ component_values_path ]]headless.fullname" -}}
 {{- printf "%s-%s" (include "[[ application.name ]][[ component_values_path ]]fullname" .) "headless" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
-[%- endif %]
-[%- if component and component.metrics %]
+[% endif %]
+[% if component and component.metrics %]
 
 {{/*
 Create a default fully qualified metrics name.
@@ -55,9 +55,9 @@ Create a default fully qualified metrics name.
 {{- define "[[ application.name ]][[ component_values_path ]]metrics.fullname" -}}
 {{- printf "%s-%s" (include "[[ application.name ]][[ component_values_path ]]fullname" .) "metrics" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
-[%- endif %]
+[% endif %]
 
-[%- if not component or component.name == application.name %]
+[% if not component or component.name == application.name %]
 {{/*
 Create chart name and version as used by the chart label.
 */}}
@@ -84,7 +84,7 @@ Selector labels
 app.kubernetes.io/name: {{ include "[[ application.name ]].name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
-[%- else %]
+[% else %]
 {{/*
 Component labels
 */}}
@@ -107,7 +107,7 @@ Selector labels
 {{ include "[[ application.name ]].selectorLabels" . }}
 {{ include "[[ application.name ]][[ component_values_path ]]componentLabels" . }}
 {{- end -}}
-[%- endif %]
+[% endif %]
 
 {{/*
 Create the name of the service account to use
@@ -119,7 +119,7 @@ Create the name of the service account to use
     {{ default "default" .Values[[ component_values_path ]]serviceAccount.name }}
 {{- end -}}
 {{- end -}}
-[%- if component and component.secret %]
+[% if component and component.secret %]
 
 {{/*
 Create the name of the secret to use
@@ -133,8 +133,8 @@ Create the name of the secret to use
 {{- end -}}
 
 [[ component.secretKeyHelpers | trim ]]
-[%- endif %]
-[%- if component and component.tls %]
+[% endif %]
+[% if component and component.tls %]
 
 {{/*
 Create the name of the tls secret to use
@@ -146,12 +146,12 @@ Create the name of the tls secret to use
     {{- printf "%s-%s" (include "[[ application.name ]][[ component_values_path ]]fullname" .) "tls" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 {{- end -}}
-[%- endif %]
-[%- if component and component.extraHelpers %]
+[% endif %]
+[% if component and component.extraHelpers %]
 
 [[ component.extraHelpers | trim ]]
-[%- endif %]
-[%- if application.mariadb %]
+[% endif %]
+[% if application.mariadb %]
 
 {{/*
 MariaDB fully qualified app name
@@ -241,8 +241,8 @@ MariaDB database
     {{ .Values.externalMariadb.database }}
 {{- end -}}
 {{- end -}}
-[%- endif %]
-[%- if application.postgresql %]
+[% endif %]
+[% if application.postgresql %]
 
 {{/*
 PostgreSQL fully qualified app name
@@ -332,4 +332,4 @@ PostgreSQL database
     {{ .Values.externalPostgresql.database }}
 {{- end -}}
 {{- end -}}
-[%- endif %]
+[% endif %]

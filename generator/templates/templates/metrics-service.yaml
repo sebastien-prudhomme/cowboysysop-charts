@@ -1,12 +1,12 @@
-[%- if component.name == application.name -%]
-[%- set component_values_path = "." %]
-[%- else -%]
-[%- set component_values_path = component.name | to_lower_camel %]
-[%- set component_values_path = "." + component_values_path + "." %]
-[%- endif -%]
-[%- if component.optional -%]
+[% if component.name == application.name %]
+[% set component_values_path = "." %]
+[% else %]
+[% set component_values_path = component.name | to_lower_camel %]
+[% set component_values_path = "." + component_values_path + "." %]
+[% endif %]
+[% if component.optional %]
 {{- if .Values[[ component_values_path ]]enabled }}
-[%- endif %]
+[% endif %]
 apiVersion: v1
 kind: Service
 metadata:
@@ -31,14 +31,14 @@ spec:
   clusterIP: {{ .Values[[ component_values_path ]]metrics.service.clusterIP }}
   {{- end }}
   ports:
-    [%- for port in component.metrics.ports %]
+    [% for port in component.metrics.ports %]
     - port: {{ .Values[[ component_values_path ]]metrics.service.ports.[[ port.name ]] }}
       targetPort: [[ port.nameIstio or port.name ]]
       protocol: TCP
       name: [[ port.nameIstio or port.name ]]
-    [%- endfor %]
+    [% endfor %]
   selector:
     {{- include "[[ application.name ]][[ component_values_path ]]selectorLabels" . | nindent 4 }}
-[%- if component.optional %]
+[% if component.optional %]
 {{- end }}
-[%- endif %]
+[% endif %]

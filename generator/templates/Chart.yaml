@@ -1,11 +1,11 @@
 apiVersion: v2
 appVersion: [[ application.appVersion ]]
-[%- set description = application.description | regex_replace(".*<<", "") | regex_replace(">>.*", "") %]
+[% set description = application.description | regex_replace(".*<<", "") | regex_replace(">>.*", "") %]
 description: [[ description[0] | upper ]][[ description[1:] ]]
 home: [[ application.home ]]
-[%- if application.icon %]
+[% if application.icon %]
 icon: [[ application.icon ]]
-[%- endif %]
+[% endif %]
 maintainers:
   - name: sebastien-prudhomme
     email: sebastien.prudhomme@gmail.com
@@ -18,24 +18,24 @@ dependencies:
   - name: common
     version: 2.5.0
     repository: https://charts.bitnami.com/bitnami/
-  [%- if application.mariadb %]
+  [% if application.mariadb %]
   - name: mariadb
     version: 11.5.7
     repository: https://charts.bitnami.com/bitnami/
     condition: mariadb.enabled
-  [%- endif %]
-  [%- if application.mongodb %]
+  [% endif %]
+  [% if application.mongodb %]
   - name: mongodb
     version: 13.15.4
     repository: https://charts.bitnami.com/bitnami/
     condition: mongodb.enabled
-  [%- endif %]
-  [%- if application.postgresql %]
+  [% endif %]
+  [% if application.postgresql %]
   - name: postgresql
     version: 12.6.0
     repository: https://charts.bitnami.com/bitnami/
     condition: postgresql.enabled
-  [%- endif %]
+  [% endif %]
 annotations:
   artifacthub.io/signKey: |
     fingerprint: 9E57D2479D48B84463EF491F66D280CE667AD6C8
