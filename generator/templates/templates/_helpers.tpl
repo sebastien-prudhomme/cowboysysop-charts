@@ -125,8 +125,8 @@ Create the name of the service account to use
 Create the name of the secret to use
 */}}
 {{- define "[[ application.name ]][[ component_values_path ]]secretName" -}}
-{{- if .Values[[ component_values_path ]][[ component_values_path ]]existingSecret -}}
-    {{ .Values[[ component_values_path ]][[ component_values_path ]]existingSecret }}
+{{- if .Values[[ component_values_path ]]existingSecret -}}
+    {{ .Values[[ component_values_path ]]existingSecret }}
 {{- else -}}
     {{ include "[[ application.name ]][[ component_values_path ]]fullname" . }}
 {{- end -}}
