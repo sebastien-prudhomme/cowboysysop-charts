@@ -1,11 +1,11 @@
 {{/* vim: set filetype=mustache: */}}
-[%- if component.name == application.name -%]
+[%- if not component or component.name == application.name -%]
 [%- set component_values_path = "." %]
 [%- else -%]
 [%- set component_values_path = component.name | to_lower_camel %]
 [%- set component_values_path = "." + component_values_path + "." %]
 [%- endif -%]
-[%- if component.name == application.name %]
+[%- if not component or component.name == application.name %]
 {{/*
 Expand the name of the chart.
 */}}
@@ -38,7 +38,7 @@ Create a default fully qualified app name.
 {{- printf "%s-%s" (include "[[ application.name ]].fullname" .) "[[ component.name ]]" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 [%- endif %]
-[%- if component.headless %]
+[%- if component and component.headless %]
 
 {{/*
 Create a default fully qualified headless name.
@@ -47,7 +47,7 @@ Create a default fully qualified headless name.
 {{- printf "%s-%s" (include "[[ application.name ]][[ component_values_path ]]fullname" .) "headless" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 [%- endif %]
-[%- if component.metrics %]
+[%- if component and component.metrics %]
 
 {{/*
 Create a default fully qualified metrics name.
@@ -57,7 +57,7 @@ Create a default fully qualified metrics name.
 {{- end -}}
 [%- endif %]
 
-[%- if component.name == application.name %]
+[%- if not component or component.name == application.name %]
 {{/*
 Create chart name and version as used by the chart label.
 */}}
@@ -119,7 +119,7 @@ Create the name of the service account to use
     {{ default "default" .Values[[ component_values_path ]]serviceAccount.name }}
 {{- end -}}
 {{- end -}}
-[%- if component.secret %]
+[%- if component and component.secret %]
 
 {{/*
 Create the name of the secret to use
@@ -134,7 +134,7 @@ Create the name of the secret to use
 
 [[ component.secretKeyHelpers | trim ]]
 [%- endif %]
-[%- if component.tls %]
+[%- if component and component.tls %]
 
 {{/*
 Create the name of the tls secret to use
@@ -147,7 +147,7 @@ Create the name of the tls secret to use
 {{- end -}}
 {{- end -}}
 [%- endif %]
-[%- if component.extraHelpers %]
+[%- if component and component.extraHelpers %]
 
 [[ component.extraHelpers | trim ]]
 [%- endif %]
