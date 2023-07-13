@@ -146,6 +146,14 @@ components:
           - --client-ca-file=/tls-secret/ca.crt
           - --tls-cert-file=/tls-secret/tls.crt
           - --tls-private-key=/tls-secret/tls.key
+        extraArgs: |
+          # kube-api-burst: 10
+          # kube-api-qps: 5
+          v: 2
+          # vpa-object-namespace: ""
+          # webhook-timeout-seconds: 30
+        extraArgsDoc: |
+          ## @skip admissionController.extraArgs.v
         env: |
           - name: NAMESPACE
             value: {{ .Release.Namespace }}
@@ -293,6 +301,43 @@ components:
     deployment:
       type: deployment
       container:
+        extraArgs: |
+          # checkpoints-gc-interval: 10m0s
+          # checkpoints-timeout: 1m0s
+          # container-name-label: name
+          # container-namespace-label: namespace
+          # container-pod-name-label: pod_name
+          # cpu-histogram-decay-half-life: 24h0m0s
+          # cpu-integer-post-processor-enabled: false
+          # history-length: 8d
+          # history-resolution: 1h
+          # kube-api-burst: 10
+          # kube-api-qps: 5
+          # memory-aggregation-interval: 24h0m0s
+          # memory-aggregation-interval-count: 8
+          # memory-histogram-decay-half-life: 24h0m0s
+          # memory-saver: false
+          # metric-for-pod-labels: up{job="kubernetes-pods"}
+          # min-checkpoints: 10
+          # oom-bump-up-ratio: 1.2
+          # oom-min-bump-up-bytes: 104857600
+          # pod-label-prefix: pod_label_
+          # pod-name-label: kubernetes_pod_name
+          # pod-namespace-label: kubernetes_namespace
+          # pod-recommendation-min-cpu-millicores: 25
+          # pod-recommendation-min-memory-mb: 250
+          # prometheus-address: ""
+          # prometheus-cadvisor-job-name: kubernetes-cadvisor
+          # prometheus-query-timeout: 5m
+          # recommendation-margin-fraction: 0.15
+          # recommender-interval: 1m0s
+          # recommender-name: default
+          # storage: checkpoint
+          # target-cpu-percentile: 0.9
+          v: 2
+          # vpa-object-namespace: ""
+        extraArgsDoc: |
+          ## @skip recommender.extraArgs.v
         livenessProbe:
           httpGet:
             path: /health-check
