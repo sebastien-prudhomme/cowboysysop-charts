@@ -1,0 +1,57 @@
+[%- if component.name == application.name -%]
+[%- set component_values_path = "." %]
+[%- else -%]
+[%- set component_values_path = component.name | to_lower_camel %]
+[%- set component_values_path = "." + component_values_path + "." %]
+[%- endif -%]
+[%- if component.optional -%]
+{{- if .Values[[ component_values_path ]]enabled }}
+[%- endif %]
+{{- if .Values[[ component_values_path ]]metrics.serviceMonitor.enabled -}}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "[[ application.name ]][[ component_values_path ]]fullname" . }}
+  labels:
+    {{- include "[[ application.name ]][[ component_values_path ]]metrics.serviceMonitor.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if or .Values[[ component_values_path ]]metrics.serviceMonitor.annotations .Values.commonAnnotations }}
+  annotations:
+    {{- if .Values[[ component_values_path ]]metrics.serviceMonitor.annotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values[[ component_values_path ]]metrics.serviceMonitor.annotations "context" $ ) | nindent 4 }}
+    {{- end }}
+    {{- if .Values.commonAnnotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- end }}
+spec:
+  {{- if .Values[[ component_values_path ]]metrics.serviceMonitor.jobLabel }}
+  jobLabel: {{ .Values[[ component_values_path ]]metrics.serviceMonitor.jobLabel }}
+  {{- end }}
+  endpoints:
+    - port: http-metrics
+      {{- if .Values[[ component_values_path ]]metrics.serviceMonitor.interval }}
+      interval: {{ .Values[[ component_values_path ]]metrics.serviceMonitor.interval }}
+      {{- end}}
+      {{- if .Values[[ component_values_path ]]metrics.serviceMonitor.scrapeTimeout }}
+      scrapeTimeout: {{ .Values[[ component_values_path ]]metrics.serviceMonitor.scrapeTimeout }}
+      {{- end}}
+      {{- if .Values[[ component_values_path ]]metrics.serviceMonitor.metricRelabelings }}
+      metricRelabelings: {{ toYaml .Values[[ component_values_path ]]metrics.serviceMonitor.metricRelabelings | nindent 8 }}
+      {{- end }}
+      {{- if .Values[[ component_values_path ]]metrics.serviceMonitor.relabelings }}
+      relabelings: {{ toYaml .Values[[ component_values_path ]]metrics.serviceMonitor.relabelings | nindent 8 }}
+      {{- end }}
+      path: /metrics
+  namespaceSelector:
+    matchNames:
+    - {{ .Release.Namespace | quote }}
+  selector:
+    matchLabels:
+      {{- include "[[ application.name ]][[ component_values_path ]]selectorLabels" . | nindent 6 }}
+{{- end -}}
+[%- if component.optional %]
+{{- end -}}
+[%- endif %]

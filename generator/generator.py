@@ -173,6 +173,13 @@ with open(sys.argv[1], "r") as stream:
         else:
             render("templates/serviceaccount.yaml", f"{component_directory}/serviceaccount.yaml", application=application, component=component)
 
+        # Manage ServiceMonitor
+        if component.get("serviceMonitor"):
+            if component_name == name:
+                render("templates/servicemonitor.yaml", f"{templates_directory}/servicemonitor.yaml", application=application, component=component)
+            else:
+                render("templates/servicemonitor.yaml", f"{component_directory}/servicemonitor.yaml", application=application, component=component)
+
     # Manage CRDs
     if application.get("crds"):
         files_directory = f"{chart_directory}/files"
