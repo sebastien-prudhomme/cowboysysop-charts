@@ -432,6 +432,39 @@ metrics:
       ## @param [[ component_yaml_path ]]metrics.service.ports.[[ port.name ]] Metrics service port for [[ port.description ]]
       [[ port.name ]]: [[ port.number ]]
       [% endfor %]
+  [% if component.serviceMonitor %]
+
+  serviceMonitor:
+    ## @param [[ component_yaml_path ]]metrics.serviceMonitor.enabled Specifies whether a service monitor should be created
+    enabled: false
+
+    ## @param [[ component_yaml_path ]]metrics.serviceMonitor.namespace Namespace in which to create the service monitor
+    namespace: ""
+
+    ## @param [[ component_yaml_path ]]metrics.serviceMonitor.annotations Service monitor annotations
+    annotations: {}
+
+    ## @param [[ component_yaml_path ]]metrics.serviceMonitor.labels Additional service monitor labels
+    labels: {}
+
+    ## @param [[ component_yaml_path ]]metrics.serviceMonitor.jobLabel The name of the label on the target service to use as the job name in Prometheus
+    jobLabel: ""
+
+    ## @param [[ component_yaml_path ]]metrics.serviceMonitor.honorLabels Whether to choose the metric’s labels on collisions with target labels
+    honorLabels: false
+
+    ## @param [[ component_yaml_path ]]metrics.serviceMonitor.interval Interval at which metrics should be scraped
+    interval: ""
+
+    ## @param [[ component_yaml_path ]]metrics.serviceMonitor.scrapeTimeout Timeout after which the scrape is ended
+    scrapeTimeout: ""
+
+    ## @param [[ component_yaml_path ]]metrics.serviceMonitor.metricRelabelings Specify additional relabeling of metrics
+    metricRelabelings: []
+
+    ## @param [[ component_yaml_path ]]metrics.serviceMonitor.relabelings Specify general relabeling
+    relabelings: []
+  [% endif %]
 [% endif %]
 [% if component.persistentvolumeclaim %]
 

@@ -12,8 +12,12 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: {{ include "[[ application.name ]][[ component_values_path ]]fullname" . }}
+  namespace: {{ default .Release.Namespace .Values[[ component_values_path ]]metrics.serviceMonitor.namespace | quote }}
   labels:
-    {{- include "[[ application.name ]][[ component_values_path ]]metrics.serviceMonitor.labels" . | nindent 4 }}
+    {{- include "[[ application.name ]][[ component_values_path ]]labels" . | nindent 4 }}
+    {{- if .Values[[ component_values_path ]]metrics.serviceMonitor.labels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values[[ component_values_path ]]metrics.serviceMonitor.labels "context" $ ) | nindent 4 }}
+    {{- end }}
     {{- if .Values.commonLabels }}
     {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
     {{- end }}
@@ -38,6 +42,9 @@ spec:
       {{- if .Values[[ component_values_path ]]metrics.serviceMonitor.scrapeTimeout }}
       scrapeTimeout: {{ .Values[[ component_values_path ]]metrics.serviceMonitor.scrapeTimeout }}
       {{- end}}
+      {{- if .Values[[ component_values_path ]]metrics.serviceMonitor.honorLabels }}
+      honorLabels: {{ .Values[[ component_values_path ]]metrics.serviceMonitor.honorLabels }}
+      {{- end}}
       {{- if .Values[[ component_values_path ]]metrics.serviceMonitor.metricRelabelings }}
       metricRelabelings: {{ toYaml .Values[[ component_values_path ]]metrics.serviceMonitor.metricRelabelings | nindent 8 }}
       {{- end }}
@@ -47,7 +54,7 @@ spec:
       path: /metrics
   namespaceSelector:
     matchNames:
-    - {{ .Release.Namespace | quote }}
+      - {{ .Release.Namespace | quote }}
   selector:
     matchLabels:
       {{- include "[[ application.name ]][[ component_values_path ]]selectorLabels" . | nindent 6 }}
