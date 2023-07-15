@@ -61,5 +61,5 @@ spec:
   selector:
     {{- include "[[ application.name ]][[ component_values_path ]]selectorLabels" . | nindent 4 }}
 [% if component.optional %]
-{{- end -}}
+{{- end }}
 [% endif %]
