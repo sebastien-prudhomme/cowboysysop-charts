@@ -276,11 +276,11 @@ ingress:
 ## @param [[ component_yaml_path ]]resources CPU/Memory resource requests/limits
 resources: {}
   # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
+  #   cpu: [[ component.deployment.container.resources.limits.cpu if component.deployment.container.resources else "100m" ]]
+  #   memory: [[ component.deployment.container.resources.limits.memory if component.deployment.container.resources else "128Mi" ]]
   # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
+  #   cpu: [[ component.deployment.container.resources.requests.cpu if component.deployment.container.resources else "100m" ]]
+  #   memory: [[ component.deployment.container.resources.requests.memory if component.deployment.container.resources else "128Mi" ]]
 
 ## @param [[ component_yaml_path ]]nodeSelector Node labels for pod assignment
 nodeSelector: {}
@@ -327,11 +327,11 @@ init:
   ## @param [[ component_yaml_path ]]init.resources Init CPU/Memory resource requests/limits
   resources: {}
     # limits:
-    #   cpu: 100m
-    #   memory: 128Mi
+    #   cpu: [[ component.deployment.initContainer.resources.limits.cpu if component.deployment.initContainer.resources else "100m" ]]
+    #   memory: [[ component.deployment.initContainer.resources.limits.memory if component.deployment.initContainer.resources else "128Mi" ]]
     # requests:
-    #   cpu: 100m
-    #   memory: 128Mi
+    #   cpu: [[ component.deployment.initContainer.resources.requests.cpu if component.deployment.initContainer.resources else "100m" ]]
+    #   memory: [[ component.deployment.initContainer.resources.requests.memory if component.deployment.initContainer.resources else "128Mi" ]]
 [% endif %]
 [% for container in component.deployment.containers %]
 [% if container.asComponent %]
@@ -383,11 +383,11 @@ init:
   ## @param [[ container.name ]].resources CPU/Memory resource requests/limits
   resources: {}
     # limits:
-    #   cpu: 100m
-    #   memory: 128Mi
+    #   cpu: [[ container.resources.limits.cpu if container.resources else "100m" ]]
+    #   memory: [[ container.resources.limits.memory if container.resources else "128Mi" ]]
     # requests:
-    #   cpu: 100m
-    #   memory: 128Mi
+    #   cpu: [[ container.resources.requests.cpu if container.resources else "100m" ]]
+    #   memory: [[ container.resources.requests.memory if container.resources else "128Mi" ]]
 
   [% if container.extraArgs %]
   ## @extra [[ container.name ]].extraArgs [object] Additional container arguments

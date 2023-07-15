@@ -168,6 +168,13 @@ components:
           httpGet:
             path: /health-check
             port: http-metrics
+        resources:
+          limits:
+            cpu: 200m
+            memory: 512Mi
+          requests:
+            cpu: 50m
+            memory: 256Mi
         volumeMounts: |
           - name: tls-secret
             mountPath: /tls-secret
@@ -356,6 +363,13 @@ components:
           httpGet:
             path: /health-check
             port: http-metrics
+        resources:
+          limits:
+            cpu: 200m
+            memory: 1024Mi
+          requests:
+            cpu: 50m
+            memory: 512Mi
     image:
       registry: registry.k8s.io
       repository: autoscaling/vpa-recommender
@@ -501,6 +515,13 @@ components:
           httpGet:
             path: /health-check
             port: http-metrics
+        resources:
+          limits:
+            cpu: 200m
+            memory: 1024Mi
+          requests:
+            cpu: 50m
+            memory: 512Mi
     image:
       registry: registry.k8s.io
       repository: autoscaling/vpa-updater
