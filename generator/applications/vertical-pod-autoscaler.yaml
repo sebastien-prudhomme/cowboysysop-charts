@@ -16,8 +16,8 @@ updates: |
 
   Some parameters related to port management have been modified:
 
-  - Parameter `updater.metrics.service.port` has been renamed `updater.metrics.service.ports.http`.
-  - Parameter `updater.metrics.service.nodePort` has been renamed `updater.metrics.service.nodePorts.http`.
+  - Parameter `updater.metrics.service.port` has been renamed `updater.metrics.service.ports.metrics`.
+  - Parameter `updater.metrics.service.nodePort` has been renamed `updater.metrics.service.nodePorts.metrics`.
 
   ### Upgrading to version 7.0.0
 
@@ -175,11 +175,11 @@ components:
       tag: 0.14.0
     metrics:
       ports:
-        - name: http
+        - name: metrics
           nameContainer: http-metrics
           nameService: http-metrics
           number: 8944
-          description: HTTP
+          description: Metrics
     service:
       nameOverride: vpa-webhook
       ports:
@@ -356,11 +356,11 @@ components:
       tag: 0.14.0
     metrics:
       ports:
-        - name: http
+        - name: metrics
           nameContainer: http-metrics
           nameService: http-metrics
           number: 8942
-          description: HTTP
+          description: Metrics
     serviceMonitor: true
   - name: updater
     optional: true
@@ -498,11 +498,11 @@ components:
       tag: 0.14.0
     metrics:
       ports:
-        - name: http
+        - name: metrics
           nameContainer: http-metrics
           nameService: http-metrics
           number: 8943
-          description: HTTP
+          description: Metrics
     serviceMonitor: true
 crds: true
 tests: |

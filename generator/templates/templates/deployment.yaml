@@ -173,7 +173,7 @@ spec:
           livenessProbe:
             httpGet:
               path: [[ component.deployment.container.livenessProbe.httpGet.path ]]
-              port: [[ component.deployment.container.livenessProbe.httpGet.port or http ]]
+              port: [[ component.deployment.container.livenessProbe.httpGet.port or "http" ]]
               [% if component.deployment.container.livenessProbe.httpGet.extra %]
               [[ component.deployment.container.livenessProbe.httpGet.extra | indent(14) | trim ]]
               [% endif %]
@@ -187,7 +187,7 @@ spec:
           readinessProbe:
             httpGet:
               path: [[ component.deployment.container.readinessProbe.httpGet.path ]]
-              port: [[ component.deployment.container.readinessProbe.httpGet.port or http ]]
+              port: [[ component.deployment.container.readinessProbe.httpGet.port or "http" ]]
               [% if component.deployment.container.readinessProbe.httpGet.extra %]
               [[ component.deployment.container.readinessProbe.httpGet.extra | indent(14) | trim ]]
               [% endif %]
