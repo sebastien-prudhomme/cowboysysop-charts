@@ -160,9 +160,11 @@ components:
         livenessProbe:
           httpGet:
             path: /health-check
+            port: http-metrics
         readinessProbe:
           httpGet:
             path: /health-check
+            port: http-metrics
         volumeMounts: |
           - name: tls-secret
             mountPath: /tls-secret
@@ -343,9 +345,11 @@ components:
         livenessProbe:
           httpGet:
             path: /health-check
+            port: http-metrics
         readinessProbe:
           httpGet:
             path: /health-check
+            port: http-metrics
     image:
       registry: registry.k8s.io
       repository: autoscaling/vpa-recommender
@@ -483,9 +487,11 @@ components:
         livenessProbe:
           httpGet:
             path: /health-check
+            port: http-metrics
         readinessProbe:
           httpGet:
             path: /health-check
+            port: http-metrics
     image:
       registry: registry.k8s.io
       repository: autoscaling/vpa-updater
