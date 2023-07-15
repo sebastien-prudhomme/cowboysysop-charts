@@ -30,6 +30,7 @@ spec:
   {{- if and (eq .Values[[ component_values_path ]]service.type "ClusterIP") .Values[[ component_values_path ]]service.clusterIP }}
   clusterIP: {{ .Values[[ component_values_path ]]service.clusterIP }}
   {{- end }}
+  [% if not component.service.internal %]
   {{- if and (eq .Values[[ component_values_path ]]service.type "LoadBalancer") .Values[[ component_values_path ]]service.loadBalancerIP }}
   loadBalancerIP: {{ .Values[[ component_values_path ]]service.loadBalancerIP }}
   {{- end }}
@@ -40,15 +41,18 @@ spec:
   {{- if or (eq .Values[[ component_values_path ]]service.type "LoadBalancer") (eq .Values[[ component_values_path ]]service.type "NodePort") }}
   externalTrafficPolicy: {{ .Values[[ component_values_path ]]service.externalTrafficPolicy }}
   {{- end }}
+  [% endif %]
   ports:
     [% for port in component.service.ports %]
     - port: {{ .Values[[ component_values_path ]]service.ports.[[ port.name ]] }}
       targetPort: [[ port.nameContainer or port.name ]]
       protocol: TCP
       name: [[ port.nameService or port.name ]]
+      [% if not component.service.internal %]
       {{- if and (or (eq .Values[[ component_values_path ]]service.type "LoadBalancer") (eq .Values[[ component_values_path ]]service.type "NodePort")) .Values[[ component_values_path ]]service.nodePorts.[[ port.name ]] }}
       nodePort: {{ .Values[[ component_values_path ]]service.nodePorts.[[ port.name ]] }}
       {{- end }}
+      [% endif %]
     [% endfor %]
   selector:
     {{- include "[[ application.name ]][[ component_values_path ]]selectorLabels" . | nindent 4 }}

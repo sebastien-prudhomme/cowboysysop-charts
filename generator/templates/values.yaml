@@ -211,6 +211,7 @@ service:
   ## @param [[ component_yaml_path ]]service.clusterIP Static cluster IP address or None for headless service when service type is ClusterIP
   clusterIP:
   # clusterIP: 10.43.0.100
+  [% if not component.service.internal %]
 
   ## @param [[ component_yaml_path ]]service.loadBalancerIP Static load balancer IP address when service type is LoadBalancer
   loadBalancerIP:
@@ -222,6 +223,7 @@ service:
 
   ## @param [[ component_yaml_path ]]service.externalTrafficPolicy External traffic routing policy when service type is LoadBalancer or NodePort
   externalTrafficPolicy: Cluster
+  [% endif %]
 
   ports:
     [% for port in component.service.ports %]
@@ -231,6 +233,7 @@ service:
     ## @param [[ component_yaml_path ]]service.ports.[[ port.name ]] Service port for [[ port.description ]]
     [[ port.name ]]: [[ port.number ]]
     [% endfor %]
+  [% if not component.service.internal %]
 
   nodePorts:
     [% for port in component.service.ports %]
@@ -241,6 +244,7 @@ service:
     [[ port.name ]]:
     # [[ port.name ]]: [[ 30000 + loop.index0 ]]
     [% endfor %]
+  [% endif %]
 [% endif %]
 [% if component.ingress %]
 

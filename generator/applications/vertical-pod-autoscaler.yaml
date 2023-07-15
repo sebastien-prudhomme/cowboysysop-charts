@@ -191,6 +191,7 @@ components:
           number: 8944
           description: Metrics
     service:
+      internal: true
       nameOverride: vpa-webhook
       ports:
         - name: https
