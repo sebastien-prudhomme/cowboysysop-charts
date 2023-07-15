@@ -141,6 +141,9 @@ components:
           - watch
     deployment:
       type: deployment
+      podSecurityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
       container:
         args: |
           - --client-ca-file=/tls-secret/ca.crt
@@ -304,6 +307,9 @@ components:
           - watch
     deployment:
       type: deployment
+      podSecurityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
       container:
         extraArgs: |
           # checkpoints-gc-interval: 10m0s
@@ -464,6 +470,9 @@ components:
           - watch
     deployment:
       type: deployment
+      podSecurityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
       container:
         extraArgs: |
           # evict-after-oom-threshold: 10m0s
