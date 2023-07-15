@@ -16,8 +16,8 @@ updates: |
 
   Some parameters related to port management have been modified:
 
-  - Parameter `updater.metrics.service.port` has been renamed `updater.metrics.service.ports.http-metrics`.
-  - Parameter `updater.metrics.service.nodePort` has been renamed `updater.metrics.service.nodePorts.http-metrics`.
+  - Parameter `updater.metrics.service.port` has been renamed `updater.metrics.service.ports.http`.
+  - Parameter `updater.metrics.service.nodePort` has been renamed `updater.metrics.service.nodePorts.http`.
 
   ### Upgrading to version 7.0.0
 
@@ -173,7 +173,9 @@ components:
       tag: 0.14.0
     metrics:
       ports:
-        - name: http-metrics
+        - name: http
+          nameContainer: http-metrics
+          nameService: http-metrics
           number: 8944
           description: HTTP
     service:
@@ -350,7 +352,9 @@ components:
       tag: 0.14.0
     metrics:
       ports:
-        - name: http-metrics
+        - name: http
+          nameContainer: http-metrics
+          nameService: http-metrics
           number: 8942
           description: HTTP
     serviceMonitor: true
@@ -488,7 +492,9 @@ components:
       tag: 0.14.0
     metrics:
       ports:
-        - name: http-metrics
+        - name: http
+          nameContainer: http-metrics
+          nameService: http-metrics
           number: 8943
           description: HTTP
     serviceMonitor: true

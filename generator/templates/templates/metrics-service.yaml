@@ -33,9 +33,9 @@ spec:
   ports:
     [% for port in component.metrics.ports %]
     - port: {{ .Values[[ component_values_path ]]metrics.service.ports.[[ port.name ]] }}
-      targetPort: [[ port.nameIstio or port.name ]]
+      targetPort: [[ port.nameContainer or port.name ]]
       protocol: TCP
-      name: [[ port.nameIstio or port.name ]]
+      name: [[ port.nameService or port.name ]]
     [% endfor %]
   selector:
     {{- include "[[ application.name ]][[ component_values_path ]]selectorLabels" . | nindent 4 }}

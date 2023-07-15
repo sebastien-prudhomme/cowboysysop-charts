@@ -43,9 +43,9 @@ spec:
   ports:
     [% for port in component.service.ports %]
     - port: {{ .Values[[ component_values_path ]]service.ports.[[ port.name ]] }}
-      targetPort: [[ port.nameIstio or port.name ]]
+      targetPort: [[ port.nameContainer or port.name ]]
       protocol: TCP
-      name: [[ port.nameIstio or port.name ]]
+      name: [[ port.nameService or port.name ]]
       {{- if and (or (eq .Values[[ component_values_path ]]service.type "LoadBalancer") (eq .Values[[ component_values_path ]]service.type "NodePort")) .Values[[ component_values_path ]]service.nodePorts.[[ port.name ]] }}
       nodePort: {{ .Values[[ component_values_path ]]service.nodePorts.[[ port.name ]] }}
       {{- end }}

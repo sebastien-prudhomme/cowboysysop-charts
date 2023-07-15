@@ -164,7 +164,7 @@ spec:
             [% set ports = ports + component.metrics.ports %]
             [% endif %]
             [% for port in ports %]
-            - name: [[ port.nameIstio or port.name ]]
+            - name: [[ port.nameContainer or port.name ]]
               containerPort: {{ .Values[[ component_values_path ]]containerPorts.[[ port.name ]] }}
               protocol: TCP
             [% endfor %]
@@ -261,7 +261,7 @@ spec:
           [% if container.ports %]
           ports:
             [% for port in container.ports %]
-            - name: [[ port.nameIstio or port.name ]]
+            - name: [[ port.nameContainer or port.name ]]
               containerPort: {{ .Values[[ standard_values_path ]]containerPorts.[[ port.name ]] }}
               protocol: TCP
             [% endfor %]

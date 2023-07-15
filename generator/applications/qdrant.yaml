@@ -76,7 +76,8 @@ components:
     headless:
       ports:
         - name: p2p
-          nameIstio: tcp-p2p
+          nameContainer: tcp-p2p
+          nameService: tcp-p2p
           number: 6335
           description: P2P
 tests: |

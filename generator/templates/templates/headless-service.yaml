@@ -31,9 +31,9 @@ spec:
   ports:
     [% for port in component.headless.ports %]
     - port: {{ .Values[[ component_values_path ]]headless.service.ports.[[ port.name ]] }}
-      targetPort: [[ port.nameIstio or port.name ]]
+      targetPort: [[ port.nameContainer or port.name ]]
       protocol: TCP
-      name: [[ port.nameIstio or port.name ]]
+      name: [[ port.nameService or port.name ]]
     [% endfor %]
   publishNotReadyAddresses: true
   selector:
