@@ -572,3 +572,11 @@ tests: |
       response = requests.get(url)
 
       assert response.status_code == 200
+testVolumes: |
+  - name: admission-controller-tls-secret
+    secret:
+      secretName: {{ include "vertical-pod-autoscaler.admissionController.tls.secretName" . }}
+testVolumeMounts: |
+  - name: admission-controller-tls-secret
+    mountPath: /admission-controller-tls-secret
+    readOnly: true

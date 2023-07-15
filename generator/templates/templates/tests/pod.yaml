@@ -22,9 +22,15 @@ spec:
         - name: tests
           mountPath: /tests
           readOnly: true
+        [% if application.testVolumeMounts %]
+        [[ application.testVolumeMounts | indent(8) | trim ]]
+        [% endif %]
       workingDir: /tests
   restartPolicy: Never
   volumes:
     - name: tests
       configMap:
         name: {{ include "[[ application.name ]].tests.fullname" . }}
+    [% if application.testVolumes %]
+    [[ application.testVolumes | indent(4) | trim ]]
+    [% endif %]
