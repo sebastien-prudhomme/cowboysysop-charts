@@ -7,7 +7,7 @@ home: https://github.com/kubernetes/autoscaler
 icon: https://raw.githubusercontent.com/kubernetes/kubernetes/master/logo/logo.svg
 license: 2020
 source: https://github.com/kubernetes/autoscaler
-version: 8.0.0
+version: 8.1.0
 kubeMinVersion: 1.22
 prerequisites: |
   - Metrics Server >= 0.2 (you can use the [bitnami/metrics-server](https://artifacthub.io/packages/helm/bitnami/metrics-server) chart)
@@ -192,6 +192,10 @@ components:
             path: /health-check
             port: http-metrics
         readinessProbe:
+          httpGet:
+            path: /health-check
+            port: http-metrics
+        startupProbe:
           httpGet:
             path: /health-check
             port: http-metrics
@@ -395,6 +399,10 @@ components:
           httpGet:
             path: /health-check
             port: http-metrics
+        startupProbe:
+          httpGet:
+            path: /health-check
+            port: http-metrics
         resources:
           limits:
             cpu: 200m
@@ -547,6 +555,10 @@ components:
             path: /health-check
             port: http-metrics
         readinessProbe:
+          httpGet:
+            path: /health-check
+            port: http-metrics
+        startupProbe:
           httpGet:
             path: /health-check
             port: http-metrics

@@ -6,7 +6,7 @@ home: https://github.com/mongo-express/mongo-express
 icon: https://raw.githubusercontent.com/mongo-express/mongo-express/master/public/images/mongo-express-logo.png
 license: 2020
 source: https://github.com/mongo-express/mongo-express
-version: 4.0.0
+version: 4.1.0
 updates: |
   ### Upgrading to version 4.0.0
 
@@ -89,6 +89,15 @@ components:
                   value: {{ include "mongo-express.basicAuthHttpHeader" . }}
               {{- end }}
         readinessProbe:
+          httpGet:
+            path: "{{ .Values.siteBaseUrl }}"
+            extra: |
+              {{- if and .Values.basicAuthUsername .Values.basicAuthPassword }}
+              httpHeaders:
+                - name: Authorization
+                  value: {{ include "mongo-express.basicAuthHttpHeader" . }}
+              {{- end }}
+        startupProbe:
           httpGet:
             path: "{{ .Values.siteBaseUrl }}"
             extra: |

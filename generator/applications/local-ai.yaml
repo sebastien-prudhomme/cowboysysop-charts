@@ -6,7 +6,7 @@ home: https://localai.io/
 icon: https://user-images.githubusercontent.com/2420543/233147843-88697415-6dbf-4368-a862-ab217f9f7342.jpeg
 license: 2023
 source: https://github.com/go-skynet/LocalAI
-version: 1.4.0
+version: 1.5.0
 components:
   - name: local-ai
     configmap: |
@@ -47,6 +47,9 @@ components:
         readinessProbe:
           httpGet:
             path: /readyz
+        startupProbe:
+          httpGet:
+            path: /healthz
         volumeMounts: |
           - name: config
             mountPath: /config/preload-models.json

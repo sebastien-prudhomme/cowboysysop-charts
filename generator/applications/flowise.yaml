@@ -6,7 +6,7 @@ home: https://flowiseai.com/
 icon: https://avatars.githubusercontent.com/u/128289781
 license: 2023
 source: https://github.com/FlowiseAI/Flowise
-version: 1.0.2
+version: 1.1.0
 components:
   - name: flowise
     deployment:
@@ -28,6 +28,9 @@ components:
           httpGet:
             path: /
         readinessProbe:
+          httpGet:
+            path: /
+        startupProbe:
           httpGet:
             path: /
         volumeMounts: |

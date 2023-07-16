@@ -6,7 +6,7 @@ home: https://qdrant.tech/
 icon: https://raw.githubusercontent.com/cowboysysop/charts/master/charts/qdrant/icon.png
 license: 2023
 source: https://github.com/qdrant/qdrant
-version: 1.2.1
+version: 1.3.0
 components:
   - name: qdrant
     configmap: |
@@ -45,6 +45,9 @@ components:
           httpGet:
             path: /
         readinessProbe:
+          httpGet:
+            path: /
+        startupProbe:
           httpGet:
             path: /
         volumeMounts: |

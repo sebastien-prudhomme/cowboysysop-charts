@@ -197,6 +197,20 @@ spec:
             failureThreshold: {{ .Values[[ component_values_path ]]readinessProbe.failureThreshold }}
             successThreshold: {{ .Values[[ component_values_path ]]readinessProbe.successThreshold }}
           {{- end }}
+          {{- if .Values[[ component_values_path ]]startupProbe.enabled }}
+          startupProbe:
+            httpGet:
+              path: [[ component.deployment.container.startupProbe.httpGet.path ]]
+              port: [[ component.deployment.container.startupProbe.httpGet.port or "http" ]]
+              [% if component.deployment.container.startupProbe.httpGet.extra %]
+              [[ component.deployment.container.startupProbe.httpGet.extra | indent(14) | trim ]]
+              [% endif %]
+            initialDelaySeconds: {{ .Values[[ component_values_path ]]startupProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values[[ component_values_path ]]startupProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values[[ component_values_path ]]startupProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values[[ component_values_path ]]startupProbe.failureThreshold }}
+            successThreshold: {{ .Values[[ component_values_path ]]startupProbe.successThreshold }}
+          {{- end }}
           resources:
             {{- toYaml .Values[[ component_values_path ]]resources | nindent 12 }}
           [% if component.deployment.container.volumeMounts %]

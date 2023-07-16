@@ -6,7 +6,7 @@ home: https://github.com/benc-uk/kubeview
 icon: https://raw.githubusercontent.com/benc-uk/kubeview/master/web/client/public/favicon.png
 license: 2020
 source: https://github.com/benc-uk/kubeview
-version: 4.0.0
+version: 4.1.0
 updates: |
   ### Upgrading to version 4.0.0
 
@@ -71,6 +71,9 @@ components:
           httpGet:
             path: /healthz
         readinessProbe:
+          httpGet:
+            path: /healthz
+        startupProbe:
           httpGet:
             path: /healthz
     image:

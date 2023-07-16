@@ -5,7 +5,7 @@ description: is a <<Terminal and Web console for Kubernetes>>
 home: https://github.com/astefanutti/kubebox
 license: 2020
 source: https://github.com/astefanutti/kubebox
-version: 4.0.0
+version: 4.1.0
 prerequisites: |
   - cAdvisor >= 0.36 (you can use the [ckotzbauer/cadvisor](https://artifacthub.io/packages/helm/ckotzbauer/cadvisor) chart)
 updates: |
@@ -46,6 +46,9 @@ components:
           httpGet:
             path: /
         readinessProbe:
+          httpGet:
+            path: /
+        startupProbe:
           httpGet:
             path: /
     image:

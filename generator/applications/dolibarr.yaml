@@ -6,7 +6,7 @@ home: https://www.dolibarr.org/
 icon: https://raw.githubusercontent.com/Dolibarr/dolibarr/develop/doc/images/dolibarr_256x256_color.svg
 license: 2022
 source: https://github.com/Dolibarr/dolibarr
-version: 3.0.0
+version: 3.1.0
 updates: |
   ### Upgrading to version 3.0.0
 
@@ -63,6 +63,9 @@ components:
           httpGet:
             path: /
         readinessProbe:
+          httpGet:
+            path: /
+        startupProbe:
           httpGet:
             path: /
         volumeMounts: |
