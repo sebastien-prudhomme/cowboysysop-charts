@@ -78,6 +78,7 @@ readme: |
   - Mutating webhook configuration name automatically created by admission controller component is `vpa-webhook-config`
 components:
   - name: admission-controller
+    description: Admission controller
     optional: true
     clusterrole: |
       # system:vpa-target-reader
@@ -226,6 +227,7 @@ components:
     serviceMonitor: true
     tls: true
   - name: recommender
+    description: Recommender
     clusterrole: |
       # system:metrics-reader
       - apiGroups:
@@ -412,6 +414,7 @@ components:
           description: Metrics
     serviceMonitor: true
   - name: updater
+    description: Updater
     optional: true
     clusterrole: |
       # system:vpa-actor

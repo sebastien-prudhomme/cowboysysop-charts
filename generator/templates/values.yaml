@@ -32,15 +32,17 @@ commonLabels: {}
 extraDeploy: []
 [% for component in application.components %]
 
-## @section Parameters
-
 [% if component.name == application.name %]
 [% set component_yaml_path = "" %]
 [% set indent_width = 0 %]
+## @section Parameters
+
 [% else %]
 [% set component_yaml_path = component.name | to_lower_camel %]
 [% set component_yaml_path = component_yaml_path + "." %]
 [% set indent_width = 2 %]
+## @section [[ component.description ]] parameters
+
 [[ component.name | to_lower_camel ]]:
 [% endif %]
 [% filter indent(width=indent_width) %]
