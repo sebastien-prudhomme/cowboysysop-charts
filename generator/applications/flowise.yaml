@@ -7,8 +7,6 @@ icon: https://avatars.githubusercontent.com/u/128289781
 license: 2023
 source: https://github.com/FlowiseAI/Flowise
 version: 1.0.2
-prerequisites: |
-  - Kubernetes >= 1.19
 components:
   - name: flowise
     deployment:

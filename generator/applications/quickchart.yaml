@@ -6,8 +6,6 @@ home: https://quickchart.io/
 license: 2021
 source: https://github.com/typpo/quickchart
 version: 3.0.0
-prerequisites: |
-  - Kubernetes >= 1.19
 updates: |
   ### Upgrading to version 3.0.0
 

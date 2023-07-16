@@ -7,8 +7,6 @@ icon: https://raw.githubusercontent.com/Dolibarr/dolibarr/develop/doc/images/dol
 license: 2022
 source: https://github.com/Dolibarr/dolibarr
 version: 3.0.0
-prerequisites: |
-  - Kubernetes >= 1.19
 updates: |
   ### Upgrading to version 3.0.0
 

@@ -6,8 +6,6 @@ home: https://github.com/traefik/whoami
 license: 2020
 source: https://github.com/traefik/whoami
 version: 4.1.0
-prerequisites: |
-  - Kubernetes >= 1.19
 updates: |
   ### Upgrading to version 4.0.0
 

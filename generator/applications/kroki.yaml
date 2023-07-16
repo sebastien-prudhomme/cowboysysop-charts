@@ -7,8 +7,6 @@ icon: https://raw.githubusercontent.com/yuzutech/kroki.io/master/assets/favicon-
 license: 2021
 source: https://github.com/yuzutech/kroki
 version: 3.0.0
-prerequisites: |
-  - Kubernetes >= 1.19
 updates: |
   ### Upgrading to version 3.0.0
 

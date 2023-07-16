@@ -17,7 +17,10 @@ This chart bootstraps a [[ application.productName ]] deployment on a [Kubernete
 
 ## Prerequisites
 
+- Kubernetes >= [[ application.kubeMinVersion or "1.19" ]]
+[% if application.prerequisites %]
 [[ application.prerequisites | trim ]]
+[% endif %]
 - Helm >= 3.1
 
 ## Installing

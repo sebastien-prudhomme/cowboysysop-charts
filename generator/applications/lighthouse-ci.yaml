@@ -7,8 +7,6 @@ icon: https://raw.githubusercontent.com/GoogleChrome/lighthouse-ci/master/packag
 license: 2020
 source: https://github.com/GoogleChrome/lighthouse-ci
 version: 6.0.0
-prerequisites: |
-  - Kubernetes >= 1.19
 updates: |
   ### Upgrading to version 6.0.0
 

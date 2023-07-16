@@ -7,8 +7,6 @@ icon: https://raw.githubusercontent.com/mongo-express/mongo-express/master/publi
 license: 2020
 source: https://github.com/mongo-express/mongo-express
 version: 4.0.0
-prerequisites: |
-  - Kubernetes >= 1.19
 updates: |
   ### Upgrading to version 4.0.0
 

@@ -7,7 +7,6 @@ license: 2020
 source: https://github.com/astefanutti/kubebox
 version: 4.0.0
 prerequisites: |
-  - Kubernetes >= 1.19
   - cAdvisor >= 0.36 (you can use the [ckotzbauer/cadvisor](https://artifacthub.io/packages/helm/ckotzbauer/cadvisor) chart)
 updates: |
   ### Upgrading to version 4.0.0

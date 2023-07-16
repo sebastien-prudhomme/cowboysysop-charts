@@ -7,8 +7,6 @@ icon: https://user-images.githubusercontent.com/2420543/233147843-88697415-6dbf-
 license: 2023
 source: https://github.com/go-skynet/LocalAI
 version: 1.4.0
-prerequisites: |
-  - Kubernetes >= 1.19
 components:
   - name: local-ai
     configmap: |
