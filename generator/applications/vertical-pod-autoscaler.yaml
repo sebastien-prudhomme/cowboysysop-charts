@@ -52,6 +52,29 @@ updates: |
   ### Upgrading to version 2.0.0
 
   The port names have been changed to be compatible with Istio service mesh.
+uninstalling: |
+  Delete the `vpa-webhook-config` mutating webhook configuration automatically created by Vertical Pod Autoscaler admission controller component using:
+
+  ```bash
+  $ kubectl delete mutatingwebhookconfiguration vpa-webhook-config
+  ```
+
+  Optionally, delete the custom resource definitions created by the chart using:
+
+  **WARNING**: It will also try to delete all instances of the custom resource definitions.
+
+  ```bash
+  $ kubectl delete crd verticalpodautoscalers.autoscaling.k8s.io
+  $ kubectl delete crd verticalpodautoscalercheckpoints.autoscaling.k8s.io
+  ```
+readme: |
+  ## Limitations
+
+  Due to hard-coded values in Vertical Pod Autoscaler, the chart configuration has some limitations:
+
+  - Admission controller component service name is `vpa-webhook`
+  - Admission controller component service port is `443`
+  - Mutating webhook configuration name automatically created by admission controller component is `vpa-webhook-config`
 components:
   - name: admission-controller
     optional: true

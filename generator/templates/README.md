@@ -58,6 +58,10 @@ $ helm uninstall my-release
 The command deletes the release named `my-release` and frees all the kubernetes resources associated with the release.
 
 **TIP**: Specify the `--purge` argument to the above command to remove the release from the store and make its name free for later use.
+[% if application.uninstalling %]
+
+[[ application.uninstalling | trim ]]
+[% endif %]
 
 ## Configuration
 
@@ -82,3 +86,7 @@ $ helm install my-release \
 ```
 
 **TIP**: You can use the default [values.yaml](values.yaml).
+[% if application.readme %]
+
+[[ application.readme | trim ]]
+[% endif %]
