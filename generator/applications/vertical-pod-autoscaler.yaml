@@ -183,7 +183,7 @@ components:
           # vpa-object-namespace: ""
           # webhook-timeout-seconds: 30
         extraArgsDoc: |
-          ## @skip admissionController.extraArgs.v
+          ## @param admissionController.extraArgs.v Number for the log level verbosity
         env: |
           - name: NAMESPACE
             value: {{ .Release.Namespace }}
@@ -385,7 +385,7 @@ components:
           v: 2
           # vpa-object-namespace: ""
         extraArgsDoc: |
-          ## @skip recommender.extraArgs.v
+          ## @param recommender.extraArgs.v Number for the log level verbosity
         livenessProbe:
           httpGet:
             path: /health-check
@@ -537,7 +537,7 @@ components:
           v: 2
           # vpa-object-namespace: ""
         extraArgsDoc: |
-          ## @skip updater.extraArgs.v
+          ## @param updater.extraArgs.v Number for the log level verbosity
         env: |
           - name: NAMESPACE
             value: {{ .Release.Namespace }}
