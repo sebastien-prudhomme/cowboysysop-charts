@@ -108,6 +108,7 @@ Selector labels
 {{ include "[[ application.name ]][[ component_values_path ]]componentLabels" . }}
 {{- end -}}
 [% endif %]
+[% if component %]
 
 {{/*
 Create the name of the service account to use
@@ -119,6 +120,7 @@ Create the name of the service account to use
     {{ default "default" .Values[[ component_values_path ]]serviceAccount.name }}
 {{- end -}}
 {{- end -}}
+[% endif %]
 [% if component and component.secret %]
 
 {{/*
