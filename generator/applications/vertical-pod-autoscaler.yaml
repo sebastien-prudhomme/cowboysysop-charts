@@ -223,6 +223,7 @@ components:
       ports:
         - name: https
           number: 8000
+          numberOverride: 443
           description: HTTPS
     serviceMonitor: true
     tls: true
@@ -574,7 +575,7 @@ tests: |
 
 
   def test_admission_controller_service_connection():
-      url = "https://vpa-webhook.{{ .Release.Namespace }}.svc:443/"
+      url = "https://vpa-webhook.{{ .Release.Namespace }}.svc:{{ .Values.admissionController.service.ports.https }}/"
       verify = "/admission-controller-tls-secret/ca.crt"
 
       response = requests.get(url, verify=verify)

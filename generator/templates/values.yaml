@@ -232,8 +232,13 @@ service:
     [% if loop.index0 > 0 %]
 
     [% endif %]
-    ## @param [[ component_yaml_path ]]service.ports.[[ port.name ]] Service port for [[ port.description ]]
-    [[ port.name ]]: [[ port.number ]]
+    [% if port.numberOverride %]
+    [% set extra_comment = " (do not change it)" %]
+    [% else %]
+    [% set extra_comment = "" %]
+    [% endif %]
+    ## @param [[ component_yaml_path ]]service.ports.[[ port.name ]] Service port for [[ port.description ]][[ extra_comment ]]
+    [[ port.name ]]: [[ port.numberOverride or port.number ]]
     [% endfor %]
   [% if not component.service.internal %]
 
