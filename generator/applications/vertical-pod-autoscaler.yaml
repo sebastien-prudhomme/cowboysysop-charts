@@ -16,8 +16,9 @@ updates: |
 
   Some parameters related to port management have been modified:
 
+  - Parameter `admissionController.metrics.service.port` has been renamed `admissionController.metrics.service.ports.metrics`.
+  - Parameter `recommender.metrics.service.port` has been renamed `recommender.metrics.service.ports.metrics`.
   - Parameter `updater.metrics.service.port` has been renamed `updater.metrics.service.ports.metrics`.
-  - Parameter `updater.metrics.service.nodePort` has been renamed `updater.metrics.service.nodePorts.metrics`.
 
   ### Upgrading to version 7.0.0
 
@@ -570,7 +571,6 @@ tests: |
 
 
   def test_admission_controller_service_connection():
-      # url = "https://{{ include "vertical-pod-autoscaler.admissionController.fullname" . }}.{{ .Release.Namespace }}.svc:{{ .Values.admissionController.service.port }}/"
       url = "https://vpa-webhook.{{ .Release.Namespace }}.svc:443/"
       verify = "/admission-controller-tls-secret/ca.crt"
 
@@ -580,7 +580,7 @@ tests: |
 
 
   def test_admission_controller_metrics_service_connection():
-      url = "http://{{ include "vertical-pod-autoscaler.admissionController.metrics.fullname" . }}:{{ .Values.admissionController.metrics.service.port }}/metrics"
+      url = "http://{{ include "vertical-pod-autoscaler.admissionController.metrics.fullname" . }}:{{ .Values.admissionController.metrics.service.ports.metrics }}/metrics"
 
       response = requests.get(url)
 
@@ -588,7 +588,7 @@ tests: |
 
 
   def test_recommender_metrics_service_connection():
-      url = "http://{{ include "vertical-pod-autoscaler.recommender.metrics.fullname" . }}:{{ .Values.recommender.metrics.service.port }}/metrics"
+      url = "http://{{ include "vertical-pod-autoscaler.recommender.metrics.fullname" . }}:{{ .Values.recommender.metrics.service.ports.metrics }}/metrics"
 
       response = requests.get(url)
 
@@ -596,7 +596,7 @@ tests: |
 
 
   def test_updater_metrics_service_connection():
-      url = "http://{{ include "vertical-pod-autoscaler.updater.metrics.fullname" . }}:{{ .Values.updater.metrics.service.port }}/metrics"
+      url = "http://{{ include "vertical-pod-autoscaler.updater.metrics.fullname" . }}:{{ .Values.updater.metrics.service.ports.metrics }}/metrics"
 
       response = requests.get(url)
 
