@@ -72,6 +72,7 @@ components:
           description: HTTP
     serviceMonitor: true
   - name: worker
+    description: Worker
     deployment:
       type: deployment
       container:
