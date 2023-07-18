@@ -217,6 +217,13 @@ with open(sys.argv[1], "r") as stream:
 
         render("templates/postgresql-secret.yaml", f"{templates_directory}/postgresql-secret.yaml", application=application)
 
+    # Manage Redis
+    if application.get("redis"):
+        if application["redis"] == "optional":
+            render("ci/redis-values.yaml", f"{ci_directory}/redis-values.yaml", application=application)
+
+        render("templates/redis-secret.yaml", f"{templates_directory}/redis-secret.yaml", application=application)
+
     tests_directory = f"{templates_directory}/tests"
     os.mkdir(tests_directory)
 

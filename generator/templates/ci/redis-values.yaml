@@ -1,0 +1,4 @@
+fullnameOverride: [[ application.name ]]
+redis:
+  enabled: true
+  fullnameOverride: redis

@@ -56,33 +56,52 @@ components:
       container:
         args: |
           - worker
-        # env: |
-        #   - name: DB_TYPE
-        #     value: postgresdb
-        #   - name: DB_POSTGRESDB_HOST
-        #     value: {{ include "n8n.postgresql.host" . | quote }}
-        #   - name: DB_POSTGRESDB_PORT
-        #     value: {{ include "n8n.postgresql.port" . | quote }}
-        #   - name: DB_POSTGRESDB_USER
-        #     value: {{ include "n8n.postgresql.username" . | quote }}
-        #   - name: DB_POSTGRESDB_PASSWORD
-        #     valueFrom:
-        #       secretKeyRef:
-        #         name: {{ include "n8n.postgresql.secretName" . }}
-        #         key: {{ include "n8n.postgresql.secretKeyNamePassword" . }}
-        #   - name: DB_POSTGRESDB_DATABASE
-        #     value: {{ include "n8n.postgresql.database" . | quote }}
-        #   - name: N8N_PORT
-        #     value: {{ .Values.containerPorts.http | quote }}
+        env: |
+          - name: DB_TYPE
+            value: postgresdb
+          - name: DB_POSTGRESDB_HOST
+            value: {{ include "n8n.postgresql.host" . | quote }}
+          - name: DB_POSTGRESDB_PORT
+            value: {{ include "n8n.postgresql.port" . | quote }}
+          - name: DB_POSTGRESDB_USER
+            value: {{ include "n8n.postgresql.username" . | quote }}
+          - name: DB_POSTGRESDB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "n8n.postgresql.secretName" . }}
+                key: {{ include "n8n.postgresql.secretKeyNamePassword" . }}
+          - name: DB_POSTGRESDB_DATABASE
+            value: {{ include "n8n.postgresql.database" . | quote }}
+          - name: QUEUE_BULL_REDIS_HOST
+            value: {{ include "n8n.redis.host" . | quote }}
+          - name: QUEUE_BULL_REDIS_PORT
+            value: {{ include "n8n.redis.port" . | quote }}
+          - name: QUEUE_BULL_REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "n8n.redis.secretName" . }}
+                key: {{ include "n8n.redis.secretKeyNamePassword" . }}
+          - name: QUEUE_HEALTH_CHECK_ACTIVE
+            value: "true"
+          - name: QUEUE_HEALTH_CHECK_PORT
+            value: {{ .Values.worker.containerPorts.probes | quote }}
+        ports:
+          - name: probes
+            nameContainer: http-probes
+            number: 5678
+            description: Probes
         livenessProbe:
           httpGet:
             path: /healthz
+            port: http-probes
         readinessProbe:
           httpGet:
             path: /healthz
+            port: http-probes
         startupProbe:
           httpGet:
             path: /healthz
+            port: http-probes
     image:
       registry: docker.io
       repository: n8nio/n8n

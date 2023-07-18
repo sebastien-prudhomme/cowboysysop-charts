@@ -335,3 +335,68 @@ PostgreSQL database
 {{- end -}}
 {{- end -}}
 [% endif %]
+[% if application.redis %]
+
+{{/*
+Redis fully qualified app name
+*/}}
+{{- define "[[ application.name ]].redis.fullname" -}}
+{{- if .Values.redis.fullnameOverride -}}
+{{- .Values.redis.fullnameOverride | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- $name := default "redis" .Values.redis.nameOverride -}}
+{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Redis host
+*/}}
+{{- define "[[ application.name ]].redis.host" -}}
+{{- if .Values.redis.enabled -}}
+{{- if .Values.redis.fullnameOverride -}}
+{{- printf "%s-%s" .Values.redis.fullnameOverride "master" | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- $name := default "redis" .Values.redis.nameOverride -}}
+{{- printf "%s-%s-%s" .Release.Name $name "master" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+{{- else -}}
+    {{ .Values.externalRedis.host }}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Redis port
+*/}}
+{{- define "[[ application.name ]].redis.port" -}}
+{{- if .Values.redis.enabled -}}
+    {{ .Values.redis.master.service.ports.redis }}
+{{- else -}}
+    {{ .Values.externalRedis.port }}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Redis secret name
+*/}}
+{{- define "[[ application.name ]].redis.secretName" -}}
+{{- if .Values.redis.existingSecret -}}
+    {{ .Values.redis.existingSecret }}
+{{- else if .Values.externalRedis.existingSecret -}}
+    {{ .Values.externalRedis.existingSecret }}
+{{- else -}}
+    {{ include "[[ application.name ]].redis.fullname" . }}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Redis password secret key name
+*/}}
+{{- define "[[ application.name ]].redis.secretKeyNamePassword" -}}
+{{- if .Values.externalRedis.existingSecret -}}
+    {{ .Values.externalRedis.existingSecretKeyPassword }}
+{{- else -}}
+    redis-password
+{{- end -}}
+{{- end -}}
+[% endif %]
