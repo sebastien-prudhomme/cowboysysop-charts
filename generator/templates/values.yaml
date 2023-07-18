@@ -685,6 +685,52 @@ externalPostgresql:
   ## @param externalPostgresql.database External PostgreSQL database
   database: [[ application.name ]]
 [% endif %]
+[% if application.redis %]
+
+## @section Redis parameters
+
+redis:
+  ## @param redis.enabled Whether to use the Redis chart
+  enabled: [[ "false" if application.redis == "optional" else "true" ]]
+
+  ## @param redis.architecture Redis architecture
+  architecture: standalone
+
+  auth:
+    ## @param redis.auth.enabled Enable password authentication
+    enabled: true
+
+    ## @param redis.auth.password Redis password
+    password: [[ application.name ]]
+
+    ## @param redis.auth.existingSecret Name of existing Secret to use
+    existingSecret: ""
+
+  master:
+    service:
+      ports:
+        ## @param redis.master.service.ports.redis Redis port
+        redis: 6379
+
+externalRedis:
+  ## @param externalRedis.enabled Whether to use an external Redis
+  enabled: false
+
+  ## @param externalRedis.host External Redis host
+  host: redis
+
+  ## @param externalRedis.port External Redis port
+  port: 6379
+
+  ## @param externalRedis.password External Redis password
+  password: [[ application.name ]]
+
+  ## @param externalRedis.existingSecret Name of existing Secret to use
+  existingSecret: ""
+
+  ## @param externalRedis.existingSecretKeyPassword Name of the key in existing Secret that contains Redis password
+  existingSecretKeyPassword: redis-password
+[% endif %]
 [% if application.crds %]
 
 ## @section CRDs parameters

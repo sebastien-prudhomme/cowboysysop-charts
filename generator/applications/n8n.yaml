@@ -50,7 +50,45 @@ components:
         - name: http
           number: 5678
           description: HTTP
+  - name: worker
+    deployment:
+      type: deployment
+      container:
+        args: |
+          - worker
+        # env: |
+        #   - name: DB_TYPE
+        #     value: postgresdb
+        #   - name: DB_POSTGRESDB_HOST
+        #     value: {{ include "n8n.postgresql.host" . | quote }}
+        #   - name: DB_POSTGRESDB_PORT
+        #     value: {{ include "n8n.postgresql.port" . | quote }}
+        #   - name: DB_POSTGRESDB_USER
+        #     value: {{ include "n8n.postgresql.username" . | quote }}
+        #   - name: DB_POSTGRESDB_PASSWORD
+        #     valueFrom:
+        #       secretKeyRef:
+        #         name: {{ include "n8n.postgresql.secretName" . }}
+        #         key: {{ include "n8n.postgresql.secretKeyNamePassword" . }}
+        #   - name: DB_POSTGRESDB_DATABASE
+        #     value: {{ include "n8n.postgresql.database" . | quote }}
+        #   - name: N8N_PORT
+        #     value: {{ .Values.containerPorts.http | quote }}
+        livenessProbe:
+          httpGet:
+            path: /healthz
+        readinessProbe:
+          httpGet:
+            path: /healthz
+        startupProbe:
+          httpGet:
+            path: /healthz
+    image:
+      registry: docker.io
+      repository: n8nio/n8n
+      tag: 1.0.3
 postgresql: true
+redis: true
 tests: |
   import requests
 
