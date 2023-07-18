@@ -166,7 +166,7 @@ with open(sys.argv[1], "r") as stream:
                 render("templates/headless-service.yaml", f"{component_directory}/headless-service.yaml", application=application, component=component)
 
         # Manage Metrics Service
-        if component.get("metrics"):
+        if component.get("metrics") and component["metrics"].get("ports"):
             if component_name == name:
                 render("templates/metrics-service.yaml", f"{templates_directory}/metrics-service.yaml", application=application, component=component)
             else:

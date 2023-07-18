@@ -152,7 +152,7 @@ containerPorts:
   [% if component.headless %]
   [% set ports = ports + component.headless.ports %]
   [% endif %]
-  [% if component.metrics %]
+  [% if component.metrics and component.metrics.ports %]
   [% set ports = ports + component.metrics.ports %]
   [% endif %]
   [% if component.deployment.container.ports %]
@@ -464,6 +464,12 @@ headless:
 [% if component.metrics %]
 
 metrics:
+  [% if component.metrics.optional %]
+  ## @param [[ component_yaml_path ]]metrics.enabled Enable the export of Prometheus metrics
+  enabled: false
+  [% endif %]
+  [% if component.metrics.ports %]
+
   service:
     ## @param [[ component_yaml_path ]]metrics.service.annotations Metrics service annotations
     annotations: {}
@@ -483,6 +489,7 @@ metrics:
       ## @param [[ component_yaml_path ]]metrics.service.ports.[[ port.name ]] Metrics service port for [[ port.description ]]
       [[ port.name ]]: [[ port.number ]]
       [% endfor %]
+  [% endif %]
   [% if component.serviceMonitor %]
 
   serviceMonitor:

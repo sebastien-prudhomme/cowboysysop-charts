@@ -28,6 +28,24 @@ components:
                 key: {{ include "n8n.postgresql.secretKeyNamePassword" . }}
           - name: DB_POSTGRESDB_DATABASE
             value: {{ include "n8n.postgresql.database" . | quote }}
+            {{- if .Values.metrics.enabled }}
+          - name: N8N_METRICS
+            value: "true"
+          # - name: N8N_METRICS_INCLUDE_WORKFLOW_ID_LABEL
+          #   value: "true"
+          # - name: N8N_METRICS_INCLUDE_NODE_TYPE_LABEL
+          #   value: "true"
+          # - name: N8N_METRICS_INCLUDE_CREDENTIAL_TYPE_LABEL
+          #   value: "true"
+          # - name: N8N_METRICS_INCLUDE_API_ENDPOINTS
+          #   value: "true"
+          # - name: N8N_METRICS_INCLUDE_API_PATH_LABEL
+          #   value: "true"
+          # - name: N8N_METRICS_INCLUDE_API_METHOD_LABEL
+          #   value: "true"
+          # - name: N8N_METRICS_INCLUDE_API_STATUS_CODE_LABEL
+          #   value: "true"
+          {{- end }}
           - name: N8N_PORT
             value: {{ .Values.containerPorts.http | quote }}
         livenessProbe:
@@ -45,11 +63,14 @@ components:
       repository: n8nio/n8n
       tag: 1.0.3
     ingress: true
+    metrics:
+      optional: true
     service:
       ports:
         - name: http
           number: 5678
           description: HTTP
+    serviceMonitor: true
   - name: worker
     deployment:
       type: deployment
