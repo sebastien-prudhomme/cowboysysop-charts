@@ -1,12 +1,12 @@
 name: local-ai
 productName: LocalAI
-appVersion: 1.20.1
+appVersion: 1.21.0
 description: is <<a drop-in replacement REST API compatible with OpenAI API specifications for local inferencing>>
 home: https://localai.io/
 icon: https://user-images.githubusercontent.com/2420543/233147843-88697415-6dbf-4368-a862-ab217f9f7342.jpeg
 license: 2023
 source: https://github.com/go-skynet/LocalAI
-version: 1.5.0
+version: 1.6.0
 components:
   - name: local-ai
     configmap: |
@@ -39,8 +39,6 @@ components:
             value: {{ .Values.config.galleries | toJson | quote }}
           - name: PRELOAD_MODELS_CONFIG
             value: /config/preload-models.json
-          - name: REBUILD
-            value: "false"
         livenessProbe:
           httpGet:
             path: /healthz
@@ -59,7 +57,7 @@ components:
     image:
       registry: quay.io
       repository: go-skynet/local-ai
-      tag: v1.20.1-ffmpeg
+      tag: v1.21.0-ffmpeg
     ingress: true
     persistentvolumeclaim: true
     service:
