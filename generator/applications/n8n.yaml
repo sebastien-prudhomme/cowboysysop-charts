@@ -60,7 +60,7 @@ components:
             valueFrom:
               secretKeyRef:
                 name: {{ include "n8n.secretName" . }}
-                key: {{ include "n8n.secretKeyNamePassword" . }}
+                key: {{ include "n8n.secretKeyNameSmtpPassword" . }}
         livenessProbe:
           initialDelaySeconds: 180
           httpGet:
