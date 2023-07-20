@@ -13,6 +13,8 @@ components:
       type: deployment
       container:
         env: |
+          # - name: N8N_LOG_LEVEL
+          #   value: "debug"
           - name: DB_TYPE
             value: postgresdb
           - name: DB_POSTGRESDB_HOST
@@ -53,8 +55,8 @@ components:
           - name: N8N_SMTP_PORT
             value: {{ .Values.smtp.port | quote }}
           - name: N8N_SMTP_SSL
-            value: {{ .Values.smtp.ssl | quote }}
-          {{- if and .Values.smtp.username .Values.smtp.password }}
+            value: {{ ternary "true" "false" .Values.smtp.ssl | quote }}
+          # {{- if and .Values.smtp.username .Values.smtp.password }}
           - name: N8N_SMTP_USER
             value: {{ .Values.smtp.username | quote }}
           - name: N8N_SMTP_PASS
@@ -62,7 +64,7 @@ components:
               secretKeyRef:
                 name: {{ include "n8n.secretName" . }}
                 key: {{ include "n8n.secretKeyNameSmtpPassword" . }}
-          {{- end }}
+          # {{- end }}
         livenessProbe:
           initialDelaySeconds: 180
           httpGet:
@@ -81,9 +83,9 @@ components:
     metrics:
       optional: true
     secret: |
-      {{- if and .Values.smtp.username .Values.smtp.password }}
+      # {{- if and .Values.smtp.username .Values.smtp.password }}
       n8n-smtp-password: {{ .Values.smtp.password | b64enc | quote }}
-      {{- end }}
+      # {{- end }}
     secretKeyHelpers: |
       {{/*
       SMTP password secret key name
@@ -104,6 +106,22 @@ components:
           number: 5678
           description: HTTP
     serviceMonitor: true
+    extraValues: |
+      smtp:
+        ## @param smtp.host SMTP host
+        host: ""
+
+        ## @param smtp.port SMTP port
+        port: 587
+
+        ## @param smtp.ssl Whether to use SSL for SMTP
+        ssl: false
+
+        ## @param smtp.username SMTP username
+        username: ""
+
+        ## @param smtp.password SMTP password
+        password: ""
   - name: worker
     description: Worker
     deployment:
@@ -161,22 +179,6 @@ components:
       registry: docker.io
       repository: n8nio/n8n
       tag: 1.0.4
-extraValues: |
-  smtp:
-    ## @param smtp.host SMTP host
-    host: ""
-
-    ## @param smtp.host SMTP port
-    port: 587
-
-    ## @param smtp.host Whether to use SSL for SMTP
-    ssl: false
-
-    ## @param smtp.username SMTP username
-    username: ""
-
-    ## @param smtp.password SMTP password
-    password: ""
 postgresql: true
 redis: true
 tests: |
