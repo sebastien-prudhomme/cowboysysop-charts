@@ -54,6 +54,7 @@ components:
             value: {{ .Values.smtp.port | quote }}
           - name: N8N_SMTP_SSL
             value: {{ .Values.smtp.ssl | quote }}
+          {{- if and .Values.smtp.username .Values.smtp.password }}
           - name: N8N_SMTP_USER
             value: {{ .Values.smtp.username | quote }}
           - name: N8N_SMTP_PASS
@@ -61,6 +62,7 @@ components:
               secretKeyRef:
                 name: {{ include "n8n.secretName" . }}
                 key: {{ include "n8n.secretKeyNameSmtpPassword" . }}
+          {{- end }}
         livenessProbe:
           initialDelaySeconds: 180
           httpGet:
@@ -79,7 +81,9 @@ components:
     metrics:
       optional: true
     secret: |
+      {{- if and .Values.smtp.username .Values.smtp.password }}
       n8n-smtp-password: {{ .Values.smtp.password | b64enc | quote }}
+      {{- end }}
     secretKeyHelpers: |
       {{/*
       SMTP password secret key name
