@@ -84,7 +84,7 @@ components:
       {{/*
       SMTP password secret key name
       */}}
-      {{- define "n8n.secretKeySmtpPassword" -}}
+      {{- define "n8n.secretKeyNameSmtpPassword" -}}
       {{- if .Values.existingSecret -}}
           {{ .Values.existingSecretKeySmtpPassword }}
       {{- else -}}
