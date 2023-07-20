@@ -1,6 +1,6 @@
 name: n8n
 productName: N8n
-appVersion: 1.0.3
+appVersion: 1.0.4
 description: is <<an extendable workflow automation tool>>
 home: https://n8n.io/
 icon: https://raw.githubusercontent.com/cowboysysop/charts/master/charts/n8n/icon.png
@@ -48,6 +48,17 @@ components:
           {{- end }}
           - name: N8N_PORT
             value: {{ .Values.containerPorts.http | quote }}
+          - name: N8N_SMTP_HOST
+            value: {{ include "smtp.host" . | quote }}
+          - name: N8N_SMTP_PORT
+            value: {{ include "smtp.port" . | quote }}
+          - name: N8N_SMTP_USER
+            value: {{ include "smtp.username" . | quote }}
+          - name: N8N_SMTP_PASS
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "n8n.secretName" . }}
+                key: {{ include "n8n.secretKeyNamePassword" . }}
         livenessProbe:
           initialDelaySeconds: 180
           httpGet:
@@ -61,10 +72,26 @@ components:
     image:
       registry: docker.io
       repository: n8nio/n8n
-      tag: 1.0.3
+      tag: 1.0.4
     ingress: true
     metrics:
       optional: true
+    secret: |
+      n8n-smtp-password: {{ .Values.smtp.password | b64enc | quote }}
+    secretKeyHelpers: |
+      {{/*
+      SMTP password secret key name
+      */}}
+      {{- define "n8n.secretKeySmtpPassword" -}}
+      {{- if .Values.existingSecret -}}
+          {{ .Values.existingSecretKeySmtpPassword }}
+      {{- else -}}
+          n8n-smtp-password
+      {{- end -}}
+      {{- end -}}
+    secretKeyValues: |
+      ## @param existingSecretKeySmtpPassword Name of the key in existing Secret that contains SMTP password
+      existingSecretKeySmtpPassword: n8n-smtp-password
     service:
       ports:
         - name: http
@@ -79,21 +106,21 @@ components:
         args: |
           - worker
         env: |
-          - name: DB_TYPE
-            value: postgresdb
-          - name: DB_POSTGRESDB_HOST
-            value: {{ include "n8n.postgresql.host" . | quote }}
-          - name: DB_POSTGRESDB_PORT
-            value: {{ include "n8n.postgresql.port" . | quote }}
-          - name: DB_POSTGRESDB_USER
-            value: {{ include "n8n.postgresql.username" . | quote }}
-          - name: DB_POSTGRESDB_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: {{ include "n8n.postgresql.secretName" . }}
-                key: {{ include "n8n.postgresql.secretKeyNamePassword" . }}
-          - name: DB_POSTGRESDB_DATABASE
-            value: {{ include "n8n.postgresql.database" . | quote }}
+          # - name: DB_TYPE
+          #   value: postgresdb
+          # - name: DB_POSTGRESDB_HOST
+          #   value: {{ include "n8n.postgresql.host" . | quote }}
+          # - name: DB_POSTGRESDB_PORT
+          #   value: {{ include "n8n.postgresql.port" . | quote }}
+          # - name: DB_POSTGRESDB_USER
+          #   value: {{ include "n8n.postgresql.username" . | quote }}
+          # - name: DB_POSTGRESDB_PASSWORD
+          #   valueFrom:
+          #     secretKeyRef:
+          #       name: {{ include "n8n.postgresql.secretName" . }}
+          #       key: {{ include "n8n.postgresql.secretKeyNamePassword" . }}
+          # - name: DB_POSTGRESDB_DATABASE
+          #   value: {{ include "n8n.postgresql.database" . | quote }}
           - name: QUEUE_BULL_REDIS_HOST
             value: {{ include "n8n.redis.host" . | quote }}
           - name: QUEUE_BULL_REDIS_PORT
@@ -127,7 +154,23 @@ components:
     image:
       registry: docker.io
       repository: n8nio/n8n
-      tag: 1.0.3
+      tag: 1.0.4
+extraValues: |
+  smtp:
+    ## @param smtp.host SMTP host
+    host: ""
+
+    ## @param smtp.host SMTP port
+    port: 587
+
+    ## @param smtp.host Whether to use SSL for SMTP
+    ssl: false
+
+    ## @param smtp.username SMTP username
+    username: ""
+
+    ## @param smtp.password SMTP password
+    password: ""
 postgresql: true
 redis: true
 tests: |
