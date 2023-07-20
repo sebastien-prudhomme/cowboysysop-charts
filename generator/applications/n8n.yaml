@@ -49,11 +49,13 @@ components:
           - name: N8N_PORT
             value: {{ .Values.containerPorts.http | quote }}
           - name: N8N_SMTP_HOST
-            value: {{ include "smtp.host" . | quote }}
+            value: {{ .Values.smtp.host | quote }}
           - name: N8N_SMTP_PORT
-            value: {{ include "smtp.port" . | quote }}
+            value: {{ .Values.smtp.port | quote }}
+          - name: N8N_SMTP_SSL
+            value: {{ .Values.smtp.ssl | quote }}
           - name: N8N_SMTP_USER
-            value: {{ include "smtp.username" . | quote }}
+            value: {{ .Values.smtp.username | quote }}
           - name: N8N_SMTP_PASS
             valueFrom:
               secretKeyRef:
