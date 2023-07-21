@@ -65,6 +65,10 @@ components:
                 name: {{ include "n8n.secretName" . }}
                 key: {{ include "n8n.secretKeyNameSmtpPassword" . }}
           # {{- end }}
+          - name: N8N_EDITOR_BASE_URL
+            value: {{ .Values.externalUrl | quote }}
+          - name: WEBHOOK_URL
+            value: {{ .Values.externalUrl | quote }}
         livenessProbe:
           initialDelaySeconds: 180
           httpGet:
