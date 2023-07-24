@@ -1,6 +1,6 @@
 name: whoami
 productName: Whoami
-appVersion: 1.9.0
+appVersion: 1.10.1
 description: is a <<tiny Go webserver that prints os information and HTTP request to output>>
 home: https://github.com/traefik/whoami
 license: 2020
@@ -46,7 +46,7 @@ components:
     image:
       registry: docker.io
       repository: traefik/whoami
-      tag: v1.9.0
+      tag: v1.10.1
     ingress: true
     service:
       ports:
