@@ -467,9 +467,9 @@ metrics:
   [% if component.metrics.optional %]
   ## @param [[ component_yaml_path ]]metrics.enabled Enable the export of Prometheus metrics
   enabled: false
+
   [% endif %]
   [% if component.metrics.ports %]
-
   service:
     ## @param [[ component_yaml_path ]]metrics.service.annotations Metrics service annotations
     annotations: {}
