@@ -5,7 +5,7 @@ description: is a <<chart image and QR code web API>>
 home: https://quickchart.io/
 license: 2021
 source: https://github.com/typpo/quickchart
-version: 3.1.0
+version: 3.1.1
 updates: |
   ### Upgrading to version 3.0.0
 

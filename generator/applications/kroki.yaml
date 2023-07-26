@@ -6,7 +6,7 @@ home: https://kroki.io/
 icon: https://raw.githubusercontent.com/yuzutech/kroki.io/master/assets/favicon-196x196.png
 license: 2021
 source: https://github.com/yuzutech/kroki
-version: 3.2.0
+version: 3.2.1
 updates: |
   ### Upgrading to version 3.0.0
 

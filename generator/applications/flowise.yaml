@@ -6,7 +6,7 @@ home: https://flowiseai.com/
 icon: https://avatars.githubusercontent.com/u/128289781
 license: 2023
 source: https://github.com/FlowiseAI/Flowise
-version: 1.1.1
+version: 1.1.2
 components:
   - name: flowise
     deployment:
