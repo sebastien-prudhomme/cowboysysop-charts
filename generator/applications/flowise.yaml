@@ -6,7 +6,13 @@ home: https://flowiseai.com/
 icon: https://avatars.githubusercontent.com/u/128289781
 license: 2023
 source: https://github.com/FlowiseAI/Flowise
-version: 1.1.2
+version: 2.0.0
+updates: |
+  ### Upgrading to version 2.0.0
+
+  The chart is now tested with Kubernetes >= 1.24 and Helm >= 3.9.
+
+  Future upgrades may introduce undetected breaking changes if you continue to use older versions.
 components:
   - name: flowise
     deployment:

@@ -6,7 +6,13 @@ home: https://localai.io/
 icon: https://user-images.githubusercontent.com/2420543/233147843-88697415-6dbf-4368-a862-ab217f9f7342.jpeg
 license: 2023
 source: https://github.com/go-skynet/LocalAI
-version: 1.6.1
+version: 2.0.0
+updates: |
+  ### Upgrading to version 2.0.0
+
+  The chart is now tested with Kubernetes >= 1.24 and Helm >= 3.9.
+
+  Future upgrades may introduce undetected breaking changes if you continue to use older versions.
 components:
   - name: local-ai
     configmap: |
