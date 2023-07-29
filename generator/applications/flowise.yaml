@@ -1,6 +1,6 @@
 name: flowise
 productName: Flowise
-appVersion: 1.3.0
+appVersion: 1.3.1
 description: is a <<drag & drop UI to build your customized LLM flow>>
 home: https://flowiseai.com/
 icon: https://avatars.githubusercontent.com/u/128289781
@@ -39,7 +39,7 @@ components:
             value: {{ include "flowise.mariadb.host" . | quote }}
           - name: DATABASE_PORT
             value: {{ include "flowise.mariadb.port" . | quote }}
-          - name: DATABASE_USERNAME
+          - name: DATABASE_USER
             value: {{ include "flowise.mariadb.username" . | quote }}
           - name: DATABASE_PASSWORD
             valueFrom:
@@ -81,7 +81,7 @@ components:
     image:
       registry: docker.io
       repository: flowiseai/flowise
-      tag: 1.3.0
+      tag: 1.3.1
     ingress: true
     persistentvolumeclaim: true
     service:
