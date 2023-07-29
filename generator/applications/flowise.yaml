@@ -54,9 +54,9 @@ components:
           {{- if or .Values.postgresql.enabled .Values.externalPostgresql.enabled }}
           - name: DATABASE_TYPE
             value: postgres
-          - name: DATABASE_PORT
+          - name: DATABASE_HOST
             value: {{ include "flowise.postgresql.host" . | quote }}
-          - name: POSTGRESQL_PORT
+          - name: DATABASE_PORT
             value: {{ include "flowise.postgresql.port" . | quote }}
           - name: DATABASE_USER
             value: {{ include "flowise.postgresql.username" . | quote }}
