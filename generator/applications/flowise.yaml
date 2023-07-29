@@ -17,6 +17,8 @@ components:
   - name: flowise
     deployment:
       type: deployment
+      waitMariadb: true
+      waitPostgresql: true
       container:
         command: |
           - /bin/sh

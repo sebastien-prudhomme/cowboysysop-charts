@@ -741,6 +741,45 @@ externalRedis:
   ## @param externalRedis.existingSecretKeyPassword Name of the key in existing Secret that contains Redis password
   existingSecretKeyPassword: redis-password
 [% endif %]
+[% if application.mariadb or application.postgresql or application.redis %]
+
+## @section Wait parameters
+
+wait:
+  image:
+    ## @param wait.image.registry Image registry
+    registry: docker.io
+
+    ## @param wait.image.repository Image repository
+    repository: atkrad/wait4x
+
+    ## @param wait.image.tag Image tag
+    tag: 2.13.0
+
+    ## @param wait.image.digest Image digest
+    digest: ""
+
+    ## @param wait.image.pullPolicy Image pull policy
+    pullPolicy: IfNotPresent
+
+  ## @param wait.securityContext Container security context
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+
+  ## @param wait.resources CPU/Memory resource requests/limits
+  resources: {}
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+[% endif %]
 [% if application.crds %]
 
 ## @section CRDs parameters

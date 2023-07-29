@@ -84,8 +84,9 @@ spec:
       serviceAccountName: {{ include "[[ application.name ]][[ component_values_path ]]serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values[[ component_values_path ]]podSecurityContext | nindent 8 }}
-      [% if component.deployment.initContainer %]
+      [% if component.deployment.initContainer or component.deployment.waitMariadb or component.deployment.waitPostgresql %]
       initContainers:
+        [% if component.deployment.initContainer %]
         - name: init
           securityContext:
             {{- toYaml .Values[[ component_values_path ]]init.securityContext | nindent 12 }}
@@ -101,6 +102,37 @@ spec:
           volumeMounts:
             [[ component.deployment.initContainer.volumeMounts | indent(12) | trim ]]
           [% endif %]
+        [% endif %]
+        [% if component.deployment.waitMariadb %]
+        {{- if or .Values.mariadb.enabled .Values.externalMariadb.enabled }}
+        - name: wait-mariadb
+          securityContext:
+            {{- toYaml .Values.wait.securityContext | nindent 12 }}
+          image: {{ include "common.images.image" ( dict "imageRoot" .Values.wait.image "global" .Values.global ) }}
+          imagePullPolicy: {{ .Values.wait.image.pullPolicy }}
+          command:
+            - /bin/sh
+            - -ec
+            - |
+              wait4x mysql "${MARIADB_USERNAME}:${MARIADB_PASSWORD}@tcp(${MARIADB_HOST}:${MARIADB_PORT})/${MARIADB_DATABASE}" --timeout 0
+          env:
+            - name: MARIADB_HOST
+              value: {{ include "flowise.mariadb.host" . | quote }}
+            - name: MARIADB_PORT
+              value: {{ include "flowise.mariadb.port" . | quote }}
+            - name: MARIADB_USERNAME
+              value: {{ include "flowise.mariadb.username" . | quote }}
+            - name: MARIADB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "flowise.mariadb.secretName" . }}
+                  key: {{ include "flowise.mariadb.secretKeyNamePassword" . }}
+            - name: MARIADB_DATABASE
+              value: {{ include "flowise.mariadb.database" . | quote }}
+          resources:
+            {{- toYaml .Values.wait.resources | nindent 12 }}
+        {{- end }}
+        [% endif %]
       [% endif %]
       containers:
         - name: [[ component.name ]]
