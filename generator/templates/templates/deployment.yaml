@@ -133,6 +133,36 @@ spec:
             {{- toYaml .Values.wait.resources | nindent 12 }}
         {{- end }}
         [% endif %]
+        [% if component.deployment.waitPostgresql %]
+        {{- if or .Values.postgresql.enabled .Values.externalPostgresql.enabled }}
+        - name: wait-postgresql
+          securityContext:
+            {{- toYaml .Values.wait.securityContext | nindent 12 }}
+          image: {{ include "common.images.image" ( dict "imageRoot" .Values.wait.image "global" .Values.global ) }}
+          imagePullPolicy: {{ .Values.wait.image.pullPolicy }}
+          command:
+            - /bin/sh
+            - -ec
+            - |
+              wait4x postgresql "postgres://${POSTGRESQL_USERNAME}:${POSTGRESQL_PASSWORD}@${POSTGRESQL_HOST}:${POSTGRESQL_PORT}/${POSTGRESQL_DATABASE}?sslmode=disable" --timeout 0
+          env:
+            - name: POSTGRESQL_HOST
+              value: {{ include "flowise.postgresql.host" . | quote }}
+            - name: POSTGRESQL_PORT
+              value: {{ include "flowise.postgresql.port" . | quote }}
+            - name: POSTGRESQL_USERNAME
+              value: {{ include "flowise.postgresql.username" . | quote }}
+            - name: POSTGRESQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "flowise.postgresql.secretName" . }}
+                  key: {{ include "flowise.postgresql.secretKeyNamePassword" . }}
+            - name: POSTGRESQL_DATABASE
+              value: {{ include "flowise.postgresql.database" . | quote }}
+          resources:
+            {{- toYaml .Values.wait.resources | nindent 12 }}
+        {{- end }}
+        [% endif %]
       [% endif %]
       containers:
         - name: [[ component.name ]]
