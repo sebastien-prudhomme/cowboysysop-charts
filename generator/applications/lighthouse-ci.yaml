@@ -72,55 +72,55 @@ components:
       type: deployment
       container:
         env: |
-            - name: LHCI_LOG_LEVEL
-              value: {{ .Values.logLevel | quote }}
-            {{- if and .Values.basicAuthUsername .Values.basicAuthPassword }}
-            - name: LHCI_BASIC_AUTH__USERNAME
-              value: {{ .Values.basicAuthUsername | quote }}
-            - name: LHCI_BASIC_AUTH__PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "lighthouse-ci.secretName" . }}
-                  key: {{ include "lighthouse-ci.secretKeyNameBasicAuthPassword" . }}
-            {{- end }}
-            {{- if or .Values.mariadb.enabled .Values.externalMariadb.enabled }}
-            - name: LHCI_STORAGE__SQL_DIALECT
-              value: mysql
-            - name: MARIADB_HOST
-              value: {{ include "lighthouse-ci.mariadb.host" . | quote }}
-            - name: MARIADB_PORT
-              value: {{ include "lighthouse-ci.mariadb.port" . | quote }}
-            - name: MARIADB_USERNAME
-              value: {{ include "lighthouse-ci.mariadb.username" . | quote }}
-            - name: MARIADB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "lighthouse-ci.mariadb.secretName" . }}
-                  key: {{ include "lighthouse-ci.mariadb.secretKeyNamePassword" . }}
-            - name: MARIADB_DATABASE
-              value: {{ include "lighthouse-ci.mariadb.database" . | quote }}
-            - name: LHCI_STORAGE__SQL_CONNECTION_URL
-              value: "mysql://$(MARIADB_USERNAME):$(MARIADB_PASSWORD)@$(MARIADB_HOST):$(MARIADB_PORT)/$(MARIADB_DATABASE)"
-            {{- end }}
-            {{- if or .Values.postgresql.enabled .Values.externalPostgresql.enabled }}
-            - name: LHCI_STORAGE__SQL_DIALECT
-              value: postgres
-            - name: POSTGRESQL_HOST
-              value: {{ include "lighthouse-ci.postgresql.host" . | quote }}
-            - name: POSTGRESQL_PORT
-              value: {{ include "lighthouse-ci.postgresql.port" . | quote }}
-            - name: POSTGRESQL_USERNAME
-              value: {{ include "lighthouse-ci.postgresql.username" . | quote }}
-            - name: POSTGRESQL_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "lighthouse-ci.postgresql.secretName" . }}
-                  key: {{ include "lighthouse-ci.postgresql.secretKeyNamePassword" . }}
-            - name: POSTGRESQL_DATABASE
-              value: {{ include "lighthouse-ci.postgresql.database" . | quote }}
-            - name: LHCI_STORAGE__SQL_CONNECTION_URL
-              value: "postgres://$(POSTGRESQL_USERNAME):$(POSTGRESQL_PASSWORD)@$(POSTGRESQL_HOST):$(POSTGRESQL_PORT)/$(POSTGRESQL_DATABASE)"
-            {{- end }}
+          - name: LHCI_LOG_LEVEL
+            value: {{ .Values.logLevel | quote }}
+          {{- if and .Values.basicAuthUsername .Values.basicAuthPassword }}
+          - name: LHCI_BASIC_AUTH__USERNAME
+            value: {{ .Values.basicAuthUsername | quote }}
+          - name: LHCI_BASIC_AUTH__PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "lighthouse-ci.secretName" . }}
+                key: {{ include "lighthouse-ci.secretKeyNameBasicAuthPassword" . }}
+          {{- end }}
+          {{- if or .Values.mariadb.enabled .Values.externalMariadb.enabled }}
+          - name: LHCI_STORAGE__SQL_DIALECT
+            value: mysql
+          - name: MARIADB_HOST
+            value: {{ include "lighthouse-ci.mariadb.host" . | quote }}
+          - name: MARIADB_PORT
+            value: {{ include "lighthouse-ci.mariadb.port" . | quote }}
+          - name: MARIADB_USERNAME
+            value: {{ include "lighthouse-ci.mariadb.username" . | quote }}
+          - name: MARIADB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "lighthouse-ci.mariadb.secretName" . }}
+                key: {{ include "lighthouse-ci.mariadb.secretKeyNamePassword" . }}
+          - name: MARIADB_DATABASE
+            value: {{ include "lighthouse-ci.mariadb.database" . | quote }}
+          - name: LHCI_STORAGE__SQL_CONNECTION_URL
+            value: "mysql://$(MARIADB_USERNAME):$(MARIADB_PASSWORD)@$(MARIADB_HOST):$(MARIADB_PORT)/$(MARIADB_DATABASE)"
+          {{- end }}
+          {{- if or .Values.postgresql.enabled .Values.externalPostgresql.enabled }}
+          - name: LHCI_STORAGE__SQL_DIALECT
+            value: postgres
+          - name: POSTGRESQL_HOST
+            value: {{ include "lighthouse-ci.postgresql.host" . | quote }}
+          - name: POSTGRESQL_PORT
+            value: {{ include "lighthouse-ci.postgresql.port" . | quote }}
+          - name: POSTGRESQL_USERNAME
+            value: {{ include "lighthouse-ci.postgresql.username" . | quote }}
+          - name: POSTGRESQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "lighthouse-ci.postgresql.secretName" . }}
+                key: {{ include "lighthouse-ci.postgresql.secretKeyNamePassword" . }}
+          - name: POSTGRESQL_DATABASE
+            value: {{ include "lighthouse-ci.postgresql.database" . | quote }}
+          - name: LHCI_STORAGE__SQL_CONNECTION_URL
+            value: "postgres://$(POSTGRESQL_USERNAME):$(POSTGRESQL_PASSWORD)@$(POSTGRESQL_HOST):$(POSTGRESQL_PORT)/$(POSTGRESQL_DATABASE)"
+          {{- end }}
         livenessProbe:
           httpGet:
             path: /healthz
