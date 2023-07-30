@@ -223,9 +223,9 @@ MariaDB secret name
 {{- end -}}
 
 {{/*
-MariaDB password secret key name
+Key in Secret that contains MariaDB password
 */}}
-{{- define "[[ application.name ]].mariadb.secretKeyNamePassword" -}}
+{{- define "[[ application.name ]].mariadb.secretKeyPassword" -}}
 {{- if .Values.externalMariadb.existingSecret -}}
     {{ .Values.externalMariadb.existingSecretKeyPassword }}
 {{- else -}}
@@ -314,9 +314,9 @@ PostgreSQL secret name
 {{- end -}}
 
 {{/*
-PostgreSQL password secret key name
+Key in existing Secret that contains PostgreSQL password
 */}}
-{{- define "[[ application.name ]].postgresql.secretKeyNamePassword" -}}
+{{- define "[[ application.name ]].postgresql.secretKeyPassword" -}}
 {{- if .Values.externalPostgresql.existingSecret -}}
     {{ .Values.externalPostgresql.existingSecretKeyPassword }}
 {{- else -}}
@@ -390,9 +390,9 @@ Redis secret name
 {{- end -}}
 
 {{/*
-Redis password secret key name
+Key in existing Secret that contains Redis password
 */}}
-{{- define "[[ application.name ]].redis.secretKeyNamePassword" -}}
+{{- define "[[ application.name ]].redis.secretKeyPassword" -}}
 {{- if .Values.externalRedis.existingSecret -}}
     {{ .Values.externalRedis.existingSecretKeyPassword }}
 {{- else -}}

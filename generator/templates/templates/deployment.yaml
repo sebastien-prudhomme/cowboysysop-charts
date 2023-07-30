@@ -126,7 +126,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: {{ include "flowise.mariadb.secretName" . }}
-                  key: {{ include "flowise.mariadb.secretKeyNamePassword" . }}
+                  key: {{ include "flowise.mariadb.secretKeyPassword" . }}
             - name: MARIADB_DATABASE
               value: {{ include "flowise.mariadb.database" . | quote }}
           resources:
@@ -156,7 +156,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: {{ include "flowise.postgresql.secretName" . }}
-                  key: {{ include "flowise.postgresql.secretKeyNamePassword" . }}
+                  key: {{ include "flowise.postgresql.secretKeyPassword" . }}
             - name: POSTGRESQL_DATABASE
               value: {{ include "flowise.postgresql.database" . | quote }}
           resources:

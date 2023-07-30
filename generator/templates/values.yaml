@@ -626,7 +626,7 @@ externalMariadb:
   ## @param externalMariadb.existingSecret Name of existing Secret to use
   existingSecret: ""
 
-  ## @param externalMariadb.existingSecretKeyPassword Name of the key in existing Secret that contains MariaDB password
+  ## @param externalMariadb.existingSecretKeyPassword Key in existing Secret that contains MariaDB password
   existingSecretKeyPassword: mariadb-password
 
   ## @param externalMariadb.database External MariaDB database
@@ -689,7 +689,7 @@ externalPostgresql:
   ## @param externalPostgresql.existingSecret Name of existing Secret to use
   existingSecret: ""
 
-  ## @param externalPostgresql.existingSecretKeyPassword Name of the key in existing Secret that contains PostgreSQL password
+  ## @param externalPostgresql.existingSecretKeyPassword Key in existing Secret that contains PostgreSQL password
   existingSecretKeyPassword: password
 
   ## @param externalPostgresql.database External PostgreSQL database
@@ -738,7 +738,7 @@ externalRedis:
   ## @param externalRedis.existingSecret Name of existing Secret to use
   existingSecret: ""
 
-  ## @param externalRedis.existingSecretKeyPassword Name of the key in existing Secret that contains Redis password
+  ## @param externalRedis.existingSecretKeyPassword Key in existing Secret that contains Redis password
   existingSecretKeyPassword: redis-password
 [% endif %]
 [% if application.mariadb or application.postgresql or application.redis %]

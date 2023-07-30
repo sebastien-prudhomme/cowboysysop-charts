@@ -131,7 +131,7 @@ components:
       {{- end }}
     secretKeyHelpers: |
       {{/*
-      Administrator password secret key name
+      Key in Secret that contains administrator password
       */}}
       {{- define "dolibarr.secretKeyAdminPassword" -}}
       {{- if .Values.existingSecret -}}
@@ -142,7 +142,7 @@ components:
       {{- end -}}
 
       {{/*
-      Cron security key secret key name
+      Key in Secret that contains cron security key
       */}}
       {{- define "dolibarr.secretKeyCronSecurityKey" -}}
       {{- if .Values.existingSecret -}}
@@ -152,10 +152,10 @@ components:
       {{- end -}}
       {{- end -}}
     secretKeyValues: |
-      ## @param existingSecretKeyAdminPassword Name of the key in existing Secret that contains administrator password
+      ## @param existingSecretKeyAdminPassword Key in existing Secret that contains administrator password
       existingSecretKeyAdminPassword: dolibarr-admin-password
 
-      ## @param existingSecretKeyCronSecurityKey Name of the key in existing Secret that contains cron security key
+      ## @param existingSecretKeyCronSecurityKey Key in existing Secret that contains cron security key
       existingSecretKeyCronSecurityKey: dolibarr-cron-security-key
     service:
       ports:

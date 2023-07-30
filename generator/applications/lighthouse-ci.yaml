@@ -81,7 +81,7 @@ components:
             valueFrom:
               secretKeyRef:
                 name: {{ include "lighthouse-ci.secretName" . }}
-                key: {{ include "lighthouse-ci.secretKeyNameBasicAuthPassword" . }}
+                key: {{ include "lighthouse-ci.secretKeyBasicAuthPassword" . }}
           {{- end }}
           {{- if or .Values.mariadb.enabled .Values.externalMariadb.enabled }}
           - name: LHCI_STORAGE__SQL_DIALECT
@@ -96,7 +96,7 @@ components:
             valueFrom:
               secretKeyRef:
                 name: {{ include "lighthouse-ci.mariadb.secretName" . }}
-                key: {{ include "lighthouse-ci.mariadb.secretKeyNamePassword" . }}
+                key: {{ include "lighthouse-ci.mariadb.secretKeyPassword" . }}
           - name: MARIADB_DATABASE
             value: {{ include "lighthouse-ci.mariadb.database" . | quote }}
           - name: LHCI_STORAGE__SQL_CONNECTION_URL
@@ -115,7 +115,7 @@ components:
             valueFrom:
               secretKeyRef:
                 name: {{ include "lighthouse-ci.postgresql.secretName" . }}
-                key: {{ include "lighthouse-ci.postgresql.secretKeyNamePassword" . }}
+                key: {{ include "lighthouse-ci.postgresql.secretKeyPassword" . }}
           - name: POSTGRESQL_DATABASE
             value: {{ include "lighthouse-ci.postgresql.database" . | quote }}
           - name: LHCI_STORAGE__SQL_CONNECTION_URL
@@ -148,9 +148,9 @@ components:
       {{- end }}
     secretKeyHelpers: |
       {{/*
-      HTTP Basic Authentication password secret key name
+      Key in Secret that contains HTTP Basic Authentication password
       */}}
-      {{- define "lighthouse-ci.secretKeyNameBasicAuthPassword" -}}
+      {{- define "lighthouse-ci.secretKeyBasicAuthPassword" -}}
       {{- if .Values.existingSecret -}}
           {{ .Values.existingSecretKeyBasicAuthPassword }}
       {{- else -}}
@@ -158,7 +158,7 @@ components:
       {{- end -}}
       {{- end -}}
     secretKeyValues: |
-      ## @param existingSecretKeyBasicAuthPassword Name of the key in existing Secret that contains HTTP Basic Authentication password
+      ## @param existingSecretKeyBasicAuthPassword Key in existing Secret that contains HTTP Basic Authentication password
       existingSecretKeyBasicAuthPassword: basic-auth-password
     service:
       ports:

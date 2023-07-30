@@ -27,7 +27,7 @@ components:
             valueFrom:
               secretKeyRef:
                 name: {{ include "n8n.postgresql.secretName" . }}
-                key: {{ include "n8n.postgresql.secretKeyNamePassword" . }}
+                key: {{ include "n8n.postgresql.secretKeyPassword" . }}
           - name: DB_POSTGRESDB_DATABASE
             value: {{ include "n8n.postgresql.database" . | quote }}
             {{- if .Values.metrics.enabled }}
@@ -63,7 +63,7 @@ components:
             valueFrom:
               secretKeyRef:
                 name: {{ include "n8n.secretName" . }}
-                key: {{ include "n8n.secretKeyNameSmtpPassword" . }}
+                key: {{ include "n8n.secretKeySmtpPassword" . }}
           # {{- end }}
           - name: N8N_EDITOR_BASE_URL
             value: {{ .Values.externalUrl | quote }}
@@ -92,9 +92,9 @@ components:
       # {{- end }}
     secretKeyHelpers: |
       {{/*
-      SMTP password secret key name
+      Key in Secret that contains SMTP password
       */}}
-      {{- define "n8n.secretKeyNameSmtpPassword" -}}
+      {{- define "n8n.secretKeySmtpPassword" -}}
       {{- if .Values.existingSecret -}}
           {{ .Values.existingSecretKeySmtpPassword }}
       {{- else -}}
@@ -102,7 +102,7 @@ components:
       {{- end -}}
       {{- end -}}
     secretKeyValues: |
-      ## @param existingSecretKeySmtpPassword Name of the key in existing Secret that contains SMTP password
+      ## @param existingSecretKeySmtpPassword Key in existing Secret that contains SMTP password
       existingSecretKeySmtpPassword: n8n-smtp-password
     service:
       ports:
@@ -146,7 +146,7 @@ components:
           #   valueFrom:
           #     secretKeyRef:
           #       name: {{ include "n8n.postgresql.secretName" . }}
-          #       key: {{ include "n8n.postgresql.secretKeyNamePassword" . }}
+          #       key: {{ include "n8n.postgresql.secretKeyPassword" . }}
           # - name: DB_POSTGRESDB_DATABASE
           #   value: {{ include "n8n.postgresql.database" . | quote }}
           - name: QUEUE_BULL_REDIS_HOST
@@ -157,7 +157,7 @@ components:
             valueFrom:
               secretKeyRef:
                 name: {{ include "n8n.redis.secretName" . }}
-                key: {{ include "n8n.redis.secretKeyNamePassword" . }}
+                key: {{ include "n8n.redis.secretKeyPassword" . }}
           - name: QUEUE_HEALTH_CHECK_ACTIVE
             value: "true"
           - name: QUEUE_HEALTH_CHECK_PORT
