@@ -58,12 +58,12 @@ spec:
         checksum/configmap: {{ include (print $.Template.BasePath "[[ component_file_path ]]configmap.yaml") . | sha256sum }}
         [% endif %]
         [% if component.secret %]
-        {{- if (not .Values[[ component_values_path ]]existingSecret) }}
+        {{- if not .Values[[ component_values_path ]]existingSecret }}
         checksum/secret: {{ include (print $.Template.BasePath "[[ component_file_path ]]secret.yaml") . | sha256sum }}
         {{- end }}
         [% endif %]
         [% if component.tls %]
-        {{- if (not .Values[[ component_values_path ]]tls.existingSecret) }}
+        {{- if not .Values[[ component_values_path ]]tls.existingSecret }}
         checksum/tls-secret: {{ include (print $.Template.BasePath "[[ component_file_path ]]tls-secret.yaml") . | sha256sum }}
         {{- end }}
         [% endif %]
