@@ -28,6 +28,15 @@ components:
         env: |
           - name: PORT
             value: {{ .Values.containerPorts.http | quote }}
+          {{- if and .Values.config.username .Values.config.password }}
+          - name: FLOWISE_USERNAME
+            value: {{ .Values.config.username | quote }}
+          - name: FLOWISE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "flowise.secretName" . }}
+                key: {{ include "flowise.secretKeyPassword" . }}
+          {{- end }}
           - name: APIKEY_PATH
             value: /data
           - name: SECRETKEY_PATH
@@ -94,12 +103,26 @@ components:
     ingress: true
     persistentvolumeclaim: true
     secret: |
+      {{- if and .Values.config.username .Values.config.password }}
+      password: {{ .Values.config.password | b64enc | quote }}
+      {{- end }}
       passphrase: {{ .Values.config.passphrase | b64enc | quote }}
     secretKeyHelpers: |
       {{/*
+      Key in Secret that contains password
+      */}}
+      {{- define "flowise.secretKeyPassword" -}}
+      {{- if .Values.existingSecret -}}
+          {{ .Values.existingSecretKeyPassword }}
+      {{- else -}}
+          password
+      {{- end -}}
+      {{- end -}}
+
+      {{/*
       Key in Secret that contains passphrase
       */}}
-      {{- define "dolibarr.secretKeyPassphrase" -}}
+      {{- define "flowise.secretKeyPassphrase" -}}
       {{- if .Values.existingSecret -}}
           {{ .Values.existingSecretKeyPassphrase }}
       {{- else -}}
@@ -107,6 +130,9 @@ components:
       {{- end -}}
       {{- end -}}
     secretKeyValues: |
+      ## @param existingSecretKeyPassword Key in existing Secret that contains password
+      existingSecretKeyPassword: password
+
       ## @param existingSecretKeyPassphrase Key in existing Secret that contains passphrase
       existingSecretKeyPassphrase: passphrase
     service:
@@ -119,7 +145,13 @@ components:
       ## @section Config parameters
 
       config:
-        ## @param config.passphrase Secret phrase used to create encryption key
+        ## @param config.username Username to login
+        username: ""
+
+        ## @param config.password Password to login
+        password: ""
+
+        ## @param config.passphrase Passphrase used to create encryption key
         passphrase: MYPASSPHRASE
 
         ## @param config.executionMode Whether predictions run in their own process or the main process
