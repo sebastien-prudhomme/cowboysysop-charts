@@ -314,7 +314,7 @@ PostgreSQL secret name
 {{- end -}}
 
 {{/*
-Key in existing Secret that contains PostgreSQL password
+Key in Secret that contains PostgreSQL password
 */}}
 {{- define "[[ application.name ]].postgresql.secretKeyPassword" -}}
 {{- if .Values.externalPostgresql.existingSecret -}}
@@ -390,7 +390,7 @@ Redis secret name
 {{- end -}}
 
 {{/*
-Key in existing Secret that contains Redis password
+Key in Secret that contains Redis password
 */}}
 {{- define "[[ application.name ]].redis.secretKeyPassword" -}}
 {{- if .Values.externalRedis.existingSecret -}}
