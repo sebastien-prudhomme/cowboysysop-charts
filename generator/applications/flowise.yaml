@@ -141,9 +141,6 @@ components:
           number: 3000
           description: HTTP
     extraValues: |
-
-      ## @section Config parameters
-
       config:
         ## @param config.username Username to login
         username: ""

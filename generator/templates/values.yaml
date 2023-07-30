@@ -551,6 +551,8 @@ persistence:
 [% endif %]
 [% if component.extraValues %]
 
+## @section Config parameters
+
 [[ component.extraValues | trim ]]
 [% endif %]
 [% if component.secret %]
