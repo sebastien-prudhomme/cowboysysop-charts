@@ -1,12 +1,12 @@
 name: local-ai
 productName: LocalAI
-appVersion: 1.22.0
+appVersion: 1.23.2
 description: is <<a drop-in replacement REST API compatible with OpenAI API specifications for local inferencing>>
 home: https://localai.io/
 icon: https://user-images.githubusercontent.com/2420543/233147843-88697415-6dbf-4368-a862-ab217f9f7342.jpeg
 license: 2023
 source: https://github.com/go-skynet/LocalAI
-version: 2.1.0
+version: 2.2.0
 updates: |
   ### Upgrading to version 2.0.0
 
@@ -63,7 +63,7 @@ components:
     image:
       registry: quay.io
       repository: go-skynet/local-ai
-      tag: v1.22.0-ffmpeg
+      tag: v1.23.2-ffmpeg
     ingress: true
     persistentvolumeclaim: true
     service:
