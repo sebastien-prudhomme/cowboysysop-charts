@@ -1,6 +1,6 @@
 name: n8n
 productName: N8n
-appVersion: 1.0.4
+appVersion: 1.1.1
 description: is <<an extendable workflow automation tool>>
 home: https://n8n.io/
 icon: https://raw.githubusercontent.com/cowboysysop/charts/master/charts/n8n/icon.png
@@ -12,9 +12,16 @@ components:
     deployment:
       type: deployment
       container:
+        # args: |
+        #   - start
+        #   - --tunnel
         env: |
-          # - name: N8N_LOG_LEVEL
-          #   value: "debug"
+          - name: N8N_LOG_LEVEL
+            value: "debug"
+          - name: GENERIC_TIMEZONE
+            value: "Europe/Paris"
+          - name: TZ
+            value: "Europe/Paris"
           - name: DB_TYPE
             value: postgresdb
           - name: DB_POSTGRESDB_HOST
@@ -48,8 +55,12 @@ components:
           # - name: N8N_METRICS_INCLUDE_API_STATUS_CODE_LABEL
           #   value: "true"
           {{- end }}
+          - name: N8N_ENCRYPTION_KEY
+            value: "test"
           - name: N8N_PORT
             value: {{ .Values.containerPorts.http | quote }}
+          - name: N8N_DIAGNOSTICS_ENABLED
+            value: "false"
           - name: N8N_SMTP_HOST
             value: {{ .Values.smtp.host | quote }}
           - name: N8N_SMTP_PORT
@@ -82,7 +93,7 @@ components:
     image:
       registry: docker.io
       repository: n8nio/n8n
-      tag: 1.0.4
+      tag: 1.1.1
     ingress: true
     metrics:
       optional: true
@@ -182,7 +193,7 @@ components:
     image:
       registry: docker.io
       repository: n8nio/n8n
-      tag: 1.0.4
+      tag: 1.1.1
 postgresql: true
 redis: true
 tests: |
