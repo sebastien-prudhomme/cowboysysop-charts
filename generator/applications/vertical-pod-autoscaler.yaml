@@ -7,7 +7,7 @@ home: https://github.com/kubernetes/autoscaler
 icon: https://raw.githubusercontent.com/kubernetes/kubernetes/master/logo/logo.svg
 license: 2020
 source: https://github.com/kubernetes/autoscaler
-version: 9.0.1
+version: 9.1.0
 prerequisites: |
   - Metrics Server >= 0.2 (you can use the [bitnami/metrics-server](https://artifacthub.io/packages/helm/bitnami/metrics-server) chart)
 updates: |
