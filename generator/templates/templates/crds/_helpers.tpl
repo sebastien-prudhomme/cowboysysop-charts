@@ -20,3 +20,11 @@ Common labels
 {{ include "[[ application.name ]].labels" . }}
 {{ include "[[ application.name ]].crds.componentLabels" . }}
 {{- end -}}
+
+{{/*
+Selector labels
+*/}}
+{{- define "[[ application.name ]].crds.selectorLabels" -}}
+{{ include "[[ application.name ]].selectorLabels" . }}
+{{ include "[[ application.name ]].crds.componentLabels" . }}
+{{- end -}}
