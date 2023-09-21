@@ -11,10 +11,10 @@ jobs:
           - v3.9.4 # renovate: helm
           - v3.10.3 # renovate: helm
           - v3.11.3 # renovate: helm
-          - v3.12.2 # renovate: helm
+          - v3.12.3 # renovate: helm
     steps:
       - name: Checkout
-        uses: actions/checkout@v3.5.3
+        uses: actions/checkout@v4.0.0
         with:
           fetch-depth: 0
 
@@ -26,7 +26,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4.7.0
         with:
-          python-version: 3.11.4 # renovate: python
+          python-version: 3.11.5 # renovate: python
 
       - name: Set up chart-testing
         uses: helm/chart-testing-action@v2.4.0
@@ -55,19 +55,19 @@ jobs:
           - v1.27.3 # renovate: kindest/node
     steps:
       - name: Checkout
-        uses: actions/checkout@v3.5.3
+        uses: actions/checkout@v4.0.0
         with:
           fetch-depth: 0
 
       - name: Set up Helm
         uses: azure/setup-helm@v3.5
         with:
-          version: v3.12.2 # renovate: helm
+          version: v3.12.3 # renovate: helm
 
       - name: Set up Python
         uses: actions/setup-python@v4.7.0
         with:
-          python-version: 3.11.4 # renovate: python
+          python-version: 3.11.5 # renovate: python
 
       - name: Set up chart-testing
         uses: helm/chart-testing-action@v2.4.0
@@ -93,24 +93,6 @@ jobs:
         with:
           node_image: kindest/node:${{ matrix.kubernetes }}
 
-      - name: Install cert-manager
-        run: |
-          kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.6.1/cert-manager.crds.yaml # renovate: cert-manager
-          helm repo add jetstack https://charts.jetstack.io/
-          helm install cert-manager jetstack/cert-manager -n cert-manager --create-namespace --version v1.6.1 --wait # renovate: cert-manager
-        if: steps.list-changed.outputs.changed == 'true'
-
-      - name: Install Istio
-        run: |
-          helm repo add istio https://istio-release.storage.googleapis.com/charts/
-          helm install istio-base istio/base -n istio-system --create-namespace --version v1.12.2 --wait # renovate: istio
-        if: steps.list-changed.outputs.changed == 'true'
-
-      - name: Install Knative Serving
-        run: |
-          kubectl apply -f https://github.com/knative/serving/releases/download/knative-v1.2.0/serving-crds.yaml # renovate: knative-serving
-        if: steps.list-changed.outputs.changed == 'true'
-
       - name: Run chart-testing (install)
         run: ct install --config ct.yaml --excluded-charts "${{ steps.list-excluded.outputs.excluded }}"
         if: steps.list-changed.outputs.changed == 'true'
@@ -118,11 +100,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3.5.3
+        uses: actions/checkout@v4.0.0
         with:
           fetch-depth: 0
 
       - name: Run Checkov
-        uses: bridgecrewio/checkov-action@v12.2453.0
+        uses: bridgecrewio/checkov-action@v12.2498.0
         with:
           config_file: checkov.yaml
