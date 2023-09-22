@@ -1,0 +1,13 @@
+apiVersion: skaffold/v2beta29
+kind: Config
+metadata:
+  name: qdrant
+deploy:
+  helm:
+    releases:
+      - name: qdrant
+        chartPath: .
+        namespace: qdrant
+        createNamespace: true
+        valuesFiles:
+          - qdrant.yaml

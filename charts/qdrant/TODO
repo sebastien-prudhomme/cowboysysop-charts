@@ -1,0 +1,97 @@
+Activation de QDRANT_ALLOW_RECOVERY_MODE ? Nécesssite à priori de configurer aussi QDRANT_INIT_FILE_PATH et de le mettre sur le PVC de data
+
+Arriver à merger dans la conf production.yaml, les valeurs imposé par le chart et celle par l'utilisateur (ou  tout remettre dans les values ?)
+  => lire https://rm3l.org/merging-dynamic-config-data-in-helm-charts/
+
+Revoir logique d'enregistrement ? Faire appel à l'API pour avoir les nodes du cluster et s'enregisterer auprès du premier si réponse
+
+Test Scale down : peer toujours dans la mémoire du cluster; Si on remet le replicat come avant, ca reprend correctement l'id du peer
+
+Gestion du downscale de replica controlé (sans panne du pod) : Faire un prestop à priori (https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#pod-termination), cas du dernier pod vivant ?
+-----
+In case you want to downscale the cluster, you can move all shards away from a peer and then remove the peer using Remove peer from the cluster API.
+
+DELETE /cluster/peer/{peer_id}
+
+After that, Qdrant will exclude the node from the consensus, and the instance will be ready for the shutdown.
+-----
+
+Ex de code :
+
++          # lifecycle:
++          #   preStop:
++          #     exec:
++          #       command:
++          #         - /bin/bash
++          #         - -ec
++          #         - |
++          #           récupérer le peer_id (manque curl et jq pour le faire facilement)
++          #           curl -X DELETE /cluster/peer/<id>
++          #           appel à l'API asynchrone avec le transfert des données vers les autres pod mettre un timeout ?
+
+curl http://10.42.0.188:6333/cluster | jq .
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   555  100   555    0     0   345k      0 --:--:-- --:--:-- --:--:--  541k
+{
+  "result": {
+    "status": "enabled",
+    "peer_id": 2530877876367596,
+    "peers": {
+      "2530877876367596": {
+        "uri": "http://qdrant-2.qdrant-headless:6335/"
+      },
+      "42350707779059": {
+        "uri": "http://qdrant-1.qdrant-headless:6335/"
+      },
+      "4653596402950108": {
+        "uri": "http://qdrant-0.qdrant-headless:6335/"
+      }
+    },
+    "raft_info": {
+      "term": 3,
+      "commit": 7,
+      "pending_operations": 0,
+      "leader": 4653596402950108,
+      "role": "Follower",
+      "is_voter": true
+    },
+    "consensus_thread_status": {
+      "consensus_thread_status": "working",
+      "last_update": "2023-06-11T08:18:36.613241867Z"
+    },
+    "message_send_failures": {}
+  },
+  "status": "ok",
+  "time": 1.0179e-05
+}
+
+
+
+Fait
+====
+
+* Icon PNG 256x256 en décochant tout dans Gimp
+
+* Regarder ce que fait de different le chart officiel :
+  - juste permettre de restaurer un snapshot en mode 1 pod
+
+* With current tick period of 100ms, leader will be established in approximately 4000ms. To avoid rejected operations - add peers and submit operations only after this period.
+  -> 40 x plus grand que le tick period (c'est dans l'implémentation Raft de Rust)
+
+Plus tard
+=========
+
+* Permettre d'activer/désactiver http ou grpc ?
+
+* Ingress posssible pour port GRPC ? Non pas en standard. Seule soluton, passer par la Gateway API
+
+* Proposer un ServiceMonitor : https://github.com/qdrant/qdrant-helm/commit/dc6e6090185702cec0a255dad2dc03493a200304
+
+* Test connection GRPC (déjà fait pour autre projet)
+  - Le code ne katib ne fonctionne pas, n'implémente à priori pas le healthchecl standard grpc
+  - Separer test_service_connection en 1 test HTTP et 1 test GRPC ?
+
+* p2p protocol = grpc/protobuf et pas tcp ?
+
+* retravailler la NOTE pour faire apparaitre le dashboard (cf katib, comment gérer l'ingress ?)
