@@ -1,0 +1,26 @@
+Clé OpenAI : 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
+
+commande de telechargement des modeles à lancer dans initcontainer et enlever commentaire sur le fait de devoir configurer le initial delay du probe
+
+virer le configmap et mettre tout en env ? gallery ne propose pas encore de fichier de config
+
+REBUILD: rendre possible sa configuration ?
+
+GLOBAL OPTIONS:
+   --f16                          (default: false) [$F16]
+   --debug                        (default: false) [$DEBUG]
+   --cors                         (default: false) [$CORS]
+   --cors-allow-origins value      [$CORS_ALLOW_ORIGINS]
+   --threads value                Number of threads used for parallel computation. Usage of the number of physical cores in the system is suggested. (default: 4) [$THREADS]
+   STATIQUE --models-path value            Path containing models used for inferencing (default: "/build/models") [$MODELS_PATH]
+   OUI --galleries value              JSON list of galleries [$GALLERIES]
+   NON --preload-models value         A List of models to apply in JSON at start [$PRELOAD_MODELS]
+   OUI --preload-models-config value  A List of models to apply at startup. Path to a YAML config file [$PRELOAD_MODELS_CONFIG]
+   --config-file value            Config file [$CONFIG_FILE]
+   STATIQUE --address value                Bind address for the API server. (default: ":8080") [$ADDRESS]
+   STATIQUE --image-path value             Image directory [$IMAGE_PATH]
+   STATIQUE --audio-path value             audio directory (default: "/tmp/generated/audio") [$AUDIO_PATH]
+   --backend-assets-path value    Path used to extract libraries that are required by some of the backends in runtime. (default: "/tmp/localai/backend_data") [$BACKEND_ASSETS_PATH]
+   --context-size value           Default context size of the model (default: 512) [$CONTEXT_SIZE]
+   --upload-limit value           Default upload-limit. MB (default: 15) [$UPLOAD_LIMIT]
+   --api-keys                     List of API Keys to enable API authentication. When this is set, all the requests must be authenticated with one of these API keys. API_KEY
