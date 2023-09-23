@@ -3,7 +3,7 @@
 #wget http://192.168.1.51:8081/repository/huggingface-proxy/TheBloke/LLaMa-7B-GGML/resolve/main/llama-7b.ggmlv3.q4_0.bin
 #wget http://192.168.1.51:8081/repository/huggingface-proxy/TheBloke/Vigogne-Instruct-13B-GGML/resolve/main/Vigogne-Instruct-13B.ggmlv3.q4_0.bin
 
-#response=$(curl -s http://localhost:30000/models/apply -H "Content-Type: application/json" -d '{
+#response=$(curl -s http://local-ai.internal/models/apply -H "Content-Type: application/json" -d '{
 #  "url": "github:go-skynet/model-gallery/vicuna.yaml",
 #  "name": "vicuna",
 #  "overrides": { "parameters": {"model": "vicuna" } },
@@ -19,12 +19,12 @@
 
 #job_id=$(echo "$response" | jq -r '.uuid')
 
-#while [ "$(curl -s http://localhost:30000/models/jobs/"$job_id" | jq -r '.processed')" != "true" ]; do
+#while [ "$(curl -s http://local-ai.internal/models/jobs/"$job_id" | jq -r '.processed')" != "true" ]; do
 #  sleep 1
 #done
 
 
-curl http://localhost:30000/v1/chat/completions -H "Content-Type: application/json" -d '{
+curl http://local-ai.internal/v1/chat/completions -H "Content-Type: application/json" -d '{
      "model": "vicuna",
      "messages": [{"role": "user", "content": "Explique le théorème de Thales"}]
    }'
