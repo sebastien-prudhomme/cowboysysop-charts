@@ -16,7 +16,7 @@ sources:
 version: [[ application.version ]]
 dependencies:
   - name: common
-    version: 2.5.0
+    version: 2.9.0
     repository: https://charts.bitnami.com/bitnami/
   [% if application.mariadb %]
   - name: mariadb
@@ -32,7 +32,7 @@ dependencies:
   [% endif %]
   [% if application.postgresql %]
   - name: postgresql
-    version: 12.6.0
+    version: 12.11.1
     repository: https://charts.bitnami.com/bitnami/
     condition: postgresql.enabled
   [% endif %]
