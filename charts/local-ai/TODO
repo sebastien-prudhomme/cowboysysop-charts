@@ -8,7 +8,9 @@ REBUILD: rendre possible sa configuration ?
 
 GLOBAL OPTIONS:
    --f16                          (default: false) [$F16]
+   --autoload-galleries           (default: false) [$AUTOLOAD_GALLERIES]
    --debug                        (default: false) [$DEBUG]
+   STATIC à true ? --single-active-backend        Allow only one backend to be running. (default: false) [$SINGLE_ACTIVE_BACKEND]
    --cors                         (default: false) [$CORS]
    --cors-allow-origins value      [$CORS_ALLOW_ORIGINS]
    --threads value                Number of threads used for parallel computation. Usage of the number of physical cores in the system is suggested. (default: 4) [$THREADS]
@@ -21,6 +23,10 @@ GLOBAL OPTIONS:
    STATIQUE --image-path value             Image directory [$IMAGE_PATH]
    STATIQUE --audio-path value             audio directory (default: "/tmp/generated/audio") [$AUDIO_PATH]
    --backend-assets-path value    Path used to extract libraries that are required by some of the backends in runtime. (default: "/tmp/localai/backend_data") [$BACKEND_ASSETS_PATH]
+   --external-grpc-backends value [ --external-grpc-backends value ]  A list of external grpc backends [$EXTERNAL_GRPC_BACKENDS]
    --context-size value           Default context size of the model (default: 512) [$CONTEXT_SIZE]
    --upload-limit value           Default upload-limit. MB (default: 15) [$UPLOAD_LIMIT]
    --api-keys                     List of API Keys to enable API authentication. When this is set, all the requests must be authenticated with one of these API keys. API_KEY
+   --preload-backend-only         If set, the api is NOT launched, and only the preloaded models / backends are started. This is intended for multi-node setups. (default: false) [$PRELOAD_BACKEND_ONLY]
+
+Architecture multi-node avec --preload-backend-only et --external-grpc-backends sous forme URL ?
