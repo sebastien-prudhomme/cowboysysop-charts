@@ -1,13 +1,17 @@
 name: local-ai
 productName: LocalAI
-appVersion: 1.24.1
+appVersion: 1.25.0
 description: is <<a drop-in replacement REST API compatible with OpenAI API specifications for local inferencing>>
 home: https://localai.io/
 icon: https://user-images.githubusercontent.com/2420543/233147843-88697415-6dbf-4368-a862-ab217f9f7342.jpeg
 license: 2023
 source: https://github.com/go-skynet/LocalAI
-version: 2.3.0
+version: 3.0.0
 updates: |
+  ### Upgrading to version 3.0.0
+
+  The llama backend now uses the GGUF model format. Migrate to the llama-stable backend to continue using the GGML model format.
+
   ### Upgrading to version 2.0.0
 
   The chart is now tested with Kubernetes >= 1.24 and Helm >= 3.9.
@@ -63,7 +67,7 @@ components:
     image:
       registry: quay.io
       repository: go-skynet/local-ai
-      tag: v1.24.1-ffmpeg
+      tag: v1.25.0-ffmpeg
     ingress: true
     persistentvolumeclaim: true
     service:
