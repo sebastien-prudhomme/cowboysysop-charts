@@ -1,0 +1,22 @@
+apiVersion: skaffold/v2beta9
+kind: Config
+metadata:
+  name: vertical-pod-autoscaler
+deploy:
+  helm:
+    releases:
+      - name: vertical-pod-autoscaler
+        chartPath: .
+        namespace: vertical-pod-autoscaler
+        createNamespace: true
+        setValues:
+          commonLabels:
+            titi: toto
+          recommender:
+            extraArgs:
+              pod-recommendation-min-cpu-millicores: 1
+              pod-recommendation-min-memory-mb: 1
+          crds:
+            resources:
+              limits:
+                cpu: 1
