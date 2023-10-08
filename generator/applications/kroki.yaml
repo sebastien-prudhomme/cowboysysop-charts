@@ -1,13 +1,19 @@
 name: kroki
 productName: Kroki
-appVersion: 0.21.3
+appVersion: 0.23.0
 description: <<creates diagrams from textual descriptions>>
 home: https://kroki.io/
 icon: https://raw.githubusercontent.com/yuzutech/kroki.io/master/assets/favicon-196x196.png
 license: 2021
 source: https://github.com/yuzutech/kroki
-version: 4.0.0
+version: 5.0.0
 updates: |
+  ### Upgrading to version 5.0.0
+
+  BlockDiag and WireViz are now available in the main Kroki container.
+
+  All parameters related to BlockDiag and WireViz have been removed.
+
   ### Upgrading to version 4.0.0
 
   The chart is now tested with Kubernetes >= 1.24 and Helm >= 3.9.
@@ -42,16 +48,6 @@ components:
           httpGet:
             path: /health
       containers:
-        - name: blockdiag
-          asComponent: true
-          description: BlockDiag
-          optional: true
-          image:
-            repository: yuzutech/kroki-blockdiag
-          ports:
-            - name: http
-              number: 8001
-              description: HTTP
         - name: bpmn
           asComponent: true
           description: BPMN
@@ -92,20 +88,10 @@ components:
             - name: http
               number: 8002
               description: HTTP
-        - name: wireviz
-          asComponent: true
-          description: WireViz
-          optional: true
-          image:
-            repository: yuzutech/kroki-wireviz
-          ports:
-            - name: http
-              number: 8006
-              description: HTTP
     image:
       registry: docker.io
       repository: yuzutech/kroki
-      tag: 0.21.3
+      tag: 0.23.0
     ingress: true
     service:
       ports:
