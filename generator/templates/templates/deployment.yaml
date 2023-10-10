@@ -81,7 +81,13 @@ spec:
       {{- if .Values[[ component_values_path ]]priorityClassName }}
       priorityClassName: {{ .Values[[ component_values_path ]]priorityClassName | quote }}
       {{- end }}
+      {{- if .Values[[ component_values_path ]]runtimeClassName }}
+      runtimeClassName: {{ .Values[[ component_values_path ]]runtimeClassName | quote }}
+      {{- end }}
       serviceAccountName: {{ include "[[ application.name ]][[ component_values_path ]]serviceAccountName" . }}
+      {{- if .Values[[ component_values_path ]]topologySpreadConstraints }}
+      topologySpreadConstraints: {{- include "common.tplvalues.render" (dict "value" .Values[[ component_values_path ]]topologySpreadConstraints "context" .) | nindent 8 }}
+      {{- end }}
       securityContext:
         {{- toYaml .Values[[ component_values_path ]]podSecurityContext | nindent 8 }}
       [% if component.deployment.initContainer or component.deployment.waitMariadb or component.deployment.waitPostgresql %]

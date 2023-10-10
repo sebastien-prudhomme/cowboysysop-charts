@@ -134,6 +134,12 @@ podSecurityContext: {}
 priorityClassName:
 # priorityClassName : high-priority
 
+## @param [[ component_yaml_path ]]runtimeClassName Runtime class name
+runtimeClassName: ""
+
+## @param [[ component_yaml_path ]]topologySpreadConstraints Topology Spread Constraints for pod assignment
+topologySpreadConstraints: []
+
 ## @param [[ component_yaml_path ]]securityContext Container security context
 securityContext: {}
   # capabilities:
