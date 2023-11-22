@@ -1,3 +1,5 @@
+Activer le ServiceMonitor Prometheus
+
 Clé OpenAI : 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
 
 commande de telechargement des modeles à lancer dans initcontainer et enlever commentaire sur le fait de devoir configurer le initial delay du probe
