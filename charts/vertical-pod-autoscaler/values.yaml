@@ -77,6 +77,9 @@ admissionController:
     ## @param admissionController.serviceAccount.name The name of the service account to use (Generated using the `vertical-pod-autoscaler.fullname` template if not set)
     name:
 
+  ## @param admissionController.deploymentAnnotations Additional deployment annotations
+  deploymentAnnotations: {}
+
   ## @param admissionController.podAnnotations Additional pod annotations
   podAnnotations: {}
 
@@ -329,6 +332,9 @@ recommender:
 
     ## @param recommender.serviceAccount.name The name of the service account to use (Generated using the `vertical-pod-autoscaler.fullname` template if not set)
     name:
+
+  ## @param recommender.deploymentAnnotations Additional deployment annotations
+  deploymentAnnotations: {}
 
   ## @param recommender.podAnnotations Additional pod annotations
   podAnnotations: {}
@@ -589,6 +595,9 @@ updater:
     ## @param updater.serviceAccount.name The name of the service account to use (Generated using the `vertical-pod-autoscaler.fullname` template if not set)
     name:
 
+  ## @param updater.deploymentAnnotations Additional deployment annotations
+  deploymentAnnotations: {}
+
   ## @param updater.podAnnotations Additional pod annotations
   podAnnotations: {}
 
@@ -801,6 +810,14 @@ crds:
   ## @param crds.podLabels Additional pod labels
   podLabels: {}
 
+  ## @extra crds.podSecurityContext Pod security context
+  ## @param crds.podSecurityContext.runAsNonRoot Whether the container must run as a non-root user
+  ## @param crds.podSecurityContext.runAsUser The UID to run the entrypoint of the container process
+  podSecurityContext:
+    # fsGroup: 2000
+    runAsNonRoot: true
+    runAsUser: 65534
+
   ## @param crds.resources CPU/Memory resource requests/limits
   resources: {}
     # limits:
@@ -812,6 +829,15 @@ crds:
 
   ## @param crds.nodeSelector Node labels for pod assignment
   nodeSelector: {}
+
+  ## @param crds.securityContext Container security context
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
 
   ## @param crds.tolerations Tolerations for pod assignment
   tolerations: []
