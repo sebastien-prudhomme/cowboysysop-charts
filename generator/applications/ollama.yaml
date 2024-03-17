@@ -1,0 +1,52 @@
+name: ollama
+productName: Ollama
+appVersion: 0.1.28
+description: allows <<get up and running with large language models, locally>>
+home: https://ollama.com/
+icon: https://raw.githubusercontent.com/cowboysysop/charts/master/charts/ollama/icon.png
+license: 2024
+source: https://github.com/ollama/ollama
+version: 1.0.0
+components:
+  - name: ollama
+    deployment:
+      type: deployment
+      container:
+        env: |
+          - name: OLLAMA_HOST
+            value: ":{{ .Values.containerPorts.http }}"
+          - name: OLLAMA_MODELS
+            value: /data/models
+        livenessProbe:
+          httpGet:
+            path: /
+        readinessProbe:
+          httpGet:
+            path: /
+        startupProbe:
+          httpGet:
+            path: /
+        volumeMounts: |
+          - name: data
+            mountPath: /data
+    image:
+      registry: docker.io
+      repository: ollama/ollama
+      tag: 0.1.28
+    ingress: true
+    persistentvolumeclaim: true
+    service:
+      ports:
+        - name: http
+          number: 11434
+          description: HTTP
+tests: |
+  import requests
+
+
+  def test_service_connection():
+      url = "http://{{ include "ollama.fullname" . }}:{{ .Values.service.ports.http }}/"
+
+      response = requests.get(url)
+
+      assert response.status_code == 200
