@@ -6,8 +6,17 @@ home: https://www.dolibarr.org/
 icon: https://raw.githubusercontent.com/Dolibarr/dolibarr/develop/doc/images/dolibarr_256x256_color.svg
 license: 2022
 source: https://github.com/Dolibarr/dolibarr
-version: 4.0.0
+version: 5.0.0
 updates: |
+  ### Upgrading to version 5.0.0
+
+  The MariaDB subchart has been updated to a major release, see these upgrade instructions:
+
+  - https://github.com/bitnami/charts/tree/master/bitnami/mariadb#to-1700
+  - https://github.com/bitnami/charts/tree/master/bitnami/mariadb#to-1600
+  - https://github.com/bitnami/charts/tree/master/bitnami/mariadb#to-1400
+  - https://github.com/bitnami/charts/tree/master/bitnami/mariadb#to-1300
+
   ### Upgrading to version 4.0.0
 
   The chart is now tested with Kubernetes >= 1.24 and Helm >= 3.9.

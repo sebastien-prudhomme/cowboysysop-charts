@@ -8,6 +8,7 @@ python3 generator.py applications/local-ai.yaml
 python3 generator.py applications/mongo-express.yaml
 python3 generator.py applications/n8n.yaml
 python3 generator.py applications/ollama.yaml
+python3 generator.py applications/open-webui.yaml
 python3 generator.py applications/qdrant.yaml
 python3 generator.py applications/quickchart.yaml
 python3 generator.py applications/vertical-pod-autoscaler.yaml

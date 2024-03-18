@@ -20,7 +20,7 @@ dependencies:
     repository: https://charts.bitnami.com/bitnami/
   [% if application.mariadb %]
   - name: mariadb
-    version: 11.5.7
+    version: 17.0.0
     repository: https://charts.bitnami.com/bitnami/
     condition: mariadb.enabled
   [% endif %]
@@ -32,7 +32,7 @@ dependencies:
   [% endif %]
   [% if application.postgresql %]
   - name: postgresql
-    version: 12.11.1
+    version: 15.0.0
     repository: https://charts.bitnami.com/bitnami/
     condition: postgresql.enabled
   [% endif %]
