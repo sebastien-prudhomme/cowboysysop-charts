@@ -16,7 +16,7 @@ sources:
 version: [[ application.version ]]
 dependencies:
   - name: common
-    version: 2.9.0
+    version: 2.19.0
     repository: https://charts.bitnami.com/bitnami/
   [% if application.mariadb %]
   - name: mariadb
