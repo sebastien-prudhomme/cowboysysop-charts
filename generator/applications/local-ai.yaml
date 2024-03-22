@@ -8,6 +8,14 @@ license: 2023
 source: https://github.com/go-skynet/LocalAI
 version: 3.0.0
 updates: |
+
+The trust_remote_code setting in the YAML config file of the model are now consumed for enhanced security measures also for the AutoGPTQ and transformers backend, thanks to @dave-gray101's contribution (#1799). If your model relied on the old behavior and you are sure of what you are doing, set trust_remote_code: true in the YAML config file.
+
+backend supprimé, cf evoliton de https://github.com/mudler/LocalAI/blob/master/docs/content/docs/reference/compatibility-table.md
+= bloomz, dolly, falcon, falcon-ggml, gpt2, gptj, gptneox, mpt, replit, starcoder
+
+rename llama-stable to llama-ggml
+
   ### Upgrading to version 3.0.0
 
   The llama backend now uses the GGUF model format. Migrate to the llama-stable backend to continue using the GGML model format.
@@ -24,17 +32,6 @@ components:
         {{- .Values.config.preloadModels | toPrettyJson | nindent 4 }}
     deployment:
       type: deployment
-      initContainer:
-        command: |
-          - /bin/bash
-          - -ec
-          - |
-            mkdir -p /data/generated-audio
-            mkdir -p /data/generated-images
-            mkdir -p /data/models
-        volumeMounts: |
-          - name: data
-            mountPath: /data
       container:
         env: |
           - name: ADDRESS
