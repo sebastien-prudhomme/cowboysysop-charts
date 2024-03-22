@@ -1,12 +1,12 @@
 name: kroki
 productName: Kroki
-appVersion: 0.23.0
+appVersion: 0.24.1
 description: <<creates diagrams from textual descriptions>>
 home: https://kroki.io/
 icon: https://raw.githubusercontent.com/yuzutech/kroki.io/master/assets/favicon-196x196.png
 license: 2021
 source: https://github.com/yuzutech/kroki
-version: 5.0.0
+version: 5.1.0
 updates: |
   ### Upgrading to version 5.0.0
 
@@ -91,7 +91,7 @@ components:
     image:
       registry: docker.io
       repository: yuzutech/kroki
-      tag: 0.23.0
+      tag: 0.24.1
     ingress: true
     service:
       ports:
