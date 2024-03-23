@@ -17,6 +17,8 @@ updates: |
 
   rename llama-stable to llama-ggml
 
+  Faire le switch vers v2.10.1-ffmpeg-core (sans dépendances Python, cf la doc)
+
   ### Upgrading to version 3.0.0
 
   The llama backend now uses the GGUF model format. Migrate to the llama-stable backend to continue using the GGML model format.
@@ -65,7 +67,7 @@ components:
     image:
       registry: quay.io
       repository: go-skynet/local-ai
-      tag: v2.10.1-ffmpeg
+      tag: v2.10.1-ffmpeg-core
     ingress: true
     persistentvolumeclaim: true
     service:
