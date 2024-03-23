@@ -1,20 +1,21 @@
 name: local-ai
 productName: LocalAI
-appVersion: 1.25.0
+appVersion: 2.10.1
 description: is <<a drop-in replacement REST API compatible with OpenAI API specifications for local inferencing>>
 home: https://localai.io/
 icon: https://user-images.githubusercontent.com/2420543/233147843-88697415-6dbf-4368-a862-ab217f9f7342.jpeg
 license: 2023
 source: https://github.com/go-skynet/LocalAI
-version: 3.0.0
+version: 4.0.0
 updates: |
+  ### Upgrading to version 4.0.0
 
-The trust_remote_code setting in the YAML config file of the model are now consumed for enhanced security measures also for the AutoGPTQ and transformers backend, thanks to @dave-gray101's contribution (#1799). If your model relied on the old behavior and you are sure of what you are doing, set trust_remote_code: true in the YAML config file.
+  The trust_remote_code setting in the YAML config file of the model are now consumed for enhanced security measures also for the AutoGPTQ and transformers backend, thanks to @dave-gray101's contribution (#1799). If your model relied on the old behavior and you are sure of what you are doing, set trust_remote_code: true in the YAML config file.
 
-backend supprimé, cf evoliton de https://github.com/mudler/LocalAI/blob/master/docs/content/docs/reference/compatibility-table.md
-= bloomz, dolly, falcon, falcon-ggml, gpt2, gptj, gptneox, mpt, replit, starcoder
+  backend supprimé, cf evoliton de https://github.com/mudler/LocalAI/blob/master/docs/content/docs/reference/compatibility-table.md
+  = bloomz, dolly, falcon, falcon-ggml, gpt2, gptj, gptneox, mpt, replit, starcoder
 
-rename llama-stable to llama-ggml
+  rename llama-stable to llama-ggml
 
   ### Upgrading to version 3.0.0
 
@@ -64,7 +65,7 @@ components:
     image:
       registry: quay.io
       repository: go-skynet/local-ai
-      tag: v1.25.0-ffmpeg
+      tag: v2.10.1-ffmpeg
     ingress: true
     persistentvolumeclaim: true
     service:

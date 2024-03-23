@@ -20,7 +20,7 @@ dependencies:
     repository: https://charts.bitnami.com/bitnami/
   [% if application.mariadb %]
   - name: mariadb
-    version: 17.0.0
+    version: 17.0.1
     repository: https://charts.bitnami.com/bitnami/
     condition: mariadb.enabled
   [% endif %]
