@@ -85,6 +85,8 @@ components:
         }
     deployment:
       type: deployment
+      waitMariadb: true
+      waitPostgresql: true
       container:
         env: |
           - name: LHCI_LOG_LEVEL

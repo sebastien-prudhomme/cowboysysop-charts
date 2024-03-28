@@ -11,6 +11,8 @@ components:
   - name: n8n
     deployment:
       type: deployment
+      waitPostgresql: true
+      # waitRedis: true
       container:
         # args: |
         #   - start
@@ -141,6 +143,7 @@ components:
     description: Worker
     deployment:
       type: deployment
+      # waitRedis: true
       container:
         args: |
           - worker

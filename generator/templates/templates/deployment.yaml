@@ -123,18 +123,18 @@ spec:
               wait4x mysql "${MARIADB_USERNAME}:${MARIADB_PASSWORD}@tcp(${MARIADB_HOST}:${MARIADB_PORT})/${MARIADB_DATABASE}" --timeout 0
           env:
             - name: MARIADB_HOST
-              value: {{ include "flowise.mariadb.host" . | quote }}
+              value: {{ include "[[ application.name ]].mariadb.host" . | quote }}
             - name: MARIADB_PORT
-              value: {{ include "flowise.mariadb.port" . | quote }}
+              value: {{ include "[[ application.name ]].mariadb.port" . | quote }}
             - name: MARIADB_USERNAME
-              value: {{ include "flowise.mariadb.username" . | quote }}
+              value: {{ include "[[ application.name ]].mariadb.username" . | quote }}
             - name: MARIADB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "flowise.mariadb.secretName" . }}
-                  key: {{ include "flowise.mariadb.secretKeyPassword" . }}
+                  name: {{ include "[[ application.name ]].mariadb.secretName" . }}
+                  key: {{ include "[[ application.name ]].mariadb.secretKeyPassword" . }}
             - name: MARIADB_DATABASE
-              value: {{ include "flowise.mariadb.database" . | quote }}
+              value: {{ include "[[ application.name ]].mariadb.database" . | quote }}
           resources:
             {{- toYaml .Values.wait.resources | nindent 12 }}
         {{- end }}
@@ -153,18 +153,18 @@ spec:
               wait4x postgresql "postgres://${POSTGRESQL_USERNAME}:${POSTGRESQL_PASSWORD}@${POSTGRESQL_HOST}:${POSTGRESQL_PORT}/${POSTGRESQL_DATABASE}?sslmode=disable" --timeout 0
           env:
             - name: POSTGRESQL_HOST
-              value: {{ include "flowise.postgresql.host" . | quote }}
+              value: {{ include "[[ application.name ]].postgresql.host" . | quote }}
             - name: POSTGRESQL_PORT
-              value: {{ include "flowise.postgresql.port" . | quote }}
+              value: {{ include "[[ application.name ]].postgresql.port" . | quote }}
             - name: POSTGRESQL_USERNAME
-              value: {{ include "flowise.postgresql.username" . | quote }}
+              value: {{ include "[[ application.name ]].postgresql.username" . | quote }}
             - name: POSTGRESQL_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "flowise.postgresql.secretName" . }}
-                  key: {{ include "flowise.postgresql.secretKeyPassword" . }}
+                  name: {{ include "[[ application.name ]].postgresql.secretName" . }}
+                  key: {{ include "[[ application.name ]].postgresql.secretKeyPassword" . }}
             - name: POSTGRESQL_DATABASE
-              value: {{ include "flowise.postgresql.database" . | quote }}
+              value: {{ include "[[ application.name ]].postgresql.database" . | quote }}
           resources:
             {{- toYaml .Values.wait.resources | nindent 12 }}
         {{- end }}
