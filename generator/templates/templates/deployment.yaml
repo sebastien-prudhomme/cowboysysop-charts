@@ -110,7 +110,9 @@ spec:
           [% endif %]
         [% endif %]
         [% if component.deployment.waitMariadb %]
+        [% if application.mariadb == "optional" %]
         {{- if or .Values.mariadb.enabled .Values.externalMariadb.enabled }}
+        [% endif %]
         - name: wait-mariadb
           securityContext:
             {{- toYaml .Values.wait.securityContext | nindent 12 }}
@@ -137,10 +139,14 @@ spec:
               value: {{ include "[[ application.name ]].mariadb.database" . | quote }}
           resources:
             {{- toYaml .Values.wait.resources | nindent 12 }}
+        [% if application.mariadb == "optional" %]
         {{- end }}
         [% endif %]
+        [% endif %]
         [% if component.deployment.waitPostgresql %]
+        [% if application.postgresql == "optional" %]
         {{- if or .Values.postgresql.enabled .Values.externalPostgresql.enabled }}
+        [% endif %]
         - name: wait-postgresql
           securityContext:
             {{- toYaml .Values.wait.securityContext | nindent 12 }}
@@ -167,7 +173,9 @@ spec:
               value: {{ include "[[ application.name ]].postgresql.database" . | quote }}
           resources:
             {{- toYaml .Values.wait.resources | nindent 12 }}
+        [% if application.postgresql == "optional" %]
         {{- end }}
+        [% endif %]
         [% endif %]
       [% endif %]
       containers:
