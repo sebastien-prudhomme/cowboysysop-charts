@@ -1,12 +1,12 @@
 name: flowise
 productName: Flowise
-appVersion: 1.6.0
+appVersion: 1.6.2
 description: is a <<drag & drop UI to build your customized LLM flow>>
 home: https://flowiseai.com/
 icon: https://avatars.githubusercontent.com/u/128289781
 license: 2023
 source: https://github.com/FlowiseAI/Flowise
-version: 3.0.0
+version: 3.1.1
 updates: |
   ### Upgrading to version 3.0.0
 
@@ -111,7 +111,7 @@ components:
     image:
       registry: docker.io
       repository: flowiseai/flowise
-      tag: 1.6.0
+      tag: 1.6.2
     ingress: true
     persistentvolumeclaim: true
     secret: |

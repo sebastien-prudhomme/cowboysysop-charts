@@ -32,7 +32,7 @@ dependencies:
   [% endif %]
   [% if application.postgresql %]
   - name: postgresql
-    version: 15.0.0
+    version: 15.1.4
     repository: https://charts.bitnami.com/bitnami/
     condition: postgresql.enabled
   [% endif %]
