@@ -1,12 +1,12 @@
 name: mongo-express
 productName: Mongo Express
-appVersion: 0.54.0
+appVersion: 1.0.2
 description: is a <<web-based MongoDB admin interface, written with Node.js and express>>
 home: https://github.com/mongo-express/mongo-express
 icon: https://raw.githubusercontent.com/mongo-express/mongo-express/master/public/images/mongo-express-logo.png
 license: 2020
 source: https://github.com/mongo-express/mongo-express
-version: 5.0.0
+version: 5.1.0
 updates: |
   ### Upgrading to version 5.0.0
 
@@ -39,30 +39,46 @@ components:
       type: deployment
       container:
         env: |
-          - name: ME_CONFIG_MONGODB_SERVER
+          - name: PORT
+            value: {{ .Values.containerPorts.http | quote }}
+          - name: MONGODB_SERVER
             value: {{ .Values.mongodbServer | quote }}
-          - name: ME_CONFIG_MONGODB_PORT
+          - name: MONGODB_PORT
             value: {{ .Values.mongodbPort | quote }}
           - name: ME_CONFIG_MONGODB_ENABLE_ADMIN
             value: {{ .Values.mongodbEnableAdmin | quote }}
           {{- if .Values.mongodbEnableAdmin }}
-          - name: ME_CONFIG_MONGODB_ADMINUSERNAME
+          {{- if and .Values.mongodbAdminUsername .Values.mongodbAdminPassword}}
+          - name: MONGODB_USERNAME
             value: {{ .Values.mongodbAdminUsername | quote }}
-          - name: ME_CONFIG_MONGODB_ADMINPASSWORD
+          - name: MONGODB_PASSWORD
             valueFrom:
               secretKeyRef:
                 name: {{ include "mongo-express.secretName" . }}
                 key: mongodb-admin-password
+          - name: ME_CONFIG_MONGODB_URL
+            value: "mongodb://$(MONGODB_USERNAME):$(MONGODB_PASSWORD)@$(MONGODB_SERVER):$(MONGODB_PORT)/"
           {{- else }}
-          - name: ME_CONFIG_MONGODB_AUTH_DATABASE
+          - name: ME_CONFIG_MONGODB_URL
+            value: "mongodb://$(MONGODB_SERVER):$(MONGODB_PORT)/"
+          {{- end }}
+          {{- else }}
+          - name: MONGODB_DATABASE
             value: {{ .Values.mongodbAuthDatabase | quote }}
-          - name: ME_CONFIG_MONGODB_AUTH_USERNAME
+          {{- if and .Values.mongodbAuthUsername .Values.mongodbAuthPassword}}
+          - name: MONGODB_USERNAME
             value: {{ .Values.mongodbAuthUsername | quote }}
-          - name: ME_CONFIG_MONGODB_AUTH_PASSWORD
+          - name: MONGODB_PASSWORD
             valueFrom:
               secretKeyRef:
                 name: {{ include "mongo-express.secretName" . }}
                 key: mongodb-auth-password
+          - name: ME_CONFIG_MONGODB_URL
+            value: "mongodb://$(MONGODB_USERNAME):$(MONGODB_PASSWORD)@$(MONGODB_SERVER):$(MONGODB_PORT)/$(MONGODB_DATABASE)"
+          {{- else }}
+          - name: ME_CONFIG_MONGODB_URL
+            value: "mongodb://$(MONGODB_SERVER):$(MONGODB_PORT)/$(MONGODB_DATABASE)"
+          {{- end }}
           {{- end }}
           - name: ME_CONFIG_SITE_BASEURL
             value: {{ .Values.siteBaseUrl | quote }}
@@ -77,6 +93,8 @@ components:
                 name: {{ include "mongo-express.secretName" . }}
                 key: site-session-secret
           {{- if and .Values.basicAuthUsername .Values.basicAuthPassword }}
+          - name: ME_CONFIG_BASICAUTH
+            value: "true"
           - name: ME_CONFIG_BASICAUTH_USERNAME
             value: {{ .Values.basicAuthUsername | quote }}
           - name: ME_CONFIG_BASICAUTH_PASSWORD
@@ -84,10 +102,13 @@ components:
               secretKeyRef:
                 name: {{ include "mongo-express.secretName" . }}
                 key: basic-auth-password
+          {{- else }}
+          - name: ME_CONFIG_BASICAUTH
+            value: "false"
           {{- end }}
         livenessProbe:
           httpGet:
-            path: "{{ .Values.siteBaseUrl }}"
+            path: "{{ .Values.siteBaseUrl | trimSuffix \"/\" }}/status"
             extra: |
               {{- if and .Values.basicAuthUsername .Values.basicAuthPassword }}
               httpHeaders:
@@ -96,7 +117,7 @@ components:
               {{- end }}
         readinessProbe:
           httpGet:
-            path: "{{ .Values.siteBaseUrl }}"
+            path: "{{ .Values.siteBaseUrl | trimSuffix \"/\" }}/status"
             extra: |
               {{- if and .Values.basicAuthUsername .Values.basicAuthPassword }}
               httpHeaders:
@@ -105,7 +126,7 @@ components:
               {{- end }}
         startupProbe:
           httpGet:
-            path: "{{ .Values.siteBaseUrl }}"
+            path: "{{ .Values.siteBaseUrl | trimSuffix \"/\" }}/status"
             extra: |
               {{- if and .Values.basicAuthUsername .Values.basicAuthPassword }}
               httpHeaders:
@@ -115,7 +136,7 @@ components:
     image:
       registry: docker.io
       repository: mongo-express
-      tag: 0.54.0
+      tag: 1.0.2
     ingress: true
     ingressPath: "{{ .Values.siteBaseUrl }}"
     secret: |
@@ -129,34 +150,6 @@ components:
       {{- if and .Values.basicAuthUsername .Values.basicAuthPassword }}
       basic-auth-password: {{ .Values.basicAuthPassword | b64enc | quote }}
       {{- end }}
-    secretKeyHelpers: |
-      {{/*
-      Key in Secret that contains administrator password
-      */}}
-      {{- define "dolibarr.secretKeyAdminPassword" -}}
-      {{- if .Values.existingSecret -}}
-          {{ .Values.existingSecretKeyAdminPassword }}
-      {{- else -}}
-          dolibarr-admin-password
-      {{- end -}}
-      {{- end -}}
-
-      {{/*
-      Key in Secret that contains cron security key
-      */}}
-      {{- define "dolibarr.secretKeyCronSecurityKey" -}}
-      {{- if .Values.existingSecret -}}
-          {{ .Values.existingSecretKeyCronSecurityKey }}
-      {{- else -}}
-          dolibarr-cron-security-key
-      {{- end -}}
-      {{- end -}}
-    secretKeyValues: |
-      ## @param existingSecretKeyAdminPassword Key in existing Secret that contains administrator password
-      existingSecretKeyAdminPassword: dolibarr-admin-password
-
-      ## @param existingSecretKeyCronSecurityKey Key in existing Secret that contains cron security key
-      existingSecretKeyCronSecurityKey: dolibarr-cron-security-key
     service:
       ports:
         - name: http
@@ -185,14 +178,14 @@ components:
       ## @param mongodbAdminPassword Administrator password
       mongodbAdminPassword: ""
 
-      ## @param mongodbAuthDatabase Database name (only needed if `mongodbEnableAdmin` is `false`)
-      mongodbAuthDatabase: ""
-
       ## @param mongodbAuthUsername Database username (only needed if `mongodbEnableAdmin` is `false`)
       mongodbAuthUsername: ""
 
       ## @param mongodbAuthPassword Database password (only needed if `mongodbEnableAdmin` is `false`)
       mongodbAuthPassword: ""
+
+      ## @param mongodbAuthDatabase Database name (only needed if `mongodbEnableAdmin` is `false`)
+      mongodbAuthDatabase: ""
 
       ## @param siteBaseUrl Set the express baseUrl to ease mounting at a subdirectory
       siteBaseUrl: /
