@@ -19,7 +19,7 @@ PRoblem secret MongoExpress:
 
 
 
-wait4x Redis (essayer avec N8N) 
+wait4x Redis (essayer avec N8N)
 
 Mettre persistence: true partout ?
 
@@ -39,7 +39,6 @@ dolibarr (possible de changer ?)
 kroki
 kubebox
 kubeview
-mongo-express
 quickchart
 
 Activer startup probe de base ? Breaking change
