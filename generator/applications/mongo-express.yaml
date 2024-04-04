@@ -55,7 +55,7 @@ components:
             valueFrom:
               secretKeyRef:
                 name: {{ include "mongo-express.secretName" . }}
-                key: mongodb-admin-password
+                key: {{ include "mongo-express.secretKeyMongodbAdminPassword" . }}
           - name: ME_CONFIG_MONGODB_URL
             value: "mongodb://$(MONGODB_USERNAME):$(MONGODB_PASSWORD)@$(MONGODB_SERVER):$(MONGODB_PORT)/"
           {{- else }}
@@ -72,7 +72,7 @@ components:
             valueFrom:
               secretKeyRef:
                 name: {{ include "mongo-express.secretName" . }}
-                key: mongodb-auth-password
+                key: {{ include "mongo-express.secretKeyMongodbAuthPassword" . }}
           - name: ME_CONFIG_MONGODB_URL
             value: "mongodb://$(MONGODB_USERNAME):$(MONGODB_PASSWORD)@$(MONGODB_SERVER):$(MONGODB_PORT)/$(MONGODB_DATABASE)"
           {{- else }}
@@ -86,12 +86,12 @@ components:
             valueFrom:
               secretKeyRef:
                 name: {{ include "mongo-express.secretName" . }}
-                key: site-cookie-secret
+                key: {{ include "mongo-express.secretKeySiteCookieSecret" . }}
           - name: ME_CONFIG_SITE_SESSIONSECRET
             valueFrom:
               secretKeyRef:
                 name: {{ include "mongo-express.secretName" . }}
-                key: site-session-secret
+                key: {{ include "mongo-express.secretKeySiteSessionSecret" . }}
           {{- if and .Values.basicAuthUsername .Values.basicAuthPassword }}
           - name: ME_CONFIG_BASICAUTH
             value: "true"
@@ -101,7 +101,7 @@ components:
             valueFrom:
               secretKeyRef:
                 name: {{ include "mongo-express.secretName" . }}
-                key: basic-auth-password
+                key: {{ include "mongo-express.secretKeyBasicAuthPassword" . }}
           {{- else }}
           - name: ME_CONFIG_BASICAUTH
             value: "false"
@@ -150,6 +150,76 @@ components:
       {{- if and .Values.basicAuthUsername .Values.basicAuthPassword }}
       basic-auth-password: {{ .Values.basicAuthPassword | b64enc | quote }}
       {{- end }}
+    secretKeyHelpers: |
+      {{/*
+      Key in Secret that contains administrator password
+      */}}
+      {{- define "mongo-express.secretKeyMongodbAdminPassword" -}}
+      {{- if .Values.existingSecret -}}
+          {{ .Values.existingSecretKeyMongodbAdminPassword }}
+      {{- else -}}
+          mongodb-admin-password
+      {{- end -}}
+      {{- end -}}
+
+      {{/*
+      Key in Secret that contains database password
+      */}}
+      {{- define "mongo-express.secretKeyMongodbAuthPassword" -}}
+      {{- if .Values.existingSecret -}}
+          {{ .Values.existingSecretKeyMongodbAuthPassword }}
+      {{- else -}}
+          mongodb-auth-password
+      {{- end -}}
+      {{- end -}}
+
+      {{/*
+      Key in Secret that contains string used by cookie-parser middleware to sign cookies
+      */}}
+      {{- define "mongo-express.secretKeySiteCookieSecret" -}}
+      {{- if .Values.existingSecret -}}
+          {{ .Values.existingSecretKeySiteCookieSecret }}
+      {{- else -}}
+          site-cookie-secret
+      {{- end -}}
+      {{- end -}}
+
+      {{/*
+      Key in Secret that contains string used to sign the session ID cookie by express-session middleware
+      */}}
+      {{- define "mongo-express.secretKeySiteSessionSecret" -}}
+      {{- if .Values.existingSecret -}}
+          {{ .Values.existingSecretKeySiteSessionSecret }}
+      {{- else -}}
+          site-session-secret
+      {{- end -}}
+      {{- end -}}
+
+      {{/*
+      Key in Secret that contains Mongo Express web login password
+      */}}
+      {{- define "mongo-express.secretKeyBasicAuthPassword" -}}
+      {{- if .Values.existingSecret -}}
+          {{ .Values.existingSecretKeyBasicAuthPassword }}
+      {{- else -}}
+          basic-auth-password
+      {{- end -}}
+      {{- end -}}
+    secretKeyValues: |
+      ## @param existingSecretKeyMongodbAdminPassword Key in existing Secret that contains administrator password
+      existingSecretKeyMongodbAdminPassword: mongodb-admin-password
+
+      ## @param existingSecretKeyMongodbAuthPassword Key in existing Secret that contains database password
+      existingSecretKeyMongodbAuthPassword: mongodb-auth-password
+
+      ## @param existingSecretKeySiteCookieSecret Key in existing Secret that contains string used by cookie-parser middleware to sign cookies
+      existingSecretKeySiteCookieSecret: site-cookie-secret
+
+      ## @param existingSecretKeySiteSessionSecret Key in existing Secret that contains string used to sign the session ID cookie by express-session middleware
+      existingSecretKeySiteSessionSecret: site-session-secret
+
+      ## @param existingSecretKeyBasicAuthPassword Key in existing Secret that contains Mongo Express web login password
+      existingSecretKeyBasicAuthPassword: basic-auth-password
     service:
       ports:
         - name: http
@@ -199,7 +269,7 @@ components:
       ## @param basicAuthUsername Mongo Express web login name
       basicAuthUsername: ""
 
-      ## @param basicAuthPassword Mongo Express Web login password
+      ## @param basicAuthPassword Mongo Express web login password
       basicAuthPassword: ""
 mongodb: test
 tests: |
