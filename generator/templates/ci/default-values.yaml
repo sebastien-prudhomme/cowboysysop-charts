@@ -8,6 +8,8 @@ mariadb:
 mongodb:
   enabled: true
   fullnameOverride: mongodb
+  auth:
+    enabled: false
 [% endif %]
 [% if application.postgresql == "test" %]
 postgresql:
