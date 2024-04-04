@@ -1,24 +1,5 @@
 Modif bitnami common : https://github.com/bitnami/charts/commit/9a20483cfd1daa6bfe08fd8116516a9bb5cd9754
 
-PRoblem secret MongoExpress:
-
-      ## @param existingSecretKeyMongodbAdminPassword Key in existing Secret that contains administrator password
-      existingSecretKeyMongodbAdminPassword: mongodb-admin-password
-
-      ## @param existingSecretKeyMongodbAuthPassword Key in existing Secret that contains database password
-      existingSecretKeyMongodbAuthPassword: mongodb-auth-password
-
-      ## @param existingSecretKeySiteCookieSecret Key in existing Secret that contains XXX
-      existingSecretKeySiteCookieSecret: site-cookie-secret
-
-      ## @param existingSecretKeySiteSessionSecret Key in existing Secret that contains XXX
-      existingSecretKeySiteSessionSecret: site-session-secret
-
-      ## @param existingSecretKeyBasicAuthPassword Key in existing Secret that contains XXX
-      existingSecretKeyBasicAuthPassword basic-auth-password
-
-
-
 wait4x Redis (essayer avec N8N)
 
 Mettre persistence: true partout ?
@@ -28,8 +9,6 @@ Manque le fullnameoverride des bases dans CI aussi quand pas "test" et pas "opti
 Reintroduire la phrase d'intro de la configuration (toujours presente dans le template de README mais ecrasee par readme-generator)
 
 VPA: Passer le extra args de log level en config applicative
-
-Revoir completement mongo-express pour s'aligner sur ce que ferais un chart avec un vrai mongodb
 
 Possible de faire des template de template avec jinja2 (comme le filtre "tpl" de gotemplate) ?
 
