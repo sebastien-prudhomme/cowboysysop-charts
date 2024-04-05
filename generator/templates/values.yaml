@@ -129,6 +129,11 @@ podSecurityContext:
 podSecurityContext: {}
   # fsGroup: 2000
 [% endif %]
+[% if component.admissionWebhook %]
+
+## @param [[ component_yaml_path ]]hostNetwork Use the host network
+hostNetwork: false
+[% endif %]
 
 ## @param [[ component_yaml_path ]]priorityClassName Priority class name
 priorityClassName:

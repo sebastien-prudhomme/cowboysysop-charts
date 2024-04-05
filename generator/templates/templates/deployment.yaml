@@ -78,6 +78,12 @@ spec:
       [% endif %]
     spec:
       {{- include "common.images.pullSecrets" ( dict "images" ( list .Values[[ component_values_path ]]image ) "global" .Values.global ) | nindent 6 }}
+      [% if component.admissionWebhook %]
+      {{- if .Values[[ component_values_path ]]hostNetwork }}
+      dnsPolicy: ClusterFirstWithHostNet
+      hostNetwork: true
+      {{- end }}
+      [% endif %]
       {{- if .Values[[ component_values_path ]]priorityClassName }}
       priorityClassName: {{ .Values[[ component_values_path ]]priorityClassName | quote }}
       {{- end }}
