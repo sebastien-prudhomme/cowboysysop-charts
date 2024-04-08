@@ -102,6 +102,14 @@ serviceAccount:
   ## @param [[ component_yaml_path ]]serviceAccount.name The name of the service account to use (Generated using the `[[ application.name ]].fullname` template if not set)
   name:
 
+[% if component.deployment.type == "deployment" %]
+## @param [[ component_yaml_path ]]deploymentAnnotations Additional deployment annotations
+deploymentAnnotations: {}
+[% elif component.deployment.type == "statefulset" %]
+## @param [[ component_yaml_path ]]statefulsetAnnotations Additional statefulset annotations
+statefulsetAnnotations: {}
+[% endif %]
+
 ## @param [[ component_yaml_path ]]podAnnotations Additional pod annotations
 podAnnotations: {}
 
