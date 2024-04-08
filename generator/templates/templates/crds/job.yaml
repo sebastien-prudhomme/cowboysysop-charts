@@ -36,6 +36,8 @@ spec:
     spec:
       {{- include "common.images.pullSecrets" ( dict "images" ( list .Values.crds.image ) "global" .Values.global ) | nindent 6 }}
       serviceAccountName: {{ include "[[ application.name ]].crds.fullname" . }}
+      securityContext:
+        {{- toYaml .Values.crds.podSecurityContext | nindent 8 }}
       containers:
         - name: kubectl
           securityContext:

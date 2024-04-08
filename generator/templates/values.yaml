@@ -820,6 +820,14 @@ crds:
   ## @param crds.podLabels Additional pod labels
   podLabels: {}
 
+  ## @extra crds.podSecurityContext Pod security context
+  ## @param crds.podSecurityContext.runAsNonRoot Whether the container must run as a non-root user
+  ## @param crds.podSecurityContext.runAsUser The UID to run the entrypoint of the container process
+  podSecurityContext:
+    # fsGroup: 2000
+    runAsNonRoot: true
+    runAsUser: 65534
+
   ## @param crds.securityContext Container security context
   securityContext: {}
     # capabilities:
