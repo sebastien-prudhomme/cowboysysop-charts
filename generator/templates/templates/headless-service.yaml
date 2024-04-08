@@ -17,13 +17,8 @@ metadata:
     {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
     {{- end }}
   {{- if or .Values[[ component_values_path ]]headless.service.annotations .Values.commonAnnotations }}
-  annotations:
-    {{- if .Values[[ component_values_path ]]headless.service.annotations }}
-    {{- include "common.tplvalues.render" ( dict "value" .Values[[ component_values_path ]]headless.service.annotations "context" $ ) | nindent 4 }}
-    {{- end }}
-    {{- if .Values.commonAnnotations }}
-    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
-    {{- end }}
+  {{- $annotations := include "common.tplvalues.merge" ( dict "values" ( list .Values[[ component_values_path ]]headless.service.annotations .Values.commonAnnotations ) "context" . ) }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" $annotations "context" $ ) | nindent 4 }}
   {{- end }}
 spec:
   type: ClusterIP
