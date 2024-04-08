@@ -829,7 +829,7 @@ crds:
   podSecurityContext:
     # fsGroup: 2000
     runAsNonRoot: true
-    runAsUser: 65534
+    runAsUser: 1001
 
   ## @param crds.securityContext Container security context
   securityContext: {}
