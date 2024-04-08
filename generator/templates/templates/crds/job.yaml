@@ -38,6 +38,8 @@ spec:
       serviceAccountName: {{ include "[[ application.name ]].crds.fullname" . }}
       containers:
         - name: kubectl
+          securityContext:
+            {{- toYaml .Values.crds.securityContext | nindent 12 }}
           image: {{ include "common.images.image" ( dict "imageRoot" .Values.crds.image "global" .Values.global ) }}
           imagePullPolicy: {{ .Values.crds.image.pullPolicy }}
           args:
