@@ -24,7 +24,7 @@ metadata:
     {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
     {{- end }}
   {{- if or .Values[[ component_values_path ]]deploymentAnnotations .Values.commonAnnotations }}
-  {{- $annotations := include "common.tplvalues.merge" (dict "values" (list .Values[[ component_values_path ]]deploymentAnnotations .Values.commonAnnotations) "context" .) }}
+  {{- $annotations := include "common.tplvalues.merge" ( dict "values" ( list .Values[[ component_values_path ]]deploymentAnnotations .Values.commonAnnotations ) "context" . ) }}
   annotations: {{- include "common.tplvalues.render" ( dict "value" $annotations "context" $ ) | nindent 4 }}
   {{- end }}
 spec:
