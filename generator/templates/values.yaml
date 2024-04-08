@@ -820,6 +820,15 @@ crds:
   ## @param crds.podLabels Additional pod labels
   podLabels: {}
 
+  ## @param crds.securityContext Container security context
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+
   ## @param crds.resources CPU/Memory resource requests/limits
   resources: {}
     # limits:
