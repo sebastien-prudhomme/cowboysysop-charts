@@ -6,7 +6,7 @@ home: https://github.com/mongo-express/mongo-express
 icon: https://raw.githubusercontent.com/mongo-express/mongo-express/master/public/images/mongo-express-logo.png
 license: 2020
 source: https://github.com/mongo-express/mongo-express
-version: 5.1.0
+version: 5.1.1
 updates: |
   ### Upgrading to version 5.0.0
 
@@ -109,30 +109,12 @@ components:
         livenessProbe:
           httpGet:
             path: "{{ .Values.siteBaseUrl | trimSuffix \"/\" }}/status"
-            extra: |
-              {{- if and .Values.basicAuthUsername .Values.basicAuthPassword }}
-              httpHeaders:
-                - name: Authorization
-                  value: {{ include "mongo-express.basicAuthHttpHeader" . }}
-              {{- end }}
         readinessProbe:
           httpGet:
             path: "{{ .Values.siteBaseUrl | trimSuffix \"/\" }}/status"
-            extra: |
-              {{- if and .Values.basicAuthUsername .Values.basicAuthPassword }}
-              httpHeaders:
-                - name: Authorization
-                  value: {{ include "mongo-express.basicAuthHttpHeader" . }}
-              {{- end }}
         startupProbe:
           httpGet:
             path: "{{ .Values.siteBaseUrl | trimSuffix \"/\" }}/status"
-            extra: |
-              {{- if and .Values.basicAuthUsername .Values.basicAuthPassword }}
-              httpHeaders:
-                - name: Authorization
-                  value: {{ include "mongo-express.basicAuthHttpHeader" . }}
-              {{- end }}
     image:
       registry: docker.io
       repository: mongo-express
