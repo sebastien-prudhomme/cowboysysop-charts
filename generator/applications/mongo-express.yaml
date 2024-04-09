@@ -6,7 +6,7 @@ home: https://github.com/mongo-express/mongo-express
 icon: https://raw.githubusercontent.com/mongo-express/mongo-express/master/public/images/mongo-express-logo.png
 license: 2020
 source: https://github.com/mongo-express/mongo-express
-version: 5.1.1
+version: 6.5.0
 updates: |
   ### Upgrading to version 5.0.0
 
