@@ -29,6 +29,12 @@ spec:
   {{- if and (eq .Values[[ component_values_path ]]service.type "ClusterIP") .Values[[ component_values_path ]]service.clusterIP }}
   clusterIP: {{ .Values[[ component_values_path ]]service.clusterIP }}
   {{- end }}
+  {{- if .Values.service.sessionAffinity }}
+  sessionAffinity: {{ .Values.service.sessionAffinity }}
+  {{- end }}
+  {{- if .Values.service.sessionAffinityConfig }}
+  sessionAffinityConfig: {{- include "common.tplvalues.render" (dict "value" .Values.service.sessionAffinityConfig "context" $) | nindent 4 }}
+  {{- end }}
   [% if not component.service.internal %]
   {{- if and (eq .Values[[ component_values_path ]]service.type "LoadBalancer") .Values[[ component_values_path ]]service.loadBalancerIP }}
   loadBalancerIP: {{ .Values[[ component_values_path ]]service.loadBalancerIP }}
@@ -38,7 +44,7 @@ spec:
     {{- toYaml .Values[[ component_values_path ]]service.loadBalancerSourceRanges | nindent 4 }}
   {{- end }}
   {{- if or (eq .Values[[ component_values_path ]]service.type "LoadBalancer") (eq .Values[[ component_values_path ]]service.type "NodePort") }}
-  externalTrafficPolicy: {{ .Values[[ component_values_path ]]service.externalTrafficPolicy }}
+  externalTrafficPolicy: {{ .Values[[ component_values_path ]]service.externalTrafficPolicy | quote }}
   {{- end }}
   [% endif %]
   ports:
