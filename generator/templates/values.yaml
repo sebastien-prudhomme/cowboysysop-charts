@@ -255,7 +255,6 @@ service:
 
   ## @param [[ component_yaml_path ]]service.sessionAffinityConfig Additional settings for the sessionAffinity
   sessionAffinityConfig: {}
-
   [% if not component.service.internal %]
 
   ## @param [[ component_yaml_path ]]service.loadBalancerIP Static load balancer IP address when service type is LoadBalancer
