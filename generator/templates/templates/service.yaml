@@ -29,11 +29,11 @@ spec:
   {{- if and (eq .Values[[ component_values_path ]]service.type "ClusterIP") .Values[[ component_values_path ]]service.clusterIP }}
   clusterIP: {{ .Values[[ component_values_path ]]service.clusterIP }}
   {{- end }}
-  {{- if .Values.service.sessionAffinity }}
-  sessionAffinity: {{ .Values.service.sessionAffinity }}
+  {{- if .Values[[ component_values_path ]]service.sessionAffinity }}
+  sessionAffinity: {{ .Values[[ component_values_path ]]service.sessionAffinity }}
   {{- end }}
-  {{- if .Values.service.sessionAffinityConfig }}
-  sessionAffinityConfig: {{- include "common.tplvalues.render" (dict "value" .Values.service.sessionAffinityConfig "context" $) | nindent 4 }}
+  {{- if .Values[[ component_values_path ]]service.sessionAffinityConfig }}
+  sessionAffinityConfig: {{- include "common.tplvalues.render" (dict "value" .Values[[ component_values_path ]]service.sessionAffinityConfig "context" $) | nindent 4 }}
   {{- end }}
   [% if not component.service.internal %]
   {{- if and (eq .Values[[ component_values_path ]]service.type "LoadBalancer") .Values[[ component_values_path ]]service.loadBalancerIP }}
