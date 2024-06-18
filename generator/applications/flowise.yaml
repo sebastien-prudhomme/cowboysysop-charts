@@ -1,12 +1,12 @@
 name: flowise
 productName: Flowise
-appVersion: 1.8.1
+appVersion: 1.8.2
 description: is a <<drag & drop UI to build your customized LLM flow>>
 home: https://flowiseai.com/
 icon: https://avatars.githubusercontent.com/u/128289781
 license: 2023
 source: https://github.com/FlowiseAI/Flowise
-version: 3.4.0
+version: 3.5.0
 updates: |
   ### Upgrading to version 3.0.0
 
@@ -35,11 +35,6 @@ components:
       waitMariadb: true
       waitPostgresql: true
       container:
-        command: |
-          - /bin/sh
-          - -ec
-          - |
-            flowise start
         env: |
           - name: PORT
             value: {{ .Values.containerPorts.http | quote }}
@@ -98,20 +93,20 @@ components:
             value: "true"
         livenessProbe:
           httpGet:
-            path: /
+            path: /api/v1/ping
         readinessProbe:
           httpGet:
-            path: /
+            path: /api/v1/ping
         startupProbe:
           httpGet:
-            path: /
+            path: /api/v1/ping
         volumeMounts: |
           - name: data
             mountPath: /data
     image:
       registry: docker.io
       repository: flowiseai/flowise
-      tag: 1.8.1
+      tag: 1.8.2
     ingress: true
     persistentvolumeclaim: true
     secret: |

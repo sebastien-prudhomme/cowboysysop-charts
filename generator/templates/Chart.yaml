@@ -16,23 +16,23 @@ sources:
 version: [[ application.version ]]
 dependencies:
   - name: common
-    version: 2.19.1
+    version: 2.20.3
     repository: https://charts.bitnami.com/bitnami/
   [% if application.mariadb %]
   - name: mariadb
-    version: 18.0.1
+    version: 18.2.4
     repository: https://charts.bitnami.com/bitnami/
     condition: mariadb.enabled
   [% endif %]
   [% if application.mongodb %]
   - name: mongodb
-    version: 15.1.3
+    version: 15.6.6
     repository: https://charts.bitnami.com/bitnami/
     condition: mongodb.enabled
   [% endif %]
   [% if application.postgresql %]
   - name: postgresql
-    version: 15.2.5
+    version: 15.5.7
     repository: https://charts.bitnami.com/bitnami/
     condition: postgresql.enabled
   [% endif %]
