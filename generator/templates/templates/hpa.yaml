@@ -22,9 +22,14 @@ metadata:
   {{- end }}
 spec:
   scaleTargetRef:
+    [% if component.deployment.type == "deployment" %]
     apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
     kind: Deployment
-    name: {{ include "common.names.fullname" . }}
+    [% elif component.deployment.type == "statefulset" %]
+    apiVersion: {{ include "common.capabilities.statefulset.apiVersion" . }}
+    kind: StatefulSet
+    [% endif %]
+    name: {{ include "[[ application.name ]][[ component_values_path ]]fullname" . }}
   minReplicas: {{ .Values[[ component_values_path ]]autoscaling.hpa.minReplicas }}
   maxReplicas: {{ .Values[[ component_values_path ]]autoscaling.hpa.maxReplicas }}
   metrics:

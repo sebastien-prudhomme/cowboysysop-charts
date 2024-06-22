@@ -19,7 +19,7 @@ metadata:
     {{- end }}
   {{- if or .Values[[ component_values_path ]]autoscaling.vpa.annotations .Values.commonAnnotations }}
   {{- $annotations := include "common.tplvalues.merge" ( dict "values" ( list .Values[[ component_values_path ]]autoscaling.vpa.annotations .Values.commonAnnotations ) "context" . ) }}
-  annotations: {{- include "common.tplvalues.render" ( dict "value" $annotations "context" $) | nindent 4 }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" $annotations "context" $ ) | nindent 4 }}
   {{- end }}
 spec:
   resourcePolicy:
@@ -38,9 +38,14 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
   targetRef:
+    [% if component.deployment.type == "deployment" %]
     apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
     kind: Deployment
-    name: {{ include "common.names.fullname" . }}
+    [% elif component.deployment.type == "statefulset" %]
+    apiVersion: {{ include "common.capabilities.statefulset.apiVersion" . }}
+    kind: StatefulSet
+    [% endif %]
+    name: {{ include "[[ application.name ]][[ component_values_path ]]fullname" . }}
   {{- if .Values[[ component_values_path ]]autoscaling.vpa.updatePolicy }}
   updatePolicy:
     {{- with .Values[[ component_values_path ]]autoscaling.vpa.updatePolicy.updateMode }}
