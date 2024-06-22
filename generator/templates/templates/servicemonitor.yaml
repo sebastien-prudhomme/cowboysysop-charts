@@ -7,7 +7,7 @@
 [% if component.optional %]
 {{- if .Values[[ component_values_path ]]enabled }}
 [% endif %]
-{{- if .Values[[ component_values_path ]]metrics.serviceMonitor.enabled -}}
+{{- if .Values[[ component_values_path ]]metrics.serviceMonitor.enabled }}
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
