@@ -365,8 +365,27 @@ extraEnvVarsCM:
 
 ## @param [[ component_yaml_path ]]extraEnvVarsSecret Name of existing Secret containing additional container environment variables
 extraEnvVarsSecret:
+[% if component.hpa or component.vpa %]
 
 autoscaling:
+  [% if component.hpa %]
+  hpa:
+    ## @param [[ component_yaml_path ]]autoscaling.hpa.enabled Enable HPA
+    enabled: false
+
+    ## @param [[ component_yaml_path ]]autoscaling.hpa.minReplicas Minimum number of replicas
+    minReplicas: ""
+
+    ## @param [[ component_yaml_path ]]autoscaling.hpa.maxReplicas Maximum number of replicas
+    maxReplicas: ""
+
+    ## @param [[ component_yaml_path ]]autoscaling.hpa.targetCPU Target CPU utilization percentage
+    targetCPU: ""
+
+    ## @param [[ component_yaml_path ]]autoscaling.hpa.targetMemory Target Memory utilization percentage
+    targetMemory: ""
+  [% endif %]
+  [% if component.vpa %]
   vpa:
     ## @param [[ component_yaml_path ]]autoscaling.vpa.enabled Enable VPA
     enabled: false
@@ -386,22 +405,8 @@ autoscaling:
     updatePolicy:
       ## @param [[ component_yaml_path ]]autoscaling.vpa.updatePolicy.updateMode Autoscaling update policy
       updateMode: Auto
-
-  hpa:
-    ## @param [[ component_yaml_path ]]autoscaling.hpa.enabled Enable HPA
-    enabled: false
-
-    ## @param [[ component_yaml_path ]]autoscaling.hpa.minReplicas Minimum number of replicas
-    minReplicas: ""
-
-    ## @param [[ component_yaml_path ]]autoscaling.hpa.maxReplicas Maximum number of replicas
-    maxReplicas: ""
-
-    ## @param [[ component_yaml_path ]]autoscaling.hpa.targetCPU Target CPU utilization percentage
-    targetCPU: ""
-
-    ## @param [[ component_yaml_path ]]autoscaling.hpa.targetMemory Target Memory utilization percentage
-    targetMemory: ""
+  [% endif %]
+[% endif %]
 [% if component.deployment.initContainer %]
 
 init:
