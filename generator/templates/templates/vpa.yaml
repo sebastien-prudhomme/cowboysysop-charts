@@ -24,7 +24,7 @@ metadata:
 spec:
   resourcePolicy:
     containerPolicies:
-    - containerName: %%MAIN_OBJECT_BLOCK%%
+    - containerName: [[ component.name ]]
       {{- with .Values[[ component_values_path ]]autoscaling.vpa.controlledResources }}
       controlledResources:
         {{- toYaml . | nindent 8 }}
