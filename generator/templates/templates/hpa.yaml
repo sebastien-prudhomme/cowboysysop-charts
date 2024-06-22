@@ -8,7 +8,7 @@
 {{- if .Values[[ component_values_path ]]enabled }}
 [% endif %]
 {{- if .Values[[ component_values_path ]]autoscaling.hpa.enabled }}
-apiVersion: {{ include "common.capabilities.hpa.apiVersion" . }}
+apiVersion: {{ include "common.capabilities.hpa.apiVersion" ( dict "context" $ ) }}
 kind: HorizontalPodAutoscaler
 metadata:
   name: {{ include "[[ application.name ]][[ component_values_path ]]fullname" . }}
