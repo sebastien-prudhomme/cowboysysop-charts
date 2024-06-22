@@ -28,7 +28,9 @@ metadata:
   annotations: {{- include "common.tplvalues.render" ( dict "value" $annotations "context" $ ) | nindent 4 }}
   {{- end }}
 spec:
+  {{- if not .Values[[ component_values_path ]]autoscaling.hpa.enabled }}
   replicas: {{ .Values[[ component_values_path ]]replicaCount }}
+  {{- end }}
   selector:
     matchLabels:
       {{- include "[[ application.name ]][[ component_values_path ]]selectorLabels" . | nindent 6 }}
