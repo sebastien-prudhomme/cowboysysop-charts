@@ -365,6 +365,43 @@ extraEnvVarsCM:
 
 ## @param [[ component_yaml_path ]]extraEnvVarsSecret Name of existing Secret containing additional container environment variables
 extraEnvVarsSecret:
+
+autoscaling:
+  vpa:
+    ## @param [[ component_yaml_path ]]autoscaling.vpa.enabled Enable VPA
+    enabled: false
+
+    ## @param [[ component_yaml_path ]]autoscaling.vpa.annotations Annotations for VPA resource
+    annotations: {}
+
+    ## @param [[ component_yaml_path ]]autoscaling.vpa.controlledResources VPA List of resources that the vertical pod autoscaler can control. Defaults to cpu and memory
+    controlledResources: []
+
+    ## @param [[ component_yaml_path ]]autoscaling.vpa.maxAllowed VPA Max allowed resources for the pod
+    maxAllowed: {}
+
+    ## @param [[ component_yaml_path ]]autoscaling.vpa.minAllowed VPA Min allowed resources for the pod
+    minAllowed: {}
+
+    updatePolicy:
+      ## @param [[ component_yaml_path ]]autoscaling.vpa.updatePolicy.updateMode Autoscaling update policy
+      updateMode: Auto
+
+  hpa:
+    ## @param [[ component_yaml_path ]]autoscaling.hpa.enabled Enable HPA
+    enabled: false
+
+    ## @param [[ component_yaml_path ]]autoscaling.hpa.minReplicas Minimum number of replicas
+    minReplicas: ""
+
+    ## @param [[ component_yaml_path ]]autoscaling.hpa.maxReplicas Maximum number of replicas
+    maxReplicas: ""
+
+    ## @param [[ component_yaml_path ]]autoscaling.hpa.targetCPU Target CPU utilization percentage
+    targetCPU: ""
+
+    ## @param [[ component_yaml_path ]]autoscaling.hpa.targetMemory Target Memory utilization percentage
+    targetMemory: ""
 [% if component.deployment.initContainer %]
 
 init:

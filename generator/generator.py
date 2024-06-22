@@ -185,6 +185,20 @@ with open(sys.argv[1], "r") as stream:
             else:
                 render("templates/servicemonitor.yaml", f"{component_directory}/servicemonitor.yaml", application=application, component=component)
 
+        # Manage HPA
+        if component.get("hpa"):
+            if component_name == name:
+                render("templates/hpa.yaml", f"{templates_directory}/hpa.yaml", application=application, component=component)
+            else:
+                render("templates/hpa.yaml", f"{component_directory}/hpa.yaml", application=application, component=component)
+
+        # Manage VPA
+        if component.get("vpa"):
+            if component_name == name:
+                render("templates/vpa.yaml", f"{templates_directory}/vpa.yaml", application=application, component=component)
+            else:
+                render("templates/vpa.yaml", f"{component_directory}/vpa.yaml", application=application, component=component)
+
     # Manage CRDs
     if application.get("crds"):
         files_directory = f"{chart_directory}/files"

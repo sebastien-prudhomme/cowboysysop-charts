@@ -98,6 +98,7 @@ components:
         - name: http
           number: 8000
           description: HTTP
+    hpa: true
 tests: |
   import requests
 
