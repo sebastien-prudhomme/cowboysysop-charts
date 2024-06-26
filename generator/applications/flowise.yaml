@@ -106,7 +106,7 @@ components:
     image:
       registry: docker.io
       repository: flowiseai/flowise
-      tag: 1.8.2
+      tag: 1.8.3
     ingress: true
     persistentvolumeclaim: true
     secret: |
