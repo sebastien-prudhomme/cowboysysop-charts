@@ -98,4 +98,4 @@ $ helm install my-release \
 
 The source code of this chart is under [MIT License](LICENSE).
 
-It also uses source code under Apache 2.0 License from the [Bitnami repository](https://github.com/bitnami/charts)
+It also uses source code under Apache 2.0 License from the [Bitnami repository](https://github.com/bitnami/charts).

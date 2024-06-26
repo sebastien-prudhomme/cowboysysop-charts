@@ -28,9 +28,13 @@ metadata:
   annotations: {{- include "common.tplvalues.render" ( dict "value" $annotations "context" $ ) | nindent 4 }}
   {{- end }}
 spec:
+  [% if component.hpa %]
   {{- if not .Values[[ component_values_path ]]autoscaling.hpa.enabled }}
+  [% endif %]
   replicas: {{ .Values[[ component_values_path ]]replicaCount }}
+  [% if component.hpa %]
   {{- end }}
+  [% endif %]
   selector:
     matchLabels:
       {{- include "[[ application.name ]][[ component_values_path ]]selectorLabels" . | nindent 6 }}
@@ -130,6 +134,10 @@ spec:
               value: {{ include "[[ application.name ]].mariadb.database" . | quote }}
           resources:
             {{- toYaml .Values.wait.resources | nindent 12 }}
+          volumeMounts:
+            {{- if .Values.wait.extraVolumeMounts }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.wait.extraVolumeMounts "context" $) | nindent 12 }}
+            {{- end }}
         [% if application.mariadb == "optional" %]
         {{- end }}
         [% endif %]
@@ -164,6 +172,10 @@ spec:
               value: {{ include "[[ application.name ]].postgresql.database" . | quote }}
           resources:
             {{- toYaml .Values.wait.resources | nindent 12 }}
+          volumeMounts:
+            {{- if .Values.wait.extraVolumeMounts }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.wait.extraVolumeMounts "context" $) | nindent 12 }}
+            {{- end }}
         [% if application.postgresql == "optional" %]
         {{- end }}
         [% endif %]
@@ -180,10 +192,13 @@ spec:
           [% endif %]
           resources:
             {{- toYaml .Values[[ component_values_path ]]init.resources | nindent 12 }}
-          [% if component.deployment.initContainer.volumeMounts %]
           volumeMounts:
+            [% if component.deployment.initContainer.volumeMounts %]
             [[ component.deployment.initContainer.volumeMounts | indent(12) | trim ]]
-          [% endif %]
+            [% endif %]
+            {{- if .Values[[ component_values_path ]]init.extraVolumeMounts }}
+            {{- include "common.tplvalues.render" (dict "value" .Values[[ component_values_path ]]init.extraVolumeMounts "context" $) | nindent 12 }}
+            {{- end }}
         [% endif %]
       [% endif %]
       containers:
@@ -300,10 +315,13 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values[[ component_values_path ]]resources | nindent 12 }}
-          [% if component.deployment.container.volumeMounts %]
           volumeMounts:
+            [% if component.deployment.container.volumeMounts %]
             [[ component.deployment.container.volumeMounts | indent(12) | trim ]]
-          [% endif %]
+            [% endif %]
+            {{- if .Values[[ component_values_path ]]extraVolumeMounts }}
+            {{- include "common.tplvalues.render" (dict "value" .Values[[ component_values_path ]]extraVolumeMounts "context" $) | nindent 12 }}
+            {{- end }}
         [% for container in component.deployment.containers %]
         [% if container.asComponent %]
         [% set standard_values_path = "." + container.name + "." %]
@@ -369,10 +387,13 @@ spec:
           [% endif %]
           resources:
             {{- toYaml .Values[[ standard_values_path ]]resources | nindent 12 }}
-          [% if container.volumeMounts %]
           volumeMounts:
+            [% if container.volumeMounts %]
             [[ container.volumeMounts | indent(12) | trim ]]
-          [% endif %]
+            [% endif %]
+            {{- if .Values[[ standard_values_path ]]extraVolumeMounts }}
+            {{- include "common.tplvalues.render" (dict "value" .Values[[ standard_values_path ]]extraVolumeMounts "context" $) | nindent 12 }}
+            {{- end }}
         [% if container.optional %]
         {{- end }}
         [% endif %]
@@ -389,7 +410,6 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-      [% if component.configmap or component.persistentvolumeclaim or component.tls %]
       volumes:
         [% if component.configmap %]
         - name: config
@@ -417,7 +437,9 @@ spec:
           secret:
             secretName: {{ include "[[ application.name ]][[ component_values_path ]]tls.secretName" . }}
         [% endif %]
-      [% endif %]
+        {{- if .Values[[ component_values_path ]]extraVolumes }}
+        {{- include "common.tplvalues.render" (dict "value" .Values[[ component_values_path ]]extraVolumes "context" $) | nindent 8 }}
+        {{- end }}
   [% if component.deployment.type == "statefulset" and component.persistentvolumeclaim %]
   {{- if .Values[[ component_values_path ]]persistence.enabled }}
   volumeClaimTemplates:

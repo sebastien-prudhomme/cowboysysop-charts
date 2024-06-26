@@ -365,6 +365,12 @@ extraEnvVarsCM:
 
 ## @param [[ component_yaml_path ]]extraEnvVarsSecret Name of existing Secret containing additional container environment variables
 extraEnvVarsSecret:
+
+## @param [[ component_yaml_path ]]extraVolumes Optionally specify extra list of additional volumes
+extraVolumes: []
+
+## @param [[ component_yaml_path ]]extraVolumeMounts Optionally specify extra list of additional volumeMounts
+extraVolumeMounts: []
 [% if component.hpa or component.vpa %]
 
 autoscaling:
@@ -427,6 +433,9 @@ init:
     # requests:
     #   cpu: [[ component.deployment.initContainer.resources.requests.cpu if component.deployment.initContainer.resources else "100m" ]]
     #   memory: [[ component.deployment.initContainer.resources.requests.memory if component.deployment.initContainer.resources else "128Mi" ]]
+
+  ## @param [[ component_yaml_path ]]init.extraVolumeMounts Optionally specify extra list of additional volumeMounts
+  extraVolumeMounts: []
 [% endif %]
 [% for container in component.deployment.containers %]
 [% if container.asComponent %]
@@ -505,6 +514,9 @@ init:
 
   ## @param [[ container.name ]].extraEnvVarsSecret Name of existing Secret containing additional container environment variables
   extraEnvVarsSecret:
+
+  ## @param [[ container.name ]].extraVolumeMounts Optionally specify extra list of additional volumeMounts
+  extraVolumeMounts: []
 [% endif %]
 [% endfor %]
 [% if component.headless %]
@@ -843,6 +855,9 @@ wait:
     # requests:
     #   cpu: 100m
     #   memory: 128Mi
+
+  ## @param wait.extraVolumeMounts Optionally specify extra list of additional volumeMounts
+  extraVolumeMounts: []
 [% endif %]
 [% if application.crds %]
 
