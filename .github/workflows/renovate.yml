@@ -10,14 +10,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4.1.6
+        uses: actions/checkout@v4.1.7
         with:
           fetch-depth: 0
 
       - name: Renovate
-        uses: renovatebot/github-action@v40.1.11
+        uses: renovatebot/github-action@v40.1.12
         with:
-          renovate-version: 37.399.8 # renovate: ghcr.io/renovatebot/renovate
+          renovate-version: 37.421.2 # renovate: ghcr.io/renovatebot/renovate
         env:
           RENOVATE_CONFIG_FILE: renovate.json
           RENOVATE_REPOSITORIES: ${{ github.repository }}
