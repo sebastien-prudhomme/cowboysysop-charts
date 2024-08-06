@@ -16,11 +16,11 @@ sources:
 version: [[ application.version ]]
 dependencies:
   - name: common
-    version: 2.20.3
+    version: 2.21.0
     repository: https://charts.bitnami.com/bitnami/
   [% if application.mariadb %]
   - name: mariadb
-    version: 18.2.4
+    version: 18.2.6
     repository: https://charts.bitnami.com/bitnami/
     condition: mariadb.enabled
   [% endif %]
