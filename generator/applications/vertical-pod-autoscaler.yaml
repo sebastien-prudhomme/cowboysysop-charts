@@ -395,8 +395,16 @@ components:
           # external-metrics-memory-metric: ""
           # history-length: 8d
           # history-resolution: 1h
+          # ignored-vpa-object-namespaces: ""
           # kube-api-burst: 10
           # kube-api-qps: 5
+          # leader-elect: false
+          # leader-elect-lease-duration: 15s
+          # leader-elect-renew-deadline: 10s
+          # leader-elect-resource-lock: leases
+          # leader-elect-resource-name: vpa-recommender
+          # leader-elect-resource-namespace: kube-system
+          # leader-elect-retry-period: 2s
           # memory-aggregation-interval: 24h0m0s
           # memory-aggregation-interval-count: 8
           # memory-histogram-decay-half-life: 24h0m0s
@@ -414,11 +422,16 @@ components:
           # prometheus-address: ""
           # prometheus-cadvisor-job-name: kubernetes-cadvisor
           # prometheus-query-timeout: 5m
+          # recommendation-lower-bound-cpu-percentile: 0.5
+          # recommendation-lower-bound-memory-percentile: 0.5
           # recommendation-margin-fraction: 0.15
+          # recommendation-upper-bound-cpu-percentile: 0.95
+          # recommendation-upper-bound-memory-percentile: 0.95
           # recommender-interval: 1m0s
           # recommender-name: default
           # storage: checkpoint
           # target-cpu-percentile: 0.9
+          # target-memory-percentile: 0.9
           # use-external-metrics: false
           # username: ""
           v: 2
@@ -585,9 +598,17 @@ components:
           # eviction-rate-burst: 1
           # eviction-rate-limit: -1
           # eviction-tolerance: 0.5
+          # ignored-vpa-object-namespaces: ""
           # in-recommendation-bounds-eviction-lifetime-threshold: 12h0m0s
           # kube-api-burst: 10
           # kube-api-qps: 5
+          # leader-elect: false
+          # leader-elect-lease-duration: 15s
+          # leader-elect-renew-deadline: 10s
+          # leader-elect-resource-lock: leases
+          # leader-elect-resource-name: vpa-updater
+          # leader-elect-resource-namespace: kube-system
+          # leader-elect-retry-period: 2s
           # min-replicas: 2
           # pod-update-threshold: 0.1
           # updater-interval: 1m0s
