@@ -1,13 +1,13 @@
 
 name: vertical-pod-autoscaler
 productName: Vertical Pod Autoscaler
-appVersion: 1.1.2
+appVersion: 1.2.1
 description: is a <<set of components that automatically adjust the amount of CPU and memory requested by pods running in the Kubernetes Cluster>>
 home: https://github.com/kubernetes/autoscaler
 icon: https://raw.githubusercontent.com/kubernetes/kubernetes/master/logo/logo.svg
 license: 2020
 source: https://github.com/kubernetes/autoscaler
-version: 9.8.2
+version: 9.9.0
 prerequisites: |
   - Metrics Server >= 0.2 (you can use the [bitnami/metrics-server](https://artifacthub.io/packages/helm/bitnami/metrics-server) chart)
 updates: |
@@ -219,7 +219,7 @@ components:
     image:
       registry: registry.k8s.io
       repository: autoscaling/vpa-admission-controller
-      tag: 1.1.2
+      tag: 1.2.1
     metrics:
       ports:
         - name: metrics
@@ -358,6 +358,23 @@ components:
           - get
           - list
           - watch
+      # system:leader-locking-vpa-recommender
+      - apiGroups:
+          - "coordination.k8s.io"
+        resources:
+          - leases
+        verbs:
+          - create
+      - apiGroups:
+          - "coordination.k8s.io"
+        resourceNames:
+          - vpa-recommender
+        resources:
+          - leases
+        verbs:
+          - get
+          - watch
+          - update
     deployment:
       type: deployment
       podSecurityContext:
@@ -430,7 +447,7 @@ components:
     image:
       registry: registry.k8s.io
       repository: autoscaling/vpa-recommender
-      tag: 1.1.2
+      tag: 1.2.1
     metrics:
       ports:
         - name: metrics
@@ -538,6 +555,23 @@ components:
           - get
           - list
           - watch
+      # system:leader-locking-vpa-updater
+      - apiGroups:
+          - "coordination.k8s.io"
+        resources:
+          - leases
+        verbs:
+          - create
+      - apiGroups:
+          - "coordination.k8s.io"
+        resourceNames:
+          - vpa-updater
+        resources:
+          - leases
+        verbs:
+          - get
+          - watch
+          - update
     deployment:
       type: deployment
       podSecurityContext:
@@ -587,7 +621,7 @@ components:
     image:
       registry: registry.k8s.io
       repository: autoscaling/vpa-updater
-      tag: 1.1.2
+      tag: 1.2.1
     metrics:
       ports:
         - name: metrics
