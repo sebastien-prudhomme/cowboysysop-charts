@@ -175,6 +175,7 @@ components:
       podSecurityContext:
         runAsNonRoot: true
         runAsUser: 65534
+        runAsGroup: 65534
       container:
         args: |
           - --address=:{{ .Values.admissionController.containerPorts.metrics }}
@@ -380,6 +381,7 @@ components:
       podSecurityContext:
         runAsNonRoot: true
         runAsUser: 65534
+        runAsGroup: 65534
       container:
         args: |
           - --address=:{{ .Values.recommender.containerPorts.metrics }}
@@ -590,6 +592,7 @@ components:
       podSecurityContext:
         runAsNonRoot: true
         runAsUser: 65534
+        runAsGroup: 65534
       container:
         args: |
           - --address=:{{ .Values.updater.containerPorts.metrics }}

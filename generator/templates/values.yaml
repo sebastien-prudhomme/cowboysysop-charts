@@ -122,6 +122,9 @@ podLabels: {}
 [% if component.deployment.podSecurityContext.runAsUser %]
 ## @param [[ component_yaml_path ]]podSecurityContext.runAsUser The UID to run the entrypoint of the container process
 [% endif %]
+[% if component.deployment.podSecurityContext.runAsGroup %]
+## @param [[ component_yaml_path ]]podSecurityContext.runAsGroup The GID to run the entrypoint of the container process
+[% endif %]
 podSecurityContext:
   # fsGroup: 2000
   [% if component.deployment.podSecurityContext.runAsNonRoot %]
@@ -129,6 +132,9 @@ podSecurityContext:
   [% endif %]
   [% if component.deployment.podSecurityContext.runAsUser %]
   runAsUser: [[ component.deployment.podSecurityContext.runAsUser ]]
+  [% endif %]
+  [% if component.deployment.podSecurityContext.runAsGroup %]
+  runAsGroup: [[ component.deployment.podSecurityContext.runAsGroup ]]
   [% endif %]
 [% else %]
 ## @param [[ component_yaml_path ]]podSecurityContext Pod security context
@@ -892,10 +898,12 @@ crds:
   ## @extra crds.podSecurityContext Pod security context
   ## @param crds.podSecurityContext.runAsNonRoot Whether the container must run as a non-root user
   ## @param crds.podSecurityContext.runAsUser The UID to run the entrypoint of the container process
+  ## @param crds.podSecurityContext.runAsGroup The GID to run the entrypoint of the container process
   podSecurityContext:
     # fsGroup: 2000
     runAsNonRoot: true
     runAsUser: 1001
+    runAsGroup: 1001
 
   ## @param crds.securityContext Container security context
   securityContext: {}
