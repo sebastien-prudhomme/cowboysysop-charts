@@ -1,12 +1,12 @@
 name: dolibarr
 productName: Dolibarr
-appVersion: 19.0.1
+appVersion: 19.0.3
 description: is <<a modern software package to manage your company or foundation's activity>>
 home: https://www.dolibarr.org/
 icon: https://raw.githubusercontent.com/Dolibarr/dolibarr/develop/doc/images/dolibarr_256x256_color.svg
 license: 2022
 source: https://github.com/Dolibarr/dolibarr
-version: 5.2.0
+version: 5.2.1
 updates: |
   ### Upgrading to version 5.0.0
 
@@ -118,8 +118,8 @@ components:
               mountPath: /var/www/documents
     image:
       registry: docker.io
-      repository: tuxgasy/dolibarr
-      tag: 19.0.1
+      repository: dolibarr/dolibarr
+      tag: 19.0.3
     ingress: true
     persistentvolumeclaim: true
     secret: |
