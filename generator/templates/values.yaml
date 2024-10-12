@@ -873,6 +873,9 @@ wait:
 ## @section CRDs parameters
 
 crds:
+  ## @param crds.enabled Enable CRDs
+  enabled: true
+
   image:
     ## @param crds.image.registry Image registry
     registry: docker.io
