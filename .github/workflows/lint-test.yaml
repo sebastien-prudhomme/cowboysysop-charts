@@ -14,7 +14,7 @@ jobs:
           - v3.12.3 # renovate: helm
     steps:
       - name: Checkout
-        uses: actions/checkout@v4.1.7
+        uses: actions/checkout@v4.2.1
         with:
           fetch-depth: 0
 
@@ -26,7 +26,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5.2.0
         with:
-          python-version: 3.12.6 # renovate: python
+          python-version: 3.13.0 # renovate: python
 
       - name: Set up chart-testing
         uses: helm/chart-testing-action@v2.6.1
@@ -55,7 +55,7 @@ jobs:
           - v1.27.16 # renovate: kindest/node
     steps:
       - name: Checkout
-        uses: actions/checkout@v4.1.7
+        uses: actions/checkout@v4.2.1
         with:
           fetch-depth: 0
 
@@ -67,7 +67,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5.2.0
         with:
-          python-version: 3.12.6 # renovate: python
+          python-version: 3.13.0 # renovate: python
 
       - name: Set up chart-testing
         uses: helm/chart-testing-action@v2.6.1
@@ -100,11 +100,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4.1.7
+        uses: actions/checkout@v4.2.1
         with:
           fetch-depth: 0
 
       - name: Run Checkov
-        uses: bridgecrewio/checkov-action@v12.2860.0
+        uses: bridgecrewio/checkov-action@v12.2875.0
         with:
           config_file: checkov.yaml
