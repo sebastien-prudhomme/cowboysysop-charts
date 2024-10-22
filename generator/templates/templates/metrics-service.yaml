@@ -25,6 +25,12 @@ spec:
   {{- if and (eq .Values[[ component_values_path ]]metrics.service.type "ClusterIP") .Values[[ component_values_path ]]metrics.service.clusterIP }}
   clusterIP: {{ .Values[[ component_values_path ]]metrics.service.clusterIP }}
   {{- end }}
+  {{- if .Values[[ component_values_path ]]metrics.service.ipFamilyPolicy }}
+  ipFamilyPolicy: {{ .Values[[ component_values_path ]]metrics.service.ipFamilyPolicy }}
+  {{- end }}
+  {{- if not (empty .Values[[ component_values_path ]]metrics.service.ipFamilies)}}
+  ipFamilies: {{- toYaml .Values[[ component_values_path ]]metrics.service.ipFamilies | nindent 4 }}
+  {{- end }}
   ports:
     [% for port in component.metrics.ports %]
     - port: {{ .Values[[ component_values_path ]]metrics.service.ports.[[ port.name ]] }}

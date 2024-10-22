@@ -23,6 +23,12 @@ metadata:
 spec:
   type: ClusterIP
   clusterIP: None
+  {{- if .Values[[ component_values_path ]]headless.service.ipFamilyPolicy }}
+  ipFamilyPolicy: {{ .Values[[ component_values_path ]]headless.service.ipFamilyPolicy }}
+  {{- end }}
+  {{- if not (empty .Values[[ component_values_path ]]headless.service.ipFamilies)}}
+  ipFamilies: {{- toYaml .Values[[ component_values_path ]]headless.service.ipFamilies | nindent 4 }}
+  {{- end }}
   ports:
     [% for port in component.headless.ports %]
     - port: {{ .Values[[ component_values_path ]]headless.service.ports.[[ port.name ]] }}

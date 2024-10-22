@@ -29,6 +29,12 @@ spec:
   {{- if and (eq .Values[[ component_values_path ]]service.type "ClusterIP") .Values[[ component_values_path ]]service.clusterIP }}
   clusterIP: {{ .Values[[ component_values_path ]]service.clusterIP }}
   {{- end }}
+  {{- if .Values[[ component_values_path ]]service.ipFamilyPolicy }}
+  ipFamilyPolicy: {{ .Values[[ component_values_path ]]service.ipFamilyPolicy }}
+  {{- end }}
+  {{- if not (empty .Values[[ component_values_path ]]service.ipFamilies)}}
+  ipFamilies: {{- toYaml .Values[[ component_values_path ]]service.ipFamilies | nindent 4 }}
+  {{- end }}
   {{- if .Values[[ component_values_path ]]service.sessionAffinity }}
   sessionAffinity: {{ .Values[[ component_values_path ]]service.sessionAffinity }}
   {{- end }}

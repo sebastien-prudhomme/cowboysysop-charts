@@ -259,6 +259,12 @@ service:
   clusterIP:
   # clusterIP: 10.43.0.100
 
+  ## @param [[ component_yaml_path ]]service.ipFamilyPolicy Service IP family policy
+  ipFamilyPolicy: ""
+
+  ## @param [[ component_yaml_path ]]service.ipFamilies Service IP families
+  ipFamilies: []
+
   ## @param [[ component_yaml_path ]]service.sessionAffinity Control where client requests go, to the same pod or round-robin
   sessionAffinity: None
 
@@ -535,6 +541,12 @@ headless:
     ## @param [[ component_yaml_path ]]headless.service.annotations Headless service annotations
     annotations: {}
 
+    ## @param [[ component_yaml_path ]]headless.service.ipFamilyPolicy Headless service IP family policy
+    ipFamilyPolicy: ""
+
+    ## @param [[ component_yaml_path ]]headless.service.ipFamilies Headless service IP families
+    ipFamilies: []
+
     ports:
       [% for port in component.headless.ports %]
       [% if loop.index0 > 0 %]
@@ -563,6 +575,12 @@ metrics:
     ## @param [[ component_yaml_path ]]metrics.service.clusterIP Metrics static cluster IP address or None for headless service when service type is ClusterIP
     clusterIP:
     # clusterIP: 10.43.0.100
+
+    ## @param [[ component_yaml_path ]]metrics.service.ipFamilyPolicy Metrics service IP family policy
+    ipFamilyPolicy: ""
+
+    ## @param [[ component_yaml_path ]]metrics.service.ipFamilies Metrics service IP families
+    ipFamilies: []
 
     ports:
       [% for port in component.metrics.ports %]
