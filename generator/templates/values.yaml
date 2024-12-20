@@ -810,9 +810,6 @@ redis:
   architecture: standalone
 
   auth:
-    ## @param redis.auth.enabled Enable password authentication
-    enabled: true
-
     ## @param redis.auth.password Redis password
     password: [[ application.name ]]
 

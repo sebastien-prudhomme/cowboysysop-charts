@@ -38,7 +38,7 @@ dependencies:
   [% endif %]
   [% if application.redis %]
   - name: redis
-    version: 17.13.2
+    version: 20.6.0
     repository: https://charts.bitnami.com/bitnami/
     condition: redis.enabled
   [% endif %]

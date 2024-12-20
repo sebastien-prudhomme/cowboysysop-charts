@@ -105,7 +105,7 @@ spec:
       {{- end }}
       securityContext:
         {{- toYaml .Values[[ component_values_path ]]podSecurityContext | nindent 8 }}
-      [% if component.deployment.waitMariadb or component.deployment.waitPostgresql or component.deployment.initContainer %]
+      [% if component.deployment.waitMariadb or component.deployment.waitPostgresql or component.deployment.waitRedis or component.deployment.initContainer %]
       initContainers:
         [% if component.deployment.waitMariadb %]
         [% if application.mariadb == "optional" %]
@@ -180,6 +180,40 @@ spec:
             {{- include "common.tplvalues.render" (dict "value" .Values.wait.extraVolumeMounts "context" $) | nindent 12 }}
             {{- end }}
         [% if application.postgresql == "optional" %]
+        {{- end }}
+        [% endif %]
+        [% endif %]
+        [% if component.deployment.waitRedis %]
+        [% if application.redis == "optional" %]
+        {{- if or .Values.redis.enabled .Values.externalRedis.enabled }}
+        [% endif %]
+        - name: wait-redis
+          securityContext:
+            {{- toYaml .Values.wait.securityContext | nindent 12 }}
+          image: {{ include "common.images.image" ( dict "imageRoot" .Values.wait.image "global" .Values.global ) }}
+          imagePullPolicy: {{ .Values.wait.image.pullPolicy }}
+          command:
+            - /bin/sh
+            - -ec
+            - |
+              wait4x redis "redis://default:${REDIS_PASSWORD}@${REDIS_HOST}:${REDIS_PORT}" --timeout 0
+          env:
+            - name: REDIS_HOST
+              value: {{ include "[[ application.name ]].redis.host" . | quote }}
+            - name: REDIS_PORT
+              value: {{ include "[[ application.name ]].redis.port" . | quote }}
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "[[ application.name ]].redis.secretName" . }}
+                  key: {{ include "[[ application.name ]].redis.secretKeyPassword" . }}
+          resources:
+            {{- toYaml .Values.wait.resources | nindent 12 }}
+          volumeMounts:
+            {{- if .Values.wait.extraVolumeMounts }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.wait.extraVolumeMounts "context" $) | nindent 12 }}
+            {{- end }}
+        [% if application.redis == "optional" %]
         {{- end }}
         [% endif %]
         [% endif %]
