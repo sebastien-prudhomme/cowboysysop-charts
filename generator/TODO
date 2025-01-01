@@ -1,8 +1,6 @@
+Mettre persistence: true partout (BREAKING CHANGE)
+
 Modif bitnami common : https://github.com/bitnami/charts/commit/9a20483cfd1daa6bfe08fd8116516a9bb5cd9754
-
-wait4x Redis (essayer avec N8N)
-
-Mettre persistence: true partout ?
 
 Manque le fullnameoverride des bases dans CI aussi quand pas "test" et pas "optionnal" ?
 
