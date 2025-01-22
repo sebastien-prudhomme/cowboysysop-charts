@@ -5,8 +5,12 @@ description: is a <<chart image and QR code web API>>
 home: https://quickchart.io/
 license: 2021
 source: https://github.com/typpo/quickchart
-version: 4.0.0
+version: 5.0.0
 updates: |
+  ### Upgrading to version 5.0.0
+
+  Information about services are no more injected into pod's environment variable.
+
   ### Upgrading to version 4.0.0
 
   The chart is now tested with Kubernetes >= 1.24 and Helm >= 3.9.

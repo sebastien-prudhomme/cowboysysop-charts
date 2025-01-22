@@ -6,8 +6,12 @@ home: https://github.com/benc-uk/kubeview
 icon: https://raw.githubusercontent.com/benc-uk/kubeview/master/web/client/public/favicon.png
 license: 2020
 source: https://github.com/benc-uk/kubeview
-version: 5.0.0
+version: 6.0.0
 updates: |
+  ### Upgrading to version 6.0.0
+
+  Information about services are no more injected into pod's environment variable.
+
   ### Upgrading to version 5.0.0
 
   The chart is now tested with Kubernetes >= 1.24 and Helm >= 3.9.

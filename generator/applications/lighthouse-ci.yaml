@@ -6,8 +6,12 @@ home: https://github.com/GoogleChrome/lighthouse-ci
 icon: https://raw.githubusercontent.com/GoogleChrome/lighthouse-ci/master/packages/server/src/ui/logo.svg
 license: 2020
 source: https://github.com/GoogleChrome/lighthouse-ci
-version: 8.0.0
+version: 9.0.0
 updates: |
+  ### Upgrading to version 9.0.0
+
+  Information about services are no more injected into pod's environment variable.
+
   ### Upgrading to version 8.0.0
 
   The MariaDB subchart has been updated to a major release, see these upgrade instructions:

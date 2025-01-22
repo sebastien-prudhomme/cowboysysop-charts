@@ -6,8 +6,12 @@ home: https://github.com/mongo-express/mongo-express
 icon: https://raw.githubusercontent.com/mongo-express/mongo-express/master/public/images/mongo-express-logo.png
 license: 2020
 source: https://github.com/mongo-express/mongo-express
-version: 6.5.0
+version: 7.0.0
 updates: |
+  ### Upgrading to version 7.0.0
+
+  Information about services are no more injected into pod's environment variable.
+
   ### Upgrading to version 5.0.0
 
   The chart is now tested with Kubernetes >= 1.24 and Helm >= 3.9.

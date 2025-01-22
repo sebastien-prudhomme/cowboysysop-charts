@@ -6,8 +6,12 @@ home: https://www.dolibarr.org/
 icon: https://raw.githubusercontent.com/Dolibarr/dolibarr/develop/doc/images/dolibarr_256x256_color.svg
 license: 2022
 source: https://github.com/Dolibarr/dolibarr
-version: 5.2.1
+version: 6.0.0
 updates: |
+  ### Upgrading to version 6.0.0
+
+  Information about services are no more injected into pod's environment variable.
+
   ### Upgrading to version 5.0.0
 
   The MariaDB subchart has been updated to a major release, see these upgrade instructions:

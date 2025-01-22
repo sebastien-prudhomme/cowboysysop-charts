@@ -102,6 +102,9 @@ serviceAccount:
   ## @param [[ component_yaml_path ]]serviceAccount.name The name of the service account to use (Generated using the `[[ application.name ]].fullname` template if not set)
   name:
 
+## @param [[ component_yaml_path ]]enableServiceLinks Whether information about services should be injected into pod's environment variable
+enableServiceLinks: false
+
 ## @param [[ component_yaml_path ]]hostAliases Pod host aliases
 hostAliases: []
 

@@ -83,6 +83,7 @@ spec:
       {{- end }}
       [% endif %]
     spec:
+      enableServiceLinks: {{ .Values[[ component_values_path ]]enableServiceLinks }}
       {{- include "common.images.pullSecrets" ( dict "images" ( list .Values[[ component_values_path ]]image ) "global" .Values.global ) | nindent 6 }}
       {{- if .Values[[ component_values_path ]]hostAliases }}
       hostAliases: {{- include "common.tplvalues.render" (dict "value" .Values[[ component_values_path ]]hostAliases "context" $) | nindent 8 }}

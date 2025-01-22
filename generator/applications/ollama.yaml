@@ -6,7 +6,11 @@ home: https://ollama.com/
 icon: https://raw.githubusercontent.com/cowboysysop/charts/master/charts/ollama/icon.png
 license: 2024
 source: https://github.com/ollama/ollama
-version: 1.5.4
+version: 2.0.0
+updates: |
+  ### Upgrading to version 2.0.0
+
+  Information about services are no more injected into pod's environment variable.
 components:
   - name: ollama
     deployment:

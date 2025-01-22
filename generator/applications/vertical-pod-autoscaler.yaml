@@ -7,10 +7,14 @@ home: https://github.com/kubernetes/autoscaler
 icon: https://raw.githubusercontent.com/kubernetes/kubernetes/master/logo/logo.svg
 license: 2020
 source: https://github.com/kubernetes/autoscaler
-version: 9.9.0
+version: 10.0.0
 prerequisites: |
   - Metrics Server >= 0.2 (you can use the [bitnami/metrics-server](https://artifacthub.io/packages/helm/bitnami/metrics-server) chart)
 updates: |
+  ### Upgrading to version 10.0.0
+
+  Information about services are no more injected into pod's environment variable.
+
   ### Upgrading to version 9.0.0
 
   The chart is now tested with Kubernetes >= 1.24 and Helm >= 3.9.

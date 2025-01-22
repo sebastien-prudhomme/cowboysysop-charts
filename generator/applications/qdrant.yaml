@@ -6,8 +6,12 @@ home: https://qdrant.tech/
 icon: https://raw.githubusercontent.com/cowboysysop/charts/master/charts/qdrant/icon.png
 license: 2023
 source: https://github.com/qdrant/qdrant
-version: 2.1.1
+version: 3.0.0
 updates: |
+  ### Upgrading to version 3.0.0
+
+  Information about services are no more injected into pod's environment variable.
+
   ### Upgrading to version 2.0.0
 
   The chart is now tested with Kubernetes >= 1.24 and Helm >= 3.9.
