@@ -304,8 +304,8 @@ PostgreSQL user
 PostgreSQL secret name
 */}}
 {{- define "[[ application.name ]].postgresql.secretName" -}}
-{{- if .Values.postgresql.existingSecret -}}
-    {{ .Values.postgresql.existingSecret }}
+{{- if .Values.postgresql.auth.existingSecret -}}
+    {{ .Values.postgresql.auth.existingSecret }}
 {{- else if .Values.externalPostgresql.existingSecret -}}
     {{ .Values.externalPostgresql.existingSecret }}
 {{- else -}}
@@ -380,8 +380,8 @@ Redis port
 Redis secret name
 */}}
 {{- define "[[ application.name ]].redis.secretName" -}}
-{{- if .Values.redis.existingSecret -}}
-    {{ .Values.redis.existingSecret }}
+{{- if .Values.redis.auth.existingSecret -}}
+    {{ .Values.redis.auth.existingSecret }}
 {{- else if .Values.externalRedis.existingSecret -}}
     {{ .Values.externalRedis.existingSecret }}
 {{- else -}}

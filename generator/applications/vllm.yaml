@@ -1,0 +1,54 @@
+name: vllm
+productName: vLLM
+appVersion: 0.6.6
+description: is a <<high-throughput and memory-efficient inference and serving engine for LLMs>>
+home: https://blog.vllm.ai/
+icon: https://raw.githubusercontent.com/cowboysysop/charts/master/charts/vllm/icon.png
+license: 2025
+source: https://github.com/vllm-project/vllm
+version: 1.0.0
+components:
+  - name: vllm
+    deployment:
+      type: deployment
+      container:
+        args: |
+          - --port={{ .Values.containerPorts.http }}
+          - --swap-space=0
+        env: |
+          - name: VLLM_NO_USAGE_STATS
+            value: "1"
+        livenessProbe:
+          initialDelaySeconds: 180
+          httpGet:
+            path: /health
+        readinessProbe:
+          httpGet:
+            path: /health
+        startupProbe:
+          httpGet:
+            path: /health
+        volumeMounts: |
+          - name: data
+            mountPath: /root/.cache/huggingface
+    image:
+      registry: docker.io
+      repository: vllm/vllm-openai
+      tag: v0.6.6
+    ingress: true
+    persistentvolumeclaim: true
+    service:
+      ports:
+        - name: http
+          number: 8000
+          description: HTTP
+tests: |
+  import requests
+
+
+  def test_service_connection():
+      url = "http://{{ include "vllm.fullname" . }}:{{ .Values.service.ports.http }}/"
+
+      response = requests.get(url)
+
+      assert response.status_code == 200
