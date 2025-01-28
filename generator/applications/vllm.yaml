@@ -14,6 +14,7 @@ components:
       container:
         args: |
           - --port={{ .Values.containerPorts.http }}
+          - --model=https://huggingface.co/bartowski/Meta-Llama-3.1-8B-Instruct-GGUF/raw/main/Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf
           - --swap-space=0
         env: |
           - name: VLLM_NO_USAGE_STATS
