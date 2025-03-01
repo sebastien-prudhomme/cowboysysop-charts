@@ -14,6 +14,14 @@ updates: |
 
   ### Upgrading to version 4.0.0
 
+ We’ve removed rwkv.cpp and bert.cpp
+
+Deprecation of the exllama backend
+
+
+As we continue to evolve, we are officially deprecating the gpt4all.cpp and petals backends
+
+
   The trust_remote_code setting in the YAML config file of the model are now consumed for enhanced security measures also for the AutoGPTQ and transformers backend, thanks to @dave-gray101's contribution (#1799). If your model relied on the old behavior and you are sure of what you are doing, set trust_remote_code: true in the YAML config file.
 
   backend supprimé, cf evoliton de https://github.com/mudler/LocalAI/blob/master/docs/content/docs/reference/compatibility-table.md
