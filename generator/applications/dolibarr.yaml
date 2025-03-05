@@ -1,6 +1,6 @@
 name: dolibarr
 productName: Dolibarr
-appVersion: 19.0.3
+appVersion: 20.0.3
 description: is <<a modern software package to manage your company or foundation's activity>>
 home: https://www.dolibarr.org/
 icon: https://raw.githubusercontent.com/Dolibarr/dolibarr/develop/doc/images/dolibarr_256x256_color.svg
@@ -9,6 +9,10 @@ source: https://github.com/Dolibarr/dolibarr
 version: 6.0.0
 updates: |
   ### Upgrading to version 6.0.0
+
+  The application has been updated to a major release, see the release notes for breaking changes:
+
+  - https://github.com/Dolibarr/dolibarr/releases/tag/20.0.0
 
   Information about services are no more injected into pod's environment variable.
 
@@ -123,7 +127,7 @@ components:
     image:
       registry: docker.io
       repository: dolibarr/dolibarr
-      tag: 19.0.3
+      tag: 20.0.3
     ingress: true
     persistentvolumeclaim: true
     secret: |
