@@ -78,131 +78,132 @@ with open(sys.argv[1], "r") as stream:
     # First rendered helper in case only non main components
     render("templates/_helpers.tpl", f"{templates_directory}/_helpers.tpl", application=application)
 
-    components = application["components"]
+    if application.get("components"):
+      components = application["components"]
 
-    for component in components:
-        # Manage component
-        component_name = component["name"]
+      for component in components:
+          # Manage component
+          component_name = component["name"]
 
-        if component_name != name:
-            component_directory = f"{templates_directory}/{component_name}"
-            os.mkdir(component_directory)
+          if component_name != name:
+              component_directory = f"{templates_directory}/{component_name}"
+              os.mkdir(component_directory)
 
-        # Manage helper
-        if component_name == name:
-            render("templates/_helpers.tpl", f"{templates_directory}/_helpers.tpl", application=application, component=component)
-        else:
-            render("templates/_helpers.tpl", f"{component_directory}/_helpers.tpl", application=application, component=component)
+          # Manage helper
+          if component_name == name:
+              render("templates/_helpers.tpl", f"{templates_directory}/_helpers.tpl", application=application, component=component)
+          else:
+              render("templates/_helpers.tpl", f"{component_directory}/_helpers.tpl", application=application, component=component)
 
-        # Manage ClusterRole/ClusterRoleBinding
-        if component.get("clusterrole"):
-            if component_name == name:
-                render("templates/clusterrole.yaml", f"{templates_directory}/clusterrole.yaml", application=application, component=component)
-                render("templates/clusterrolebinding.yaml", f"{templates_directory}/clusterrolebinding.yaml", application=application, component=component)
-            else:
-                render("templates/clusterrole.yaml", f"{component_directory}/clusterrole.yaml", application=application, component=component)
-                render("templates/clusterrolebinding.yaml", f"{component_directory}/clusterrolebinding.yaml", application=application, component=component)
+          # Manage ClusterRole/ClusterRoleBinding
+          if component.get("clusterrole"):
+              if component_name == name:
+                  render("templates/clusterrole.yaml", f"{templates_directory}/clusterrole.yaml", application=application, component=component)
+                  render("templates/clusterrolebinding.yaml", f"{templates_directory}/clusterrolebinding.yaml", application=application, component=component)
+              else:
+                  render("templates/clusterrole.yaml", f"{component_directory}/clusterrole.yaml", application=application, component=component)
+                  render("templates/clusterrolebinding.yaml", f"{component_directory}/clusterrolebinding.yaml", application=application, component=component)
 
-        # Manage ConfigMap
-        if component.get("configmap"):
-            if component_name == name:
-                render("templates/configmap.yaml", f"{templates_directory}/configmap.yaml", application=application, component=component)
-            else:
-                render("templates/component/configmap.yaml", f"{component_directory}/configmap.yaml", application=application, component=component)
+          # Manage ConfigMap
+          if component.get("configmap"):
+              if component_name == name:
+                  render("templates/configmap.yaml", f"{templates_directory}/configmap.yaml", application=application, component=component)
+              else:
+                  render("templates/component/configmap.yaml", f"{component_directory}/configmap.yaml", application=application, component=component)
 
-        # Manage Deployment/Statefulset
-        if component.get("deployment"):
-            if component_name == name:
-                render(f"templates/deployment.yaml", f"{templates_directory}/{component['deployment']['type']}.yaml", application=application, component=component)
-            else:
-                render(f"templates/deployment.yaml", f"{component_directory}/{component['deployment']['type']}.yaml", application=application, component=component)
+          # Manage Deployment/Statefulset
+          if component.get("deployment"):
+              if component_name == name:
+                  render(f"templates/deployment.yaml", f"{templates_directory}/{component['deployment']['type']}.yaml", application=application, component=component)
+              else:
+                  render(f"templates/deployment.yaml", f"{component_directory}/{component['deployment']['type']}.yaml", application=application, component=component)
 
-        # Manage Ingress
-        if component.get("ingress"):
-            if component_name == name:
-                render("templates/ingress.yaml", f"{templates_directory}/ingress.yaml", application=application, component=component)
-            else:
-                render("templates/component/ingress.yaml", f"{component_directory}/ingress.yaml", application=application, component=component)
+          # Manage Ingress
+          if component.get("ingress"):
+              if component_name == name:
+                  render("templates/ingress.yaml", f"{templates_directory}/ingress.yaml", application=application, component=component)
+              else:
+                  render("templates/component/ingress.yaml", f"{component_directory}/ingress.yaml", application=application, component=component)
 
-        # Manage PersistentVolumeClaim
-        if component["deployment"]["type"] == "deployment" and component.get("persistentvolumeclaim"):
-            if component_name == name:
-                render("templates/persistentvolumeclaim.yaml", f"{templates_directory}/persistentvolumeclaim.yaml", application=application, component=component)
-            else:
-                render("templates/component/persistentvolumeclaim.yaml", f"{component_directory}/persistentvolumeclaim.yaml", application=application, component=component)
+          # Manage PersistentVolumeClaim
+          if component["deployment"]["type"] == "deployment" and component.get("persistentvolumeclaim"):
+              if component_name == name:
+                  render("templates/persistentvolumeclaim.yaml", f"{templates_directory}/persistentvolumeclaim.yaml", application=application, component=component)
+              else:
+                  render("templates/component/persistentvolumeclaim.yaml", f"{component_directory}/persistentvolumeclaim.yaml", application=application, component=component)
 
-        # Manage PodDisruptionBudget
-        if component_name == name:
-            render("templates/pdb.yaml", f"{templates_directory}/pdb.yaml", application=application, component=component)
-        else:
-            render("templates/pdb.yaml", f"{component_directory}/pdb.yaml", application=application, component=component)
+          # Manage PodDisruptionBudget
+          if component_name == name:
+              render("templates/pdb.yaml", f"{templates_directory}/pdb.yaml", application=application, component=component)
+          else:
+              render("templates/pdb.yaml", f"{component_directory}/pdb.yaml", application=application, component=component)
 
-        # Manage Secret
-        if component.get("secret"):
-            if component_name == name:
-                render("templates/secret.yaml", f"{templates_directory}/secret.yaml", application=application, component=component)
-            else:
-                render("templates/component/secret.yaml", f"{component_directory}/secret.yaml", application=application, component=component)
+          # Manage Secret
+          if component.get("secret"):
+              if component_name == name:
+                  render("templates/secret.yaml", f"{templates_directory}/secret.yaml", application=application, component=component)
+              else:
+                  render("templates/component/secret.yaml", f"{component_directory}/secret.yaml", application=application, component=component)
 
-        # Manage TLS Secret
-        if component.get("tls"):
-            if component_name == name:
-                render("templates/tls-secret.yaml", f"{templates_directory}/tls-secret.yaml", application=application, component=component)
-            else:
-                render("templates/tls-secret.yaml", f"{component_directory}/tls-secret.yaml", application=application, component=component)
+          # Manage TLS Secret
+          if component.get("tls"):
+              if component_name == name:
+                  render("templates/tls-secret.yaml", f"{templates_directory}/tls-secret.yaml", application=application, component=component)
+              else:
+                  render("templates/tls-secret.yaml", f"{component_directory}/tls-secret.yaml", application=application, component=component)
 
-        # Manage Service
-        if component.get("service"):
-            if component_name == name:
-                render("templates/service.yaml", f"{templates_directory}/service.yaml", application=application, component=component)
-            else:
-                render("templates/service.yaml", f"{component_directory}/service.yaml", application=application, component=component)
+          # Manage Service
+          if component.get("service"):
+              if component_name == name:
+                  render("templates/service.yaml", f"{templates_directory}/service.yaml", application=application, component=component)
+              else:
+                  render("templates/service.yaml", f"{component_directory}/service.yaml", application=application, component=component)
 
-        # Manage Headless Service
-        if component.get("headless"):
-            if component_name == name:
-                render("templates/headless-service.yaml", f"{templates_directory}/headless-service.yaml", application=application, component=component)
-            else:
-                render("templates/headless-service.yaml", f"{component_directory}/headless-service.yaml", application=application, component=component)
+          # Manage Headless Service
+          if component.get("headless"):
+              if component_name == name:
+                  render("templates/headless-service.yaml", f"{templates_directory}/headless-service.yaml", application=application, component=component)
+              else:
+                  render("templates/headless-service.yaml", f"{component_directory}/headless-service.yaml", application=application, component=component)
 
-        # Manage Metrics Service
-        if component.get("metrics") and component["metrics"].get("ports"):
-            if component_name == name:
-                render("templates/metrics-service.yaml", f"{templates_directory}/metrics-service.yaml", application=application, component=component)
-            else:
-                render("templates/metrics-service.yaml", f"{component_directory}/metrics-service.yaml", application=application, component=component)
+          # Manage Metrics Service
+          if component.get("metrics") and component["metrics"].get("ports"):
+              if component_name == name:
+                  render("templates/metrics-service.yaml", f"{templates_directory}/metrics-service.yaml", application=application, component=component)
+              else:
+                  render("templates/metrics-service.yaml", f"{component_directory}/metrics-service.yaml", application=application, component=component)
 
-        # Manage ServiceAccount
-        if component_name == name:
-            render("templates/serviceaccount.yaml", f"{templates_directory}/serviceaccount.yaml", application=application, component=component)
-        else:
-            render("templates/serviceaccount.yaml", f"{component_directory}/serviceaccount.yaml", application=application, component=component)
+          # Manage ServiceAccount
+          if component_name == name:
+              render("templates/serviceaccount.yaml", f"{templates_directory}/serviceaccount.yaml", application=application, component=component)
+          else:
+              render("templates/serviceaccount.yaml", f"{component_directory}/serviceaccount.yaml", application=application, component=component)
 
-        # Manage ServiceMonitor
-        if component.get("serviceMonitor"):
-            if component_name == name:
-                render("templates/servicemonitor.yaml", f"{templates_directory}/servicemonitor.yaml", application=application, component=component)
-            else:
-                render("templates/servicemonitor.yaml", f"{component_directory}/servicemonitor.yaml", application=application, component=component)
+          # Manage ServiceMonitor
+          if component.get("serviceMonitor"):
+              if component_name == name:
+                  render("templates/servicemonitor.yaml", f"{templates_directory}/servicemonitor.yaml", application=application, component=component)
+              else:
+                  render("templates/servicemonitor.yaml", f"{component_directory}/servicemonitor.yaml", application=application, component=component)
 
-        # Manage HPA
-        if component.get("hpa"):
-            if component_name == name:
-                render("templates/hpa.yaml", f"{templates_directory}/hpa.yaml", application=application, component=component)
-            else:
-                render("templates/hpa.yaml", f"{component_directory}/hpa.yaml", application=application, component=component)
+          # Manage HPA
+          if component.get("hpa"):
+              if component_name == name:
+                  render("templates/hpa.yaml", f"{templates_directory}/hpa.yaml", application=application, component=component)
+              else:
+                  render("templates/hpa.yaml", f"{component_directory}/hpa.yaml", application=application, component=component)
 
-        # Manage VPA
-        if component.get("vpa"):
-            if component_name == name:
-                render("templates/vpa.yaml", f"{templates_directory}/vpa.yaml", application=application, component=component)
-            else:
-                render("templates/vpa.yaml", f"{component_directory}/vpa.yaml", application=application, component=component)
+          # Manage VPA
+          if component.get("vpa"):
+              if component_name == name:
+                  render("templates/vpa.yaml", f"{templates_directory}/vpa.yaml", application=application, component=component)
+              else:
+                  render("templates/vpa.yaml", f"{component_directory}/vpa.yaml", application=application, component=component)
 
     # Manage CRDs
     if application.get("crds"):
         files_directory = f"{chart_directory}/files"
-        os.mkdir(files_directory)
+        os.makedirs(files_directory, exist_ok=True)
 
         files_crds_directory = f"{files_directory}/crds"
         shutil.copytree(f"applications/{name}/files/crds", files_crds_directory)
@@ -216,6 +217,16 @@ with open(sys.argv[1], "r") as stream:
         render("templates/crds/configmap.yaml", f"{crds_directory}/configmap.yaml", application=application)
         render("templates/crds/job.yaml", f"{crds_directory}/job.yaml", application=application)
         render("templates/crds/serviceaccount.yaml", f"{crds_directory}/serviceaccount.yaml", application=application)
+
+    # Manage Grafana dashboards
+    if application.get("grafanaDashboards"):
+        files_directory = f"{chart_directory}/files"
+        os.makedirs(files_directory, exist_ok=True)
+
+        files_grafana_dashboards_directory = f"{files_directory}/grafana-dashboards"
+        shutil.copytree(f"applications/{name}/files/grafana-dashboards", files_grafana_dashboards_directory)
+
+        render("templates/configmap-grafana-dashboards.yaml", f"{templates_directory}/configmap-grafana-dashboards.yaml", application=application)
 
     # Manage MariaDB
     if application.get("mariadb"):
@@ -231,6 +242,16 @@ with open(sys.argv[1], "r") as stream:
 
         render("templates/postgresql-secret.yaml", f"{templates_directory}/postgresql-secret.yaml", application=application)
 
+    # Manage Prometheus rules
+    if application.get("prometheusRules"):
+        files_directory = f"{chart_directory}/files"
+        os.makedirs(files_directory, exist_ok=True)
+
+        files_prometheus_rules_directory = f"{files_directory}/prometheus-rules"
+        shutil.copytree(f"applications/{name}/files/prometheus-rules", files_prometheus_rules_directory)
+
+        render("templates/prometheusrule.yaml", f"{templates_directory}/prometheusrule.yaml", application=application)
+
     # Manage Redis
     if application.get("redis"):
         if application["redis"] == "optional":
@@ -238,9 +259,10 @@ with open(sys.argv[1], "r") as stream:
 
         render("templates/redis-secret.yaml", f"{templates_directory}/redis-secret.yaml", application=application)
 
-    tests_directory = f"{templates_directory}/tests"
-    os.mkdir(tests_directory)
+    if application.get("tests"):
+      tests_directory = f"{templates_directory}/tests"
+      os.mkdir(tests_directory)
 
-    render("templates/tests/_helpers.tpl", f"{tests_directory}/_helpers.tpl", application=application)
-    render("templates/tests/configmap.yaml", f"{tests_directory}/configmap.yaml", application=application)
-    render("templates/tests/pod.yaml", f"{tests_directory}/pod.yaml", application=application)
+      render("templates/tests/_helpers.tpl", f"{tests_directory}/_helpers.tpl", application=application)
+      render("templates/tests/configmap.yaml", f"{tests_directory}/configmap.yaml", application=application)
+      render("templates/tests/pod.yaml", f"{tests_directory}/pod.yaml", application=application)

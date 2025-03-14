@@ -42,7 +42,7 @@ spec:
           imagePullPolicy: {{ .Values.crds.image.pullPolicy }}
           args:
             - apply
-            {{- range $path, $_ := .Files.Glob  "files/crds/*" }}
+            {{- range $path, $_ := .Files.Glob  "files/crds/*.yaml" }}
             - --filename=/config/{{ base $path }}
             {{- end }}
           resources:

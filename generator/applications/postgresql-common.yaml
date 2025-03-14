@@ -1,0 +1,10 @@
+name: postgresql-common
+productName: PostgreSQL Common
+appVersion: 1.0.0
+description: are a <<collection of Kubernetes objects common to all PostgreSQL instances>>
+home: https://github.com/cowboysysop/charts/tree/master/charts/postgresql-common
+license: 2025
+source: https://github.com/grafana/postgres_exporter/tree/master/postgres_mixin
+version: 1.0.0
+grafanaDashboards: true
+prometheusRules: true

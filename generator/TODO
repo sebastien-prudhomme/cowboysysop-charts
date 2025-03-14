@@ -1,3 +1,7 @@
+Chart.yaml : keywords et category artifacthub (comment faire ?)
+
+values.schema.json (généré avec readme-generator)
+
 Mettre persistence: true partout (BREAKING CHANGE)
 
 Modif bitnami common : https://github.com/bitnami/charts/commit/9a20483cfd1daa6bfe08fd8116516a9bb5cd9754
