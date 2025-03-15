@@ -18,6 +18,6 @@ metadata:
   {{- end }}
 spec:
   {{- range $path, $_ := .Files.Glob  "files/prometheus-rules/*.yaml" }}
-  {{- tpl ($.Files.Get $path) $ | nindent 2 }}
+  {{- $.Files.Get $path | nindent 2 }}
   {{- end }}
 {{- end }}

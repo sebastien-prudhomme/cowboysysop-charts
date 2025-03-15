@@ -957,7 +957,7 @@ crds:
 [% endif %]
 [% if application.grafanaDashboards %]
 
-## @section Grafana parameters
+## @section Grafana dashboards parameters
 
 grafanaDashboards:
   ## @param grafanaDashboards.enabled Specifies whether Grafana dashboards should be created
@@ -966,14 +966,14 @@ grafanaDashboards:
   ## @param grafanaDashboards.namespace Namespace in which to create the Grafana dashboards
   namespace: ""
 
-  ## @extra grafanaDashboards.labels Additional Grafana dashboards labels
+  ## @extra grafanaDashboards.labels [object] Additional Grafana dashboards labels
   ## @param grafanaDashboards.labels.grafana_dashboard Label used by Grafana dashboards selector
   labels:
     grafana_dashboard: "1"
 [% endif %]
 [% if application.grafanaDashboards %]
 
-## @section Prometheus parameters
+## @section Prometheus rules parameters
 
 prometheusRules:
   ## @param prometheusRules.enabled Specifies whether Prometheus rules should be created

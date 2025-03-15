@@ -2,7 +2,7 @@
 
 [["["]][[ application.productName ]][["]"]]([[ application.home ]]) [[ application.description | replace("<<", "") | replace(">>", "") ]].
 
-**DISCLAIMER**: This is an unofficial chart not supported by [[ application.productName ]] authors.
+**DISCLAIMER**: This is an unofficial chart not supported by [[ application.originalProductName if application.originalProductName else application.productName ]] authors.
 
 ## TL;DR;
 

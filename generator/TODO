@@ -23,3 +23,10 @@ kubeview
 quickchart
 
 Activer startup probe de base ? Breaking change
+
+Gestion des mixins:
+
+- https://github.com/nlamirault/monitoring-mixins/
+  - charts ici : https://github.com/portefaix/portefaix-hub/tree/master/charts
+    https://github.com/portefaix/portefaix-hub/blob/master/hack/mixins.py
+- https://github.com/monitoring-mixins/website
