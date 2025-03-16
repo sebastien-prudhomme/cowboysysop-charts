@@ -30,3 +30,4 @@ Gestion des mixins:
   - charts ici : https://github.com/portefaix/portefaix-hub/tree/master/charts
     https://github.com/portefaix/portefaix-hub/blob/master/hack/mixins.py
 - https://github.com/monitoring-mixins/website
+- https://github.com/grafana/jsonnet-libs/

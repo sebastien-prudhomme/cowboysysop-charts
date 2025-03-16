@@ -1,3 +1,4 @@
+python3 generator.py applications/cert-manager-common.yaml
 python3 generator.py applications/dolibarr.yaml
 python3 generator.py applications/flowise.yaml
 python3 generator.py applications/kroki.yaml

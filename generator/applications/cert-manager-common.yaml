@@ -1,0 +1,11 @@
+name: cert-manager-common
+productName: Cert-Manager Common
+originalProductName: Cert-Manager
+appVersion: 1.0.0
+description: are a <<collection of Kubernetes objects common to all Cert-Manager instances>>
+home: https://github.com/cowboysysop/charts/tree/master/charts/cert-manager-common
+license: 2025
+source: https://github.com/imusmanmalik/cert-manager-mixin
+version: 1.0.0
+grafanaDashboards: true
+prometheusRules: true
