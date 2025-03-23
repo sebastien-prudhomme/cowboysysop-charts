@@ -987,7 +987,7 @@ prometheusRules:
   labels:
     release: kube-prometheus-stack
 [% endif %]
-[% if application.crds %]
+[% if application.tests %]
 
 ## @section Tests parameters
 

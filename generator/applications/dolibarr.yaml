@@ -1,13 +1,25 @@
 name: dolibarr
 productName: Dolibarr
-appVersion: 20.0.3
+appVersion: 21.0.0
 description: is <<a modern software package to manage your company or foundation's activity>>
 home: https://www.dolibarr.org/
 icon: https://raw.githubusercontent.com/Dolibarr/dolibarr/develop/doc/images/dolibarr_256x256_color.svg
 license: 2022
 source: https://github.com/Dolibarr/dolibarr
-version: 6.0.0
+version: 7.0.0
 updates: |
+  ### Upgrading to version 7.0.0
+
+  The application has been updated to a major release, see the release notes for breaking changes:
+
+  - https://github.com/Dolibarr/dolibarr/releases/tag/21.0.0
+
+  The MariaDB subchart has been updated to a major release, see these upgrade instructions:
+
+  - https://github.com/bitnami/charts/tree/master/bitnami/mariadb#to-2020
+  - https://github.com/bitnami/charts/tree/master/bitnami/mariadb#to-2000
+  - https://github.com/bitnami/charts/tree/master/bitnami/mariadb#to-1900
+
   ### Upgrading to version 6.0.0
 
   The application has been updated to a major release, see the release notes for breaking changes:
@@ -67,6 +79,13 @@ components:
               secretKeyRef:
                 name: {{ include "dolibarr.secretName" . }}
                 key: {{ include "dolibarr.secretKeyAdminPassword" . }}
+          {{- if .Values.dolibarr.cron.enabled }}
+          - name: DOLI_CRON_KEY
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "dolibarr.secretName" . }}
+                key: {{ include "dolibarr.secretKeyCronSecurityKey" . }}
+          {{- end }}
           - name: DOLI_DB_HOST
             value: {{ include "dolibarr.mariadb.host" . | quote }}
           - name: DOLI_DB_HOST_PORT
@@ -127,7 +146,7 @@ components:
     image:
       registry: docker.io
       repository: dolibarr/dolibarr
-      tag: 20.0.3
+      tag: 21.0.0
     ingress: true
     persistentvolumeclaim: true
     secret: |
