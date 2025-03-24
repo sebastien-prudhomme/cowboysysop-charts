@@ -266,3 +266,11 @@ with open(sys.argv[1], "r") as stream:
       render("templates/tests/_helpers.tpl", f"{tests_directory}/_helpers.tpl", application=application)
       render("templates/tests/configmap.yaml", f"{tests_directory}/configmap.yaml", application=application)
       render("templates/tests/pod.yaml", f"{tests_directory}/pod.yaml", application=application)
+
+    # Manage Velero backups
+    if application.get("veleroBackups"):
+        render("templates/schedule-daily.yaml", f"{templates_directory}/schedule-daily.yaml", application=application)
+        render("templates/schedule-hourly.yaml", f"{templates_directory}/schedule-hourly.yaml", application=application)
+        render("templates/schedule-weekly.yaml", f"{templates_directory}/schedule-weekly.yaml", application=application)
+        render("templates/schedule-monthly.yaml", f"{templates_directory}/schedule-monthly.yaml", application=application)
+        render("templates/schedule-yearly.yaml", f"{templates_directory}/schedule-yearly.yaml", application=application)

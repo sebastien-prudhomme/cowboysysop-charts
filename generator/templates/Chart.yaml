@@ -11,7 +11,9 @@ maintainers:
     email: sebastien.prudhomme@gmail.com
 name: [[ application.name ]]
 sources:
+  [% if application.source %]
   - [[ application.source ]]
+  [% endif %]
   - https://github.com/cowboysysop/charts/tree/master/charts/[[ application.name ]]
 version: [[ application.version ]]
 dependencies:

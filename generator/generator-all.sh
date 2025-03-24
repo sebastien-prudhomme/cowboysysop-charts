@@ -13,5 +13,6 @@ python3 generator.py applications/open-webui.yaml
 python3 generator.py applications/postgresql-common.yaml
 python3 generator.py applications/qdrant.yaml
 python3 generator.py applications/quickchart.yaml
+python3 generator.py applications/redis-extra.yaml
 python3 generator.py applications/vertical-pod-autoscaler.yaml
 python3 generator.py applications/whoami.yaml

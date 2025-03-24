@@ -1,0 +1,9 @@
+name: redis-extra
+productName: Redis Extra
+originalProductName: Redis
+appVersion: 1.0.0
+description: are a <<collection of extra Kubernetes objects for a Redis instance>>
+home: https://github.com/cowboysysop/charts/tree/master/charts/redis-extra
+license: 2025
+version: 1.0.0
+veleroBackups: true
