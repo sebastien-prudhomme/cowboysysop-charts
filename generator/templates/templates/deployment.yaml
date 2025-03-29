@@ -309,6 +309,7 @@ spec:
               protocol: TCP
             [% endfor %]
           [% endif %]
+          [% if component.deployment.container.livenessProbe %]
           {{- if .Values[[ component_values_path ]]livenessProbe.enabled }}
           livenessProbe:
             httpGet:
@@ -323,6 +324,8 @@ spec:
             failureThreshold: {{ .Values[[ component_values_path ]]livenessProbe.failureThreshold }}
             successThreshold: {{ .Values[[ component_values_path ]]livenessProbe.successThreshold }}
           {{- end }}
+          [% endif %]
+          [% if component.deployment.container.readinessProbe %]
           {{- if .Values[[ component_values_path ]]readinessProbe.enabled }}
           readinessProbe:
             httpGet:
@@ -337,6 +340,8 @@ spec:
             failureThreshold: {{ .Values[[ component_values_path ]]readinessProbe.failureThreshold }}
             successThreshold: {{ .Values[[ component_values_path ]]readinessProbe.successThreshold }}
           {{- end }}
+          [% endif %]
+          [% if component.deployment.container.startupProbe %]
           {{- if .Values[[ component_values_path ]]startupProbe.enabled }}
           startupProbe:
             httpGet:
@@ -351,6 +356,7 @@ spec:
             failureThreshold: {{ .Values[[ component_values_path ]]startupProbe.failureThreshold }}
             successThreshold: {{ .Values[[ component_values_path ]]startupProbe.successThreshold }}
           {{- end }}
+          [% endif %]
           resources:
             {{- toYaml .Values[[ component_values_path ]]resources | nindent 12 }}
           volumeMounts:

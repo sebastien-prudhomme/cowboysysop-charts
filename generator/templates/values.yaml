@@ -194,6 +194,7 @@ containerPorts:
   [[ port.name ]]: [[ port.number ]]
   [% endfor %]
 [% endif %]
+[% if component.deployment.container.livenessProbe %]
 
 livenessProbe:
   ## @param [[ component_yaml_path ]]livenessProbe.enabled Enable liveness probe
@@ -213,6 +214,8 @@ livenessProbe:
 
   ## @param [[ component_yaml_path ]]livenessProbe.successThreshold Minimum consecutive successes for the liveness probe to be considered successful after having failed
   successThreshold: 1
+[% endif %]
+[% if component.deployment.container.readinessProbe %]
 
 readinessProbe:
   ## @param [[ component_yaml_path ]]readinessProbe.enabled Enable readiness probe
@@ -232,6 +235,8 @@ readinessProbe:
 
   ## @param [[ component_yaml_path ]]readinessProbe.successThreshold Minimum consecutive successes for the readiness probe to be considered successful after having failed
   successThreshold: 1
+[% endif %]
+[% if component.deployment.container.startupProbe %]
 
 startupProbe:
   ## @param [[ component_yaml_path ]]startupProbe.enabled Enable startup probe
@@ -251,6 +256,7 @@ startupProbe:
 
   ## @param [[ component_yaml_path ]]startupProbe.successThreshold Minimum consecutive successes for the startup probe to be considered successful after having failed
   successThreshold: 1
+[% endif %]
 [% if component.service %]
 
 service:
