@@ -1,16 +1,14 @@
 apiVersion: v2
-appVersion: 0.2.1
-description: Get up and running with large language models, locally
-home: https://ollama.com/
-icon: https://raw.githubusercontent.com/cowboysysop/charts/master/charts/ollama/icon.png
+appVersion: 1.0.0
+description: Collection of extra Kubernetes objects for a Redis instance
+home: https://github.com/cowboysysop/charts/tree/master/charts/redis-extra
 maintainers:
   - name: sebastien-prudhomme
     email: sebastien.prudhomme@gmail.com
-name: ollama
+name: redis-extra
 sources:
-  - https://github.com/ollama/ollama
-  - https://github.com/cowboysysop/charts/tree/master/charts/ollama
-version: 1.6.3
+  - https://github.com/cowboysysop/charts/tree/master/charts/redis-extra
+version: 1.0.0
 dependencies:
   - name: common
     version: 2.21.0
