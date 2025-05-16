@@ -1,13 +1,13 @@
 
 name: vertical-pod-autoscaler
 productName: Vertical Pod Autoscaler
-appVersion: 1.3.0
+appVersion: 1.3.1
 description: is a <<set of components that automatically adjust the amount of CPU and memory requested by pods running in the Kubernetes Cluster>>
 home: https://github.com/kubernetes/autoscaler
 icon: https://raw.githubusercontent.com/kubernetes/kubernetes/master/logo/logo.svg
 license: 2020
 source: https://github.com/kubernetes/autoscaler
-version: 10.0.0
+version: 10.0.1
 prerequisites: |
   - Metrics Server >= 0.2 (you can use the [bitnami/metrics-server](https://artifacthub.io/packages/helm/bitnami/metrics-server) chart)
 updates: |
