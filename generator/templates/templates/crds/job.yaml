@@ -1,5 +1,5 @@
 {{- if .Values.crds.enabled }}
-apiVersion: batch/v1
+apiVersion: {{ include "common.capabilities.job.apiVersion" . }}
 kind: Job
 metadata:
   name: {{ include "[[ application.name ]].crds.fullname" . }}
