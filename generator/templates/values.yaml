@@ -60,6 +60,9 @@ enabled: true
 [% endif %]
 ## @param [[ component_yaml_path ]]replicaCount Number of replicas[[ extra_comment ]]
 replicaCount: 1
+
+## @param [[ component_yaml_path ]]revisionHistoryLimit Number of old history to retain to allow rollback
+revisionHistoryLimit: 10
 [% if component.deployment.type == "deployment" and component.persistentvolumeclaim %]
 
 updateStrategy:

@@ -32,6 +32,7 @@ spec:
   {{- if not .Values[[ component_values_path ]]autoscaling.hpa.enabled }}
   [% endif %]
   replicas: {{ .Values[[ component_values_path ]]replicaCount }}
+  revisionHistoryLimit: {{ .Values[[ component_values_path ]]revisionHistoryLimit }}
   [% if component.hpa %]
   {{- end }}
   [% endif %]
