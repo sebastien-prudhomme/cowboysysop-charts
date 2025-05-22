@@ -26,7 +26,7 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: {{ include "[[ application.name ]][[ component_values_path ]]serviceAccountName" . }}
-    namespace: {{ .Release.Namespace | quote }}
+    namespace: {{ include "common.names.namespace" . | quote }}
 [% if component.optional %]
 {{- end }}
 [% endif %]

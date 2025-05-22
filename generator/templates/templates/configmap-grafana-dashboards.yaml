@@ -3,7 +3,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ include "[[ application.name ]].fullname" . }}-grafana-dashboards
-  namespace: {{ default .Release.Namespace .Values.grafanaDashboards.namespace | quote }}
+  namespace: {{ default (include "common.names.namespace" .) .Values.grafanaDashboards.namespace | quote }}
   labels:
     {{- include "[[ application.name ]].labels" . | nindent 4 }}
     {{- if .Values.commonLabels }}

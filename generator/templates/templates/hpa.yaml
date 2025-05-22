@@ -12,6 +12,7 @@ apiVersion: {{ include "common.capabilities.hpa.apiVersion" ( dict "context" $ )
 kind: HorizontalPodAutoscaler
 metadata:
   name: {{ include "[[ application.name ]][[ component_values_path ]]fullname" . }}
+  namespace: {{ include "common.names.namespace" . | quote }}
   labels:
     {{- include "[[ application.name ]][[ component_values_path ]]labels" . | nindent 4 }}
     {{- if .Values.commonLabels }}

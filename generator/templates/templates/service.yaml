@@ -15,6 +15,7 @@ metadata:
   [% else %]
   name: {{ include "[[ application.name ]][[ component_values_path ]]fullname" . }}
   [% endif %]
+  namespace: {{ include "common.names.namespace" . | quote }}
   labels:
     {{- include "[[ application.name ]][[ component_values_path ]]labels" . | nindent 4 }}
     {{- if .Values.commonLabels }}
