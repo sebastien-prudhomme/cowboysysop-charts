@@ -201,7 +201,7 @@ components:
           ## @param admissionController.extraArgs.v Number for the log level verbosity
         env: |
           - name: NAMESPACE
-            value: {{ .Release.Namespace }}
+            value: {{ include "common.names.namespace" . | quote }}
         livenessProbe:
           httpGet:
             path: /health-check
@@ -631,7 +631,7 @@ components:
           ## @param updater.extraArgs.v Number for the log level verbosity
         env: |
           - name: NAMESPACE
-            value: {{ .Release.Namespace }}
+            value: {{ include "common.names.namespace" . | quote }}
         livenessProbe:
           httpGet:
             path: /health-check
@@ -668,8 +668,8 @@ tests: |
   import requests
 
 
-  def test_admission_controller_service_connection():
-      url = "https://vpa-webhook.{{ .Release.Namespace }}.svc:{{ .Values.admissionController.service.ports.https }}/"
+  def test_admission_controller_service_connection():s
+      url = "https://vpa-webhook.{{ include "common.names.namespace" . }}.svc:{{ .Values.admissionController.service.ports.https }}/"
       verify = "/admission-controller-tls-secret/ca.crt"
 
       response = requests.get(url, verify=verify)
