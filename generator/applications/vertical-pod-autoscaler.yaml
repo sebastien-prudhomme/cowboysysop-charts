@@ -668,7 +668,7 @@ tests: |
   import requests
 
 
-  def test_admission_controller_service_connection():s
+  def test_admission_controller_service_connection():
       url = "https://vpa-webhook.{{ include "common.names.namespace" . }}.svc:{{ .Values.admissionController.service.ports.https }}/"
       verify = "/admission-controller-tls-secret/ca.crt"
 
