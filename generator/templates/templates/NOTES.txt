@@ -9,7 +9,7 @@
 
 1. Get the application status by running the command:
 
-$ helm status {{ .Release.Name }} --namespace {{ include "common.names.namespace" . | quote }}
+$ helm status {{ .Release.Name }} --namespace {{ .Release.Namespace }}
 [% else %]
 1. Get the application URL by running these commands:
 {{- if .Values.ingress.enabled }}
