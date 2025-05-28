@@ -1,6 +1,6 @@
 name: flowise
 productName: Flowise
-appVersion: 2.2.4
+appVersion: 3.0.0
 description: is a <<drag & drop UI to build your customized LLM flow>>
 home: https://flowiseai.com/
 icon: https://avatars.githubusercontent.com/u/128289781
@@ -9,6 +9,21 @@ source: https://github.com/FlowiseAI/Flowise
 version: 4.0.0
 updates: |
   ### Upgrading to version 4.0.0
+
+  A new parameter `config.encryptionKey` has been added.
+
+  If you're using the default `local` storage type and not the `aws` one, configure it with the
+  current value of the encryption key using:
+
+  ```bash
+  $ kubectl exec deployment/my-flowise-deployment -c flowise -- cat /data/encryption.key
+  ```
+
+  The MariaDB subchart has been updated to a major release, see these upgrade instructions:
+
+  - https://github.com/bitnami/charts/tree/master/bitnami/mariadb#to-2020
+  - https://github.com/bitnami/charts/tree/master/bitnami/mariadb#to-2000
+  - https://github.com/bitnami/charts/tree/master/bitnami/mariadb#to-1900
 
   Information about services are no more injected into pod's environment variable.
 
@@ -51,6 +66,11 @@ components:
                 name: {{ include "flowise.secretName" . }}
                 key: {{ include "flowise.secretKeyPassword" . }}
           {{- end }}
+          - name: FLOWISE_SECRETKEY_OVERWRITE
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "flowise.secretName" . }}
+                key: {{ include "flowise.secretKeyEncryptionKey" . }}
           - name: APIKEY_PATH
             value: /data
           - name: BLOB_STORAGE_PATH
@@ -93,8 +113,6 @@ components:
           - name: DATABASE_NAME
             value: {{ include "flowise.postgresql.database" . | quote }}
           {{- end }}
-          - name: DISABLE_FLOWISE_TELEMETRY
-            value: "true"
         livenessProbe:
           httpGet:
             path: /api/v1/ping
@@ -110,13 +128,14 @@ components:
     image:
       registry: docker.io
       repository: flowiseai/flowise
-      tag: 2.2.4
+      tag: 3.0.0
     ingress: true
     persistentvolumeclaim: true
     secret: |
       {{- if and .Values.config.username .Values.config.password }}
       password: {{ .Values.config.password | b64enc | quote }}
       {{- end }}
+      encryption-key: {{ .Values.config.encryptionKey | b64enc | quote }}
     secretKeyHelpers: |
       {{/*
       Key in Secret that contains password
@@ -128,9 +147,23 @@ components:
           password
       {{- end -}}
       {{- end -}}
+
+      {{/*
+      Key in Secret that contains encryption key
+      */}}
+      {{- define "flowise.secretKeyEncryptionKey" -}}
+      {{- if .Values.existingSecret -}}
+          {{ .Values.existingSecretKeyEncryptionKey }}
+      {{- else -}}
+          encryption-key
+      {{- end -}}
+      {{- end -}}
     secretKeyValues: |
       ## @param existingSecretKeyPassword Key in existing Secret that contains password
       existingSecretKeyPassword: password
+
+      ## @param existingSecretKeyEncryptionKey Key in existing Secret that contains encryption key
+      existingSecretKeyEncryptionKey: encryption-key
     service:
       ports:
         - name: http
@@ -143,6 +176,9 @@ components:
 
         ## @param config.password Password to login
         password: ""
+
+        ## @param config.encryptionKey Encryption key
+        encryptionKey: ""
 mariadb: optional
 postgresql: optional
 tests: |
