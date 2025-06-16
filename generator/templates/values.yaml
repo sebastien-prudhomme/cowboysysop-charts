@@ -50,7 +50,7 @@ extraDeploy: []
 
 [[ component.name | to_lower_camel ]]:
 [% endif %]
-[% filter indent(width=indent_width) %]
+[% filter indent(width=indent_width, first=True) %]
 [% if component.optional %]
 ## @param [[ component_yaml_path ]]enabled Enable the component
 enabled: true
