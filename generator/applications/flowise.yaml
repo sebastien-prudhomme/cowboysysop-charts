@@ -1,6 +1,6 @@
 name: flowise
 productName: Flowise
-appVersion: 3.0.1
+appVersion: 3.0.2
 description: is a <<drag & drop UI to build your customized LLM flow>>
 home: https://flowiseai.com/
 icon: https://avatars.githubusercontent.com/u/128289781
@@ -127,7 +127,7 @@ components:
     image:
       registry: docker.io
       repository: flowiseai/flowise
-      tag: 3.0.1
+      tag: 3.0.2
     ingress: true
     persistentvolumeclaim: true
     secret: |
@@ -152,6 +152,7 @@ components:
           number: 3000
           description: HTTP
     extraValues: |
+      config:
         ## @param config.encryptionKey Encryption key
         encryptionKey: ""
 mariadb: optional
