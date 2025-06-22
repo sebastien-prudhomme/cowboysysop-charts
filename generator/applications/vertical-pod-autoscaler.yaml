@@ -93,6 +93,7 @@ components:
   - name: admission-controller
     description: Admission controller
     optional: true
+    enabled: true
     admissionWebhook: true
     clusterrole: |
       # system:vpa-target-reader
@@ -487,6 +488,7 @@ components:
   - name: updater
     description: Updater
     optional: true
+    enabled: true
     clusterrole: |
       # system:vpa-actor
       - apiGroups:

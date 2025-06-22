@@ -53,7 +53,7 @@ extraDeploy: []
 [% filter indent(width=indent_width, first=True) %]
 [% if component.optional %]
 ## @param [[ component_yaml_path ]]enabled Enable the component
-enabled: true
+enabled: [[ "true" if component.enabled else "false" ]]
 
 [% endif %]
 [% if component.deployment.type == "deployment" and component.persistentvolumeclaim %]
