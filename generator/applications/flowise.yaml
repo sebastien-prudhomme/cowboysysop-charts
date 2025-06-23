@@ -6,7 +6,7 @@ home: https://flowiseai.com/
 icon: https://avatars.githubusercontent.com/u/128289781
 license: 2023
 source: https://github.com/FlowiseAI/Flowise
-version: 5.0.0
+version: 5.1.0
 updates: |
   ### Upgrading to version 5.0.0
 
@@ -55,14 +55,25 @@ updates: |
   The chart is now tested with Kubernetes >= 1.24 and Helm >= 3.9.
 
   Future upgrades may introduce undetected breaking changes if you continue to use older versions.
+readme: |
+  ## Queue mode
+
+  To run Flowise in queue mode:
+
+  - Set `config.mode` parameter to `queue`
+  - Set `worker.enabled` parameter to `true`
+  - Set `redis.enabled` parameter or `externalRedis.enabled` parameter to `true`
 components:
   - name: flowise
     deployment:
       type: deployment
       waitMariadb: true
       waitPostgresql: true
+      waitRedis: true
       container:
         env: |
+          - name: MODE
+            value: {{ .Values.config.mode | quote }}
           - name: PORT
             value: {{ .Values.containerPorts.http | quote }}
           - name: FLOWISE_SECRETKEY_OVERWRITE
@@ -112,6 +123,17 @@ components:
           - name: DATABASE_NAME
             value: {{ include "flowise.postgresql.database" . | quote }}
           {{- end }}
+          {{- if or .Values.redis.enabled .Values.externalRedis.enabled }}
+          - name: REDIS_HOST
+            value: {{ include "flowise.redis.host" . | quote }}
+          - name: REDIS_PORT
+            value: {{ include "flowise.redis.port" . | quote }}
+          - name: REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "flowise.redis.secretName" . }}
+                key: {{ include "flowise.redis.secretKeyPassword" . }}
+          {{- end }}
         livenessProbe:
           httpGet:
             path: /api/v1/ping
@@ -153,10 +175,96 @@ components:
           description: HTTP
     extraValues: |
       config:
+        ## @param config.mode Mode to run Flowise
+        mode: main
+
         ## @param config.encryptionKey Encryption key
         encryptionKey: ""
+  - name: worker
+    description: Worker
+    optional: true
+    enabled: false
+    deployment:
+      type: deployment
+      waitMariadb: true
+      waitPostgresql: true
+      waitRedis: true
+      container:
+        env: |
+          - name: WORKER_PORT
+            value: {{ .Values.worker.containerPorts.probes | quote }}
+          - name: FLOWISE_SECRETKEY_OVERWRITE
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "flowise.secretName" . }}
+                key: {{ include "flowise.secretKeyEncryptionKey" . }}
+          {{- if or .Values.mariadb.enabled .Values.externalMariadb.enabled }}
+          - name: DATABASE_TYPE
+            value: mysql
+          - name: DATABASE_HOST
+            value: {{ include "flowise.mariadb.host" . | quote }}
+          - name: DATABASE_PORT
+            value: {{ include "flowise.mariadb.port" . | quote }}
+          - name: DATABASE_USER
+            value: {{ include "flowise.mariadb.username" . | quote }}
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "flowise.mariadb.secretName" . }}
+                key: {{ include "flowise.mariadb.secretKeyPassword" . }}
+          - name: DATABASE_NAME
+            value: {{ include "flowise.mariadb.database" . | quote }}
+          {{- end }}
+          {{- if or .Values.postgresql.enabled .Values.externalPostgresql.enabled }}
+          - name: DATABASE_TYPE
+            value: postgres
+          - name: DATABASE_HOST
+            value: {{ include "flowise.postgresql.host" . | quote }}
+          - name: DATABASE_PORT
+            value: {{ include "flowise.postgresql.port" . | quote }}
+          - name: DATABASE_USER
+            value: {{ include "flowise.postgresql.username" . | quote }}
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "flowise.postgresql.secretName" . }}
+                key: {{ include "flowise.postgresql.secretKeyPassword" . }}
+          - name: DATABASE_NAME
+            value: {{ include "flowise.postgresql.database" . | quote }}
+          {{- end }}
+          - name: REDIS_HOST
+            value: {{ include "flowise.redis.host" . | quote }}
+          - name: REDIS_PORT
+            value: {{ include "flowise.redis.port" . | quote }}
+          - name: REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "flowise.redis.secretName" . }}
+                key: {{ include "flowise.redis.secretKeyPassword" . }}
+        ports:
+          - name: probes
+            nameContainer: http-probes
+            number: 5566
+            description: Probes
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: http-probes
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: http-probes
+        startupProbe:
+          httpGet:
+            path: /healthz
+            port: http-probes
+    image:
+      registry: docker.io
+      repository: flowiseai/flowise-worker
+      tag: 3.0.2
 mariadb: optional
 postgresql: optional
+redis: optional
 tests: |
   import requests
 
