@@ -1,12 +1,12 @@
 name: ollama
 productName: Ollama
-appVersion: 0.8.0
+appVersion: 0.9.2
 description: allows <<get up and running with large language models, locally>>
 home: https://ollama.com/
 icon: https://raw.githubusercontent.com/cowboysysop/charts/master/charts/ollama/icon.png
 license: 2024
 source: https://github.com/ollama/ollama
-version: 2.0.0
+version: 2.1.1
 updates: |
   ### Upgrading to version 2.0.0
 
@@ -36,7 +36,7 @@ components:
     image:
       registry: docker.io
       repository: ollama/ollama
-      tag: 0.8.0
+      tag: 0.9.2
     ingress: true
     persistentvolumeclaim: true
     service:
