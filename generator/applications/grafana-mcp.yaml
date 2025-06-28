@@ -1,0 +1,71 @@
+name: grafana-mcp
+productName: Grafana MCP Server
+appVersion: latest
+description: is a <<Model Context Protocol server for Grafana>>
+home: https://github.com/grafana/mcp-grafana
+license: 2025
+source: https://github.com/grafana/mcp-grafana
+version: 1.0.0
+components:
+  - name: grafana-mcp
+    deployment:
+      type: deployment
+      container:
+        args: |
+          - --address=:{{ .Values.containerPorts.http }}
+          - --transport=streamable-http
+        env: |
+          - name: GRAFANA_URL
+            value: {{ .Values.grafana.url | quote }}
+          - name: GRAFANA_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "grafana-mcp.secretName" . }}
+                key: {{ include "grafana-mcp.secretKeyGrafanaApiKey" . }}
+    image:
+      registry: docker.io
+      repository: mcp/grafana
+      tag: latest
+    ingress: true
+    secret: |
+      grafana-api-key: {{ .Values.grafana.apiKey | b64enc | quote }}
+    secretKeyHelpers: |
+      {{/*
+      Key in Secret that contains Grafana API key
+      */}}
+      {{- define "grafana-mcp.secretKeyGrafanaApiKey" -}}
+      {{- if .Values.existingSecret -}}
+          {{ .Values.existingSecretKeyGrafanaApiKey }}
+      {{- else -}}
+          grafana-api-key
+      {{- end -}}
+      {{- end -}}
+    secretKeyValues: |
+      ## @param existingSecretKeyGrafanaApiKey Key in existing Secret that contains Grafana API key
+      existingSecretKeyGrafanaApiKey: grafana-api-key
+    service:
+      ports:
+        - name: http
+          number: 8000
+          description: HTTP
+    extraValues: |
+      grafana:
+        ## @param grafana.url Grafana URL
+        url: http://grafana.local
+
+        ## @param grafana.apiKey Grafana API key
+        apiKey: ""
+tests: |
+  from mcp import ClientSession
+  from mcp.client.streamable_http import streamablehttp_client
+  import pytest
+
+  @pytest.mark.asyncio
+  async def test_service_connection():
+      url = "http://{{ include "grafana-mcp.fullname" . }}:{{ .Values.service.ports.http }}/mcp"
+
+      async with streamablehttp_client(url) as (read_stream, write_stream, _):
+          async with ClientSession(read_stream, write_stream) as session:
+              response = await session.initialize()
+
+              assert response.serverInfo.name == "mcp-grafana"
