@@ -40,7 +40,7 @@ dependencies:
   [% endif %]
   [% if application.redis %]
   - name: redis
-    version: 20.6.0
+    version: 21.2.6
     repository: oci://registry-1.docker.io/bitnamicharts
     condition: redis.enabled
   [% endif %]
