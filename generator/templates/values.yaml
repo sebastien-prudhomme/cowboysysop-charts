@@ -99,6 +99,13 @@ pdb:
   ## @param [[ component_yaml_path ]]pdb.maxUnavailable Maximum number/percentage of pods that may be made unavailable
   maxUnavailable:
   # maxUnavailable: 1
+[% if component.extraClusterRole %]
+
+rbac:
+  ## @param [[ component_yaml_path ]]rbac.rules [array] Custom RBAC rules to set
+  rules:
+    [[ component.extraClusterRole | indent(4) | trim ]]
+[% endif %]
 
 serviceAccount:
   ## @param [[ component_yaml_path ]]serviceAccount.create Specifies whether a service account should be created

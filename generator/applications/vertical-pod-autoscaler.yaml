@@ -95,7 +95,7 @@ components:
     optional: true
     enabled: true
     admissionWebhook: true
-    clusterrole: |
+    clusterRole: |
       # system:vpa-target-reader
       - apiGroups:
           - "*"
@@ -250,7 +250,7 @@ components:
     tls: true
   - name: recommender
     description: Recommender
-    clusterrole: |
+    clusterRole: |
       # system:metrics-reader
       - apiGroups:
           - "metrics.k8s.io"
@@ -489,7 +489,7 @@ components:
     description: Updater
     optional: true
     enabled: true
-    clusterrole: |
+    clusterRole: |
       # system:vpa-actor
       - apiGroups:
           - ""

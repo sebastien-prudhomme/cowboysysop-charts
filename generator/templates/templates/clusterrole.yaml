@@ -20,7 +20,12 @@ metadata:
   annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
   {{- end }}
 rules:
-  [[ component.clusterrole | indent(2) | trim ]]
+  [% if component.clusterRole %]
+  [[ component.clusterRole | indent(2) | trim ]]
+  [% endif %]
+  [% if component.extraClusterRole %]
+  {{- include "common.tplvalues.render" ( dict "value" .Values.rbac.rules "context" $ ) | nindent 2 }}
+  [% endif %]
 [% if component.optional %]
 {{- end }}
 [% endif %]

@@ -1,0 +1,48 @@
+name: kubernetes-mcp
+productName: Kubernetes MCP Server
+appVersion: 0.0.44
+description: is a <<Model Context Protocol server for Kubernetes>>
+home: https://github.com/manusa/kubernetes-mcp-server
+license: 2025
+source: https://github.com/manusa/kubernetes-mcp-server
+version: 1.0.0
+components:
+  - name: kubernetes-mcp
+    extraClusterRole: |
+      - apiGroups:
+          - "*"
+        resources:
+          - "*"
+        verbs:
+          - get
+          - watch
+          - list
+    deployment:
+      type: deployment
+      container:
+        args: |
+          - --port={{ .Values.containerPorts.http }}
+    image:
+      registry: quay.io
+      repository: manusa/kubernetes_mcp_server
+      tag: v0.0.44
+    ingress: true
+    service:
+      ports:
+        - name: http
+          number: 8080
+          description: HTTP
+tests: |
+  from mcp import ClientSession
+  from mcp.client.streamable_http import streamablehttp_client
+  import pytest
+
+  @pytest.mark.asyncio
+  async def test_service_connection():
+      url = "http://{{ include "kubernetes-mcp.fullname" . }}:{{ .Values.service.ports.http }}/mcp"
+
+      async with streamablehttp_client(url) as (read_stream, write_stream, _):
+          async with ClientSession(read_stream, write_stream) as session:
+              response = await session.initialize()
+
+              assert response.serverInfo.name == "kubernetes-mcp-server"

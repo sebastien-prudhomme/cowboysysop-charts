@@ -40,7 +40,7 @@ updates: |
   Refer to the [Helm documentation](https://helm.sh/docs/topics/v2_v3_migration/) for more information.
 components:
   - name: kubebox
-    clusterrole: |
+    clusterRole: |
       - apiGroups:
           - "*"
         resources:

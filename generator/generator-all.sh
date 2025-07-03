@@ -7,6 +7,7 @@ python3 generator.py applications/kubeview.yaml
 python3 generator.py applications/lighthouse-ci.yaml
 python3 generator.py applications/local-ai.yaml
 python3 generator.py applications/grafana-mcp.yaml
+python3 generator.py applications/kubernetes-mcp.yaml
 python3 generator.py applications/mongo-express.yaml
 python3 generator.py applications/n8n.yaml
 python3 generator.py applications/ollama.yaml

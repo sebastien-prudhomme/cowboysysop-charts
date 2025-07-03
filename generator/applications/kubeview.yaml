@@ -39,7 +39,7 @@ updates: |
   Refer to the [Helm documentation](https://helm.sh/docs/topics/v2_v3_migration/) for more information.
 components:
   - name: kubeview
-    clusterrole: |
+    clusterRole: |
       - apiGroups: ["extensions"]
         resources:
           - ingresses
