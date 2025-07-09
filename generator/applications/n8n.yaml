@@ -11,77 +11,77 @@ components:
   - name: n8n
     deployment:
       type: deployment
-#       # waitPostgresql: true
+      waitPostgresql: true
 #       # waitRedis: true
       container:
-#         # args: |
-#         #   - start
-#         #   - --tunnel
         env: |
-          #           - name: N8N_LOG_LEVEL
-          #             value: "debug"
-          #           - name: GENERIC_TIMEZONE
-          #             value: "Europe/Paris"
-          #           - name: TZ
-          #             value: "Europe/Paris"
-          #           - name: DB_TYPE
-          #             value: postgresdb
-          #           - name: DB_POSTGRESDB_HOST
-          #             value: {{ include "n8n.postgresql.host" . | quote }}
-          #           - name: DB_POSTGRESDB_PORT
-          #             value: {{ include "n8n.postgresql.port" . | quote }}
-          #           - name: DB_POSTGRESDB_USER
-          #             value: {{ include "n8n.postgresql.username" . | quote }}
-          #           - name: DB_POSTGRESDB_PASSWORD
-          #             valueFrom:
-          #               secretKeyRef:
-          #                 name: {{ include "n8n.postgresql.secretName" . }}
-          #                 key: {{ include "n8n.postgresql.secretKeyPassword" . }}
-          #           - name: DB_POSTGRESDB_DATABASE
-          #             value: {{ include "n8n.postgresql.database" . | quote }}
-          #             {{- if .Values.metrics.enabled }}
-          #           - name: N8N_METRICS
-          #             value: "true"
-          #           # - name: N8N_METRICS_INCLUDE_WORKFLOW_ID_LABEL
-          #           #   value: "true"
-          #           # - name: N8N_METRICS_INCLUDE_NODE_TYPE_LABEL
-          #           #   value: "true"
-          #           # - name: N8N_METRICS_INCLUDE_CREDENTIAL_TYPE_LABEL
-          #           #   value: "true"
-          #           # - name: N8N_METRICS_INCLUDE_API_ENDPOINTS
-          #           #   value: "true"
-          #           # - name: N8N_METRICS_INCLUDE_API_PATH_LABEL
-          #           #   value: "true"
-          #           # - name: N8N_METRICS_INCLUDE_API_METHOD_LABEL
-          #           #   value: "true"
-          #           # - name: N8N_METRICS_INCLUDE_API_STATUS_CODE_LABEL
-          #           #   value: "true"
-          #           {{- end }}
-          #           - name: N8N_ENCRYPTION_KEY
-          #             value: "test"
+          {{- if or .Values.postgresql.enabled .Values.externalPostgresql.enabled }}
+          - name: DB_TYPE
+            value: postgresdb
+          - name: DB_POSTGRESDB_HOST
+            value: {{ include "n8n.postgresql.host" . | quote }}
+          - name: DB_POSTGRESDB_PORT
+            value: {{ include "n8n.postgresql.port" . | quote }}
+          - name: DB_POSTGRESDB_USER
+            value: {{ include "n8n.postgresql.username" . | quote }}
+          - name: DB_POSTGRESDB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "n8n.postgresql.secretName" . }}
+                key: {{ include "n8n.postgresql.secretKeyPassword" . }}
+          - name: DB_POSTGRESDB_DATABASE
+            value: {{ include "n8n.postgresql.database" . | quote }}
+          {{- end }}
           - name: N8N_PORT
             value: {{ .Values.containerPorts.http | quote }}
-          #           - name: N8N_DIAGNOSTICS_ENABLED
-          #             value: "false"
-          #           - name: N8N_SMTP_HOST
-          #             value: {{ .Values.smtp.host | quote }}
-          #           - name: N8N_SMTP_PORT
-          #             value: {{ .Values.smtp.port | quote }}
-          #           - name: N8N_SMTP_SSL
-          #             value: {{ ternary "true" "false" .Values.smtp.ssl | quote }}
-          #           # {{- if and .Values.smtp.username .Values.smtp.password }}
-          #           - name: N8N_SMTP_USER
-          #             value: {{ .Values.smtp.username | quote }}
-          #           - name: N8N_SMTP_PASS
-          #             valueFrom:
-          #               secretKeyRef:
-          #                 name: {{ include "n8n.secretName" . }}
-          #                 key: {{ include "n8n.secretKeySmtpPassword" . }}
-          #           # {{- end }}
-          #           - name: N8N_EDITOR_BASE_URL
-          #             value: {{ .Values.externalUrl | quote }}
-          #           - name: WEBHOOK_URL
-          #             value: {{ .Values.externalUrl | quote }}
+          - name: N8N_SECURE_COOKIE
+            value: "false"
+          - name: GENERIC_TIMEZONE
+            value: {{ .Values.n8n.timezone | quote }}
+          - name: TZ
+            value: {{ .Values.n8n.timezone | quote }}
+#           - name: N8N_LOG_LEVEL
+#             value: "debug"
+#           - name: N8N_METRICS
+#             value: "true"
+#           # - name: N8N_METRICS_INCLUDE_WORKFLOW_ID_LABEL
+#           #   value: "true"
+#           # - name: N8N_METRICS_INCLUDE_NODE_TYPE_LABEL
+#           #   value: "true"
+#           # - name: N8N_METRICS_INCLUDE_CREDENTIAL_TYPE_LABEL
+#           #   value: "true"
+#           # - name: N8N_METRICS_INCLUDE_API_ENDPOINTS
+#           #   value: "true"
+#           # - name: N8N_METRICS_INCLUDE_API_PATH_LABEL
+#           #   value: "true"
+#           # - name: N8N_METRICS_INCLUDE_API_METHOD_LABEL
+#           #   value: "true"
+#           # - name: N8N_METRICS_INCLUDE_API_STATUS_CODE_LABEL
+#           #   value: "true"
+#           {{- end }}
+#           - name: N8N_ENCRYPTION_KEY
+#             value: "test"
+#           - name: N8N_DIAGNOSTICS_ENABLED
+#             value: "false"
+#           - name: N8N_SMTP_HOST
+#             value: {{ .Values.smtp.host | quote }}
+#           - name: N8N_SMTP_PORT
+#             value: {{ .Values.smtp.port | quote }}
+#           - name: N8N_SMTP_SSL
+#             value: {{ ternary "true" "false" .Values.smtp.ssl | quote }}
+#           # {{- if and .Values.smtp.username .Values.smtp.password }}
+#           - name: N8N_SMTP_USER
+#             value: {{ .Values.smtp.username | quote }}
+#           - name: N8N_SMTP_PASS
+#             valueFrom:
+#               secretKeyRef:
+#                 name: {{ include "n8n.secretName" . }}
+#                 key: {{ include "n8n.secretKeySmtpPassword" . }}
+#           # {{- end }}
+#           - name: N8N_EDITOR_BASE_URL
+#             value: {{ .Values.externalUrl | quote }}
+#           - name: WEBHOOK_URL
+#             value: {{ .Values.externalUrl | quote }}
 #         livenessProbe:
 #           initialDelaySeconds: 180
 #           httpGet:
@@ -123,7 +123,10 @@ components:
           number: 5678
           description: HTTP
 #     serviceMonitor: true
-#     extraValues: |
+    extraValues: |
+      n8n:
+        ## @param n8n.timezone Timezone
+        timezone: Etc/UTC
 #       smtp:
 #         ## @param smtp.host SMTP host
 #         host: ""
@@ -197,7 +200,7 @@ components:
 #       registry: docker.n8n.io
 #       repository: n8nio/n8n
 #       tag: 1.101.1
-# postgresql: true
+postgresql: optional
 # redis: true
 tests: |
   import requests
