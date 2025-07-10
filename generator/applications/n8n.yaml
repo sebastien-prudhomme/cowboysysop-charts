@@ -41,6 +41,10 @@ components:
             value: {{ .Values.containerPorts.http | quote }}
           - name: N8N_DIAGNOSTICS_ENABLED
             value: "false"
+          - name: N8N_METRICS
+            value: {{ .Values.metrics.enabled | quote }}
+          - name: WEBHOOK_URL
+            value: {{ .Values.n8n.externalUrl | quote }}
           - name: N8N_SECURE_COOKIE
             value: "false"
           - name: N8N_RUNNERS_ENABLED
@@ -51,8 +55,6 @@ components:
             value: {{ .Values.n8n.timezone | quote }}
 #           - name: N8N_LOG_LEVEL
 #             value: "debug"
-#           - name: N8N_METRICS
-#             value: "true"
 #           # - name: N8N_METRICS_INCLUDE_WORKFLOW_ID_LABEL
 #           #   value: "true"
 #           # - name: N8N_METRICS_INCLUDE_NODE_TYPE_LABEL
@@ -67,6 +69,7 @@ components:
 #           #   value: "true"
 #           # - name: N8N_METRICS_INCLUDE_API_STATUS_CODE_LABEL
 #           #   value: "true"
+#           # N8N_METRICS_INCLUDE_QUEUE_METRICS
 #           {{- end }}
 #           - name: N8N_SMTP_HOST
 #             value: {{ .Values.smtp.host | quote }}
@@ -85,8 +88,6 @@ components:
 #           # {{- end }}
 #           - name: N8N_EDITOR_BASE_URL
 #             value: {{ .Values.externalUrl | quote }}
-#           - name: WEBHOOK_URL
-#             value: {{ .Values.externalUrl | quote }}
 #         livenessProbe:
 #           initialDelaySeconds: 180
 #           httpGet:
@@ -102,8 +103,8 @@ components:
       repository: n8nio/n8n
       tag: 1.101.1
     ingress: true
-#     metrics:
-#       optional: true
+    metrics:
+      optional: true
 #     secret: |
 #       # {{- if and .Values.smtp.username .Values.smtp.password }}
 #       n8n-smtp-password: {{ .Values.smtp.password | b64enc | quote }}
@@ -149,6 +150,9 @@ components:
         ## @param n8n.encryptionKey Encryption key
         encryptionKey: ""
 
+        ## @param n8n.externalUrl External URL
+        externalUrl: http://n8n.local
+
         ## @param n8n.timezone Timezone
         timezone: Etc/UTC
 #       smtp:
@@ -180,6 +184,8 @@ components:
           #     secretKeyRef:
           #       name: {{ include "n8n.secretName" . }}
           #       key: {{ include "n8n.secretKeyEncryptionKey" . }}
+          # - name: N8N_METRICS
+          #   value: {{ .Values.worker.metrics.enabled | quote }}
 #           # - name: DB_TYPE
 #           #   value: postgresdb
 #           # - name: DB_POSTGRESDB_HOST
@@ -229,6 +235,8 @@ components:
 #       registry: docker.n8n.io
 #       repository: n8nio/n8n
 #       tag: 1.101.1
+    # metrics:
+    #   optional: true
 postgresql: optional
 # redis: true
 tests: |
