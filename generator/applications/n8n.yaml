@@ -1,6 +1,6 @@
 name: n8n
 productName: N8n
-appVersion: 1.101.1
+appVersion: 1.101.2
 description: is <<a workflow automation platform with native AI capabilities>>
 home: https://n8n.io/
 icon: https://raw.githubusercontent.com/cowboysysop/charts/master/charts/n8n/icon.png
@@ -67,9 +67,7 @@ components:
           - name: N8N_SMTP_SSL
             value: {{ .Values.smtp.tls.enabled | quote }}
           - name: N8N_SMTP_STARTTLS
-            value: {{ .Values.smtp.startTls.enabled | quote }}
-#           - name: N8N_LOG_LEVEL
-#             value: "debug"
+            value: {{ .Values.smtp.tls.startTls | quote }}
 #           # - name: N8N_METRICS_INCLUDE_WORKFLOW_ID_LABEL
 #           #   value: "true"
 #           # - name: N8N_METRICS_INCLUDE_NODE_TYPE_LABEL
@@ -88,20 +86,20 @@ components:
 #           {{- end }}
 #           - name: N8N_EDITOR_BASE_URL
 #             value: {{ .Values.externalUrl | quote }}
-#         livenessProbe:
-#           initialDelaySeconds: 180
-#           httpGet:
-#             path: /healthz
-#         readinessProbe:
-#           httpGet:
-#             path: /healthz
-#         startupProbe:
-#           httpGet:
-#             path: /healthz
+        livenessProbe:
+          # initialDelaySeconds: 180
+          httpGet:
+            path: /healthz
+        readinessProbe:
+          httpGet:
+            path: /healthz/readiness
+        startupProbe:
+          httpGet:
+            path: /healthz
     image:
       registry: docker.n8n.io
       repository: n8nio/n8n
-      tag: 1.101.1
+      tag: 1.101.2
     ingress: true
     metrics:
       optional: true
@@ -226,7 +224,7 @@ components:
 #             port: http-probes
 #         readinessProbe:
 #           httpGet:
-#             path: /healthz
+#             path: /healthz/readiness
 #             port: http-probes
 #         startupProbe:
 #           httpGet:
@@ -235,7 +233,7 @@ components:
 #     image:
 #       registry: docker.n8n.io
 #       repository: n8nio/n8n
-#       tag: 1.101.1
+#       tag: 1.101.2
     # metrics:
     #   optional: true
 postgresql: optional
