@@ -62,6 +62,8 @@ readme: |
 
   - Set `config.mode` parameter to `queue`
   - Set `worker.enabled` parameter to `true`
+  - Set `mariadb.enabled` parameter or `externalMariadb.enabled` parameter
+    or `postgresql.enabled` parameter or `externalPostgresql.enabled` parameter to `true`
   - Set `redis.enabled` parameter or `externalRedis.enabled` parameter to `true`
 components:
   - name: flowise

@@ -14,6 +14,7 @@ readme: |
 
   - Set `n8n.executionsMode` parameter to `queue`
   - Set `worker.enabled` parameter to `true`
+  - Set `postgresql.enabled` parameter or `externalPostgresql.enabled` parameter to `true`
   - Set `redis.enabled` parameter or `externalRedis.enabled` parameter to `true`
 components:
   - name: n8n
@@ -199,46 +200,53 @@ components:
 
            ## @param smtp.tls.startTls Enable STARTTLS for SMTP
           startTls: false
-#   - name: worker
-#     description: Worker
-#     deployment:
-#       type: deployment
-#       waitRedis: true
-#       container:
-#         args: |
-#           - worker
-#         env: |
-          # - name: N8N_ENCRYPTION_KEY
-          #   valueFrom:
-          #     secretKeyRef:
-          #       name: {{ include "n8n.secretName" . }}
-          #       key: {{ include "n8n.secretKeyEncryptionKey" . }}
-          # - name: N8N_METRICS
-          #   value: {{ .Values.worker.metrics.enabled | quote }}
-#           # - name: DB_TYPE
-#           #   value: postgresdb
-#           # - name: DB_POSTGRESDB_HOST
-#           #   value: {{ include "n8n.postgresql.host" . | quote }}
-#           # - name: DB_POSTGRESDB_PORT
-#           #   value: {{ include "n8n.postgresql.port" . | quote }}
-#           # - name: DB_POSTGRESDB_USER
-#           #   value: {{ include "n8n.postgresql.username" . | quote }}
-#           # - name: DB_POSTGRESDB_PASSWORD
-#           #   valueFrom:
-#           #     secretKeyRef:
-#           #       name: {{ include "n8n.postgresql.secretName" . }}
-#           #       key: {{ include "n8n.postgresql.secretKeyPassword" . }}
-#           # - name: DB_POSTGRESDB_DATABASE
-#           #   value: {{ include "n8n.postgresql.database" . | quote }}
-#           - name: QUEUE_BULL_REDIS_HOST
-#             value: {{ include "n8n.redis.host" . | quote }}
-#           - name: QUEUE_BULL_REDIS_PORT
-#             value: {{ include "n8n.redis.port" . | quote }}
-#           - name: QUEUE_BULL_REDIS_PASSWORD
-#             valueFrom:
-#               secretKeyRef:
-#                 name: {{ include "n8n.redis.secretName" . }}
-#                 key: {{ include "n8n.redis.secretKeyPassword" . }}
+  - name: worker
+    description: Worker
+    optional: true
+    enabled: false
+    deployment:
+      type: deployment
+      waitPostgresql: true
+      waitRedis: true
+      container:
+        args: |
+          - worker
+        env: |
+          - name: DB_TYPE
+            value: postgresdb
+          - name: DB_POSTGRESDB_HOST
+            value: {{ include "n8n.postgresql.host" . | quote }}
+          - name: DB_POSTGRESDB_PORT
+            value: {{ include "n8n.postgresql.port" . | quote }}
+          - name: DB_POSTGRESDB_USER
+            value: {{ include "n8n.postgresql.username" . | quote }}
+          - name: DB_POSTGRESDB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "n8n.postgresql.secretName" . }}
+                key: {{ include "n8n.postgresql.secretKeyPassword" . }}
+          - name: DB_POSTGRESDB_DATABASE
+            value: {{ include "n8n.postgresql.database" . | quote }}
+          - name: N8N_ENCRYPTION_KEY
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "n8n.secretName" . }}
+                key: {{ include "n8n.secretKeyEncryptionKey" . }}
+          - name: QUEUE_BULL_REDIS_HOST
+            value: {{ include "n8n.redis.host" . | quote }}
+          - name: QUEUE_BULL_REDIS_PORT
+            value: {{ include "n8n.redis.port" . | quote }}
+          - name: QUEUE_BULL_REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "n8n.redis.secretName" . }}
+                key: {{ include "n8n.redis.secretKeyPassword" . }}
+          - name: N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS
+            value: "true"
+          - name: N8N_RUNNERS_ENABLED
+            value: "true"
+#          # - name: N8N_METRICS
+#          #   value: {{ .Values.worker.metrics.enabled | quote }}
 #           - name: QUEUE_HEALTH_CHECK_ACTIVE
 #             value: "true"
 #           - name: QUEUE_HEALTH_CHECK_PORT
@@ -260,10 +268,10 @@ components:
 #           httpGet:
 #             path: /healthz
 #             port: http-probes
-#     image:
-#       registry: docker.n8n.io
-#       repository: n8nio/n8n
-#       tag: 1.101.2
+    image:
+      registry: docker.n8n.io
+      repository: n8nio/n8n
+      tag: 1.101.2
     # metrics:
     #   optional: true
 postgresql: optional
