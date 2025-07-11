@@ -53,6 +53,21 @@ components:
             value: {{ .Values.n8n.timezone | quote }}
           - name: TZ
             value: {{ .Values.n8n.timezone | quote }}
+          - name: N8N_SMTP_HOST
+            value: {{ .Values.smtp.host | quote }}
+          - name: N8N_SMTP_PORT
+            value: {{ .Values.smtp.port | quote }}
+          - name: N8N_SMTP_USER
+            value: {{ .Values.smtp.username | quote }}
+          - name: N8N_SMTP_PASS
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "n8n.secretName" . }}
+                key: {{ include "n8n.secretKeySmtpPassword" . }}
+          - name: N8N_SMTP_SSL
+            value: {{ .Values.smtp.tls.enabled | quote }}
+          - name: N8N_SMTP_STARTTLS
+            value: {{ .Values.smtp.startTls.enabled | quote }}
 #           - name: N8N_LOG_LEVEL
 #             value: "debug"
 #           # - name: N8N_METRICS_INCLUDE_WORKFLOW_ID_LABEL
@@ -71,21 +86,6 @@ components:
 #           #   value: "true"
 #           # N8N_METRICS_INCLUDE_QUEUE_METRICS
 #           {{- end }}
-#           - name: N8N_SMTP_HOST
-#             value: {{ .Values.smtp.host | quote }}
-#           - name: N8N_SMTP_PORT
-#             value: {{ .Values.smtp.port | quote }}
-#           - name: N8N_SMTP_SSL
-#             value: {{ ternary "true" "false" .Values.smtp.ssl | quote }}
-#           # {{- if and .Values.smtp.username .Values.smtp.password }}
-#           - name: N8N_SMTP_USER
-#             value: {{ .Values.smtp.username | quote }}
-#           - name: N8N_SMTP_PASS
-#             valueFrom:
-#               secretKeyRef:
-#                 name: {{ include "n8n.secretName" . }}
-#                 key: {{ include "n8n.secretKeySmtpPassword" . }}
-#           # {{- end }}
 #           - name: N8N_EDITOR_BASE_URL
 #             value: {{ .Values.externalUrl | quote }}
 #         livenessProbe:
@@ -105,26 +105,9 @@ components:
     ingress: true
     metrics:
       optional: true
-#     secret: |
-#       # {{- if and .Values.smtp.username .Values.smtp.password }}
-#       n8n-smtp-password: {{ .Values.smtp.password | b64enc | quote }}
-#       # {{- end }}
-#     secretKeyHelpers: |
-#       {{/*
-#       Key in Secret that contains SMTP password
-#       */}}
-#       {{- define "n8n.secretKeySmtpPassword" -}}
-#       {{- if .Values.existingSecret -}}
-#           {{ .Values.existingSecretKeySmtpPassword }}
-#       {{- else -}}
-#           n8n-smtp-password
-#       {{- end -}}
-#       {{- end -}}
-#     secretKeyValues: |
-#       ## @param existingSecretKeySmtpPassword Key in existing Secret that contains SMTP password
-#       existingSecretKeySmtpPassword: n8n-smtp-password
     secret: |
       encryption-key: {{ .Values.n8n.encryptionKey | b64enc | quote }}
+      smtp-password: {{ .Values.smtp.password | b64enc | quote }}
     secretKeyHelpers: |
       {{/*
       Key in Secret that contains encryption key
@@ -136,9 +119,23 @@ components:
           encryption-key
       {{- end -}}
       {{- end -}}
+
+      {{/*
+      Key in Secret that contains SMTP password
+      */}}
+      {{- define "n8n.secretKeySmtpPassword" -}}
+      {{- if .Values.existingSecret -}}
+          {{ .Values.existingSecretKeySmtpPassword }}
+      {{- else -}}
+          smtp-password
+      {{- end -}}
+      {{- end -}}
     secretKeyValues: |
       ## @param existingSecretKeyEncryptionKey Key in existing Secret that contains encryption key
       existingSecretKeyEncryptionKey: encryption-key
+
+      ## @param existingSecretKeySmtpPassword Key in existing Secret that contains SMTP password
+      existingSecretKeySmtpPassword: smtp-password
     service:
       ports:
         - name: http
@@ -155,21 +152,25 @@ components:
 
         ## @param n8n.timezone Timezone
         timezone: Etc/UTC
-#       smtp:
-#         ## @param smtp.host SMTP host
-#         host: ""
+      smtp:
+        ## @param smtp.host SMTP host
+        host: smtp.local
 
-#         ## @param smtp.port SMTP port
-#         port: 587
+        ## @param smtp.port SMTP port
+        port: 25
 
-#         ## @param smtp.ssl Whether to use SSL for SMTP
-#         ssl: false
+        ## @param smtp.username SMTP user
+        username: ""
 
-#         ## @param smtp.username SMTP username
-#         username: ""
+        ## @param smtp.password SMTP password
+        password: ""
 
-#         ## @param smtp.password SMTP password
-#         password: ""
+        tls:
+          ## @param smtp.tls.enabled Enable TLS for SMTP
+          enabled: false
+
+           ## @param smtp.tls.startTls Enable STARTTLS for SMTP
+          startTls: false
 #   - name: worker
 #     description: Worker
 #     deployment:
