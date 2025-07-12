@@ -243,14 +243,14 @@ components:
                 key: {{ include "n8n.redis.secretKeyPassword" . }}
           - name: QUEUE_HEALTH_CHECK_ACTIVE
             value: "true"
+          - name: QUEUE_HEALTH_CHECK_PORT
+            value: {{ .Values.worker.containerPorts.probes | quote }}
           - name: N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS
             value: "true"
           - name: N8N_RUNNERS_ENABLED
             value: "true"
 #          # - name: N8N_METRICS
 #          #   value: {{ .Values.worker.metrics.enabled | quote }}
-#           - name: QUEUE_HEALTH_CHECK_PORT
-#             value: {{ .Values.worker.containerPorts.probes | quote }}
         ports:
           - name: probes
             nameContainer: http-probes
