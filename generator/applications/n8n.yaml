@@ -232,6 +232,8 @@ components:
               secretKeyRef:
                 name: {{ include "n8n.secretName" . }}
                 key: {{ include "n8n.secretKeyEncryptionKey" . }}
+          - name: N8N_METRICS
+            value: {{ .Values.worker.metrics.enabled | quote }}
           - name: QUEUE_BULL_REDIS_HOST
             value: {{ include "n8n.redis.host" . | quote }}
           - name: QUEUE_BULL_REDIS_PORT
@@ -249,8 +251,6 @@ components:
             value: "true"
           - name: N8N_RUNNERS_ENABLED
             value: "true"
-#          # - name: N8N_METRICS
-#          #   value: {{ .Values.worker.metrics.enabled | quote }}
         ports:
           - name: probes
             nameContainer: http-probes
@@ -272,8 +272,8 @@ components:
       registry: docker.n8n.io
       repository: n8nio/n8n
       tag: 1.101.2
-    # metrics:
-    #   optional: true
+    metrics:
+      optional: true
 postgresql: optional
 redis: optional
 tests: |
