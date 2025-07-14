@@ -173,6 +173,13 @@ with open(sys.argv[1], "r") as stream:
               else:
                   render("templates/metrics-service.yaml", f"{component_directory}/metrics-service.yaml", application=application, component=component)
 
+          # Manage PodMonitor
+          if component.get("podMonitor"):
+              if component_name == name:
+                  render("templates/podmonitor.yaml", f"{templates_directory}/podmonitor.yaml", application=application, component=component)
+              else:
+                  render("templates/podmonitor.yaml", f"{component_directory}/podmonitor.yaml", application=application, component=component)
+
           # Manage ServiceAccount
           if component_name == name:
               render("templates/serviceaccount.yaml", f"{templates_directory}/serviceaccount.yaml", application=application, component=component)
