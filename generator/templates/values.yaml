@@ -586,9 +586,11 @@ metrics:
   [% if component.metrics.optional %]
   ## @param [[ component_yaml_path ]]metrics.enabled Enable the export of Prometheus metrics
   enabled: false
-
   [% endif %]
   [% if component.metrics.ports %]
+  [% if component.metrics.optional %]
+
+  [% endif %]
   service:
     ## @param [[ component_yaml_path ]]metrics.service.annotations Metrics service annotations
     annotations: {}
@@ -614,6 +616,39 @@ metrics:
       ## @param [[ component_yaml_path ]]metrics.service.ports.[[ port.name ]] Metrics service port for [[ port.description ]]
       [[ port.name ]]: [[ port.number ]]
       [% endfor %]
+  [% endif %]
+  [% if component.podMonitor %]
+
+  podMonitor:
+    ## @param [[ component_yaml_path ]]metrics.podMonitor.enabled Specifies whether a pod monitor should be created
+    enabled: false
+
+    ## @param [[ component_yaml_path ]]metrics.podMonitor.namespace Namespace in which to create the pod monitor
+    namespace: ""
+
+    ## @param [[ component_yaml_path ]]metrics.podMonitor.annotations Pod monitor annotations
+    annotations: {}
+
+    ## @param [[ component_yaml_path ]]metrics.podMonitor.labels Additional pod monitor labels
+    labels: {}
+
+    ## @param [[ component_yaml_path ]]metrics.podMonitor.jobLabel The name of the label on the target pod to use as the job name in Prometheus
+    jobLabel: ""
+
+    ## @param [[ component_yaml_path ]]metrics.podMonitor.honorLabels Whether to choose the metric’s labels on collisions with target labels
+    honorLabels: false
+
+    ## @param [[ component_yaml_path ]]metrics.podMonitor.interval Interval at which metrics should be scraped
+    interval: ""
+
+    ## @param [[ component_yaml_path ]]metrics.podMonitor.scrapeTimeout Timeout after which the scrape is ended
+    scrapeTimeout: ""
+
+    ## @param [[ component_yaml_path ]]metrics.podMonitor.metricRelabelings Specify additional relabeling of metrics
+    metricRelabelings: []
+
+    ## @param [[ component_yaml_path ]]metrics.podMonitor.relabelings Specify general relabeling
+    relabelings: []
   [% endif %]
   [% if component.serviceMonitor %]
 

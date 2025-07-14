@@ -1,0 +1,59 @@
+[% if component.name == application.name %]
+[% set component_values_path = "." %]
+[% else %]
+[% set component_values_path = component.name | to_lower_camel %]
+[% set component_values_path = "." + component_values_path + "." %]
+[% endif %]
+[% if component.optional %]
+{{- if .Values[[ component_values_path ]]enabled }}
+[% endif %]
+{{- if .Values[[ component_values_path ]]metrics.podMonitor.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: {{ include "[[ application.name ]][[ component_values_path ]]fullname" . }}
+  namespace: {{ default (include "common.names.namespace" .) .Values[[ component_values_path ]]metrics.podMonitor.namespace | quote }}
+  labels:
+    {{- include "[[ application.name ]][[ component_values_path ]]labels" . | nindent 4 }}
+    {{- if .Values[[ component_values_path ]]metrics.podMonitor.labels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values[[ component_values_path ]]metrics.podMonitor.labels "context" $ ) | nindent 4 }}
+    {{- end }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if or .Values[[ component_values_path ]]metrics.podMonitor.annotations .Values.commonAnnotations }}
+  {{- $annotations := include "common.tplvalues.merge" ( dict "values" ( list .Values[[ component_values_path ]]metrics.podMonitor.annotations .Values.commonAnnotations ) "context" . ) }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" $annotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if .Values[[ component_values_path ]]metrics.podMonitor.jobLabel }}
+  jobLabel: {{ .Values[[ component_values_path ]]metrics.podMonitor.jobLabel }}
+  {{- end }}
+  podMetricsEndpoints:
+    - port: [[ component.podMonitor.port]]
+      {{- if .Values[[ component_values_path ]]metrics.podMonitor.interval }}
+      interval: {{ .Values[[ component_values_path ]]metrics.podMonitor.interval }}
+      {{- end }}
+      {{- if .Values[[ component_values_path ]]metrics.podMonitor.scrapeTimeout }}
+      scrapeTimeout: {{ .Values[[ component_values_path ]]metrics.podMonitor.scrapeTimeout }}
+      {{- end }}
+      {{- if .Values[[ component_values_path ]]metrics.podMonitor.honorLabels }}
+      honorLabels: {{ .Values[[ component_values_path ]]metrics.podMonitor.honorLabels }}
+      {{- end }}
+      {{- if .Values[[ component_values_path ]]metrics.podMonitor.metricRelabelings }}
+      metricRelabelings: {{ toYaml .Values[[ component_values_path ]]metrics.podMonitor.metricRelabelings | nindent 8 }}
+      {{- end }}
+      {{- if .Values[[ component_values_path ]]metrics.podMonitor.relabelings }}
+      relabelings: {{ toYaml .Values[[ component_values_path ]]metrics.podMonitor.relabelings | nindent 8 }}
+      {{- end }}
+      path: /metrics
+  namespaceSelector:
+    matchNames:
+      - {{ include "common.names.namespace" . | quote }}
+  selector:
+    matchLabels:
+      {{- include "[[ application.name ]][[ component_values_path ]]selectorLabels" . | nindent 6 }}
+{{- end -}}
+[% if component.optional %]
+{{- end -}}
+[% endif %]
