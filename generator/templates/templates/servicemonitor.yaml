@@ -30,16 +30,16 @@ spec:
   jobLabel: {{ .Values[[ component_values_path ]]metrics.serviceMonitor.jobLabel }}
   {{- end }}
   endpoints:
-    - port: http-metrics
+    - port: [[ component.serviceMonitor.port]]
       {{- if .Values[[ component_values_path ]]metrics.serviceMonitor.interval }}
       interval: {{ .Values[[ component_values_path ]]metrics.serviceMonitor.interval }}
-      {{- end}}
+      {{- end }}
       {{- if .Values[[ component_values_path ]]metrics.serviceMonitor.scrapeTimeout }}
       scrapeTimeout: {{ .Values[[ component_values_path ]]metrics.serviceMonitor.scrapeTimeout }}
-      {{- end}}
+      {{- end }}
       {{- if .Values[[ component_values_path ]]metrics.serviceMonitor.honorLabels }}
       honorLabels: {{ .Values[[ component_values_path ]]metrics.serviceMonitor.honorLabels }}
-      {{- end}}
+      {{- end }}
       {{- if .Values[[ component_values_path ]]metrics.serviceMonitor.metricRelabelings }}
       metricRelabelings: {{ toYaml .Values[[ component_values_path ]]metrics.serviceMonitor.metricRelabelings | nindent 8 }}
       {{- end }}
