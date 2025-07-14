@@ -246,7 +246,8 @@ components:
           number: 8000
           numberOverride: 443
           description: HTTPS
-    serviceMonitor: true
+    serviceMonitor:
+      port: http-metrics
     tls: true
   - name: recommender
     description: Recommender
@@ -484,7 +485,8 @@ components:
           nameService: http-metrics
           number: 8942
           description: Metrics
-    serviceMonitor: true
+    serviceMonitor:
+      port: http-metrics
   - name: updater
     description: Updater
     optional: true
@@ -679,7 +681,8 @@ components:
           nameService: http-metrics
           number: 8943
           description: Metrics
-    serviceMonitor: true
+    serviceMonitor:
+      port: http-metrics
 crds: true
 tests: |
   import requests
