@@ -13,6 +13,7 @@ readme: |
   To run N8n in queue mode:
 
   - Set `n8n.executionsMode` parameter to `queue`
+  - Set `webhook.enabled` parameter to `true`
   - Set `worker.enabled` parameter to `true`
   - Set `postgresql.enabled` parameter or `externalPostgresql.enabled` parameter to `true`
   - Set `redis.enabled` parameter or `externalRedis.enabled` parameter to `true`
@@ -74,11 +75,13 @@ components:
             value: "true"
           - name: WEBHOOK_URL
             value: {{ .Values.n8n.externalUrl | quote }}
-          # - name: N8N_DISABLE_PRODUCTION_MAIN_PROCESS
-          #   value: "true"
+          {{- if .Values.webhook.enabled }}
+          - name: N8N_DISABLE_PRODUCTION_MAIN_PROCESS
+            value: "true"
+          {{- end }}
           - name: EXECUTIONS_MODE
             value: {{ .Values.n8n.executionsMode | quote }}
-          {{- if eq .Values.n8n.executionsMode "queue" }}
+          {{- if .Values.worker.enabled }}
           - name: OFFLOAD_MANUAL_EXECUTIONS_TO_WORKERS
             value: "true"
           {{- end }}
