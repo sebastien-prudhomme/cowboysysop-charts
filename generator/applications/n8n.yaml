@@ -74,6 +74,8 @@ components:
             value: "true"
           - name: WEBHOOK_URL
             value: {{ .Values.n8n.externalUrl | quote }}
+          # - name: N8N_DISABLE_PRODUCTION_MAIN_PROCESS
+          #   value: "true"
           - name: EXECUTIONS_MODE
             value: {{ .Values.n8n.executionsMode | quote }}
           {{- if eq .Values.n8n.executionsMode "queue" }}
@@ -205,6 +207,123 @@ components:
 
            ## @param smtp.tls.startTls Enable STARTTLS for SMTP
           startTls: false
+  - name: webhook
+    description: Webhook
+    optional: true
+    enabled: false
+    deployment:
+      type: deployment
+      waitPostgresql: true
+      waitRedis: true
+      container:
+        args: |
+          - webhook
+        env: |
+          - name: DB_TYPE
+            value: postgresdb
+          - name: DB_POSTGRESDB_HOST
+            value: {{ include "n8n.postgresql.host" . | quote }}
+          - name: DB_POSTGRESDB_PORT
+            value: {{ include "n8n.postgresql.port" . | quote }}
+          - name: DB_POSTGRESDB_USER
+            value: {{ include "n8n.postgresql.username" . | quote }}
+          - name: DB_POSTGRESDB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "n8n.postgresql.secretName" . }}
+                key: {{ include "n8n.postgresql.secretKeyPassword" . }}
+          - name: DB_POSTGRESDB_DATABASE
+            value: {{ include "n8n.postgresql.database" . | quote }}
+          - name: N8N_ENCRYPTION_KEY
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "n8n.secretName" . }}
+                key: {{ include "n8n.secretKeyEncryptionKey" . }}
+          - name: N8N_PORT
+            value: {{ .Values.webhook.containerPorts.http | quote }}
+          - name: EXECUTIONS_MODE
+            value: {{ .Values.n8n.executionsMode | quote }}
+          - name: QUEUE_BULL_REDIS_HOST
+            value: {{ include "n8n.redis.host" . | quote }}
+          - name: QUEUE_BULL_REDIS_PORT
+            value: {{ include "n8n.redis.port" . | quote }}
+          - name: QUEUE_BULL_REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "n8n.redis.secretName" . }}
+                key: {{ include "n8n.redis.secretKeyPassword" . }}
+          - name: N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS
+            value: "true"
+          # - name: N8N_SECURE_COOKIE
+          #   value: "false"
+          - name: N8N_RUNNERS_ENABLED
+            value: "true"
+        # env: |
+        #   - name: N8N_ENCRYPTION_KEY
+        #     valueFrom:
+        #       secretKeyRef:
+        #         name: {{ include "n8n.secretName" . }}
+        #         key: {{ include "n8n.secretKeyEncryptionKey" . }}
+        #   - name: N8N_METRICS
+        #     value: {{ .Values.worker.metrics.enabled | quote }}
+        #   - name: N8N_METRICS_INCLUDE_CACHE_METRICS
+        #     value: "true"
+        #   - name: N8N_METRICS_INCLUDE_MESSAGE_EVENT_BUS_METRICS
+        #     value: "true"
+        #   - name: N8N_METRICS_INCLUDE_WORKFLOW_ID_LABEL
+        #     value: "true"
+        #   - name: N8N_METRICS_INCLUDE_NODE_TYPE_LABEL
+        #     value: "true"
+        #   - name: N8N_METRICS_INCLUDE_CREDENTIAL_TYPE_LABEL
+        #     value: "true"
+        #   - name: N8N_METRICS_INCLUDE_API_ENDPOINTS
+        #     value: "true"
+        #   - name: N8N_METRICS_INCLUDE_API_PATH_LABEL
+        #     value: "true"
+        #   - name: N8N_METRICS_INCLUDE_API_METHOD_LABEL
+        #     value: "true"
+        #   - name: N8N_METRICS_INCLUDE_API_STATUS_CODE_LABEL
+        #     value: "true"
+        #   - name: N8N_METRICS_INCLUDE_QUEUE_METRICS
+        #     value: "true"
+        #   - name: QUEUE_HEALTH_CHECK_ACTIVE
+        #     value: "true"
+        #   - name: QUEUE_HEALTH_CHECK_PORT
+        #     value: {{ .Values.worker.containerPorts.metrics | quote }}
+        #   - name: N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS
+        #     value: "true"
+        #   - name: N8N_RUNNERS_ENABLED
+        #     value: "true"
+        # ports:
+        #   - name: metrics
+        #     nameContainer: http-metrics
+        #     number: 5678
+        #     description: Metrics
+        # livenessProbe:
+        #   httpGet:
+        #     path: /healthz
+        #     port: http-metrics
+        # readinessProbe:
+        #   httpGet:
+        #     path: /healthz/readiness
+        #     port: http-metrics
+        # startupProbe:
+        #   httpGet:
+        #     path: /healthz
+        #     port: http-metrics
+    image:
+      registry: docker.n8n.io
+      repository: n8nio/n8n
+      tag: 1.102.3
+    # metrics:
+    #   optional: true
+    # podMonitor:
+    #   port: http-metrics
+    service:
+      ports:
+        - name: http
+          number: 5678
+          description: HTTP
   - name: worker
     description: Worker
     optional: true
