@@ -42,6 +42,8 @@ components:
           - name: DB_POSTGRESDB_DATABASE
             value: {{ include "n8n.postgresql.database" . | quote }}
           {{- end }}
+          - name: N8N_EDITOR_BASE_URL
+            value: {{ .Values.n8n.externalUrl | quote }}
           - name: N8N_ENCRYPTION_KEY
             valueFrom:
               secretKeyRef:
@@ -99,7 +101,7 @@ components:
           - name: N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS
             value: "true"
           - name: N8N_SECURE_COOKIE
-            value: "false"
+            value: {{ ternary "true" "false" (hasPrefix "https://" .Values.n8n.externalUrl) | quote }}
           - name: N8N_RUNNERS_ENABLED
             value: "true"
           - name: GENERIC_TIMEZONE
@@ -121,8 +123,6 @@ components:
             value: {{ .Values.smtp.tls.enabled | quote }}
           - name: N8N_SMTP_STARTTLS
             value: {{ .Values.smtp.tls.startTls | quote }}
-#           - name: N8N_EDITOR_BASE_URL
-#             value: {{ .Values.externalUrl | quote }}
         livenessProbe:
           # initialDelaySeconds: 180
           httpGet:
