@@ -1,10 +1,19 @@
+[% if component.name == application.name %]
+[% set component_values_path = "." %]
+[% else %]
+[% set component_values_path = component.name | to_lower_camel %]
+[% set component_values_path = "." + component_values_path + "." %]
+[% endif %]
+[% if component.optional %]
+{{- if .Values[[ component_values_path ]]enabled }}
+[% endif %]
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "[[ application.name ]].fullname" . }}
+  name: {{ include "[[ application.name ]][[ component_values_path ]]fullname" . }}
   namespace: {{ include "common.names.namespace" . | quote }}
   labels:
-    {{- include "[[ application.name ]].labels" . | nindent 4 }}
+    {{- include "[[ application.name ]][[ component_values_path ]]labels" . | nindent 4 }}
     {{- if .Values.commonLabels }}
     {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
     {{- end }}
@@ -13,3 +22,6 @@ metadata:
   {{- end }}
 data:
   [[ component.configmap | indent(2) | trim ]]
+[% if component.optional %]
+{{- end -}}
+[% endif %]

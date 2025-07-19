@@ -109,7 +109,7 @@ with open(sys.argv[1], "r") as stream:
               if component_name == name:
                   render("templates/configmap.yaml", f"{templates_directory}/configmap.yaml", application=application, component=component)
               else:
-                  render("templates/component/configmap.yaml", f"{component_directory}/configmap.yaml", application=application, component=component)
+                  render("templates/configmap.yaml", f"{component_directory}/configmap.yaml", application=application, component=component)
 
           # Manage Deployment/Statefulset
           if component.get("deployment"):
