@@ -123,7 +123,7 @@ with open(sys.argv[1], "r") as stream:
               if component_name == name:
                   render("templates/ingress.yaml", f"{templates_directory}/ingress.yaml", application=application, component=component)
               else:
-                  render("templates/component/ingress.yaml", f"{component_directory}/ingress.yaml", application=application, component=component)
+                  render("templates/ingress.yaml", f"{component_directory}/ingress.yaml", application=application, component=component)
 
           # Manage PersistentVolumeClaim
           if component["deployment"]["type"] == "deployment" and component.get("persistentvolumeclaim"):
@@ -143,7 +143,7 @@ with open(sys.argv[1], "r") as stream:
               if component_name == name:
                   render("templates/secret.yaml", f"{templates_directory}/secret.yaml", application=application, component=component)
               else:
-                  render("templates/component/secret.yaml", f"{component_directory}/secret.yaml", application=application, component=component)
+                  render("templates/secret.yaml", f"{component_directory}/secret.yaml", application=application, component=component)
 
           # Manage TLS Secret
           if component.get("tls"):

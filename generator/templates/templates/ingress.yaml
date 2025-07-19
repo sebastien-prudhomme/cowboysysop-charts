@@ -1,25 +1,34 @@
-{{- if .Values.ingress.enabled }}
+[% if component.name == application.name %]
+[% set component_values_path = "." %]
+[% else %]
+[% set component_values_path = component.name | to_lower_camel %]
+[% set component_values_path = "." + component_values_path + "." %]
+[% endif %]
+[% if component.optional %]
+{{- if .Values[[ component_values_path ]]enabled }}
+[% endif %]
+{{- if .Values[[ component_values_path ]]ingress.enabled }}
 apiVersion: {{ include "common.capabilities.ingress.apiVersion" . }}
 kind: Ingress
 metadata:
-  name: {{ include "[[ application.name ]].fullname" . }}
+  name: {{ include "[[ application.name ]][[ component_values_path ]]fullname" . }}
   namespace: {{ include "common.names.namespace" . | quote }}
   labels:
-    {{- include "[[ application.name ]].labels" . | nindent 4 }}
+    {{- include "[[ application.name ]][[ component_values_path ]]labels" . | nindent 4 }}
     {{- if .Values.commonLabels }}
     {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
     {{- end }}
-  {{- if or .Values.ingress.annotations .Values.commonAnnotations }}
-  {{- $annotations := include "common.tplvalues.merge" ( dict "values" ( list .Values.ingress.annotations .Values.commonAnnotations ) "context" . ) }}
+  {{- if or .Values[[ component_values_path ]]ingress.annotations .Values.commonAnnotations }}
+  {{- $annotations := include "common.tplvalues.merge" ( dict "values" ( list .Values[[ component_values_path ]]ingress.annotations .Values.commonAnnotations ) "context" . ) }}
   annotations: {{- include "common.tplvalues.render" ( dict "value" $annotations "context" $ ) | nindent 4 }}
   {{- end }}
 spec:
-  {{- if .Values.ingress.ingressClassName }}
-  ingressClassName: {{ .Values.ingress.ingressClassName | quote }}
+  {{- if .Values[[ component_values_path ]]ingress.ingressClassName }}
+  ingressClassName: {{ .Values[[ component_values_path ]]ingress.ingressClassName | quote }}
   {{- end }}
-  {{- if .Values.ingress.tls }}
+  {{- if .Values[[ component_values_path ]]ingress.tls }}
   tls:
-    {{- range .Values.ingress.tls }}
+    {{- range .Values[[ component_values_path ]]ingress.tls }}
     - hosts:
         {{- range .hosts }}
         - {{ . | quote }}
@@ -28,15 +37,18 @@ spec:
     {{- end }}
   {{- end }}
   rules:
-    {{- range .Values.ingress.hosts }}
+    {{- range .Values[[ component_values_path ]]ingress.hosts }}
     - host: {{ .host | quote }}
       http:
         paths:
           {{- range .paths }}
           - path: {{ . }}
-            pathType: {{ $.Values.ingress.pathType }}
+            pathType: {{ $.Values[[ component_values_path ]]ingress.pathType }}
             backend:
-              {{- include "common.ingress.backend" (dict "serviceName" (include "[[ application.name ]].fullname" $) "servicePort" $.Values.service.ports.http "context" $) | nindent 14 }}
+              {{- include "common.ingress.backend" (dict "serviceName" (include "[[ application.name ]][[ component_values_path ]]fullname" $) "servicePort" $.Values[[ component_values_path ]]service.ports.http "context" $) | nindent 14 }}
           {{- end }}
     {{- end }}
 {{- end }}
+[% if component.optional %]
+{{- end -}}
+[% endif %]
