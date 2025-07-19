@@ -1,29 +1,41 @@
-{{- if and .Values.persistence.enabled (not .Values.persistence.existingClaim) }}
+[% if component.name == application.name %]
+[% set component_values_path = "." %]
+[% else %]
+[% set component_values_path = component.name | to_lower_camel %]
+[% set component_values_path = "." + component_values_path + "." %]
+[% endif %]
+[% if component.optional %]
+{{- if .Values[[ component_values_path ]]enabled }}
+[% endif %]
+{{- if and .Values[[ component_values_path ]]persistence.enabled (not .Values[[ component_values_path ]]persistence.existingClaim) }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ include "[[ application.name ]].fullname" . }}
+  name: {{ include "[[ application.name ]][[ component_values_path ]]fullname" . }}
   namespace: {{ include "common.names.namespace" . | quote }}
   labels:
-    {{- include "[[ application.name ]].labels" . | nindent 4 }}
+    {{- include "[[ application.name ]][[ component_values_path ]]labels" . | nindent 4 }}
     {{- if .Values.commonLabels }}
     {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
     {{- end }}
-  {{- if or .Values.persistence.annotations .Values.commonAnnotations }}
-  {{- $annotations := include "common.tplvalues.merge" ( dict "values" ( list .Values.persistence.annotations .Values.commonAnnotations ) "context" . ) }}
+  {{- if or .Values[[ component_values_path ]]persistence.annotations .Values.commonAnnotations }}
+  {{- $annotations := include "common.tplvalues.merge" ( dict "values" ( list .Values[[ component_values_path ]]persistence.annotations .Values.commonAnnotations ) "context" . ) }}
   annotations: {{- include "common.tplvalues.render" ( dict "value" $annotations "context" $ ) | nindent 4 }}
   {{- end }}
 spec:
   accessModes:
-    - {{ .Values.persistence.accessMode | quote }}
+    - {{ .Values[[ component_values_path ]]persistence.accessMode | quote }}
   resources:
     requests:
-      storage: {{ .Values.persistence.size | quote }}
-  {{- if .Values.persistence.storageClass }}
-  {{- if (eq "-" .Values.persistence.storageClass) }}
+      storage: {{ .Values[[ component_values_path ]]persistence.size | quote }}
+  {{- if .Values[[ component_values_path ]]persistence.storageClass }}
+  {{- if (eq "-" .Values[[ component_values_path ]]persistence.storageClass) }}
   storageClassName: ""
   {{- else }}
-  storageClassName: {{ .Values.persistence.storageClass | quote }}
+  storageClassName: {{ .Values[[ component_values_path ]]persistence.storageClass | quote }}
   {{- end }}
   {{- end }}
 {{- end }}
+[% if component.optional %]
+{{- end -}}
+[% endif %]

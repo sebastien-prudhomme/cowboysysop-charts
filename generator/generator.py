@@ -130,7 +130,7 @@ with open(sys.argv[1], "r") as stream:
               if component_name == name:
                   render("templates/persistentvolumeclaim.yaml", f"{templates_directory}/persistentvolumeclaim.yaml", application=application, component=component)
               else:
-                  render("templates/component/persistentvolumeclaim.yaml", f"{component_directory}/persistentvolumeclaim.yaml", application=application, component=component)
+                  render("templates/persistentvolumeclaim.yaml", f"{component_directory}/persistentvolumeclaim.yaml", application=application, component=component)
 
           # Manage PodDisruptionBudget
           if component_name == name:
