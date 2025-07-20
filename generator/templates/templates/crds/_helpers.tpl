@@ -14,10 +14,10 @@ app.kubernetes.io/component: crds
 {{- end -}}
 
 {{/*
-Common labels
+Labels
 */}}
 {{- define "[[ application.name ]].crds.labels" -}}
-{{ include "[[ application.name ]].labels" . }}
+{{ include "[[ application.name ]].commonLabels" . }}
 {{ include "[[ application.name ]].crds.componentLabels" . }}
 {{- end -}}
 
@@ -25,6 +25,6 @@ Common labels
 Selector labels
 */}}
 {{- define "[[ application.name ]].crds.selectorLabels" -}}
-{{ include "[[ application.name ]].selectorLabels" . }}
+{{ include "[[ application.name ]].commonSelectorLabels" . }}
 {{ include "[[ application.name ]].crds.componentLabels" . }}
 {{- end -}}

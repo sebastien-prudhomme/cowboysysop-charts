@@ -5,7 +5,7 @@ metadata:
   name: {{ include "[[ application.name ]].fullname" . }}
   namespace: {{ default (include "common.names.namespace" .) .Values.prometheusRules.namespace | quote }}
   labels:
-    {{- include "[[ application.name ]].labels" . | nindent 4 }}
+    {{- include "[[ application.name ]].commonLabels" . | nindent 4 }}
     {{- if .Values.prometheusRules.labels }}
     {{- include "common.tplvalues.render" ( dict "value" .Values.prometheusRules.labels "context" $ ) | nindent 4 }}
     {{- end }}

@@ -56,8 +56,8 @@ Create a default fully qualified metrics name.
 {{- printf "%s-%s" (include "[[ application.name ]][[ component_values_path ]]fullname" .) "metrics" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 [% endif %]
-
 [% if not component or component.name == application.name %]
+
 {{/*
 Create chart name and version as used by the chart label.
 */}}
@@ -68,9 +68,9 @@ Create chart name and version as used by the chart label.
 {{/*
 Common labels
 */}}
-{{- define "[[ application.name ]].labels" -}}
+{{- define "[[ application.name ]].commonLabels" -}}
 helm.sh/chart: {{ include "[[ application.name ]].chart" . }}
-{{ include "[[ application.name ]].selectorLabels" . }}
+{{ include "[[ application.name ]].commonSelectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -78,13 +78,15 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
 
 {{/*
-Selector labels
+Common selector labels
 */}}
-{{- define "[[ application.name ]].selectorLabels" -}}
+{{- define "[[ application.name ]].commonSelectorLabels" -}}
 app.kubernetes.io/name: {{ include "[[ application.name ]].name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
-[% else %]
+[% endif %]
+[% if component %]
+
 {{/*
 Component labels
 */}}
@@ -93,10 +95,10 @@ app.kubernetes.io/component: [[component.name]]
 {{- end -}}
 
 {{/*
-Common labels
+Labels
 */}}
 {{- define "[[ application.name ]][[ component_values_path ]]labels" -}}
-{{ include "[[ application.name ]].labels" . }}
+{{ include "[[ application.name ]].commonLabels" . }}
 {{ include "[[ application.name ]][[ component_values_path ]]componentLabels" . }}
 {{- end -}}
 
@@ -104,11 +106,9 @@ Common labels
 Selector labels
 */}}
 {{- define "[[ application.name ]][[ component_values_path ]]selectorLabels" -}}
-{{ include "[[ application.name ]].selectorLabels" . }}
+{{ include "[[ application.name ]].commonSelectorLabels" . }}
 {{ include "[[ application.name ]][[ component_values_path ]]componentLabels" . }}
 {{- end -}}
-[% endif %]
-[% if component %]
 
 {{/*
 Create the name of the service account to use
