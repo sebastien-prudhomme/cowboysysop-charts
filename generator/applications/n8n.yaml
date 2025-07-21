@@ -133,6 +133,9 @@ components:
         startupProbe:
           httpGet:
             path: /healthz
+        volumeMounts: |
+          - name: data
+            mountPath: /home/node/.n8n
     image:
       registry: docker.n8n.io
       repository: n8nio/n8n
@@ -140,6 +143,7 @@ components:
     ingress: true
     metrics:
       optional: true
+    persistentvolumeclaim: true
     secret: |
       encryption-key: {{ .Values.n8n.encryptionKey | b64enc | quote }}
       smtp-password: {{ .Values.smtp.password | b64enc | quote }}
