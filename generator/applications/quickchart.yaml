@@ -48,7 +48,9 @@ components:
       registry: docker.io
       repository: ianw/quickchart
       tag: v1.7.1
-    ingress: true
+    ingress:
+      paths:
+        - /
     service:
       ports:
         - name: http

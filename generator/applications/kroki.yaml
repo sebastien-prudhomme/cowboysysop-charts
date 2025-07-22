@@ -96,7 +96,9 @@ components:
       registry: docker.io
       repository: yuzutech/kroki
       tag: 0.25.0
-    ingress: true
+    ingress:
+      paths:
+        - /
     service:
       ports:
         - name: http

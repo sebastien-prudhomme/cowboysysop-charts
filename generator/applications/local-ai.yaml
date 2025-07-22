@@ -82,7 +82,9 @@ components:
       registry: quay.io
       repository: go-skynet/local-ai
       tag: v2.12.1-ffmpeg-core
-    ingress: true
+    ingress:
+      paths:
+        - /
     persistentvolumeclaim: true
     service:
       ports:

@@ -152,7 +152,9 @@ components:
       registry: docker.io
       repository: flowiseai/flowise
       tag: 3.0.2
-    ingress: true
+    ingress:
+      paths:
+        - /
     persistentvolumeclaim: true
     secret: |
       encryption-key: {{ .Values.config.encryptionKey | b64enc | quote }}

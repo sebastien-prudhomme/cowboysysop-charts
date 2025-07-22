@@ -356,7 +356,9 @@ ingress:
   hosts:
     - host: [[ application.name ]].local
       paths:
-        - /
+        [% for path in component.ingress.paths %]
+        - [[ path ]]
+        [% endfor %]
 
   ## @param [[ component_yaml_path ]]ingress.tls TLS configuration
   tls: []

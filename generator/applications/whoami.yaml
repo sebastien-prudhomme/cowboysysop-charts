@@ -57,7 +57,9 @@ components:
       registry: docker.io
       repository: traefik/whoami
       tag: v1.10.3
-    ingress: true
+    ingress:
+      paths:
+        - /
     service:
       ports:
         - name: http

@@ -90,7 +90,9 @@ components:
       registry: ghcr.io
       repository: benc-uk/kubeview
       tag: 0.1.31
-    ingress: true
+    ingress:
+      paths:
+        - /
     service:
       ports:
         - name: http

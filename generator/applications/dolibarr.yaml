@@ -147,7 +147,9 @@ components:
       registry: docker.io
       repository: dolibarr/dolibarr
       tag: 21.0.0
-    ingress: true
+    ingress:
+      paths:
+        - /
     persistentvolumeclaim: true
     secret: |
       dolibarr-admin-password: {{ .Values.dolibarr.admin.password | b64enc | quote }}

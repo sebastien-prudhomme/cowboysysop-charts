@@ -37,7 +37,9 @@ components:
       registry: docker.io
       repository: ollama/ollama
       tag: 0.9.2
-    ingress: true
+    ingress:
+      paths:
+        - /
     persistentvolumeclaim: true
     service:
       ports:

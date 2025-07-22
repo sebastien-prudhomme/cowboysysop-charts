@@ -26,7 +26,9 @@ components:
       registry: docker.io
       repository: mcp/grafana
       tag: latest
-    ingress: true
+    ingress:
+      paths:
+        - /
     secret: |
       grafana-api-key: {{ .Values.grafana.apiKey | b64enc | quote }}
     secretKeyHelpers: |

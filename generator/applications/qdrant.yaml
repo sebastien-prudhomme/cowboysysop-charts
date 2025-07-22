@@ -74,7 +74,9 @@ components:
       registry: docker.io
       repository: qdrant/qdrant
       tag: v1.4.1
-    ingress: true
+    ingress:
+      paths:
+        - /
     persistentvolumeclaim: true
     service:
       ports:

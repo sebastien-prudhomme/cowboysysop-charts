@@ -124,7 +124,6 @@ components:
           - name: N8N_SMTP_STARTTLS
             value: {{ .Values.smtp.tls.startTls | quote }}
         livenessProbe:
-          # initialDelaySeconds: 180
           httpGet:
             path: /healthz
         readinessProbe:
@@ -140,7 +139,9 @@ components:
       registry: docker.n8n.io
       repository: n8nio/n8n
       tag: 1.102.4
-    ingress: true
+    ingress:
+      paths:
+        - /
     metrics:
       optional: true
     persistentvolumeclaim: true
@@ -284,6 +285,9 @@ components:
       registry: docker.n8n.io
       repository: n8nio/n8n
       tag: 1.102.4
+    ingress:
+      paths:
+        - /webhook/
     service:
       ports:
         - name: http

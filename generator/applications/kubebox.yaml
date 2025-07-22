@@ -65,7 +65,9 @@ components:
       registry: docker.io
       repository: astefanutti/kubebox
       tag: 0.9.0-server
-    ingress: true
+    ingress:
+      paths:
+        - /
     service:
       ports:
         - name: http
