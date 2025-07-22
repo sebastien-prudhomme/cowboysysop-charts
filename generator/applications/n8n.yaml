@@ -287,7 +287,10 @@ components:
       tag: 1.102.4
     ingress:
       paths:
+        - /form/
+        - /form-waiting/
         - /webhook/
+        - /webhook-waiting/
     service:
       ports:
         - name: http
