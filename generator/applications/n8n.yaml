@@ -220,6 +220,11 @@ components:
     enabled: false
     deployment:
       type: deployment
+      wait:
+        # Pour éviter la migration des données par le webhook
+        - name: n8n
+          command: |
+            wait4x http "http://{{ include "n8n.fullname" . }}:{{ .Values.service.ports.http }}/healthz/readiness" --expect-status-code 200 --timeout 0
       waitPostgresql: true
       waitRedis: true
       container:
@@ -290,6 +295,11 @@ components:
     enabled: false
     deployment:
       type: deployment
+      wait:
+        # Pour éviter la migration des données par le worker
+        - name: n8n
+          command: |
+            wait4x http "http://{{ include "n8n.fullname" . }}:{{ .Values.service.ports.http }}/healthz/readiness" --expect-status-code 200 --timeout 0
       waitPostgresql: true
       waitRedis: true
       container:

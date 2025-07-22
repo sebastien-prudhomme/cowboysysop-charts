@@ -110,6 +110,24 @@ spec:
         {{- toYaml .Values[[ component_values_path ]]podSecurityContext | nindent 8 }}
       [% if component.deployment.waitMariadb or component.deployment.waitPostgresql or component.deployment.waitRedis or component.deployment.initContainer %]
       initContainers:
+        [% for dependency in component.deployment.wait %]
+        - name: wait-[[ dependency.name ]]
+          securityContext:
+            {{- toYaml .Values.wait.securityContext | nindent 12 }}
+          image: {{ include "common.images.image" ( dict "imageRoot" .Values.wait.image "global" .Values.global ) }}
+          imagePullPolicy: {{ .Values.wait.image.pullPolicy }}
+          command:
+            - /bin/sh
+            - -ec
+            - |
+              [[ dependency.command | indent(14) | trim ]]
+          resources:
+            {{- toYaml .Values.wait.resources | nindent 12 }}
+          volumeMounts:
+            {{- if .Values.wait.extraVolumeMounts }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.wait.extraVolumeMounts "context" $) | nindent 12 }}
+            {{- end }}
+        [% endfor %]
         [% if component.deployment.waitMariadb %]
         [% if application.mariadb == "optional" %]
         {{- if or .Values.mariadb.enabled .Values.externalMariadb.enabled }}
