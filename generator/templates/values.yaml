@@ -176,8 +176,10 @@ runtimeClassName: ""
 topologySpreadConstraints: []
 
 ## @extra [[ component_yaml_path ]]securityContext Container security context
+## @param [[ component_yaml_path ]]securityContext.allowPrivilegeEscalation Set container's Security Context allowPrivilegeEscalation
 ## @param [[ component_yaml_path ]]securityContext.seccompProfile.type Set container's Security Context seccomp profile
 securityContext:
+  allowPrivilegeEscalation: false
   seccompProfile:
     type: RuntimeDefault
   # capabilities:
@@ -461,8 +463,10 @@ autoscaling:
 
 init:
   ## @extra [[ component_yaml_path ]]init.securityContext Init security context
+  ## @param [[ component_yaml_path ]]init.securityContext.allowPrivilegeEscalation Set init container's Security Context allowPrivilegeEscalation
   ## @param [[ component_yaml_path ]]init.securityContext.seccompProfile.type Set init container's Security Context seccomp profile
   securityContext:
+    allowPrivilegeEscalation: false
     seccompProfile:
       type: RuntimeDefault
     # capabilities:
@@ -512,8 +516,10 @@ init:
     pullPolicy: IfNotPresent
 
   ## @extra [[ container.name ]].securityContext Container security context
+  ## @param [[ container.name ]].securityContext.allowPrivilegeEscalation Set container's Security Context allowPrivilegeEscalation
   ## @param [[ container.name ]].securityContext.seccompProfile.type Set container's Security Context seccomp profile
   securityContext:
+    allowPrivilegeEscalation: false
     seccompProfile:
       type: RuntimeDefault
     # capabilities:
@@ -933,8 +939,10 @@ wait:
     pullPolicy: IfNotPresent
 
   ## @extra wait.securityContext Container security context
+  ## @param wait.securityContext.allowPrivilegeEscalation Set container's Security Context allowPrivilegeEscalation
   ## @param wait.securityContext.seccompProfile.type Set container's Security Context seccomp profile
   securityContext:
+    allowPrivilegeEscalation: false
     seccompProfile:
       type: RuntimeDefault
     # capabilities:
@@ -997,8 +1005,10 @@ crds:
     runAsGroup: 1001
 
   ## @extra crds.securityContext Container security context
+  ## @param crds.securityContext.allowPrivilegeEscalation Set container's Security Context allowPrivilegeEscalation
   ## @param crds.securityContext.seccompProfile.type Set container's Security Context seccomp profile
   securityContext:
+    allowPrivilegeEscalation: false
     seccompProfile:
       type: RuntimeDefault
     # capabilities:
