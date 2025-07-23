@@ -177,14 +177,15 @@ topologySpreadConstraints: []
 
 ## @extra [[ component_yaml_path ]]securityContext Container security context
 ## @param [[ component_yaml_path ]]securityContext.allowPrivilegeEscalation Set container's Security Context allowPrivilegeEscalation
+## @param [[ component_yaml_path ]]securityContext.capabilities.drop List of capabilities to be dropped
 ## @param [[ component_yaml_path ]]securityContext.seccompProfile.type Set container's Security Context seccomp profile
 securityContext:
   allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
   seccompProfile:
     type: RuntimeDefault
-  # capabilities:
-  #   drop:
-  #   - ALL
   # readOnlyRootFilesystem: true
   # runAsNonRoot: true
   # runAsUser: 1000
@@ -464,14 +465,15 @@ autoscaling:
 init:
   ## @extra [[ component_yaml_path ]]init.securityContext Init security context
   ## @param [[ component_yaml_path ]]init.securityContext.allowPrivilegeEscalation Set init container's Security Context allowPrivilegeEscalation
+  ## @param [[ component_yaml_path ]]init.securityContext.capabilities.drop List of capabilities to be dropped
   ## @param [[ component_yaml_path ]]init.securityContext.seccompProfile.type Set init container's Security Context seccomp profile
   securityContext:
     allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
     seccompProfile:
       type: RuntimeDefault
-    # capabilities:
-    #   drop:
-    #   - ALL
     # readOnlyRootFilesystem: true
     # runAsNonRoot: true
     # runAsUser: 1000
@@ -517,14 +519,15 @@ init:
 
   ## @extra [[ container.name ]].securityContext Container security context
   ## @param [[ container.name ]].securityContext.allowPrivilegeEscalation Set container's Security Context allowPrivilegeEscalation
+  ## @param [[ container.name ]].securityContext.capabilities.drop List of capabilities to be dropped
   ## @param [[ container.name ]].securityContext.seccompProfile.type Set container's Security Context seccomp profile
   securityContext:
     allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
     seccompProfile:
       type: RuntimeDefault
-    # capabilities:
-    #   drop:
-    #   - ALL
     # readOnlyRootFilesystem: true
     # runAsNonRoot: true
     # runAsUser: 1000
@@ -940,14 +943,15 @@ wait:
 
   ## @extra wait.securityContext Container security context
   ## @param wait.securityContext.allowPrivilegeEscalation Set container's Security Context allowPrivilegeEscalation
+  ## @param wait.securityContext.capabilities.drop List of capabilities to be dropped
   ## @param wait.securityContext.seccompProfile.type Set container's Security Context seccomp profile
   securityContext:
     allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
     seccompProfile:
       type: RuntimeDefault
-    # capabilities:
-    #   drop:
-    #   - ALL
     # readOnlyRootFilesystem: true
     # runAsNonRoot: true
     # runAsUser: 1000
@@ -1006,14 +1010,15 @@ crds:
 
   ## @extra crds.securityContext Container security context
   ## @param crds.securityContext.allowPrivilegeEscalation Set container's Security Context allowPrivilegeEscalation
+  ## @param crds.securityContext.capabilities.drop List of capabilities to be dropped
   ## @param crds.securityContext.seccompProfile.type Set container's Security Context seccomp profile
   securityContext:
     allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
     seccompProfile:
       type: RuntimeDefault
-    # capabilities:
-    #   drop:
-    #   - ALL
     # readOnlyRootFilesystem: true
     # runAsNonRoot: true
     # runAsUser: 1000
