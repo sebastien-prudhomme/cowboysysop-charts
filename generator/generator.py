@@ -281,3 +281,10 @@ with open(sys.argv[1], "r") as stream:
         render("templates/schedule-weekly.yaml", f"{templates_directory}/schedule-weekly.yaml", application=application)
         render("templates/schedule-monthly.yaml", f"{templates_directory}/schedule-monthly.yaml", application=application)
         render("templates/schedule-yearly.yaml", f"{templates_directory}/schedule-yearly.yaml", application=application)
+
+    # subprocess.run([
+    #   "helm",
+    #   "dependency",
+    #   "build",
+    #   f"{chart_directory}"
+    # ])
