@@ -178,17 +178,21 @@ topologySpreadConstraints: []
 ## @extra [[ component_yaml_path ]]securityContext Container security context
 ## @param [[ component_yaml_path ]]securityContext.allowPrivilegeEscalation Set container's Security Context allowPrivilegeEscalation
 ## @param [[ component_yaml_path ]]securityContext.capabilities.drop List of capabilities to be dropped
+## @param [[ component_yaml_path ]]securityContext.runAsNonRoot Whether the container must run as a non-root user
+## @param [[ component_yaml_path ]]securityContext.runAsUser The UID to run the entrypoint of the container process
+## @param [[ component_yaml_path ]]securityContext.runAsGroup The GID to run the entrypoint of the container process
 ## @param [[ component_yaml_path ]]securityContext.seccompProfile.type Set container's Security Context seccomp profile
 securityContext:
   allowPrivilegeEscalation: false
   capabilities:
     drop:
       - ALL
+  runAsNonRoot: [[ "false" if component.deployment.container.securityContext.runAsUser == 0 else "true" ]]
+  runAsUser: [[ component.deployment.container.securityContext.runAsUser ]]
+  runAsGroup: [[ component.deployment.container.securityContext.runAsGroup ]]
   seccompProfile:
     type: RuntimeDefault
   # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
 [% if component.service or component.headless or component.metrics or component.deployment.container.ports %]
 
 containerPorts:
@@ -466,17 +470,21 @@ init:
   ## @extra [[ component_yaml_path ]]init.securityContext Init security context
   ## @param [[ component_yaml_path ]]init.securityContext.allowPrivilegeEscalation Set init container's Security Context allowPrivilegeEscalation
   ## @param [[ component_yaml_path ]]init.securityContext.capabilities.drop List of capabilities to be dropped
+  ## @param [[ component_yaml_path ]]init.securityContext.runAsNonRoot Whether the container must run as a non-root user
+  ## @param [[ component_yaml_path ]]init.securityContext.runAsUser The UID to run the entrypoint of the container process
+  ## @param [[ component_yaml_path ]]init.securityContext.runAsGroup The GID to run the entrypoint of the container process
   ## @param [[ component_yaml_path ]]init.securityContext.seccompProfile.type Set init container's Security Context seccomp profile
   securityContext:
     allowPrivilegeEscalation: false
     capabilities:
       drop:
         - ALL
+    runAsNonRoot: [[ "false" if component.deployment.initContainer.securityContext.runAsUser == 0 else "true" ]]
+    runAsUser: [[ component.deployment.initContainer.securityContext.runAsUser ]]
+    runAsGroup: [[ component.deployment.initContainer.securityContext.runAsGroup ]]
     seccompProfile:
       type: RuntimeDefault
     # readOnlyRootFilesystem: true
-    # runAsNonRoot: true
-    # runAsUser: 1000
 
   ## @param [[ component_yaml_path ]]init.resources Init CPU/Memory resource requests/limits
   resources: {}
@@ -520,17 +528,21 @@ init:
   ## @extra [[ container.name ]].securityContext Container security context
   ## @param [[ container.name ]].securityContext.allowPrivilegeEscalation Set container's Security Context allowPrivilegeEscalation
   ## @param [[ container.name ]].securityContext.capabilities.drop List of capabilities to be dropped
+  ## @param [[ container.name ]].securityContext.runAsNonRoot Whether the container must run as a non-root user
+  ## @param [[ container.name ]].securityContext.runAsUser The UID to run the entrypoint of the container process
+  ## @param [[ container.name ]].securityContext.runAsGroup The GID to run the entrypoint of the container process
   ## @param [[ container.name ]].securityContext.seccompProfile.type Set container's Security Context seccomp profile
   securityContext:
     allowPrivilegeEscalation: false
     capabilities:
       drop:
         - ALL
+    runAsNonRoot: [[ "false" if container.securityContext.runAsUser == 0 else "true" ]]
+    runAsUser: [[ container.securityContext.runAsUser ]]
+    runAsGroup: [[ container.securityContext.runAsGroup ]]
     seccompProfile:
       type: RuntimeDefault
     # readOnlyRootFilesystem: true
-    # runAsNonRoot: true
-    # runAsUser: 1000
   [% if container.ports %]
 
   containerPorts:
@@ -944,17 +956,21 @@ wait:
   ## @extra wait.securityContext Container security context
   ## @param wait.securityContext.allowPrivilegeEscalation Set container's Security Context allowPrivilegeEscalation
   ## @param wait.securityContext.capabilities.drop List of capabilities to be dropped
+  ## @param wait.securityContext.runAsNonRoot Whether the container must run as a non-root user
+  ## @param wait.securityContext.runAsUser The UID to run the entrypoint of the container process
+  ## @param wait.securityContext.runAsGroup The GID to run the entrypoint of the container process
   ## @param wait.securityContext.seccompProfile.type Set container's Security Context seccomp profile
   securityContext:
     allowPrivilegeEscalation: false
     capabilities:
       drop:
         - ALL
+    runAsNonRoot: true
+    runAsUser: 65534
+    runAsGroup: 65534
     seccompProfile:
       type: RuntimeDefault
     # readOnlyRootFilesystem: true
-    # runAsNonRoot: true
-    # runAsUser: 1000
 
   ## @param wait.resources CPU/Memory resource requests/limits
   resources: {}
@@ -998,30 +1014,28 @@ crds:
   ## @param crds.podLabels Additional pod labels
   podLabels: {}
 
-  ## @extra crds.podSecurityContext Pod security context
-  ## @param crds.podSecurityContext.runAsNonRoot Whether the container must run as a non-root user
-  ## @param crds.podSecurityContext.runAsUser The UID to run the entrypoint of the container process
-  ## @param crds.podSecurityContext.runAsGroup The GID to run the entrypoint of the container process
-  podSecurityContext:
+  ## @param crds.podSecurityContext Pod security context
+  podSecurityContext: {}
     # fsGroup: 2000
-    runAsNonRoot: true
-    runAsUser: 1001
-    runAsGroup: 1001
 
   ## @extra crds.securityContext Container security context
   ## @param crds.securityContext.allowPrivilegeEscalation Set container's Security Context allowPrivilegeEscalation
   ## @param crds.securityContext.capabilities.drop List of capabilities to be dropped
+  ## @param crds.securityContext.runAsNonRoot Whether the container must run as a non-root user
+  ## @param crds.securityContext.runAsUser The UID to run the entrypoint of the container process
+  ## @param crds.securityContext.runAsGroup The GID to run the entrypoint of the container process
   ## @param crds.securityContext.seccompProfile.type Set container's Security Context seccomp profile
   securityContext:
     allowPrivilegeEscalation: false
     capabilities:
       drop:
         - ALL
+    runAsNonRoot: true
+    runAsUser: 65534
+    runAsGroup: 65534
     seccompProfile:
       type: RuntimeDefault
     # readOnlyRootFilesystem: true
-    # runAsNonRoot: true
-    # runAsUser: 1000
 
   ## @param crds.resources CPU/Memory resource requests/limits
   resources: {}
