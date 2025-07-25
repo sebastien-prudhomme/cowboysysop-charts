@@ -132,33 +132,9 @@ podAnnotations: {}
 ## @param [[ component_yaml_path ]]podLabels Additional pod labels
 podLabels: {}
 
-[% if component.deployment.podSecurityContext %]
-## @extra [[ component_yaml_path ]]podSecurityContext Pod security context
-[% if component.deployment.podSecurityContext.runAsNonRoot %]
-## @param [[ component_yaml_path ]]podSecurityContext.runAsNonRoot Whether the container must run as a non-root user
-[% endif %]
-[% if component.deployment.podSecurityContext.runAsUser %]
-## @param [[ component_yaml_path ]]podSecurityContext.runAsUser The UID to run the entrypoint of the container process
-[% endif %]
-[% if component.deployment.podSecurityContext.runAsGroup %]
-## @param [[ component_yaml_path ]]podSecurityContext.runAsGroup The GID to run the entrypoint of the container process
-[% endif %]
-podSecurityContext:
-  # fsGroup: 2000
-  [% if component.deployment.podSecurityContext.runAsNonRoot %]
-  runAsNonRoot: [[ "true" if component.deployment.podSecurityContext.runAsNonRoot else "false" ]]
-  [% endif %]
-  [% if component.deployment.podSecurityContext.runAsUser %]
-  runAsUser: [[ component.deployment.podSecurityContext.runAsUser ]]
-  [% endif %]
-  [% if component.deployment.podSecurityContext.runAsGroup %]
-  runAsGroup: [[ component.deployment.podSecurityContext.runAsGroup ]]
-  [% endif %]
-[% else %]
 ## @param [[ component_yaml_path ]]podSecurityContext Pod security context
 podSecurityContext: {}
   # fsGroup: 2000
-[% endif %]
 [% if component.admissionWebhook %]
 
 ## @param [[ component_yaml_path ]]hostNetwork Use the host network
