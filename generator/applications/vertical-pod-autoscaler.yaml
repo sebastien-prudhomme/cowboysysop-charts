@@ -226,6 +226,7 @@ components:
             cpu: 50m
             memory: 256Mi
         securityContext:
+          readOnlyRootFilesystem: true
           runAsNonRoot: true
           runAsUser: 65534
           runAsGroup: 65534
@@ -477,6 +478,7 @@ components:
             cpu: 50m
             memory: 512Mi
         securityContext:
+          readOnlyRootFilesystem: true
           runAsNonRoot: true
           runAsUser: 65534
           runAsGroup: 65534
@@ -673,6 +675,7 @@ components:
             cpu: 50m
             memory: 512Mi
         securityContext:
+          readOnlyRootFilesystem: true
           runAsNonRoot: true
           runAsUser: 65534
           runAsGroup: 65534
