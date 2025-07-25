@@ -8,6 +8,10 @@ license: 2020
 source: https://github.com/GoogleChrome/lighthouse-ci
 version: 9.0.0
 updates: |
+  ### Upgrading to version 10.0.0
+  label en plus
+
+
   ### Upgrading to version 9.0.0
 
   Information about services are no more injected into pod's environment variable.

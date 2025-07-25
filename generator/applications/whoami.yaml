@@ -7,6 +7,9 @@ license: 2020
 source: https://github.com/traefik/whoami
 version: 6.0.0
 updates: |
+  ### Upgrading to version 7.0.0
+  label en plus
+
   ### Upgrading to version 6.0.0
 
   Information about services are no more injected into pod's environment variable.

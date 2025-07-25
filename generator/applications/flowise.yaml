@@ -8,6 +8,9 @@ license: 2023
 source: https://github.com/FlowiseAI/Flowise
 version: 5.1.0
 updates: |
+  ### Upgrading to version 6.0.0
+  label en plus
+
   ### Upgrading to version 5.0.0
 
   The application has changed its authentication system, see the release notes:

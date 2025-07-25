@@ -129,6 +129,9 @@ components:
         readinessProbe:
           httpGet:
             path: /healthz/readiness
+        securityContext:
+          runAsUser: 1000
+          runAsGroup: 1000
         startupProbe:
           httpGet:
             path: /healthz
@@ -277,6 +280,9 @@ components:
           httpGet:
             path: /healthz/readiness
             port: http
+        securityContext:
+          runAsUser: 1000
+          runAsGroup: 1000
         startupProbe:
           httpGet:
             path: /healthz
@@ -385,6 +391,9 @@ components:
           httpGet:
             path: /healthz/readiness
             port: http-metrics
+        securityContext:
+          runAsUser: 1000
+          runAsGroup: 1000
         startupProbe:
           httpGet:
             path: /healthz

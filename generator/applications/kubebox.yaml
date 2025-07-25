@@ -9,6 +9,9 @@ version: 6.0.0
 prerequisites: |
   - cAdvisor >= 0.36 (you can use the [ckotzbauer/cadvisor](https://artifacthub.io/packages/helm/ckotzbauer/cadvisor) chart)
 updates: |
+  ### Upgrading to version 7.0.0
+  label en plus
+
   ### Upgrading to version 6.0.0
 
   Information about services are no more injected into pod's environment variable.

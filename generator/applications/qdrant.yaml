@@ -8,6 +8,9 @@ license: 2023
 source: https://github.com/qdrant/qdrant
 version: 3.0.0
 updates: |
+  ### Upgrading to version 4.0.0
+  label en plus
+
   ### Upgrading to version 3.0.0
 
   Information about services are no more injected into pod's environment variable.

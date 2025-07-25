@@ -7,6 +7,9 @@ license: 2021
 source: https://github.com/typpo/quickchart
 version: 5.0.0
 updates: |
+  ### Upgrading to version 6.0.0
+  label en plus
+
   ### Upgrading to version 5.0.0
 
   Information about services are no more injected into pod's environment variable.

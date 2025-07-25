@@ -8,6 +8,9 @@ license: 2022
 source: https://github.com/Dolibarr/dolibarr
 version: 7.0.0
 updates: |
+  ### Upgrading to version 8.0.0
+  label en plus
+
   ### Upgrading to version 7.0.0
 
   The application has been updated to a major release, see the release notes for breaking changes:

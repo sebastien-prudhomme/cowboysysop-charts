@@ -6,6 +6,9 @@ home: https://github.com/grafana/mcp-grafana
 license: 2025
 source: https://github.com/grafana/mcp-grafana
 version: 1.0.0
+updates: |
+  ### Upgrading to version 2.0.0
+  label en plus
 components:
   - name: grafana-mcp
     deployment:

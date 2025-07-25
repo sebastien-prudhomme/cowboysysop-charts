@@ -11,6 +11,12 @@ version: 10.2.0
 prerequisites: |
   - Metrics Server >= 0.2 (you can use the [bitnami/metrics-server](https://artifacthub.io/packages/helm/bitnami/metrics-server) chart)
 updates: |
+  ### Upgrading to version 11.0.0
+
+  BREAKING: crds.podSecurityContext.runAsNonRoot -> crds.securityContext.runAsNonRoot (container)
+            crds.podSecurityContext.runAsUser 1001 -> crds.securityContext.runAsUser 65534
+            crds.podSecurityContext.runAsGroup 1001 -> crds.securityContext.runAsGroup 65534
+
   ### Upgrading to version 10.0.0
 
   The application has been updated to a major release, see the release notes for breaking changes:
@@ -182,10 +188,6 @@ components:
           - watch
     deployment:
       type: deployment
-      podSecurityContext:
-        runAsNonRoot: true
-        runAsUser: 65534
-        runAsGroup: 65534
       container:
         args: |
           - --address=:{{ .Values.admissionController.containerPorts.metrics }}
@@ -223,6 +225,10 @@ components:
           requests:
             cpu: 50m
             memory: 256Mi
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 65534
+          runAsGroup: 65534
         volumeMounts: |
           - name: tls-secret
             mountPath: /tls-secret
@@ -393,10 +399,6 @@ components:
           - update
     deployment:
       type: deployment
-      podSecurityContext:
-        runAsNonRoot: true
-        runAsUser: 65534
-        runAsGroup: 65534
       container:
         args: |
           - --address=:{{ .Values.recommender.containerPorts.metrics }}
@@ -474,6 +476,10 @@ components:
           requests:
             cpu: 50m
             memory: 512Mi
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 65534
+          runAsGroup: 65534
     image:
       registry: registry.k8s.io
       repository: autoscaling/vpa-recommender
@@ -617,10 +623,6 @@ components:
           - patch
     deployment:
       type: deployment
-      podSecurityContext:
-        runAsNonRoot: true
-        runAsUser: 65534
-        runAsGroup: 65534
       container:
         args: |
           - --address=:{{ .Values.updater.containerPorts.metrics }}
@@ -670,6 +672,10 @@ components:
           requests:
             cpu: 50m
             memory: 512Mi
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 65534
+          runAsGroup: 65534
     image:
       registry: registry.k8s.io
       repository: autoscaling/vpa-updater
