@@ -156,6 +156,7 @@ topologySpreadConstraints: []
 ## @extra [[ component_yaml_path ]]securityContext Container security context
 ## @param [[ component_yaml_path ]]securityContext.allowPrivilegeEscalation Set container's Security Context allowPrivilegeEscalation
 ## @param [[ component_yaml_path ]]securityContext.capabilities.drop List of capabilities to be dropped
+## @param [[ component_yaml_path ]]securityContext.readOnlyRootFilesystem Set container's Security Context readOnlyRootFilesystem
 ## @param [[ component_yaml_path ]]securityContext.runAsNonRoot Whether the container must run as a non-root user
 ## @param [[ component_yaml_path ]]securityContext.runAsUser The UID to run the entrypoint of the container process
 ## @param [[ component_yaml_path ]]securityContext.runAsGroup The GID to run the entrypoint of the container process
@@ -164,6 +165,7 @@ securityContext:
   capabilities:
     drop:
       - ALL
+  readOnlyRootFilesystem: [[ "true" if component.deployment.container.securityContext.readOnlyRootFilesystem else "false" ]]
   runAsNonRoot: [[ "false" if component.deployment.container.securityContext.runAsUser == 0 else "true" ]]
   runAsUser: [[ component.deployment.container.securityContext.runAsUser ]]
   runAsGroup: [[ component.deployment.container.securityContext.runAsGroup ]]
@@ -444,6 +446,7 @@ init:
   ## @extra [[ component_yaml_path ]]init.securityContext Init security context
   ## @param [[ component_yaml_path ]]init.securityContext.allowPrivilegeEscalation Set init container's Security Context allowPrivilegeEscalation
   ## @param [[ component_yaml_path ]]init.securityContext.capabilities.drop List of capabilities to be dropped
+  ## @param [[ component_yaml_path ]]init.securityContext.readOnlyRootFilesystem Set init container's Security Context readOnlyRootFilesystem
   ## @param [[ component_yaml_path ]]init.securityContext.runAsNonRoot Whether the container must run as a non-root user
   ## @param [[ component_yaml_path ]]init.securityContext.runAsUser The UID to run the entrypoint of the container process
   ## @param [[ component_yaml_path ]]init.securityContext.runAsGroup The GID to run the entrypoint of the container process
@@ -452,6 +455,7 @@ init:
     capabilities:
       drop:
         - ALL
+    readOnlyRootFilesystem: [[ "true" if component.deployment.initContainer.securityContext.readOnlyRootFilesystem else "false" ]]
     runAsNonRoot: [[ "false" if component.deployment.initContainer.securityContext.runAsUser == 0 else "true" ]]
     runAsUser: [[ component.deployment.initContainer.securityContext.runAsUser ]]
     runAsGroup: [[ component.deployment.initContainer.securityContext.runAsGroup ]]
@@ -498,6 +502,7 @@ init:
   ## @extra [[ container.name ]].securityContext Container security context
   ## @param [[ container.name ]].securityContext.allowPrivilegeEscalation Set container's Security Context allowPrivilegeEscalation
   ## @param [[ container.name ]].securityContext.capabilities.drop List of capabilities to be dropped
+  ## @param [[ container.name ]].securityContext.readOnlyRootFilesystem Set container's Security Context readOnlyRootFilesystem
   ## @param [[ container.name ]].securityContext.runAsNonRoot Whether the container must run as a non-root user
   ## @param [[ container.name ]].securityContext.runAsUser The UID to run the entrypoint of the container process
   ## @param [[ container.name ]].securityContext.runAsGroup The GID to run the entrypoint of the container process
@@ -506,6 +511,7 @@ init:
     capabilities:
       drop:
         - ALL
+    readOnlyRootFilesystem: [[ "true" if container.securityContext.readOnlyRootFilesystem else "false" ]]
     runAsNonRoot: [[ "false" if container.securityContext.runAsUser == 0 else "true" ]]
     runAsUser: [[ container.securityContext.runAsUser ]]
     runAsGroup: [[ container.securityContext.runAsGroup ]]
@@ -922,6 +928,7 @@ wait:
   ## @extra wait.securityContext Container security context
   ## @param wait.securityContext.allowPrivilegeEscalation Set container's Security Context allowPrivilegeEscalation
   ## @param wait.securityContext.capabilities.drop List of capabilities to be dropped
+  ## @param wait.securityContext.readOnlyRootFilesystem Set container's Security Context readOnlyRootFilesystem
   ## @param wait.securityContext.runAsNonRoot Whether the container must run as a non-root user
   ## @param wait.securityContext.runAsUser The UID to run the entrypoint of the container process
   ## @param wait.securityContext.runAsGroup The GID to run the entrypoint of the container process
@@ -930,6 +937,7 @@ wait:
     capabilities:
       drop:
         - ALL
+    readOnlyRootFilesystem: true
     runAsNonRoot: true
     runAsUser: 65534
     runAsGroup: 65534
@@ -985,6 +993,7 @@ crds:
   ## @extra crds.securityContext Container security context
   ## @param crds.securityContext.allowPrivilegeEscalation Set container's Security Context allowPrivilegeEscalation
   ## @param crds.securityContext.capabilities.drop List of capabilities to be dropped
+  ## @param crds.securityContext.readOnlyRootFilesystem Set container's Security Context readOnlyRootFilesystem
   ## @param crds.securityContext.runAsNonRoot Whether the container must run as a non-root user
   ## @param crds.securityContext.runAsUser The UID to run the entrypoint of the container process
   ## @param crds.securityContext.runAsGroup The GID to run the entrypoint of the container process
@@ -993,6 +1002,7 @@ crds:
     capabilities:
       drop:
         - ALL
+    readOnlyRootFilesystem: true
     runAsNonRoot: true
     runAsUser: 65534
     runAsGroup: 65534

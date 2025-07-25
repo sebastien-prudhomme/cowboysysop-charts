@@ -130,6 +130,7 @@ components:
           httpGet:
             path: /healthz/readiness
         securityContext:
+          readOnlyRootFilesystem: false
           runAsUser: 1000
           runAsGroup: 1000
         startupProbe:
@@ -281,6 +282,7 @@ components:
             path: /healthz/readiness
             port: http
         securityContext:
+          readOnlyRootFilesystem: false
           runAsUser: 1000
           runAsGroup: 1000
         startupProbe:
@@ -392,6 +394,7 @@ components:
             path: /healthz/readiness
             port: http-metrics
         securityContext:
+          readOnlyRootFilesystem: false
           runAsUser: 1000
           runAsGroup: 1000
         startupProbe:
