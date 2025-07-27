@@ -6,6 +6,11 @@ description: are a <<collection of Kubernetes objects common to all Cert-Manager
 home: https://github.com/cowboysysop/charts/tree/master/charts/cert-manager-common
 license: 2025
 source: https://github.com/imusmanmalik/cert-manager-mixin
-version: 1.0.0
+version: 2.0.0
+updates: |
+  ### Upgrading to version 2.0.0
+  The chart now uses forked versions of the Bitnami charts to reference the Bitnami Legacy repository:
+
+  - https://github.com/bitnami/containers/issues/83267
 grafanaDashboards: true
 prometheusRules: true
