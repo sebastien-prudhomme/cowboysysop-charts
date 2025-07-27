@@ -455,10 +455,14 @@ init:
   ## @param [[ component_yaml_path ]]init.securityContext.runAsUser The UID to run the entrypoint of the container process
   ## @param [[ component_yaml_path ]]init.securityContext.runAsGroup The GID to run the entrypoint of the container process
   securityContext:
-    allowPrivilegeEscalation: false
+    allowPrivilegeEscalation: [[ "true" if component.deployment.initContainer.securityContext.runAsUser == 0 else "false" ]]
     capabilities:
+    [% if component.deployment.initContainer.securityContext.runAsUser == 0 %]
+      drop: []
+    [% else %]
       drop:
         - ALL
+    [% endif %]
     readOnlyRootFilesystem: [[ "true" if component.deployment.initContainer.securityContext.readOnlyRootFilesystem else "false" ]]
     runAsNonRoot: [[ "false" if component.deployment.initContainer.securityContext.runAsUser == 0 else "true" ]]
     runAsUser: [[ component.deployment.initContainer.securityContext.runAsUser ]]
@@ -511,10 +515,14 @@ init:
   ## @param [[ container.name ]].securityContext.runAsUser The UID to run the entrypoint of the container process
   ## @param [[ container.name ]].securityContext.runAsGroup The GID to run the entrypoint of the container process
   securityContext:
-    allowPrivilegeEscalation: false
+    allowPrivilegeEscalation: [[ "true" if container.securityContext.runAsUser == 0 else "false" ]]
     capabilities:
+    [% if container.securityContext.runAsUser == 0 %]
+      drop: []
+    [% else %]
       drop:
         - ALL
+    [% endif %]
     readOnlyRootFilesystem: [[ "true" if container.securityContext.readOnlyRootFilesystem else "false" ]]
     runAsNonRoot: [[ "false" if container.securityContext.runAsUser == 0 else "true" ]]
     runAsUser: [[ container.securityContext.runAsUser ]]
