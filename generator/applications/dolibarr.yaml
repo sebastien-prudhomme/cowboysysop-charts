@@ -9,6 +9,7 @@ source: https://github.com/Dolibarr/dolibarr
 version: 8.0.0
 updates: |
   ### Upgrading to version 8.0.0
+
   The chart now uses forked versions of the Bitnami charts to reference the Bitnami Legacy repository:
 
   - https://github.com/bitnami/containers/issues/83267
