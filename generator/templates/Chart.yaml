@@ -23,7 +23,7 @@ dependencies:
   [% if application.mariadb %]
   - name: mariadb
     version: 20.4.2
-    repository: oci://registry-1.docker.io/bitnamicharts
+    repository: oci://ghcr.io/cowboysysop/charts
     condition: mariadb.enabled
   [% endif %]
   [% if application.mongodb %]
