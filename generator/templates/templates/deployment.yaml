@@ -496,6 +496,10 @@ spec:
         {{- end }}
         [% endif %]
         [% endif %]
+        [% if component.emptyDir %]
+        - name: empty-dir
+          emptyDir: {}
+        [% endif %]
         [% if component.tls %]
         - name: tls-secret
           secret:

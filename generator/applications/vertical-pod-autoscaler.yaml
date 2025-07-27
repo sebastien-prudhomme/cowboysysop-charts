@@ -219,12 +219,12 @@ components:
             path: /health-check
             port: http-metrics
         resources:
-          limits:
-            cpu: 200m
-            memory: 512Mi
           requests:
             cpu: 50m
             memory: 256Mi
+          limits:
+            cpu: 200m
+            memory: 512Mi
         securityContext:
           readOnlyRootFilesystem: true
           runAsNonRoot: true
@@ -471,12 +471,12 @@ components:
             path: /health-check
             port: http-metrics
         resources:
-          limits:
-            cpu: 200m
-            memory: 1024Mi
           requests:
             cpu: 50m
             memory: 512Mi
+          limits:
+            cpu: 200m
+            memory: 1024Mi
         securityContext:
           readOnlyRootFilesystem: true
           runAsNonRoot: true
@@ -668,12 +668,12 @@ components:
             path: /health-check
             port: http-metrics
         resources:
-          limits:
-            cpu: 200m
-            memory: 1024Mi
           requests:
             cpu: 50m
             memory: 512Mi
+          limits:
+            cpu: 200m
+            memory: 1024Mi
         securityContext:
           readOnlyRootFilesystem: true
           runAsNonRoot: true

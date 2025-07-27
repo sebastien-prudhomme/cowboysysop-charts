@@ -129,8 +129,15 @@ components:
         readinessProbe:
           httpGet:
             path: /healthz/readiness
+        # resources:
+        #   requests:
+        #     cpu: 500m
+        #     memory: 192Mi
+        #   limits:
+        #     cpu: 500m
+        #     memory: 384Mi
         securityContext:
-          readOnlyRootFilesystem: false
+          readOnlyRootFilesystem: true
           runAsUser: 1000
           runAsGroup: 1000
         startupProbe:
@@ -139,6 +146,10 @@ components:
         volumeMounts: |
           - name: data
             mountPath: /home/node/.n8n
+          - name: empty-dir
+            mountPath: /home/node/.cache
+            subPath: home-node-cache
+    emptyDir: true
     image:
       registry: docker.n8n.io
       repository: n8nio/n8n
@@ -281,14 +292,26 @@ components:
           httpGet:
             path: /healthz/readiness
             port: http
+        # resources:
+        #   requests:
+        #     cpu: 250m
+        #     memory: 128Mi
+        #   limits:
+        #     cpu: 250m
+        #     memory: 256Mi
         securityContext:
-          readOnlyRootFilesystem: false
+          readOnlyRootFilesystem: true
           runAsUser: 1000
           runAsGroup: 1000
         startupProbe:
           httpGet:
             path: /healthz
             port: http
+        volumeMounts: |
+          - name: empty-dir
+            mountPath: /home/node/.n8n
+            subPath: home-node-n8n
+    emptyDir: true
     image:
       registry: docker.n8n.io
       repository: n8nio/n8n
@@ -389,18 +412,30 @@ components:
           httpGet:
             path: /healthz
             port: http-metrics
+        # resources:
+        #   requests:
+        #     cpu: 500m
+        #     memory: 192Mi
+        #   limits:
+        #     cpu: 500m
+        #     memory: 384Mi
         readinessProbe:
           httpGet:
             path: /healthz/readiness
             port: http-metrics
         securityContext:
-          readOnlyRootFilesystem: false
+          readOnlyRootFilesystem: true
           runAsUser: 1000
           runAsGroup: 1000
         startupProbe:
           httpGet:
             path: /healthz
             port: http-metrics
+        volumeMounts: |
+          - name: empty-dir
+            mountPath: /home/node/.n8n
+            subPath: home-node-n8n
+    emptyDir: true
     image:
       registry: docker.n8n.io
       repository: n8nio/n8n

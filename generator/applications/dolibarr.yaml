@@ -70,6 +70,8 @@ components:
           - -ec
           - |
             rm -f /var/www/documents/install.lock
+        securityContext:
+          readOnlyRootFilesystem: false
         volumeMounts: |
           - name: data
             mountPath: /var/www/documents
@@ -111,6 +113,8 @@ components:
         readinessProbe:
           httpGet:
             path: /
+        securityContext:
+          readOnlyRootFilesystem: false
         startupProbe:
           httpGet:
             path: /
