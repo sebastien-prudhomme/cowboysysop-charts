@@ -161,10 +161,14 @@ topologySpreadConstraints: []
 ## @param [[ component_yaml_path ]]securityContext.runAsUser The UID to run the entrypoint of the container process
 ## @param [[ component_yaml_path ]]securityContext.runAsGroup The GID to run the entrypoint of the container process
 securityContext:
-  allowPrivilegeEscalation: false
+  allowPrivilegeEscalation: [[ "true" if component.deployment.container.securityContext.runAsUser == 0 else "false" ]]
   capabilities:
+  [% if component.deployment.container.securityContext.runAsUser == 0 %]
+    drop: []
+  [% else %]
     drop:
       - ALL
+  [% endif %]
   readOnlyRootFilesystem: [[ "true" if component.deployment.container.securityContext.readOnlyRootFilesystem else "false" ]]
   runAsNonRoot: [[ "false" if component.deployment.container.securityContext.runAsUser == 0 else "true" ]]
   runAsUser: [[ component.deployment.container.securityContext.runAsUser ]]
