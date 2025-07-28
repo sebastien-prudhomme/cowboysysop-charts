@@ -19,12 +19,6 @@ updates: |
   $ kubectl delete deployment/my-flowise-deployment
   ```
 
-  Also run this command if `worker.enabled` parameter is `true`:
-
-  ```bash
-  $ kubectl delete deployment/my-flowise-worker-deployment
-  ```
-
   Pod and container security contexts are now configured with default values.
 
   ### Upgrading to version 5.0.0
