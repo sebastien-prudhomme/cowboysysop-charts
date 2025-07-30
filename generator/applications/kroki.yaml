@@ -1,6 +1,6 @@
 name: kroki
 productName: Kroki
-appVersion: 0.25.0
+appVersion: 0.28.0
 description: <<creates diagrams from textual descriptions>>
 home: https://kroki.io/
 icon: https://raw.githubusercontent.com/yuzutech/kroki.io/master/assets/favicon-196x196.png
@@ -8,10 +8,19 @@ license: 2021
 source: https://github.com/yuzutech/kroki
 version: 6.0.0
 updates: |
-  ### Upgrading to version 7.0.0
-  label en plus
-
   ### Upgrading to version 6.0.0
+
+  The chart now uses forked versions of the Bitnami charts to reference the Bitnami Legacy repository:
+
+  - https://github.com/bitnami/containers/issues/83267
+
+  A label `app.kubernetes.io/component` will be added to the Deployment. Run this command before upgrading to prevent an immutable field error:
+
+  ```bash
+  $ kubectl delete deployment/my-kroki-deployment
+  ```
+
+  Pod and container security contexts are now configured with default values.
 
   Information about services are no more injected into pod's environment variable.
 
@@ -54,6 +63,14 @@ components:
         startupProbe:
           httpGet:
             path: /health
+        securityContext:
+          readOnlyRootFilesystem: true
+          runAsUser: 1001
+          runAsGroup: 1001
+        volumeMounts: |
+          - name: empty-dir
+            mountPath: /tmp
+            subPath: kroki-tmp
       containers:
         - name: bpmn
           asComponent: true
@@ -65,6 +82,14 @@ components:
             - name: http
               number: 8003
               description: HTTP
+          securityContext:
+            readOnlyRootFilesystem: true
+            runAsUser: 1001
+            runAsGroup: 1001
+          volumeMounts: |
+            - name: empty-dir
+              mountPath: /tmp
+              subPath: bpmn-tmp
         - name: diagramsnet
           asComponent: true
           description: Diagrams.net
@@ -75,6 +100,14 @@ components:
             - name: http
               number: 8005
               description: HTTP
+          securityContext:
+            readOnlyRootFilesystem: true
+            runAsUser: 1001
+            runAsGroup: 1001
+          volumeMounts: |
+            - name: empty-dir
+              mountPath: /tmp
+              subPath: diagramsnet-tmp
         - name: excalidraw
           asComponent: true
           description: Excalidraw
@@ -85,6 +118,14 @@ components:
             - name: http
               number: 8004
               description: HTTP
+          securityContext:
+            readOnlyRootFilesystem: true
+            runAsUser: 1001
+            runAsGroup: 1001
+          volumeMounts: |
+            - name: empty-dir
+              mountPath: /tmp
+              subPath: excalidraw-tmp
         - name: mermaid
           asComponent: true
           description: Mermaid
@@ -95,10 +136,19 @@ components:
             - name: http
               number: 8002
               description: HTTP
+          securityContext:
+            readOnlyRootFilesystem: true
+            runAsUser: 1001
+            runAsGroup: 1001
+          volumeMounts: |
+            - name: empty-dir
+              mountPath: /tmp
+              subPath: mermaid-tmp
+    emptyDir: true
     image:
       registry: docker.io
       repository: yuzutech/kroki
-      tag: 0.25.0
+      tag: 0.28.0
     ingress:
       paths:
         - /

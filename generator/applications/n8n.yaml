@@ -148,7 +148,7 @@ components:
             mountPath: /home/node/.n8n
           - name: empty-dir
             mountPath: /home/node/.cache
-            subPath: home-node-cache
+            subPath: n8n-home-node-cache
     emptyDir: true
     image:
       registry: docker.n8n.io
@@ -310,7 +310,7 @@ components:
         volumeMounts: |
           - name: empty-dir
             mountPath: /home/node/.n8n
-            subPath: home-node-n8n
+            subPath: webhook-home-node-n8n
     emptyDir: true
     image:
       registry: docker.n8n.io
@@ -434,7 +434,7 @@ components:
         volumeMounts: |
           - name: empty-dir
             mountPath: /home/node/.n8n
-            subPath: home-node-n8n
+            subPath: worker-home-node-n8n
     emptyDir: true
     image:
       registry: docker.n8n.io
