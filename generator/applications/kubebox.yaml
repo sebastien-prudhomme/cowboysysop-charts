@@ -5,11 +5,11 @@ description: is a <<Terminal and Web console for Kubernetes>>
 home: https://github.com/astefanutti/kubebox
 license: 2020
 source: https://github.com/astefanutti/kubebox
-version: 7.0.0
+version: 6.0.0
 prerequisites: |
   - cAdvisor >= 0.36 (you can use the [ckotzbauer/cadvisor](https://artifacthub.io/packages/helm/ckotzbauer/cadvisor) chart)
 updates: |
-  ### Upgrading to version 7.0.0
+  ### Upgrading to version 6.0.0
 
   The chart now uses forked versions of the Bitnami charts to reference the Bitnami Legacy repository:
 
@@ -22,8 +22,6 @@ updates: |
   ```
 
   Pod and container security contexts are now configured with default values.
-
-  ### Upgrading to version 6.0.0
 
   Information about services are no more injected into pod's environment variable.
 
