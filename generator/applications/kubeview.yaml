@@ -6,10 +6,21 @@ home: https://github.com/benc-uk/kubeview
 icon: https://raw.githubusercontent.com/benc-uk/kubeview/master/web/client/public/favicon.png
 license: 2020
 source: https://github.com/benc-uk/kubeview
-version: 6.0.0
+version: 7.0.0
 updates: |
   ### Upgrading to version 7.0.0
-  label en plus
+
+  The chart now uses forked versions of the Bitnami charts to reference the Bitnami Legacy repository:
+
+  - https://github.com/bitnami/containers/issues/83267
+
+  A label `app.kubernetes.io/component` will be added to the Deployment. Run this command before upgrading to prevent an immutable field error:
+
+  ```bash
+  $ kubectl delete deployment/my-kubeview-deployment
+  ```
+
+  Pod and container security contexts are now configured with default values.
 
   ### Upgrading to version 6.0.0
 
@@ -89,6 +100,10 @@ components:
         startupProbe:
           httpGet:
             path: /healthz
+        securityContext:
+          readOnlyRootFilesystem: true
+          runAsUser: 65534
+          runAsGroup: 65534
     image:
       registry: ghcr.io
       repository: benc-uk/kubeview
