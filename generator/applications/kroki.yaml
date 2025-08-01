@@ -71,6 +71,9 @@ components:
           - name: empty-dir
             mountPath: /tmp
             subPath: kroki-tmp
+          - name: empty-dir
+            mountPath: /home/kroki
+            subPath: kroki-home-kroki
       containers:
         - name: bpmn
           asComponent: true
@@ -90,6 +93,9 @@ components:
             - name: empty-dir
               mountPath: /tmp
               subPath: bpmn-tmp
+            - name: empty-dir
+              mountPath: /home/kroki
+              subPath: bpmn-home-kroki
         - name: diagramsnet
           asComponent: true
           description: Diagrams.net
@@ -108,6 +114,9 @@ components:
             - name: empty-dir
               mountPath: /tmp
               subPath: diagramsnet-tmp
+            - name: empty-dir
+              mountPath: /home/kroki
+              subPath: diagramsnet-home-kroki
         - name: excalidraw
           asComponent: true
           description: Excalidraw
@@ -126,6 +135,9 @@ components:
             - name: empty-dir
               mountPath: /tmp
               subPath: excalidraw-tmp
+            - name: empty-dir
+              mountPath: /home/kroki
+              subPath: excalidraw-home-kroki
         - name: mermaid
           asComponent: true
           description: Mermaid
@@ -144,6 +156,9 @@ components:
             - name: empty-dir
               mountPath: /tmp
               subPath: mermaid-tmp
+            - name: empty-dir
+              mountPath: /home/kroki
+              subPath: mermaid-home-kroki
     emptyDir: true
     image:
       registry: docker.io
