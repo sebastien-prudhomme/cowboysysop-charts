@@ -1,14 +1,24 @@
 name: kubernetes-mcp
 productName: Kubernetes MCP Server
-appVersion: 0.0.44
+appVersion: 0.0.47
 description: is a <<Model Context Protocol server for Kubernetes>>
 home: https://github.com/manusa/kubernetes-mcp-server
 license: 2025
 source: https://github.com/manusa/kubernetes-mcp-server
-version: 1.0.0
+version: 2.0.0
 updates: |
   ### Upgrading to version 2.0.0
-  label en plus
+  The chart now uses forked versions of the Bitnami charts to reference the Bitnami Legacy repository:
+
+  - https://github.com/bitnami/containers/issues/83267
+
+  A label `app.kubernetes.io/component` will be added to the Deployment. Run this command before upgrading to prevent an immutable field error:
+
+  ```bash
+  $ kubectl delete deployment/my-kubernetes-mcp-deployment
+  ```
+
+  Pod and container security contexts are now configured with default values.
 components:
   - name: kubernetes-mcp
     extraClusterRole: |
@@ -25,10 +35,14 @@ components:
       container:
         args: |
           - --port={{ .Values.containerPorts.http }}
+        securityContext:
+          readOnlyRootFilesystem: true
+          runAsUser: 65534
+          runAsGroup: 65534
     image:
       registry: quay.io
       repository: manusa/kubernetes_mcp_server
-      tag: v0.0.44
+      tag: v0.0.47
     ingress:
       paths:
         - /
