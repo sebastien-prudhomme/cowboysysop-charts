@@ -5,12 +5,23 @@ description: is a <<Terminal and Web console for Kubernetes>>
 home: https://github.com/astefanutti/kubebox
 license: 2020
 source: https://github.com/astefanutti/kubebox
-version: 6.0.0
+version: 7.0.0
 prerequisites: |
   - cAdvisor >= 0.36 (you can use the [ckotzbauer/cadvisor](https://artifacthub.io/packages/helm/ckotzbauer/cadvisor) chart)
 updates: |
   ### Upgrading to version 7.0.0
-  label en plus
+
+  The chart now uses forked versions of the Bitnami charts to reference the Bitnami Legacy repository:
+
+  - https://github.com/bitnami/containers/issues/83267
+
+  A label `app.kubernetes.io/component` will be added to the Deployment. Run this command before upgrading to prevent an immutable field error:
+
+  ```bash
+  $ kubectl delete deployment/my-kubebox-deployment
+  ```
+
+  Pod and container security contexts are now configured with default values.
 
   ### Upgrading to version 6.0.0
 
@@ -64,6 +75,10 @@ components:
         startupProbe:
           httpGet:
             path: /
+        securityContext:
+          readOnlyRootFilesystem: false
+          runAsUser: 998
+          runAsGroup: 0
     image:
       registry: docker.io
       repository: astefanutti/kubebox
