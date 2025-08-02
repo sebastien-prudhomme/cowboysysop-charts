@@ -1,41 +1,28 @@
 name: local-ai
 productName: LocalAI
-appVersion: 2.12.1
+appVersion: 1.25.0
 description: is <<a drop-in replacement REST API compatible with OpenAI API specifications for local inferencing>>
 home: https://localai.io/
 icon: https://user-images.githubusercontent.com/2420543/233147843-88697415-6dbf-4368-a862-ab217f9f7342.jpeg
 license: 2023
 source: https://github.com/go-skynet/LocalAI
-version: 5.0.0
+version: 4.0.0
 updates: |
-  ### Upgrading to version 6.0.0
-  label en plus
-
-
-  ### Upgrading to version 5.0.0
-
-  Information about services are no more injected into pod's environment variable.
-
   ### Upgrading to version 4.0.0
 
- We’ve removed rwkv.cpp and bert.cpp
+  The chart now uses forked versions of the Bitnami charts to reference the Bitnami Legacy repository:
 
-Deprecation of the exllama backend
+  - https://github.com/bitnami/containers/issues/83267
 
+  A label `app.kubernetes.io/component` will be added to the Deployment. Run this command before upgrading to prevent an immutable field error:
 
-As we continue to evolve, we are officially deprecating the gpt4all.cpp and petals backends
+  ```bash
+  $ kubectl delete deployment/my-local-ai-deployment
+  ```
 
+  Pod and container security contexts are now configured with default values.
 
-  The trust_remote_code setting in the YAML config file of the model are now consumed for enhanced security measures also for the AutoGPTQ and transformers backend, thanks to @dave-gray101's contribution (#1799). If your model relied on the old behavior and you are sure of what you are doing, set trust_remote_code: true in the YAML config file.
-
-  backend supprimé, cf evoliton de https://github.com/mudler/LocalAI/blob/master/docs/content/docs/reference/compatibility-table.md
-  = bloomz, dolly, falcon, falcon-ggml, gpt2, gptj, gptneox, mpt, replit, starcoder
-
-  rename llama-stable to llama-ggml
-
-  Faire le switch vers v2.12.1-ffmpeg-core (sans dépendances Python, cf la doc)
-
-  Refaire un --help avec la v2.12.1
+  Information about services are no more injected into pod's environment variable.
 
   ### Upgrading to version 3.0.0
 
@@ -53,6 +40,21 @@ components:
         {{- .Values.config.preloadModels | toPrettyJson | nindent 4 }}
     deployment:
       type: deployment
+      initContainer:
+        command: |
+          - /bin/bash
+          - -ec
+          - |
+            mkdir -p /data/generated-audio
+            mkdir -p /data/generated-images
+            mkdir -p /data/models
+        securityContext:
+          readOnlyRootFilesystem: true
+          runAsUser: 0
+          runAsGroup: 0
+        volumeMounts: |
+          - name: data
+            mountPath: /data
       container:
         env: |
           - name: ADDRESS
@@ -76,6 +78,10 @@ components:
         startupProbe:
           httpGet:
             path: /healthz
+        securityContext:
+          readOnlyRootFilesystem: false
+          runAsUser: 0
+          runAsGroup: 0
         volumeMounts: |
           - name: config
             mountPath: /config/preload-models.json
@@ -85,7 +91,7 @@ components:
     image:
       registry: quay.io
       repository: go-skynet/local-ai
-      tag: v2.12.1-ffmpeg-core
+      tag: v1.25.0-ffmpeg
     ingress:
       paths:
         - /
