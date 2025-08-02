@@ -34,9 +34,9 @@ Create chart name and version as used by the chart label.
 {{/*
 Common labels
 */}}
-{{- define "flowise.labels" -}}
+{{- define "flowise.commonLabels" -}}
 helm.sh/chart: {{ include "flowise.chart" . }}
-{{ include "flowise.selectorLabels" . }}
+{{ include "flowise.commonSelectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -44,11 +44,34 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
 
 {{/*
+Common selector labels
+*/}}
+{{- define "flowise.commonSelectorLabels" -}}
+app.kubernetes.io/name: {{ include "flowise.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end -}}
+
+{{/*
+Component labels
+*/}}
+{{- define "flowise.componentLabels" -}}
+app.kubernetes.io/component: flowise
+{{- end -}}
+
+{{/*
+Labels
+*/}}
+{{- define "flowise.labels" -}}
+{{ include "flowise.commonLabels" . }}
+{{ include "flowise.componentLabels" . }}
+{{- end -}}
+
+{{/*
 Selector labels
 */}}
 {{- define "flowise.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "flowise.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
+{{ include "flowise.commonSelectorLabels" . }}
+{{ include "flowise.componentLabels" . }}
 {{- end -}}
 
 {{/*

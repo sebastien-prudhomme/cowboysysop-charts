@@ -1,11 +1,12 @@
-{{- if .Values.pdb.create }}
+{{- if .Values.worker.enabled }}
+{{- if .Values.worker.pdb.create }}
 apiVersion: {{ include "common.capabilities.policy.apiVersion" . }}
 kind: PodDisruptionBudget
 metadata:
-  name: {{ include "lighthouse-ci.fullname" . }}
+  name: {{ include "flowise.worker.fullname" . }}
   namespace: {{ include "common.names.namespace" . | quote }}
   labels:
-    {{- include "lighthouse-ci.labels" . | nindent 4 }}
+    {{- include "flowise.worker.labels" . | nindent 4 }}
     {{- if .Values.commonLabels }}
     {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
     {{- end }}
@@ -13,13 +14,14 @@ metadata:
   annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
   {{- end }}
 spec:
-  {{- if .Values.pdb.minAvailable }}
-  minAvailable: {{ .Values.pdb.minAvailable }}
+  {{- if .Values.worker.pdb.minAvailable }}
+  minAvailable: {{ .Values.worker.pdb.minAvailable }}
   {{- end }}
-  {{- if .Values.pdb.maxUnavailable }}
-  maxUnavailable: {{ .Values.pdb.maxUnavailable }}
+  {{- if .Values.worker.pdb.maxUnavailable }}
+  maxUnavailable: {{ .Values.worker.pdb.maxUnavailable }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "lighthouse-ci.selectorLabels" . | nindent 6 }}
+      {{- include "flowise.worker.selectorLabels" . | nindent 6 }}
+{{- end }}
 {{- end }}
