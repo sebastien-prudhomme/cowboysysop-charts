@@ -1,15 +1,26 @@
 name: ollama
 productName: Ollama
-appVersion: 0.9.2
+appVersion: 0.9.3
 description: allows <<get up and running with large language models, locally>>
 home: https://ollama.com/
 icon: https://raw.githubusercontent.com/cowboysysop/charts/master/charts/ollama/icon.png
 license: 2024
 source: https://github.com/ollama/ollama
-version: 2.1.1
+version: 3.0.0
 updates: |
   ### Upgrading to version 3.0.0
-  label en plus
+
+  The chart now uses forked versions of the Bitnami charts to reference the Bitnami Legacy repository:
+
+  - https://github.com/bitnami/containers/issues/83267
+
+  A label `app.kubernetes.io/component` will be added to the Deployment. Run this command before upgrading to prevent an immutable field error:
+
+  ```bash
+  $ kubectl delete deployment/my-ollama-deployment
+  ```
+
+  Pod and container security contexts are now configured with default values.
 
   ### Upgrading to version 2.0.0
 
@@ -30,6 +41,10 @@ components:
         readinessProbe:
           httpGet:
             path: /
+        securityContext:
+          readOnlyRootFilesystem: false
+          runAsUser: 0
+          runAsGroup: 0
         startupProbe:
           httpGet:
             path: /
@@ -39,7 +54,7 @@ components:
     image:
       registry: docker.io
       repository: ollama/ollama
-      tag: 0.9.2
+      tag: 0.9.3
     ingress:
       paths:
         - /
