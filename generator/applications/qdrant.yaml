@@ -8,10 +8,19 @@ license: 2023
 source: https://github.com/qdrant/qdrant
 version: 3.0.0
 updates: |
-  ### Upgrading to version 4.0.0
-  label en plus
-
   ### Upgrading to version 3.0.0
+
+  The chart now uses forked versions of the Bitnami charts to reference the Bitnami Legacy repository:
+
+  - https://github.com/bitnami/containers/issues/83267
+
+  A label `app.kubernetes.io/component` will be added to the StatefulSet. Run this command before upgrading to prevent an immutable field error:
+
+  ```bash
+  $ kubectl delete statefulset/my-qdrant-statefulset
+  ```
+
+  Pod and container security contexts are now configured with default values.
 
   Information about services are no more injected into pod's environment variable.
 
@@ -60,6 +69,10 @@ components:
         readinessProbe:
           httpGet:
             path: /
+        securityContext:
+          readOnlyRootFilesystem: false
+          runAsUser: 0
+          runAsGroup: 0
         startupProbe:
           httpGet:
             path: /
