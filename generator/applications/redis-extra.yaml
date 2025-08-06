@@ -5,5 +5,10 @@ appVersion: 1.0.0
 description: are a <<collection of extra Kubernetes objects for a Redis instance>>
 home: https://github.com/cowboysysop/charts/tree/master/charts/redis-extra
 license: 2025
-version: 1.0.0
+version: 2.0.0
+updates: |
+  ### Upgrading to version 2.0.0
+  The chart now uses forked versions of the Bitnami charts to reference the Bitnami Legacy repository:
+
+  - https://github.com/bitnami/containers/issues/83267
 veleroBackups: true
