@@ -1,16 +1,25 @@
 name: whoami
 productName: Whoami
-appVersion: 1.10.3
+appVersion: 1.11.0
 description: is a <<tiny Go webserver that prints os information and HTTP request to output>>
 home: https://github.com/traefik/whoami
 license: 2020
 source: https://github.com/traefik/whoami
 version: 6.0.0
 updates: |
-  ### Upgrading to version 7.0.0
-  label en plus
-
   ### Upgrading to version 6.0.0
+
+  The chart now uses forked versions of the Bitnami charts to reference the Bitnami Legacy repository:
+
+  - https://github.com/bitnami/containers/issues/83267
+
+  A label `app.kubernetes.io/component` will be added to the Deployment. Run this command before upgrading to prevent an immutable field error:
+
+  ```bash
+  $ kubectl delete deployment/my-whoami-deployment
+  ```
+
+  Pod and container security contexts are now configured with default values.
 
   Information about services are no more injected into pod's environment variable.
 
@@ -53,13 +62,17 @@ components:
         readinessProbe:
           httpGet:
             path: /health
+        securityContext:
+          readOnlyRootFilesystem: true
+          runAsUser: 0
+          runAsGroup: 0
         startupProbe:
           httpGet:
             path: /health
     image:
       registry: docker.io
       repository: traefik/whoami
-      tag: v1.10.3
+      tag: v1.11.0
     ingress:
       paths:
         - /
