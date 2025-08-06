@@ -1,21 +1,24 @@
 
 name: vertical-pod-autoscaler
 productName: Vertical Pod Autoscaler
-appVersion: 1.4.0
+appVersion: 1.4.1
 description: is a <<set of components that automatically adjust the amount of CPU and memory requested by pods running in the Kubernetes Cluster>>
 home: https://github.com/kubernetes/autoscaler
 icon: https://raw.githubusercontent.com/kubernetes/kubernetes/master/logo/logo.svg
 license: 2020
 source: https://github.com/kubernetes/autoscaler
-version: 10.2.0
+version: 11.0.0
 prerequisites: |
   - Metrics Server >= 0.2 (you can use the [bitnami/metrics-server](https://artifacthub.io/packages/helm/bitnami/metrics-server) chart)
 updates: |
   ### Upgrading to version 11.0.0
 
-  BREAKING: crds.podSecurityContext.runAsNonRoot -> crds.securityContext.runAsNonRoot (container)
-            crds.podSecurityContext.runAsUser 1001 -> crds.securityContext.runAsUser 65534
-            crds.podSecurityContext.runAsGroup 1001 -> crds.securityContext.runAsGroup 65534
+  The chart now uses forked versions of the Bitnami charts to reference the Bitnami Legacy repository:
+
+  - https://github.com/bitnami/containers/issues/83267
+
+  Pod and container security contexts have been hardened and some values are now configured at
+  the container level instead of the pod level.
 
   ### Upgrading to version 10.0.0
 
@@ -227,7 +230,6 @@ components:
             memory: 512Mi
         securityContext:
           readOnlyRootFilesystem: true
-          runAsNonRoot: true
           runAsUser: 65534
           runAsGroup: 65534
         volumeMounts: |
@@ -237,7 +239,7 @@ components:
     image:
       registry: registry.k8s.io
       repository: autoscaling/vpa-admission-controller
-      tag: 1.4.0
+      tag: 1.4.1
     metrics:
       ports:
         - name: metrics
@@ -479,13 +481,12 @@ components:
             memory: 1024Mi
         securityContext:
           readOnlyRootFilesystem: true
-          runAsNonRoot: true
           runAsUser: 65534
           runAsGroup: 65534
     image:
       registry: registry.k8s.io
       repository: autoscaling/vpa-recommender
-      tag: 1.4.0
+      tag: 1.4.1
     metrics:
       ports:
         - name: metrics
@@ -676,13 +677,12 @@ components:
             memory: 1024Mi
         securityContext:
           readOnlyRootFilesystem: true
-          runAsNonRoot: true
           runAsUser: 65534
           runAsGroup: 65534
     image:
       registry: registry.k8s.io
       repository: autoscaling/vpa-updater
-      tag: 1.4.0
+      tag: 1.4.1
     metrics:
       ports:
         - name: metrics
