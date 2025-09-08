@@ -1,6 +1,6 @@
 name: n8n
 productName: N8n
-appVersion: 1.103.2
+appVersion: 1.109.2
 description: is <<a workflow automation platform with native AI capabilities>>
 home: https://n8n.io/
 icon: https://raw.githubusercontent.com/cowboysysop/charts/master/charts/n8n/icon.png
@@ -153,7 +153,7 @@ components:
     image:
       registry: docker.n8n.io
       repository: n8nio/n8n
-      tag: 1.103.2
+      tag: 1.109.2
     ingress:
       paths:
         - /
@@ -200,11 +200,11 @@ components:
       port: http
     extraValues: |
       n8n:
-        ## @param n8n.encryptionKey Encryption key
-        encryptionKey: ""
-
         ## @param n8n.externalUrl External URL
         externalUrl: http://n8n.local
+
+        ## @param n8n.encryptionKey Encryption key
+        encryptionKey: ""
 
         ## @param n8n.executionsMode Whether executions should run directly or using queue
         executionsMode: regular
@@ -315,7 +315,7 @@ components:
     image:
       registry: docker.n8n.io
       repository: n8nio/n8n
-      tag: 1.103.2
+      tag: 1.109.2
     ingress:
       paths:
         - /form/
@@ -439,7 +439,7 @@ components:
     image:
       registry: docker.n8n.io
       repository: n8nio/n8n
-      tag: 1.103.2
+      tag: 1.109.2
     metrics:
       optional: true
     podMonitor:
