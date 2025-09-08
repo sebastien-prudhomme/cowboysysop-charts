@@ -83,6 +83,8 @@ components:
           {{- end }}
           - name: EXECUTIONS_MODE
             value: {{ .Values.n8n.executionsMode | quote }}
+          - name: N8N_CONCURRENCY_PRODUCTION_LIMIT
+            value: {{ .Values.n8n.concurrencyProductionLimit | quote }}
           {{- if .Values.worker.enabled }}
           - name: OFFLOAD_MANUAL_EXECUTIONS_TO_WORKERS
             value: "true"
@@ -208,6 +210,9 @@ components:
 
         ## @param n8n.executionsMode Whether executions should run directly or using queue
         executionsMode: regular
+
+        ## @param n8n.concurrencyProductionLimit Max production executions allowed to run concurrently
+        concurrencyProductionLimit: 10
 
         ## @param n8n.timezone Timezone
         timezone: Etc/UTC
@@ -386,6 +391,8 @@ components:
             value: "true"
           - name: N8N_METRICS_INCLUDE_QUEUE_METRICS
             value: "true"
+          - name: N8N_CONCURRENCY_PRODUCTION_LIMIT
+            value: {{ .Values.n8n.concurrencyProductionLimit | quote }}
           - name: QUEUE_BULL_REDIS_HOST
             value: {{ include "n8n.redis.host" . | quote }}
           - name: QUEUE_BULL_REDIS_PORT
