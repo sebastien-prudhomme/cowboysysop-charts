@@ -212,7 +212,7 @@ components:
         executionsMode: regular
 
         ## @param n8n.concurrencyProductionLimit Max production executions allowed to run concurrently
-        concurrencyProductionLimit: 10
+        concurrencyProductionLimit: -1
 
         ## @param n8n.timezone Timezone
         timezone: Etc/UTC
