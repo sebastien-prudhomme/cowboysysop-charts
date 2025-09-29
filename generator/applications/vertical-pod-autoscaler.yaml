@@ -1,7 +1,7 @@
 
 name: vertical-pod-autoscaler
 productName: Vertical Pod Autoscaler
-appVersion: 1.4.1
+appVersion: 1.5.0
 description: is a <<set of components that automatically adjust the amount of CPU and memory requested by pods running in the Kubernetes Cluster>>
 home: https://github.com/kubernetes/autoscaler
 icon: https://raw.githubusercontent.com/kubernetes/kubernetes/master/logo/logo.svg
@@ -199,8 +199,8 @@ components:
           - --tls-cert-file=/tls-secret/tls.crt
           - --tls-private-key=/tls-secret/tls.key
         extraArgs: |
-          # kube-api-burst: 10
-          # kube-api-qps: 5
+          # kube-api-burst: 100
+          # kube-api-qps: 50
           v: 2
           # vpa-object-namespace: ""
           # webhook-timeout-seconds: 30
@@ -239,7 +239,7 @@ components:
     image:
       registry: registry.k8s.io
       repository: autoscaling/vpa-admission-controller
-      tag: 1.4.1
+      tag: 1.5.0
     metrics:
       ports:
         - name: metrics
@@ -418,8 +418,8 @@ components:
           # history-length: 8d
           # history-resolution: 1h
           # ignored-vpa-object-namespaces: ""
-          # kube-api-burst: 10
-          # kube-api-qps: 5
+          # kube-api-burst: 100
+          # kube-api-qps: 50
           # leader-elect: false
           # leader-elect-lease-duration: 15s
           # leader-elect-renew-deadline: 10s
@@ -432,7 +432,6 @@ components:
           # memory-histogram-decay-half-life: 24h0m0s
           # memory-saver: false
           # metric-for-pod-labels: up{job="kubernetes-pods"}
-          # min-checkpoints: 10
           # oom-bump-up-ratio: 1.2
           # oom-min-bump-up-bytes: 104857600
           # password: ""
@@ -454,6 +453,7 @@ components:
           # storage: checkpoint
           # target-cpu-percentile: 0.9
           # target-memory-percentile: 0.9
+          # update-worker-count: 10
           # use-external-metrics: false
           # username: ""
           v: 2
@@ -486,7 +486,7 @@ components:
     image:
       registry: registry.k8s.io
       repository: autoscaling/vpa-recommender
-      tag: 1.4.1
+      tag: 1.5.0
     metrics:
       ports:
         - name: metrics
@@ -636,8 +636,8 @@ components:
           # eviction-tolerance: 0.5
           # ignored-vpa-object-namespaces: ""
           # in-recommendation-bounds-eviction-lifetime-threshold: 12h0m0s
-          # kube-api-burst: 10
-          # kube-api-qps: 5
+          # kube-api-burst: 100
+          # kube-api-qps: 50
           # leader-elect: false
           # leader-elect-lease-duration: 15s
           # leader-elect-renew-deadline: 10s
@@ -682,7 +682,7 @@ components:
     image:
       registry: registry.k8s.io
       repository: autoscaling/vpa-updater
-      tag: 1.4.1
+      tag: 1.5.0
     metrics:
       ports:
         - name: metrics
