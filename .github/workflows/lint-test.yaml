@@ -26,7 +26,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v6.0.0
         with:
-          python-version: 3.14.0 # renovate: python
+          python-version: 3.14.3 # renovate: python
 
       - name: Set up chart-testing
         uses: helm/chart-testing-action@v2.6.1
@@ -51,8 +51,8 @@ jobs:
         kubernetes:
           - v1.29.14 # renovate: kindest/node
           - v1.30.13 # renovate: kindest/node
-          - v1.31.12 # renovate: kindest/node
-          - v1.32.8 # renovate: kindest/node
+          - v1.31.14 # renovate: kindest/node
+          - v1.32.11 # renovate: kindest/node
     steps:
       - name: Checkout
         uses: actions/checkout@v5.0.0
@@ -67,7 +67,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v6.0.0
         with:
-          python-version: 3.14.0 # renovate: python
+          python-version: 3.14.3 # renovate: python
 
       - name: Set up chart-testing
         uses: helm/chart-testing-action@v2.6.1
